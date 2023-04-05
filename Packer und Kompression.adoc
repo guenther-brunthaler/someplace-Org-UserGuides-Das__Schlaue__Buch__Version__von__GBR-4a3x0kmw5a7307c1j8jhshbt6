@@ -1,0 +1,249 @@
+﻿Lossless File Compressors Comparison
+====================================
+Guenther Brunthaler
+v2023.95
+
+Copyright (C) 2023 Guenther Brunthaler.
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+
+A copy of the license is included in the separate document link:GFDL-1.3[entitled "GNU Free Documentation License"].
+
+
+lrzip vs. xz vs. gzip vs. lzma vs. gzip vs. uncompressed
+--------------------------------------------------------
+
+Um ein bereits mit "lzop -U" gepacktes Archiv oder andere nicht mehr weiter komprimierbare Daten für umbenennenden Transport in ein tar-Archiv zu verpacken, dies mit "gzip -8" komprimieren.
+
+Bei -9 wird es wieder leicht größer.
+
+Der größte Gewinn gegenüber der Vorgänger-Stufe stellt dabei -4 dar - dies nehmen wenn die Packzeit eine Rolle spielt.
+
+Noch besser als gzip -8 war erstaunlicher Weise lzop -9. Aber wer hat das schon installiert? Auch war der Unterschied kleiner als 2 kB bei einem 350 MB Packergebnis. Sprich, vernachlässigbar.
+
+Und hier noch die Vergleichsergebnisse für das Packen von Linux Kernel Modulen gestripped, für die ARM-Architektur, nach gepackter Größe sortiert:
+
+"Raspberry Pi, All Kernel Modules for all Architectures, cpio Archive, Compression sizes"
+
+....
+size compressed,compression
+35022080,lrzip -UzL9
+35022080,lrzip -zL9
+35078320,lrzip -UzL8
+35078320,lrzip -zL8
+35640174,lzma -9
+35645820,xz -9
+39021062,lrzip -UzL7
+39021062,lrzip -zL7
+39331846,lrzip -UzL5
+39331846,lrzip -zL5
+39334768,lrzip -UzL6
+39334768,lrzip -zL6
+39753587,lrzip -UzL4
+39753587,lrzip -zL4
+41414234,lrzip -L8
+41414234,lrzip -UL8
+41419823,lrzip -L7
+41419823,lrzip -UL7
+47334890,lrzip -L5
+47334890,lrzip -UL5
+47434956,lrzip -L6
+47434956,lrzip -UL6
+47901852,lrzip -L4
+47901852,lrzip -UL4
+48288960,lrzip -UzL3
+48288960,lrzip -zL3
+48919492,lrzip -L3
+48919492,lrzip -UL3
+49378916,lrzip -UzL2
+49378916,lrzip -zL2
+50657834,lrzip -L2
+50657834,lrzip -UL2
+50674679,lrzip -UzL1
+50674679,lrzip -zL1
+51329509,lrzip -bL9
+51329509,lrzip -UbL9
+51443583,lzma -8
+51451616,xz -8
+51548321,lrzip -bL8
+51548321,lrzip -UbL8
+51738864,lrzip -bL7
+51738864,lrzip -UbL7
+51820270,lrzip -L1
+51820270,lrzip -UL1
+51824388,lzma -7
+51832472,xz -7
+52206462,lzma -6
+52214604,xz -6
+52681569,lrzip -bL6
+52681569,lrzip -UbL6
+52827627,lrzip -bL5
+52827627,lrzip -UbL5
+52842189,lzma -5
+52850440,xz -5
+54124641,lrzip -bL4
+54124641,lrzip -UbL4
+55313313,lzma -4
+55321940,xz -4
+55805886,lrzip -bL3
+55805886,lrzip -UbL3
+55844390,lrzip -gL9
+55844390,lrzip -UgL9
+56017255,lrzip -gL8
+56017255,lrzip -UgL8
+56238286,lrzip -gL7
+56238286,lrzip -UgL7
+57733164,lrzip -gL6
+57733164,lrzip -UgL6
+57887689,lrzip -bL2
+57887689,lrzip -UbL2
+58615407,lrzip -gL5
+58615407,lrzip -UgL5
+59591239,lzma -3
+59600516,xz -3
+59959021,lzma -2
+59968352,xz -2
+60902017,lzma -1
+60911516,xz -1
+61314478,lrzip -bL1
+61314478,lrzip -UbL1
+61349339,lrzip -gL4
+61349339,lrzip -UgL4
+62828978,lzma -0
+62838780,xz -0
+65006375,lrzip -gL3
+65006375,lrzip -UgL3
+67855422,lrzip -gL2
+67855422,lrzip -UgL2
+70602605,bzip2 -9
+70897924,bzip2 -8
+71194146,bzip2 -7
+71395500,lrzip -gL1
+71395500,lrzip -UgL1
+71502721,bzip2 -6
+71803812,bzip2 -5
+72418871,bzip2 -4
+73073263,bzip2 -3
+74249287,bzip2 -2
+76628398,bzip2 -1
+79675723,gzip -9
+79792246,gzip -8
+80108540,gzip -7
+80393603,gzip -6
+80522128,lrzip -lL9
+80522128,lrzip -UlL9
+80676330,lrzip -lL8
+80676330,lrzip -UlL8
+80757982,lrzip -lL7
+80757982,lrzip -UlL7
+81581787,gzip -5
+83183131,lrzip -lL6
+83183131,lrzip -UlL6
+83528552,lrzip -lL5
+83528552,lrzip -UlL5
+83612884,gzip -4
+86011425,lrzip -lL4
+86011425,lrzip -UlL4
+86524590,gzip -3
+87929264,gzip -2
+88904213,lrzip -lL3
+88904213,lrzip -UlL3
+89725656,gzip -1
+91545802,lrzip -lL2
+91545802,lrzip -UlL2
+94540491,lrzip -lL1
+94540491,lrzip -UlL1
+149543051,lrzip -nL9
+149543051,lrzip -UnL9
+149758516,lrzip -nL8
+149758516,lrzip -UnL8
+150089978,lrzip -nL7
+150089978,lrzip -UnL7
+160467764,lrzip -nL6
+160467764,lrzip -UnL6
+161988342,lrzip -nL5
+161988342,lrzip -UnL5
+172148473,lrzip -nL4
+172148473,lrzip -UnL4
+183262677,lrzip -nL3
+183262677,lrzip -UnL3
+192335092,lrzip -nL2
+192335092,lrzip -UnL2
+201069260,lrzip -nL1
+201069260,lrzip -UnL1
+254337536,uncompressed
+....
+
+Note that some settings result in the same compressed size.
+
+All compression levels from 0 through 9 have been attempted. Missing levels mean the compressor does not support that level.
+
+Also missing are the following invocations which could not get enough memory on a 32 bit x86 machine:
+
+* lrzip -L9
+* lrzip -UL9
+
+
+tar vs. rar vs. zstd vs. xz vs. lrzip
+-------------------------------------
+
+....
+156525046 ACAD2K.tar.lrz
+157500008 ACAD2K.txz
+161248934 ACAD2K.rar
+169389972 ACAD2K.tar.zst
+212346880 ACAD2K.tar
+   120792 BridgeBuilder_2001-06.tar.lrz
+   121655 BridgeBuilder_2001-06.rar
+   122009 BridgeBuilder_2001-06.tar.zst
+   122248 BridgeBuilder_2001-06.txz
+   128512 BridgeBuilder_2001-06.tar
+ 11299693 dx80ger.tar.lrz
+ 11305556 dx80ger.txz
+ 11326464 dx80ger.tar.zst
+ 11338601 dx80ger.rar
+ 11374592 dx80ger.tar
+ 66708035 glsetup121.tar.lrz
+ 84608032 glsetup121.txz
+ 90050402 glsetup121.tar.zst
+ 90331243 glsetup121.zip
+ 90648064 glsetup121.tar
+  7734088 Intel Itanium Architecture Software Developer's Manual.tar.lrz
+  7869316 Intel Itanium Architecture Software Developer's Manual.txz
+  8387595 Intel Itanium Architecture Software Developer's Manual.rar
+  8728767 Intel Itanium Architecture Software Developer's Manual.tar.zst
+ 19257344 Intel Itanium Architecture Software Developer's Manual.tar
+147538288 O97ProGrSR2.tar.lrz
+162443716 O97ProGrSR2.txz
+177815962 O97ProGrSR2.rar
+198250610 O97ProGrSR2.tar.zst
+380322816 O97ProGrSR2.tar
+   739230 The Holy Bible.txt.lrz
+   928330 The Holy Bible.txt.bz2
+   979514 The Holy Bible.txt.lzma
+   980088 The Holy Bible.txt.xz
+  1152670 The Holy Bible.txt.zst
+  1152670 The Holy Bible.txt.zst-ultra
+  1153455 The Holy Bible.txt.zst-ultra-longrange
+  1308564 The Holy Bible.txt.gz
+  4374357 The Holy Bible.txt
+  4376064 The Holy Bible.tar
+
+....
+
+
+Options used
+~~~~~~~~~~~~
+
+----
+tar -b1
+tar -J
+tar --zstd
+lrzip -L9 -z -U
+gzip -9
+bzip2 -9
+zstd -9
+zstd --ultra --long=28 -9
+zstd --ultra -9
+lzma -9e
+----
