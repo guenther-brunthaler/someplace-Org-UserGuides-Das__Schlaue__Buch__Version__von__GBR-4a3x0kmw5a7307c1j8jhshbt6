@@ -1,29 +1,190 @@
-﻿Lossless File Compressors Comparison
-====================================
-Guenther Brunthaler
-v2023.95
+﻿Packer und Kompression
+======================
+v2024.143
 
-Copyright (C) 2023 Guenther Brunthaler.
 
-Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+zip und 7-zip
+-------------
 
-A copy of the license is included in the separate document link:GFDL-1.3[entitled "GNU Free Documentation License"].
+Diese Packer haben den Vorteil nicht nur unter '*IX'-Systemen, sondern auch unter Windows, MacOS & Co gut unterstützt zu sein. Sie sind daher eine bessere Wahl für OS-übergreifenden Daten-Austausch.
+
+Sie haben darüber hinaus aber auch die Fähigkeit, Dateien einzeln extrahierbar komprimieren zu können.
+
+Das ist z. B. sehr interessant im Zusammenspiel mit dem 'AVFS' FUSE-Dateisystem, welches Archive als Unterverzeichnisse virtualisieren kann. Das ermöglicht schnelleren Schreib- aber auch Lesezugriff auf einzelne Dateien.
+
+
+Creation
+~~~~~~~~
+
+First, set some variables here. (The values assigned here shall *not* contain file extensions like "`.7z`" or "`.zip`"!)
+
+* Archive the contents of the current directory:
++
+----
+$ set . && archive=../`basename -- "$PWD"`
+----
+
+* Archive a set of files, naming the archive after the first argument.
++
+----
+$ set -- example-3.5 example-3.5.md5 && archive=${1%%/}
+----
+
+This allows to copy/paste and execute the commands directly without any alteration.
+
+* Archive an HTML page with associated files as saved by Firefox:
++
+----
+$ set -- "XML Path Language (XPath) 2.0 (Second Edition)"*
+
+$ archive=$1 n=$# && while test $n != 0; do \
+test ${#1} -lt ${#archive} && archive=$1; \
+set -- "$@" "$1" && shift && n=`expr $n - 1 || :`; \
+done && archive=${archive%.*} && echo "Archive = '$archive'"
+----
+
+
+*.zip
+^^^^^
+
+If installed, prefer `7za` over `zip`:
+
+----
+$ rm -f -- "${archive:?}".zip && 7za a -tzip -mx9 -stl -- "${archive:?}".zip "$@"
+$ #rm -rf -- "$@"
+----
+
+Without `7za` installed:
+
+----
+$ rm -f -- "${archive:?}".zip && zip -9r "${archive:?}".zip "$@"
+$ #rm -rf -- "$@"
+----
+
+
+*.7z
+^^^^
+
+A native 7-zip format archive is superior to `zip` compression.
+
+Here is a variant with independently stored archive members, allowing fast extraction and reasonably fast replacement of indivdual members, suitable for use with virtual unpacking filesystems like 'avfs':
+
+----
+$ rm -f -- "${archive:?}".7z && 7za a -ms=off -m0=lzma -mx=9 -mfb=64 -md=32m -stl -- "${archive:?}".7z "$@"
+$ #rm -rf -- "$@"
+----
+
+Following is a variant which creates as a 'solid' archive.
+
+This will be smaller (even smaller than a `*.tar.xz` created from the same data), but one loses the feature of fast independent extraction (or updates) of the compressed files within an archive.
+
+----
+$ rm -f -- "${archive:?}".7z && 7za a -ms=on -m0=lzma -mx=9 -mfb=64 -md=32m -stl -- "${archive:?}".7z "$@"
+$ #rm -rf -- "$@"
+----
+
+It seems that `-ms=on` is the default now, but I believe this was not always the case. Better specify the option directly in order to be certain.
+
+
+Extraction
+~~~~~~~~~~
+
+----
+$ 7z x -- "${archive:?}".zip
+$ 7z x -- "${archive:?}".7z
+----
+
+
+Normal look at the contents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This displays the archive contents in tabluar format with one file per archive member:
+
+----
+$ 7z l -- "${archive:?}".zip
+$ 7z l -- "${archive:?}".7z
+$ 7z l -tzip -- "${archive:?}".maff # Override file extension.
+----
+
+
+Thorough Examination
+~~~~~~~~~~~~~~~~~~~~
+
+This displays a lot more information per archive member, but it needs several output lines to do so.
+
+----
+$ 7z l -slt -- "${archive:?}".zip
+$ 7z l -slt -- "${archive:?}".7z
+$ 7z l -slt -tzip -- "${archive:?}".jar # Override file extension.
+----
+
+
+Other Useful Examples
+---------------------
+
+Convert `*.maff` Web Archive file into `*.7z` file suitable for mounting by `AVFS`:
+
+----
+$ maff='Namensräume in XML.maff'
+
+$ archive=${maff?:} && archive=${archive%.*} \
+&& test "$maff" != "$archive" \
+&& rm -rf -- "${archive:?}" && mkdir -- "$archive" \
+&& ( cd -- "$archive" \
+&& 7z x -tzip ../"$archive".maff \
+&& cd -- * \
+&& rm -f -- ../../"$archive".7z \
+&& 7za a -ms=off -m0=lzma -mx=9 -mfb=64 -md=32m -stl \
+-- ../../"$archive".7z * \
+) && rm -r -- "$archive"
+----
+
+
+Packer features
+---------------
+
+gzip
+~~~~
+
+This provides the weakest compression, but also has smaller metadata overhead than most other archivers.
+
+Which means it beats its competitors most of the time in compression size if the files to be compressed are very small, say shorter than very few kilobytes.
+
+Even though it can only store a single file, it saves (can be turned off) by default the file's name and timestamp which can both restored at extraction time via the `-N` option.
+
+It also stores a CRC-32 of the file contents which it will verify on extraction.
+
+A very special feature is the `--rsyncable` option. It allows the compressed file to still be compared efficiently against other files compressed in the same way using the "rdiff", "rsync" and "zsync" programs. Although this option reduces the compression somewhat, this can be worth it when the desire for delta transmissions of the file is to be expected.
+
+A shortcoming of `gzip` is that it only stores the sizes of compressed and uncompressed contents modulo 2 ** 32, i.e. only the 32 least significant bits of the real sizes.
+
+`gzip` still decompresses the contents of such files correctly. But the values displayed by the `--list` command will not reflect the actual file size for files with sizes of 4 GiB or larger, but rather the real sizes modulo 2 ** 32.
+
+
+bzip2
+~~~~~
+
+This uses the Burrows-Wheeler transform before actual compression, which is highly effective on files containing human-language text.
+
+It usually outperforms `gzip` for all files larger than a few kilobytes.
+
+However, it provides non of gzip's other features. The only metadata `bzip2` seems to store is a CRC-32 which is used to detect damaged files.
 
 
 lrzip vs. xz vs. gzip vs. lzma vs. gzip vs. uncompressed
 --------------------------------------------------------
 
-Um ein bereits mit "lzop -U" gepacktes Archiv oder andere nicht mehr weiter komprimierbare Daten für umbenennenden Transport in ein tar-Archiv zu verpacken, dies mit "gzip -8" komprimieren.
+Um ein bereits mit "`lzop -U`" gepacktes Archiv oder andere nicht mehr weiter komprimierbare Daten für umbenennenden Transport in ein `tar`-Archiv zu verpacken, dies mit "`gzip -8`" komprimieren.
 
-Bei -9 wird es wieder leicht größer.
+Bei `-9` wird es wieder leicht größer.
 
-Der größte Gewinn gegenüber der Vorgänger-Stufe stellt dabei -4 dar - dies nehmen wenn die Packzeit eine Rolle spielt.
+Der größte Gewinn gegenüber der Vorgänger-Stufe stellt dabei `-4` dar - dies nehmen wenn die Packzeit eine Rolle spielt.
 
-Noch besser als gzip -8 war erstaunlicher Weise lzop -9. Aber wer hat das schon installiert? Auch war der Unterschied kleiner als 2 kB bei einem 350 MB Packergebnis. Sprich, vernachlässigbar.
+Noch besser als `gzip -8` war erstaunlicher Weise `lzop -9`. Aber wer hat das schon installiert? Auch war der Unterschied kleiner als 2 kB bei einem 350 MB Packergebnis. Sprich, vernachlässigbar.
 
 Und hier noch die Vergleichsergebnisse für das Packen von Linux Kernel Modulen gestripped, für die ARM-Architektur, nach gepackter Größe sortiert:
 
-"Raspberry Pi, All Kernel Modules for all Architectures, cpio Archive, Compression sizes"
+"Raspberry Pi, All Kernel Modules for all Architectures, `cpio` Archive, Compression sizes"
 
 ....
 size compressed,compression
@@ -180,8 +341,8 @@ All compression levels from 0 through 9 have been attempted. Missing levels mean
 
 Also missing are the following invocations which could not get enough memory on a 32 bit x86 machine:
 
-* lrzip -L9
-* lrzip -UL9
+* `lrzip -L9`
+* `lrzip -UL9`
 
 
 tar vs. rar vs. zstd vs. xz vs. lrzip
@@ -231,7 +392,6 @@ tar vs. rar vs. zstd vs. xz vs. lrzip
 
 ....
 
-
 Options used
 ~~~~~~~~~~~~
 
@@ -247,3 +407,197 @@ zstd --ultra --long=28 -9
 zstd --ultra -9
 lzma -9e
 ----
+
+
+Compression times and sizes
+---------------------------
+
+The test subject was a Linux armhf initramfs image.
+
+
+Sorted by size
+~~~~~~~~~~~~~~
+
+....
+     lzma -9 -c 101278 16603856 
+       xz -9 -c  96731 16608528 
+    xz -e -9 -c 110638 16613420 
+     lzma -8 -c  97440 16925673 
+       xz -8 -c  93922 16928500 
+    xz -e -8 -c 104055 16942016 
+     lzma -7 -c  89700 17087442 
+       xz -7 -c  86540 17092232 
+    xz -e -7 -c  95823 17120696 
+     lzma -6 -c  81774 17273515 
+        lzma -c  82454 17273515 
+       xz -6 -c  78797 17281880 
+          xz -c  81336 17281880 
+    xz -e -5 -c  85278 17296000 
+    xz -e -6 -c  87697 17299468 
+       xz -e -c  87838 17299468 
+     lzma -5 -c  75991 17329919 
+       xz -5 -c  73502 17338716 
+    xz -e -3 -c  78226 17455168 
+    xz -e -4 -c  80105 17484436 
+    xz -e -2 -c  74068 17677976 
+     lzma -4 -c  61348 17760042 
+       xz -4 -c  60922 17764612 
+    xz -e -1 -c  68395 17867244 
+    xz -e -0 -c  58841 18315708 
+     lzma -3 -c  51374 19421908 
+       xz -3 -c  51087 19425388 
+     lzma -2 -c  33003 19555855 
+       xz -2 -c  32853 19558452 
+     lzma -1 -c  21636 19765302 
+       xz -1 -c  21853 19767892 
+     lzma -0 -c  14066 20392074 
+       xz -0 -c  13931 20394884 
+     zstd -9 -c   8963 23271637 
+     zstd -8 -c   7863 23597460 
+    bzip2 -8 -c  20704 23758008 
+    bzip2 -7 -c  19497 23771962 
+     zstd -7 -c   6858 23789009 
+    bzip2 -6 -c  18356 23796333 
+    bzip2 -5 -c  18333 23809056 
+    bzip2 -9 -c  20223 23812107 
+       bzip2 -c  20194 23812107 
+    bzip2 -4 -c  17102 23843398 
+    bzip2 -3 -c  16365 24010359 
+     zstd -6 -c   5991 24016376 
+    bzip2 -2 -c  15402 24139913 
+    bzip2 -1 -c  15190 24482680 
+     zstd -5 -c   5085 24484475 
+     gzip -8 -c  21263 25155884 
+     gzip -9 -c  27260 25155894 
+     zstd -4 -c   5455 25174755 
+     gzip -7 -c  15319 25189707 
+     gzip -6 -c  12335 25247160 
+        gzip -c  12453 25247160 
+     zstd -0 -c   4021 25444964 
+     zstd -3 -c   4068 25444964 
+        zstd -c   4453 25444964 
+     gzip -5 -c   7711 25493155 
+     gzip -4 -c   5492 26031282 
+     zstd -2 -c   1679 26263215 
+     gzip -3 -c   5435 26565144 
+     gzip -2 -c   4108 26993540 
+     gzip -1 -c   3641 27458569 
+     zstd -1 -c   1316 28069282 
+sh -c cat -- -c      0 62740480 
+....
+
+
+Sorted by compression time
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+....
+sh -c cat -- -c      0 62740480 
+     zstd -1 -c   1316 28069282 
+     zstd -2 -c   1679 26263215 
+     gzip -1 -c   3641 27458569 
+     zstd -0 -c   4021 25444964 
+     zstd -3 -c   4068 25444964 
+     gzip -2 -c   4108 26993540 
+        zstd -c   4453 25444964 
+     zstd -5 -c   5085 24484475 
+     gzip -3 -c   5435 26565144 
+     zstd -4 -c   5455 25174755 
+     gzip -4 -c   5492 26031282 
+     zstd -6 -c   5991 24016376 
+     zstd -7 -c   6858 23789009 
+     gzip -5 -c   7711 25493155 
+     zstd -8 -c   7863 23597460 
+     zstd -9 -c   8963 23271637 
+     gzip -6 -c  12335 25247160 
+        gzip -c  12453 25247160 
+       xz -0 -c  13931 20394884 
+     lzma -0 -c  14066 20392074 
+    bzip2 -1 -c  15190 24482680 
+     gzip -7 -c  15319 25189707 
+    bzip2 -2 -c  15402 24139913 
+    bzip2 -3 -c  16365 24010359 
+    bzip2 -4 -c  17102 23843398 
+    bzip2 -5 -c  18333 23809056 
+    bzip2 -6 -c  18356 23796333 
+    bzip2 -7 -c  19497 23771962 
+       bzip2 -c  20194 23812107 
+    bzip2 -9 -c  20223 23812107 
+    bzip2 -8 -c  20704 23758008 
+     gzip -8 -c  21263 25155884 
+     lzma -1 -c  21636 19765302 
+       xz -1 -c  21853 19767892 
+     gzip -9 -c  27260 25155894 
+       xz -2 -c  32853 19558452 
+     lzma -2 -c  33003 19555855 
+       xz -3 -c  51087 19425388 
+     lzma -3 -c  51374 19421908 
+    xz -e -0 -c  58841 18315708 
+       xz -4 -c  60922 17764612 
+     lzma -4 -c  61348 17760042 
+    xz -e -1 -c  68395 17867244 
+       xz -5 -c  73502 17338716 
+    xz -e -2 -c  74068 17677976 
+     lzma -5 -c  75991 17329919 
+    xz -e -3 -c  78226 17455168 
+       xz -6 -c  78797 17281880 
+    xz -e -4 -c  80105 17484436 
+          xz -c  81336 17281880 
+     lzma -6 -c  81774 17273515 
+        lzma -c  82454 17273515 
+    xz -e -5 -c  85278 17296000 
+       xz -7 -c  86540 17092232 
+    xz -e -6 -c  87697 17299468 
+       xz -e -c  87838 17299468 
+     lzma -7 -c  89700 17087442 
+       xz -8 -c  93922 16928500 
+    xz -e -7 -c  95823 17120696 
+       xz -9 -c  96731 16608528 
+     lzma -8 -c  97440 16925673 
+     lzma -9 -c 101278 16603856 
+    xz -e -8 -c 104055 16942016 
+    xz -e -9 -c 110638 16613420 
+....
+
+
+lzip
+----
+
+`lzip` ist ein Packer der sich besonderer Langzeit-Archivierungsfähigkeiten rühmt und erzeugt `.lz`-Dateien. Er benutzt stabilere und auf Fehlererkennung ausgerichtete interne Datenstrukturen, und ist im Fall einer Beschädigung (vermutlich) eher zu reparieren als die meisten anderen Packer.
+
+Außerdem ist es (vermutlich) überaus portabel. Zumindest bringt es eine besonders ausführliche Dokumentation der Datenstrukturen der Archivdateien mit, und ebenso einen besonders gut dokumentierten Quelltext. Beides ist sicherlich hilfreich um den Quelltext einst auf neue Plattformen der Zukunft zu portieren, oder Reparaturprogramme für das Datenformat zu entwickeln.
+
+Besonders interessant ist die Dokumentation des Programms, die genüßlich viele Versäumnisse, Nachteile und Unzulänglichkeit der verbreiteten Konkurrenz-Packformate auflistet.
+
+Einen besonderen Hass scheint der lzip-Autor gegenüber dem `xz`-Format zu hegen, über das er kaum zu schimpfen aufhören kann und man den Eindruck gewinnt, das auf angeblich sehr ähnlichen Algorithmen basierende `lzip` müsste diesem in jeder Hinsicht überlegen sein.
+
+Tatsächlich ist das tolle `lzip` mit Default-Einstellungen aber sogar schwächer als `gzip`! Einzig "lz -9" schlägt `gzip` dann doch. Allerdings ist dies um ein Vielfaches langsamer als `gzip`.
+
+Gegen `bzip2`, `xz` oder gar `lrzip` hat `lzip` aber nicht den Hauch einer Chance, zumindest nicht in dem Standard-Einstellungen.
+
+`lzip` scheint daher tatsächlich nur für Langzeit-Archivierung interessant zu sein, wobei sich allerdings die Frage stellt ob es angesichts der geringen Verbreitung tatsächlich einen praktischen Vorteil gegenüber `.xz` & Co aufweist. Deren Quelltexte kann man schließlich ebenso unkomprimiert mit archivieren, auch wenn sie schlechter dokumentiert sein mögen als die von `lzip`. Einen C-Compiler braucht man für beides.
+
+
+zstd
+----
+
+`zstd` ist ein weiterer theroretisch viel gelobter, praktisch jedoch eher erbärmlich komprimierender Kompressor.
+
+Er scheint nur als Konkurrent für `gzip` gedacht zu sein, das er - knapp in der Komprimierung schlägt. Allerdings ist das keine Kunst, da die meisten anderen Packer gzip bei der Komprimierungs-Stärke schlagen.
+
+Eine leere Datei ist mit `gzip` komprimiert beispielsweise 20 Bytes lang, mit `zstd` 13 Bytes.
+
+`zstd` hat viele schwer verständliche Optionen, die per Default zumeist abgeschaltet sind. Man gewinnt beim Studium ihrer Beschreibung den Eindruck, dass `zstd` mit geeigneten Optionen aufgerufen vielleicht doch Ergebnisse produzieren könnte die mit ansonsten besseren Packern wie `xz` konkurrieren könnten.
+
+Es preist sich in der Anleitung selbst "mit geeigneten Optionen" als schneller als `gzip` und ähnlich stark komprimierend wie `lzma` an.
+
+Allerdings war es meine Beobachtung, dass die Pack-Ergebnisse tatsächlich sogar noch schlechter werden, wenn man diese Optionen verwendet: Desto toller die Option klingt, desto schlechter das Ergebnis bezogen auf die Größe der Ausgabedatei.
+
+Von "`lzma`-ähnlichen" Ergebnissen konnte ich weit und breit nichts beobachten, aber vielleicht kannte ich bloß die "geeigneten" Optionen nicht. Da jedoch auch die Anleitung diese nicht nennt sondern sie nur einzeln auflistet, könnte man bestenfalls durch Raten und Ausprobieren ein starkes Komprimierungsniveau erreichen.
+
+Fairer Weise muss man allerdings sagen dass ich meine Tests mit `tar`-Dateien die primär bereits komprimierte Dateien enthielten durchführte. Der Packer konnte daher nur den Blocking-Overhead und die Metadatenfelder von `*.tar` überhaupt komprimieren.
+
+Ein Vorteil vom `zstd` dürfte auf jeden Fall höhere Dekomprimierungs-Geschwindigkeit sein, sowie geringerer Ressourenverbrauch.
+
+Außerdem hat es nicht den Nachteil von `gzip` dass es nur die niederwertigsten 32 Bit der Originaldateilänge für die Anzeige speichern kann.
+
+Immerhin bietet auch `zstd` die `--rsyncable` Option von `gzip` an, was ansonsten (meines Wissens) kein weiterer Packer beherrscht.
