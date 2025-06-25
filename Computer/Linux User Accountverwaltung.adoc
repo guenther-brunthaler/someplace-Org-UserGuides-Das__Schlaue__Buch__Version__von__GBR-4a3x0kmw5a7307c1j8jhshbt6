@@ -1,0 +1,39 @@
+﻿Linux User Accountverwaltung
+============================
+v2024.62
+
+
+Set up variables
+----------------
+
+Um die Befehlszeilen in dieser Anleitung ohne Änderung nutzbar zu machen, müssen davor ein paar Variablen gesetzt werden welche in den Befehlen verwendet werden.
+
+----
+$ name=someuser more_groups=sshlogin comment='What a nice guy'
+----
+
+`$name` ist der Login-Name des zu erzeugenden Accounts.
+
+Die Variablen `$more_groups` und `$comment` sind optional. Wenn sie auf eine leere Zeichenkette gesetzt werden, werden sie nicht verwendet.
+
+Andernfalls definiert `$more_groups` zusätzliche Gruppen (durch "`,`" und ohne zusätzliche Leerzeichen von einander getrennt) von denen der neu angelegte User ein Mitlied sein soll, und `$comment` definiert den Inhalt des Kommentarfelds in `/etc/passwd` für diesen User.
+
+
+Creation
+--------
+
+----
+$ id=`uid-gid-derive-from-name "${name:?}"`; echo UID=${id:?} GID=$id
+$ groupadd -g ${id:?} "${name:?}" && useradd -u ${id:?} -g ${id:?} ${more_groups:+-G "$more_groups"} ${comment:+-c "$comment"} -m "${name:?}"
+----
+
+Diese erzeugt nicht nur den User-Account `$name` selbst, sondern auch ein `$HOME`-Directory für ihn.
+
+Removal
+-------
+
+----
+$ userdel -r "${name:?}"
+----
+
+Das `-r` entfernt nicht nur den Account `$name`, sondern auch das `$HOME`-Directory sowie den Mail-Spool des Benutzers.

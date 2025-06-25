@@ -1,0 +1,7 @@
+﻿Bluetooth Low Energy, Bluetooth LE (kurz BLE), Bluetooth Smart ist eine Funktechnik, mit der sich Geräte in einer Umgebung von etwa 10 Metern vernetzen lassen (siehe auch Rechnernetz). Im Vergleich zum „klassischen“ Bluetooth soll BLE deutlich geringeren Stromverbrauch und geringere Kosten mit einem ähnlichen Kommunikationsbereich haben. Technisch ist Bluetooth Smart nicht rückwärtskompatibel, neuere Bluetooth-Geräte müssen zusätzlich den LE-Protokollstapel unterstützen, um sich verbinden zu können.
+
+Bluetooth Smart und Bluetooth Smart Ready sind optionale Bestandteile von Bluetooth 4.0.
+
+Eine Folge daraus ist, dass Bluetooth 4.0-Geräte nicht zwangsläufig mit Bluetooth Smart-Geräten kommunizieren können müssen.
+
+Geräte im Classic Bluetooth müssen allgemein nur die Konnektivität mit der Basisgeschwindigkeit BR (Basic Rate) unterstützen, die Übertragung mit EDR (Enhanced Data Rate), HS (High Speed) oder LE (Low Energy) ist optional. Für Bluetooth Smart ist eine single-mode Implementation vorgesehen, die nur die Konnektivität per LE kennt.

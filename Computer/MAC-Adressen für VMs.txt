@@ -1,0 +1,23 @@
+﻿Ethernet MAC-Adressen
+=====================
+
+Es gibt global eindeutige MAC-Adressen welche von Herstellern registriert werden müssen, sowie zufällig erzeugte die beispielsweise für virtuelle Netzwerkkarten in VMs zum Einsatz kommen.
+
+Eine MAC-Adresse ist 48 Bit lang.
+
+Im Falle einer zufälligen MAC-Adresse können dabei alle Bits zufällig sein, außer die beiden niederwertigsten Bits des ersten 8-Bit-Bytes, welche '10' sein müssen.
+
+Hier ein Einzeiler, welcher eine gültige zufällige MAC erzeugt:
+
+$ dd if=/dev/urandom bs=1 count=6 2> /dev/null | od -t x1 | sed 's/0* //; h; s/.\(.\).*/\1/; y/01345789bcdf/222666aaaeee/; G; s/\(.\)\n\(.\).\(.*\)/\2\1\3/; y/ /:/; q'
+
+Anmerkung: Diese Kommandozeile vermeidet die Verwendung der "-A"-Option von "od", da POSIX diese zwar garantiert, doch die BusyBox-Implementation unterstützt sie trotzdem nicht.
+
+Die beiden niederwertigsten Bits des ersten 8-Bit-Bytes haben ganz allgemein die folgende Bedeutung:
+
+Bit # 1: `0`=global, `1`=local
+Bit # 0: `0`=unicast, `1`=multicast
+
+MAC-Adressen für VMs sind daher immer local unicast Adressen.
+
+"Echte" (Hardware-) Ethernet MAC-Adressen von Endgeräten wie Computern sind hingegen immer global unicast Adressen.

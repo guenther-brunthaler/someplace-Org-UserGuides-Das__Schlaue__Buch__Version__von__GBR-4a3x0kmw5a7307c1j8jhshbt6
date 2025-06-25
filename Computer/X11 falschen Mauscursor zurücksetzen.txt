@@ -1,0 +1,9 @@
+Wenn anstatt dem erwarteten Mauscursor ein offensichtlich falsches Cursor-Symbol angezeigt wird (meist durch die Fehlfunktion/Absturz irgend eines X11-Programms verursacht):
+
+$ xsetroot -cursor_name left_ptr
+
+hilft meist. Man kann auch noch
+
+$ xsetroot -def
+
+versuchen.

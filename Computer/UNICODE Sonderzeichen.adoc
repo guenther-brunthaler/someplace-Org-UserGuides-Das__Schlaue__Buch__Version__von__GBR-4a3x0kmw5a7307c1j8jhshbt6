@@ -1,0 +1,157 @@
+﻿UNICODE Sonderzeichen
+=====================
+v2024.150
+
+
+Dateinamen-Ersatzzeichen
+------------------------
+
+* "∕" Divisions-Zeichen ersetzt reguläres ASCII "/"
+
+
+Hoch- und tiefgestellte Zeichen
+-------------------------------
+
+* ±x⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ
+
+* ±x₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ₐₑₕₖₗₘₙₒₚₛₜₓ
+
+Brüche:
+
+* ¼ ⅓ ½ ⅔ ¾ ⅐ ⅑ ⅒ ⅕ ⅖ ⅗ ⅘ ⅙ ⅚ ⅛ ⅜ ⅝ ⅞
+
+Römische Zahlen:
+
+* Ⅰ Ⅲ Ⅳ Ⅴ Ⅵ Ⅶ Ⅷ Ⅸ Ⅹ Ⅺ Ⅻ Ⅼ Ⅽ Ⅾ Ⅿ
+
+* ⅰ ⅱ ⅲ ⅳ ⅴ ⅵ ⅶ ⅷ ⅸ ⅹ ⅺ ⅻ ⅼ ⅽ ⅾ ⅿ
+
+
+Echte Sonderzeichen
+-------------------
+
+Diese.
+
+....
+Arrows:
+↵ carriage return symbol
+← left
+↑ up
+→ right, enter submenu, execute menu-command
+↓ down
+↔ left=right
+↕ up=down
+↖ left up
+↗ right up
+↘ right down
+↙ left down
+⇄ right over left
+⇆ left over right
+↹ tabulation key symbol
+
+® registered
+© copyright
+™ trademark (TM)
+℡ telephone number (TEL)
+№ Numero (No.)
+
+ℕ N, the set of natural numbers
+ℤ Z, the set of integers
+ℚ Q, the set of rational numbers
+ℝ R, the set of real numbers
+
+€ Euro
+£ Pound Sterling
+¥ Yen, Yuan (renminbi)
+
+¡ upside-down !
+¿ upside-down ?
+
+⌘ Apple command key
+⏻ Power on/off key
+
+⏴ triangle pointing left
+⏵ triangle pointing right
+⏶ triangle pointing up
+⏷ triangle pointing down
+
+⏏ eject media
+⏪ fast rewind
+⏩ fast forward
+⏯ play/pause toggle
+⏹ stop
+⏺ record
+....
+
+﻿
+Mathematische Symbole
+---------------------
+
+Symbole
+
+[cols="^,<",options="autowidth"]
+|====
+| ± | Plus/Minus
+| µ | Micro
+| ‰ | Promille
+| ∞ | Unendlich
+| ∅ | leere Menge
+| ∎ | Q.E.D.
+|====
+
+
+Operatoren
+[cols="^,<",options="autowidth"]
+|====
+| ≡ | kongruent, identisch
+| ≅ | annähernd gleich
+| ≈ | beinahe völlig gleich
+| × | Multipikation, kartesisches Produkt
+| ÷ | Division
+| ∕ | Division (alternativ)
+| √ | Quadratwurzel
+| ∛ | Kubikwurzel
+| ∑ | Summe
+| ∏ | Produkt
+| ∫ | Integral
+| ∧ | logisch UND
+| ∨ | logisch ODER
+| ∩ | Durchschnitt
+| ∪ | Vereinigung
+| ∀ | für alle
+| ∃ | es existiert
+| ∆ | Zunahme, Differenz, Delta
+| ∈ | Element von
+| ∣ | so dass gilt
+|====
+
+
+Griechische Buchstaben
+----------------------
+
+[cols="^,^,<",options="autowidth"]
+|====
+| α | Α | Alpha
+| β | Β | Beta
+| γ | Γ | Gamma
+| δ | Δ | Delta
+| ε | Ε | Epsilon
+| ζ | Ζ | Zeta
+| η | Η | Eta
+| θ | Θ | Theta
+| ι | Ι | Iota
+| κ | Κ | Kappa
+| λ | Λ | Lambda
+| μ | Μ | Mu
+| ν | Ν | Nu
+| ξ | Ξ | Xi
+| ο | Ο | Omicron
+| π | Π | Pi
+| ρ | Ρ | Rho
+| σ | Σ | Sigma
+| τ | Τ | Tau
+| φ | Φ | Phi
+| χ | Χ | Chi
+| ψ | Ψ | Psi
+| ω | Ω | Omega
+|====

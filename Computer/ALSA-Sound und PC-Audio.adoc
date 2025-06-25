@@ -1,0 +1,137 @@
+﻿ALSA-Sound und PC-Audio
+=======================
+v2022.55
+
+
+Farben der Soundkarten-Ausgänge
+-------------------------------
+
+Die folgenden farbcodierten Buchsen sind in der Regel auf der Soundkarten-Blende der Gehäuserückseite angebracht.
+
+[options="header,autowidth"]
+|====
+| Farbe   | Funktion
+| rosa    | Mikrofoneingang (Mono)
+| blau    | Line-In (Stereo)
+| grün    | Ausgang für Lautsprecher, Line-Out (Stereo)
+| schwarz | Rücklautsprecher-Ausgang (Stereo)
+| silber  | Seitenlautsprecher-Ausgang (Stereo)
+| orange  | Subwoofer-Ausgang und Center-Ausgang
+|====
+
+Nicht alle Soundkarten unterstützen Mehrkanalton. Wenn nur simpler Stereo-Sound unterstützt wird, fehlen die drei letzten Buchsen in der Regel.
+
+
+alsamixer
+---------
+
+Hinweis: Die Bezeichnungen am unteren Rand sind abgekürzt. Man sieht oben aber immer die volle Bezeichnung des gerade selektierten Reglers angezeigt.
+
+
+Wiedergabe-Regler
+~~~~~~~~~~~~~~~~~
+
+* Master - der Hauptregler für die Lautstärke. Die anderen Regler bestimmen nur die Lautstärke relativ zu den verbleibenden Reglern
+
+* Headphone - Kopfhörer-Anschluss. Dieser ist auf der Gehäusevorderseite angebracht
+
+* Speaker - der direkt im PC eingebaute Lautsprecher. Sehr geringe Lautstärke, selbst wenn Regler am Maximum steht
+
+* PCM - Globaler Regler für alle digitalisierten Soundquellen. Sollte immer am Maximum stehen. Vermutlich besteht der Sinn dieses Regler darin, zusätzlichen Soundquellen wie Synthesizer/MIDI-Eingänge der Soundkarte mit anderer Lautstärke als digitalisierten Sound zu betreiben
+
+* Front Mic Boost - siehe Abschnitt über die Aufnahmeregler. Vermutlich kann man mit diesem Regler das Signal direkt auf die Ausgabe durchschleifen, anstatt es aufzunehmen
+
+* Line Boost - siehe "Front Mic Boost", nur hier für die blaue Buchse
+
+* Line Out - das der normale Lautsprecher bzw. Hifi-Anlage, die am grünen Ausgang der Soundkarten-Blende abgeschlossen ist
+
+* S/PDIF - Optischer Ausgang. Hinweis: Es sind nicht notwendiger Weise auch tatsächlich alle Ein- und Ausgangsleitungen vorhanden welche die Soundkarte grundsätzlich ansteuern könnte wenn sie denn vorhanden wären.
+
+* S/PDIF 1 - zweiter optischer Ausgang
+
+* Beep - man regelt damit die klassische Ausgabe von "Beeps" welche nicht mit den Mittel der Soundkarte erzeugt werden, sondern indem man diverse Ports am Mainboard programmiert. Die so erzeugten Piepser werden dann aber sehr wohl über die Soundkarte weiter geroutet, und in jede gerade aktive Ausgabeleitung hinzu gemischt. Das kann auch der eingebaute Lautsprecher sein, aber eben so gut Kopfhörer oder die angeschlossene Sound-Anlage. Dort hört man den Piepser dann mit der im Regler eingestellten Lautstärke. Wenn es überhaupt keinen Beep gibt, ist vermutlich das Kernel-Modul für den eingebauten Lautsprecher gerade nicht geladen. Oft wird dies nämlich blackgelistet, weil das oftmals lautstarke Gepiepse einen auch kräftig nerven kann. Mittels "`modprobe pcspkr`" kann man das Modul in so einem Fall manuell zwangs-laden. Der Regler funktioniert nur begrenzt: Selbst wenn man die Lautstärke auf 0 stellt hört man den Piepser noch, allerdings recht leise. Und muten kann man ihn überhaupt nicht. (Bzw. un-muted er sich selbst sofort wieder.) Nur das Entladen des Kernel-Moduls bringt wieder wohltuende Stille.
+
+* Auto-Mute Mode - wenn dieser aktiviert ist, wird die Ausgabe über andere Ausgabeleitungen stumm geschaltet, sobald man einen Kopfhörer anschließt. Ebenso werden die Stummschaltungen wieder zurück genommen sobald man den Kopfhörer absteckt. Man kann mit diesem Regler wählen, welche anderen Regler von der Stummschaltung betroffen sein sollen (oder auch keine).
+
+* Rear Mic Boost - siehe "Front Mic Boost", nur hier für die rosa Buchse
+
+
+Aufnahme-Regler
+~~~~~~~~~~~~~~~
+
+* Front Mic Boost - Verstärkung des auf der Gehäusevorderseite angebrachten zusätzlichen Mikrofoneingangs
+
+* Line Boost - Verstärkung des Signals von der blauen Buchse auf der Soundkarten-Blende an der Gehäuserückseite
+
+* Capture - Aufnahme-Lautstärke für erstes Aufnahmegerät (siehe unten)
+
+* Capture 1 - Aufnahme-Lautstärke für zweites Aufnahmegerät (siehe unten). Offenbar kann die Soundkarte zur selben Zeit zwei verschiedene Signalquellen aufnehmen.
+
+* Input Source - welche Eingangsleitung als erstes Aufnahmegerät verwendet werden soll. Grundsätzlich lassen sich entweder die blaue "Line In"-Buchse oder eine der Mikrofonbuchsen auswählen
+
+* Input Source 1 - welche Eingangsleitung als zweites Aufnahmegerät verwendet werden soll
+
+* Rear Mic Boost -  Verstärkung des rosa Mikrofoneingangs auf der Soundkarten-Blende an der Gehäuserückseite
+
+
+ALSA Ausgabegerät ändern
+------------------------
+
+Zuerst mit
+
+----
+$ aplay -L
+----
+
+eine Liste der installierten ALSA-Konfigurationen ausgeben. Nehmen wir als Beispiel an man möchte einen angezeigten Listeneintrag
+
+....
+plughw:CARD=b1,DEV=0
+    bcm2835 HDMI 1, bcm2835 HDMI 1
+    Hardware device with all software conversions
+....
+
+temporär für die Ausgabe mit `aplay` verwenden:
+
+----
+$ aplay -D plughw:CARD=b1,DEV=0 /usr/share/sounds/alsa/Rear_Center.wav
+----
+
+Nehmen wir an dieses gibt die Audiodatei auf die gewünschte Art und Weise wieder, und man möchte diese ALSA-Konfiguration daher zum Default machen.
+
+In der Datei `~/.asoundrc` werden die ALSA-Settings für individuelle Benutzer angepasst.
+
+----
+$ cat << 'EOF' >> ~/.asoundrc 
+pcm.!default {
+        type hw
+        device 0
+        card b1
+}
+
+ctl.!default {
+        type hw
+        device 0
+        card b1
+}
+EOF
+----
+
+Etwas unklar ist warum man `type hw` anstatt `type plughw` schreiben muss, und ob das auch tatsächlich dem obigen `aplay`-Befehl entspricht. Zumindest am Raspberry Pi hat es aber wie erhofft funktioniert.
+
+Ein weiteres Problem entsteht wenn PulseAudio installiert ist. Dieses installiert jede Menge Hooks im ALSA-System, mit der Folge dass nichts mehr ohne PulseAudio funktioniert.
+
+Die beste Lösung ist es natürlich PulseAudio zu deinstallieren. Doch das ist wegen Paketabhängigkeiten häufig nicht möglich. In diesem Fall kann man - zumindest unter Debian - mittels `dpkg-divert` die folgenden installierten Dateien in irgend ein anderes völlig Verzeichnis umleiten, so dass sie nicht mehr von ALSA gefunden werden.
+
+Die Umleitung der folgenden Dateien war zumindest unter Raspbian ausreichend:
+
+....
+/etc/dbus-1/system.d/pulseaudio-system.conf
+/etc/xdg/autostart/pulseaudio.desktop
+/lib/udev/rules.d/90-pulseaudio.rules
+/lib/udev/rules.d/91-pulseaudio-rpi.rules
+/usr/bin/pulseaudio
+/usr/share/alsa/alsa.conf.d/pulse.conf
+/usr/share/alsa/pulse-alsa.conf
+/etc/alsa/conf.d/99-pulse.conf
+....

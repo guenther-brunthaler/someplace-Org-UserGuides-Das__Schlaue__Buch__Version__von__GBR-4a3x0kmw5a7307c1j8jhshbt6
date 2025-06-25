@@ -1,0 +1,4 @@
+﻿
+Solange die VG-Struktur zwischen Original und Backup identisch ist (wenn man etwa von einem Snapshot gebootet hat und das Original bearbeiten will), darf man die Backup-VG nicht mit LVM-Befehlen bearbeiten da die UUIDs und VG-Name doppelt vorkommen.
+
+Statt dessen liest man für die LVs des Interesses einfach per "dmsetup table" deren Mapping Tables aus, ersetzt mittels "sed" das Basis-Device durch das Backup-Basis-Device, und erzeugt mit "dmsetup create" ein neues Mapping welches auf die selben Disk-Offsets zugreift, aber auf einem anderen Device.

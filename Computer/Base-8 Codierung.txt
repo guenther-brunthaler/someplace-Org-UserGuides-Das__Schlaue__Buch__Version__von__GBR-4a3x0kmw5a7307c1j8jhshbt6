@@ -1,0 +1,14 @@
+﻿Wenn man eine Binärdatei als Test übertragen muss, codiert man sie normalerweise als Base-64 oder Base-16.
+
+Wenn am Zielsystem aber keine entsprechenden Decoder zur Verfügung stehen, kann man die Binärdaten auch in Oktalsequenzen konvertieren, so dass man am Zielsystem nur noch den printf-Befehl benötigt (oder AWK welches printf eingebaut hat):
+
+$ cat /path/to/binary/file | od -vbA n | sed 'y| |\\|; s|^|printf '\''|; s|$|'\''|'
+
+Falls kein printf-Befehl am Zielsystem verfügbar ist, kann es sein dass dessen "echo"-Befehl die Option "-e" akzeptiert, und man damit dann ebenfalls Oktal-Escape-Sequenzen (oder hexadezimale) ausgeben kann:
+
+$ echo -e '\0777\001...'
+$ echo -e '\xDE\xAD\xBE\xEF...'
+
+Doch selbst wenn nur "echo" vorhanden ist und dieses keinerlei Optionen unterstützt, ist es noch möglich dass die Shell selbst die Bash-Erweiterung $'string' kennt. Damit kann man dann Oktalsequenzen immer noch wie folgt ausgeben:
+
+$ echo $'\777\001...'

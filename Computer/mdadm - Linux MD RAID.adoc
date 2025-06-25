@@ -1,0 +1,82 @@
+﻿mdadm
+=====
+v2025.109
+
+
+So erzeugt (und startet) man ein RAID-1 aus 2 Volumes $d1 und $d2, wobei $d2 (soweit machbar) nicht zum Lesen verwendet werden soll:
+
+----
+$ mdadm --create /dev/md0 --name=myarray --homehost=any --bitmap=internal --level=1 --raid-devices=2 ${d1:?} --write-mostly "${d2:?}"
+----
+
+Das "any" ist wichtig, um zu verhindern dass das Array Host-spezifisch wird.
+
+Info anzeigen:
+
+----
+$ mdadm --misc --detail /dev/md0
+----
+
+So stoppt man es:
+
+----
+$ mdadm --stop /dev/md0
+----
+
+Und startet es erneut:
+
+----
+$ mdadm --assemble /dev/md0 ${d1:?} "${d2:?}"
+----
+
+So sicher man die aktuelle Array-Konfiguration in eine Datei, um sie bei "--assemble" nicht jedes Mal neu angeben zu müssen:
+
+----
+$ mkdir myconfig
+$ mdadm --query --scan --detail /dev/md0 > myconfig/mdadm.conf
+$ mdadm --stop /dev/md0
+----
+
+Danach reicht ein
+
+----
+$ mdadm --assemble --config=myconfig /dev/md0
+----
+
+Das "--config=myconfig" is unnötig wenn man "/etc/mdadm" oder "/etc" als Basisverzeichnis für die "mdadm.conf" verwendet.
+
+Das werde ich allerdings vermeiden, weil das Array soll ja unabhängig von einem spezifischen "/etc" verwendet werden.
+
+So nimmt man das 2. Component-Volume $d2 offline, damit es geschont wird während man viele Updates auf $d1 durchführt:
+
+----
+$ mdadm --manage /dev/md0 --fail ${d2:?}
+----
+
+Und so nimmt man $d2 es wieder online, so dass es mit allen Änderungen aktualisiert wird, welche auf $d1 seit dem Offline-Nehmen erhalten hat:
+
+----
+$ mdadm --manage /dev/md0 --re-add ${d2:?}
+----
+
+
+Nachteile
+---------
+
+Ein Linux MD RAID dient ausschließlich dazu, Lesefehler in Sektoren oder den Ausfall kompletter Disks zu reparieren.
+
+* Es ist nicht in der Lage, im Falle von Abweichungen ("Mismatches" gennant), "gute" von "schlechten" Kopien eines Sektors zu unterscheiden (etwa bei einem RAID-1) wenn beide sich fehlerfrei lesen lassen, denn es werden keinerlei Prüfsummen für die Integrität der Daten angelegt oder gar verglichen.
+
+* Es ist aus eigener Kraft nicht in der Lage zu melden welche Sektoren bei einem "scrub" fehlerhaft waren oder "Mismatches" hatten. Dazu muss man die Komponenten-Disks selbst mittels anderer Tools (welcher?) vergleichen.
+
+* Schon gar nicht erfährt man, welche Dateien von dem Lesefehlern oder Mismatches betroffen waren.
+
+* Mismatches können in einem RAID-1 auch ohne jeden Hardware-Fehler ständig auftreten, etwa in Swap-Volumes oder Memory-Mapped Dateien die häufig geschrieben werden. Denn die beiden Kopien der Daten werden vor dem doppelten Schreiben nicht kopiert, sondern zwei mal hinter einander auf die beiden Disks geschrieben. Wenn sich die Daten dazwischen ändern, weichen die beiden Kopien von einander ab. In einem RAID mit Paritätsinformation anstatt direkter Kopien sollte so etwas nicht möglich sein.
+
+* Ein "repair" von Mismatches in einem RAID-1 ist gefährlich. Da das RAID nicht weiß welche der Kopien beschädigt und welche korrekt ist, hat man eine 50 %-ige Chance durch die Reparatur die richtigen Daten durch die beschädigten zu überschreiben.
+
+* Ein "repair" von Mismatches in einem RAID-5/6 ist aber um nichts besser, da hier immer davon ausgegangen wird die Parity wäre kaputt und nicht die Daten. Das muss aber keinesfalls tatsächlich so sein.
+
+* Dem Mangel an Integritäts-Schutz kann man durch Kombination des RAID mit einer dmintegrity-Schicht eliminieren. Allerdings halbiert dies den Schreibdurchsatz, da alle Daten 2 x geschrieben werden müssen: Einmal ins Journal des Integritäts-Schicht, danach von dort aus ins RAID.
+
+* Man kann anstatt DM RAID auch die Userspace-Lösung SnapRAID benutzen. Das erlaubt bis zu 6 Parity Disks, aktualisiert diese allerdings nicht in Echtzeit sondern nur explizit bei einem Aufruf des Programms. Anders als MD RAID erstellt SnapRAID Hashes der Dateien, und kann daher unterscheiden welche der Kopien bzw. Paritäts-Disks einen Fehler aufweisen. Leider speichert SnapRAID nicht alle Metadaten der Dateien, und ist daher weder für Systemlaufwerke noch /home (als Ganzes) geeignet. Es ist in erster Linie dazu gedacht, simple Datenbestände großer Dateien eines einzigen Benutzers zu schützen, wie etwa Multimedia-Dateien. SnapRAID macht nur Sinn mit zumindest 2 Parity-Disks. Andernfalls bietet es weniger als ein normales Backup-Programm.

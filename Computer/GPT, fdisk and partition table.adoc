@@ -1,0 +1,143 @@
+﻿GPT (GUID Partition Table)
+==========================
+v2025.14
+
+
+Partition-Typen
+---------------
+
+----
+024DEE41-33E7-11D3-9D69-0008C781F39F "MBR partition scheme" (MBR disk image für VMs)
+07041C10-2471-11EB-80C5-001999FDCDD9 stand-alone dm-integrity (privater non-Standard)
+0FC63DAF-8483-4772-8E79-3D69D8477DE4 Linux filesystem (z. B. "ext4")
+21686148-6449-6E6F-744E-656564454649 "BIOS boot" für z. B. Stage 1.5 Loader von GRUB
+420B95EE-246D-11EB-90DA-001999FDCDD9 Protective MBR Backup (manually)
+7FFEC5C9-2D00-49B7-8941-3EA10A5586B7 "dm-crypt", etwa für encrypted swap
+80A29844-F5E3-11E3-B1C1-B827EB896DB5 TrivialFS (textbasiert)
+97FD874C-2471-11EB-BF72-001999FDCDD9 Partition-Kommentare (privater non-Standard)
+BC13C2FF-59E6-4262-A352-B275FD6F7172 "Linux extended boot" für /boot
+C12A7328-F81F-11D2-BA4B-00A0C93EC93B "EFI System" Partition (ESP)
+CA7D7CCB-63ED-4C53-861C-1742536059CC LUKS, etwa für encrypted LVM PV
+E6D6D379-F507-44C2-A23C-238F2A3DF928 "Linux LVM" (LVM2 "Physical Volume")
+E7927CBA-E311-11EE-88CE-DCA632491A1D Anti-Forensic Information Splitter (privater non-Standard)
+E9E0D43A-E311-11EE-B11F-DCA632491A1D Anti-Forensic Information Splitter Backup (privater non-Standard)
+----
+
+
+GPT-Eintragszahl
+----------------
+
+Per Default hat eine GPT immer 128 Einträge. Das ist im Normalfall viel zu viel.
+
+Empfehlung: Die GPT nach dem Anlegen auf eine Größe von 24 GPT-Einträge reduzieren (mit "`l`" in Expertenmodus von `fdisk`) so auf diese Anzahl festlegen.)
+
+4 GPT-Einträge passen in einen 512-Byte-Sektor, d. h. dies belegt 6 Sektoren. Zusammen mit dem Boot Sector und dem GPT Header Sektor sind dies daher 8 Sektoren, oder exakt die 4 KiB welche ein physischer Sektor bei modernen Disks groß ist.
+
+Am Ende der Disk wird ebenfalls ein solcher Sektor fürs GPT-Backup eingerichtet. Diese GPT kostet daher nur 2 physische Sektoren, einen am Anfang und eine am Ende. Das erlaubt optimales Alignment aller Partitons (an 4 KiB-Grenzen ausgerichtet).
+
+Hinweis: Das GPT-Backup ist nur 7 Stück 512-Byte-Sektoren groß, da der Boot Sektor nicht eigentlicher Bestandteil der GPT ist, und daher auch nicht gebackupt wird. Der letzte 512-Byte Sektor im partionierbaren Bereich beginnt daher zwar an einer 4096-Byte Grenze, ist jedoch nur 512 Bytes groß. Man sollte diesen Sektor daher am besten unbenutzt lassen. Oder man richtet eine Mini-Partition dort ein, welche ein (manuelle erstelltes) Backup des Boot-Sektors aufnehmen soll.
+
+
+Bootloader
+----------
+
+
+GRUB2
+~~~~~
+
+GRUB2 installiert seine Stage 1.5 normalerweise in die ESP (auf UEFI-Systemen) oder in die "BIOS Boot" Partition (non-UEFI Systeme).
+
+Seinen Stage-1 Loader installiert er normalerweise in den GPT Boot Sector.
+
+Sein Stage-2 Loader kann dann die restlichen GRUB2-Module bereits aus einem regulären Dateisystem loaden.
+
+
+Extlinux
+~~~~~~~~
+
+Hier gibt man als Installationsziel ein Verzeichnis an, welches beim Booten als Defaultverzeichnis für alle Pfadangaben in den Konfigurationsdateien dient.
+
+Extlinux installiert seinen Stage-1 Loader allerdings nicht direkt in den GPT Boot Sector, sondern auf den ersten Sektor der Partition in der sich das Installations-Zielverzeichnis befindet.
+
+In diesem Fall muss man den von extlinux mitgelieferten Boot-Code gptmbr.bin an den Anfang der Disk schreiben, und danach mit fdisk die Partition auf welche extlinux installiert wurde editieren um dort die Markierung "LegacyBIOSBootable" zu setzen.
+
+Anhand dieser Markierung erkennt der Code aus gptmbr.bin auf welcher Partition der eigentliche Boot-Code liegt, und lädt diesen dann sowie springt ihn danach an.
+
+
+Empfohlenes Disk-Layout
+-----------------------
+
+. Anti-Forensic Information splitter (AFIS) area for master key storage, around 9 MiB in size.
+. All the remaining data partitions.
+. EFI System Partition (optional)
+. `/boot` partition (optional), Typ "linux extended boot", Attribut `LegacyBIOSBootable`
+. BIOS boot Partition (optional)
+. Backup of AFIS area, around same size as original.
+
+Anmerkungen:
+
+* Die anti-forensischen Partitionen kann man sich ersparen, wenn man das alte LUKS-1 Format anstatt dem neuen LUKS-2 Format verwendet. LUKS-1 hatte noch einen Ant anti-forensischen Information Splitter eingebaut.
+
+* Alle Strukturen (LBA Sektornummern) zumindest an 8 KiB Grenzen ausrichten. Ausgenommen davon ist eine Partition deren Ende exakt an das GPT Backup grenzt. Deren Ende (nicht aber deren Anfang) kann beliebig ausgerichtet sein. Oder man lässt eine ungenutzte Lücke minimaler Größe für den Bereich dessen Ende nicht exakt ausgerichtet werden kann.
+
+* Performance-kritische strukturen (LBA Sektornummern) am 1 MiB Grenzen ausrichten.
+
+* Die AFIS Area und ihr Backup sind normale Linux Dateisysteme. Empfohlen ist ext4 ohne Journal und mit einer 4 KiB block size (`mkfs.ext4 -b 4k`).
+
+Beispiel:
+
+----
+$ fdisk -lo Device,Start,Size,Attrs,Name /dev/sda
+...
+Device          Start  Size Attrs              Name
+/dev/sda1           8    9M                    Anti-Forensic Information Splitter
+/dev/sda2       18432  2,7T                    vg_n0myhost
+/dev/sda3  5859284992  600M LegacyBIOSBootable /boot (host myhost)
+/dev/sda4  5860513792  9,5M                    Backup AFI Splitter
+----
+
+Die Namen der Partitions können bis zu 36 UTF-16LE Zeichen lang sein. (Die Disk selbst als Ganzes hat keinen Namen sondern nur eine UUID.)
+
+Die `vg_n0myhost`-Partition im obigen Beispiel dient als LVM2 physical volume. Das "`n`" im Namen steht dabei für "Nesting-Level". In dieser VG befindet sich der eigentliche Disk-Inhalt als Logical Volumes, mit etwaigen Swap-Volumes (typischer LV-Name "swap") als letztes.
+
+Der "eigentliche Inhalt" kann entweder ein unverschlüsseltes LVM PV sein (`vg_n1myhost`).
+
+Oder es ist ein "dmintegrity"-Layer (typischer LV-Name "integrity") mit unverschlüsseltem LVM PV (`vg_n1myhost`) darin.
+
+In beiden Fällen gibt ist das unverschlüsselte `vg_n1myhost` eine VG für die verschiedenen verschlüsselten (FDE-Äquivalent) oder unverschlüsselten Bereiche der Festplatte (etwa für Recovery Images und dergleichen).
+
+Typische LVs innerhalb von `vg_n1myhost` sind: `level0-enc`, `level1-enc`, `level2-enc`.
+
+Verschlüsselte Bereiche enthalten ebenfalls LVM2 PVs mit VGs darin, die dann Namen wie `vg_e1myhost` für Level-1 Encryption tragen. Das "`e`" steht für "Encryption-Level".
+
+So könnte z. B. das entschlüsselte Blockgerät `level0-enc` die LVM2 Volume Group `vg_myhost` enthalten, das entschlüsselte `level1-enc` könnte `vg_e1myhost` enthalten, und das entschlüsselte `level2-enc` könnte `vg_e2myhost` enthalten.
+
+Level-0 Encryption ist der Default. Der größte Teil des Systems wie `/usr` und `/var` und meist auch `/home` befinden sich in diesem Level.
+
+Level-1 ist stärker verschlüsselt als Level-0, und Level-2 ist noch stärker als Level-1 verschlüsselt. Ob zusätzliche Levels zu Level-0 überhaupt erforderlich sind, ist Ermessens-Sache.
+
+Der FDE-Hauptbereich (also Level-0) würde dem zufolge eigentlich `vg_e0myhost` heißen, wird aber tatsächlich einfach nur `vg_myhost` genannt da er am meisten benutzt wird und das "normale System" darstellen soll.
+
+Beispiele:
+
+....
+/dev/vg_n0myhost/pv_e1myhost-enc 15g (contains vg_e1myhost)
+/dev/vg_n0myhost/pv_e2myhost-enc 240m (contains vg_e2myhost)
+/dev/vg_n0myhost/pv_e0myhost-enc 215g (contains vg_myhost)
+/dev/vg_n0myhost/swap-enc 8g (level-5 encrypted with random keys)
+/dev/vg_myhost/main-fsroot 1g
+/dev/vg_myhost/main-usr_local 1g
+/dev/vg_myhost/main-srv 1g
+/dev/vg_myhost/main-var 14g
+/dev/vg_myhost/main-usr 32g
+/dev/vg_myhost/ai_models 25g
+/dev/vg_myhost/home 40g
+/dev/vg_myhost/multimedia 100g
+/dev/vg_e1myhost/level1 16g (contains level-1 encrypted files)
+/dev/vg_e2myhost/level2 240m (contains level-2 encrypted files)
+....
+
+Ausrichtung an Hardware-Sektorgrenzen
+-------------------------------------
+
+Siehe link:mbr.html#alignment[Alignment]

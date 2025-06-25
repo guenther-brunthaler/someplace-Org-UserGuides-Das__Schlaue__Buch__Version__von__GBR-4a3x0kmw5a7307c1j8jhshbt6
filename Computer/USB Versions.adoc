@@ -1,0 +1,100 @@
+﻿USB
+===
+v2020.319
+
+Spannungsversorgung
+-------------------
+
+[options="autowidth"]
+|======
+|Spezifikation                   2+|Spannung                          |Stromstärke |Leistung
+|                                  |Nennwert        |zulässig         |max.        |max.
+|USB 1.0 / 1.1 (Low-Powered-Port)  |5 V             |4,40–5,25 V<<a>> |0,1 A       |0,5 W
+|USB 2.0 (High-Powered-Port)       |5 V             |4,75–5,25 V      |0,5 A<<d>>  |2,5 W
+|USB 3.0 / 3.1                     |5 V             |4,45–5,25 V      |0,9 A<<d>>  |4,5 W
+|USB-BC 1.2 (USB Battery Charging) |5 V             |4,45–5,25 V      |1,5 A       |7,5 W<<b>>
+|USB Typ C                         |5 V             |4,45–5,25 V      |3,0 A       |15,0 W<<c>>
+|USB-PD (USB Power Delivery)       |5, 12 oder 20 V |                 |5,0 A       |100,0 W
+|======
+
+[[a]][a] Ein Spannungsabfall bis auf 4,40 V am Ende eines USB-Kabels ist zulässig; hinter einem passiven USB-Hub sind sogar 4,00 V erlaubt.
+
+[[b]][b] Die Stecker sind bis maximal 7,5 W ausgelegt.
+
+[[c]][c] Das vereinfachte Verfahren ist für bis zu 7,5 W bei normalen und 15 W bei aktiven Kabeln ausgelegt.
+
+[[d]][d] Ein Gerät darf diese Stromstärke erst nach Freigabe durch den Host-Controller beziehen. Bis dahin gilt eine maximale Stromstärke von 0,1 A.
+
+
+Höhere Leistungen
+-----------------
+
+Über den 5-V-Standard hinaus lassen sich über eine USB-Typ-C-Steckverbindung Geräte mit einer Leistungsaufnahme bis 100 W ohne zusätzliche Stromversorgung betreiben, z. B. Monitore,  Tintenstrahldrucker und Aktivlautsprecher. Diese Spezifikation wird auch als _USB Power Delivery_ (*USB-PD*) bezeichnet. Verschiedene Profile definieren die möglichen Stromstärken (bis 5 A) und mögliche Spannungen. Zusätzlich zur bisher üblichen Spannung von 5 V sind 12 V bzw. 20 V möglich.
+
+Die Spannung auf USB beträgt beim Anschließen eines Gerätes stets 5 V, kann aber nach Verhandlungen zwischen Gerät und Host mittels seriellem Protokoll auf 12 V oder 20 V erhöht werden. Ebenso kann der entnehmbare Strom abgefragt werden.
+
+Eine weitere grundlegende Änderung ist die Freigabe der Flussrichtung der Energieversorgung. Ein Computer kann einen Monitor mit Strom versorgen, genauso wie ein Monitor einen Computer mit Strom versorgen kann.
+
+[options="autowidth,header"]
+|=======================================================================
+|Profil |+5 V  |+12 V |+20 V |Verwendungszweck
+|1      |2,0 A |–     |–     |Standard-Profil für die Inbetriebnahme, kleine mobile
+Geräte, Endgeräte, Smartphones, Handys usw.
+|2      |2,0 A |1,5 A |–     |Tablets, kleine Notebooks, zukünftige Endgeräte
+|3      |2,0 A |3,0 A |–     |Kleine Notebooks, größere Endgeräte
+|4      |2,0 A |3,0 A |3,0 A |Große Notebooks, USB-Hubs, Dockingstations
+|5      |2,0 A |5,0 A |3,0 A |Workstations, Hubs, Dockingstations
+|=======================================================================
+
+Profil 1 ist das einzige Profil, welches mit den üblichen USB-Kabeln realisierbar ist. Die höheren Profile benötigen spezielle Kabel, die für höhere Spannungen und Ströme ausgelegt sind.
+
+
+Host-Controller
+---------------
+
+Die Kommunikation bei USB wird von einem Host-Controller gesteuert, der heute in der Regel auf dem Motherboard eines Computers verbaut ist. Nur dieser kann Daten von einem Gerät lesen oder zu einem Gerät senden (Ausnahme: siehe link:#USB_On-the-go[USB On-the-Go]). Ein Gerät darf nur dann Daten zum Host-Controller senden, wenn es von diesem abgefragt wird.
+
+Universal Host Controller Interface:: UHCI-Chips bieten Unterstützung für USB-Geräte mit 1,5 oder 12 Mbit/s Datenrate im _Low-_ oder _Full-Speed_-Modus.
+
+Open Host Controller Interface:: Ein OHCI-Controller hat prinzipiell die gleichen Fähigkeiten wie seine UHCI-Pendants, erledigt aber mehr Aufgaben in Hardware und ist dadurch marginal schneller als ein UHCI-Controller. Dieser Unterschied bewegt sich meist in Bereichen, die gerade noch messbar sind, daher kann man ihn in der Praxis vernachlässigen. Bei USB-Controllern auf Hauptplatinen mit Chipsätzen, die nicht von Intel oder VIA stammen, und auf USB-PCI-Steckkarten mit Nicht-VIA-Chipsätzen handelt es sich mit hoher Wahrscheinlichkeit um OHCI-Controller.
+
+Enhanced Host Controller Interface:: EHCI stellt USB-2.0-Funktionen bereit. Es wickelt dabei nur die Übertragungen im _Hi-Speed_-Modus (480 Mbit/s) ab. Wenn man USB-1.1-Geräte an einen Port mit EHCI-Chip steckt, reicht der EHCI-Controller den Datenverkehr an einen hinter ihm liegenden UHCI- oder OHCI-Controller weiter (alle Controller sind typischerweise auf demselben Chip). Wenn kein EHCI-Treiber verfügbar ist, werden Hi-Speed-Geräte ebenfalls an den USB-1.1-Controller durchgereicht und arbeiten dann, soweit möglich, mit langsamerer Geschwindigkeit.
+
+Extensible Host Controller Interface:: Die xHCI-Spezifikation 1.0 stellt zusätzlich zu den mit USB 2.0 verfügbaren Übertragungsgeschwindigkeiten den _SuperSpeed_-Modus mit
+4,0 Gbit/s (9,7 Gbit/s bei USB 3.1) bereit.
+
+
+Datenraten
+----------
+
+USB erlaubt es einem Gerät, Daten mit 1,5 Mbit/s (Low Speed), 12 Mbit/s (Full Speed), 480 Mbit/s (Hi-Speed), 4 Gbit/s (SuperSpeed) oder 9,7 Gbit/s (Superspeed+) zu übertragen. Der tatsächliche Datendurchsatz liegt – durch Protokoll-Overhead, Bit-Stuffing und Verluste durch Turn-Around-Zeiten – um einiges darunter. Im USB-Standard ist für USB 2.0 eine maximale _theoretische_ Datenlast bei Hi-Speed unter idealen Bedingungen von 49.152.000 B/s (Isochronous Mode) beziehungsweise 53.248.000 B/s (Bulk-Mode) angegeben. Dazu kommt die Verwaltung der Geräte, so dass bei aktuellen Systemen für USB 2.0 eine nutzbare Datenrate in der Größenordnung von 320 Mbit/s und für USB 3.0 2400 Mbit/s bleibt. Bei älteren Systemen wurde diese durch eine unzureichende Anbindung des USB-Chips an den Systembus zusätzlich reduziert.
+
+[options="autowidth,header"]
+|=======================================================================
+|Name         |möglich ab |max. Nutz-Datenrate |Symbolrate / Modulation
+|Low Speed    |USB 1.0                   |0,15 MB/s  |1,5 MBd NRZI-Code mit Bit-Stuffing
+|Full Speed   |USB 1.0                   |1 MB/s     |12 MBd NRZI-Code mit Bit-Stuffing
+|Hi-Speed     |USB 2.0                   |40 MB/s    |480 MBd NRZI-Code mit Bit-Stuffing
+|SuperSpeed   |USB 3.0 (USB 3.1 Gen 1)   |300 MB/s   |5.000 MBd 8b10b-Code
+|SuperSpeed + |USB 3.1 (USB 3.1 Gen 2)   |900 MB/s   |10.000 MBd
+128b132b-Code
+|             |USB 3.2 (USB 3.2 Gen 2x2) |1.800 MB/s |2× 10.000 MBd 128b132b-Code
+|=======================================================================
+
+Anmerkungen zu dieser Tabelle:
+
+* Die Eigenschreibweise variiert: Low und Full Speed werden mit Leerzeichen getrennt, Hi-Speed mit Bindestrich (und High wird verkürzt zu Hi), SuperSpeed wird zusammengeschrieben.
+
+* SI-Präfixe sind dezimale Präfixe: 1 kbit = 103 bit, 1 Mbit = 106 bit, 1 Gbit = 109 bit, gleiches für Byte und Hz.
+
+* Bit-Stuffing: Nach 6 Eins-Bits wird 1 Null-Bit eingefügt.
+
+* USB 3.0 überträgt mit der Symbolrate 5 GBd, die effektive Datenrate nach 8b10b-Kodierung beträgt hier 4 Gbit/s. Die Bitrate ergibt sich aus der Symbolrate multipliziert mit den Bits je Symbol (0,8 bei 8b10b).
+
+* USB 3.1 überträgt mit der Symbolrate 10 GBd, die effektive Datenrate nach 128b132b-Kodierung beträgt hier 9,697 Gbit/s. Die Bitrate ergibt sich aus der Symbolrate multipliziert mit den Bits je Symbol (0,96968 bei 128b132b).
+
+* Die theoretisch erzielbare Nettodatenrate liegt bei Hi-Speed um 11,3 Prozent (Bulk-Mode) und 18,1 Prozent (Isochron-Modus) unter der Bruttodatenrate. Bei Full Speed im Bulk-Mode liegt sie 19 Prozent unter der Bruttodatenrate.
+
+* Real erzielbare Nettodatenraten liegen um mindestens 30 Prozent, meist aber um die 45 Prozent unter der Bruttodatenrate (reale Messungen an USB-2.0-Systemen).
+    
+Wird die Schnittstelle eines Geräts mit "USB 2.0" angegeben, heißt das nicht unbedingt, dass dieses Gerät auch die hohe Datenrate von 480 Mbit/s anbietet. Standpunkt der Anbieter ist dabei, dass ein USB-2.0-kompatibles Gerät grundsätzlich jede der drei Geschwindigkeiten benutzen kann und die 2.0-Kompatibilität in erster Linie bedeutet, dass die neueste Fassung der Spezifikation eingehalten wird. 480 Mbit/s dürfen also nur erwartet werden, wenn ein Gerät mit dem Logo "Certified USB Hi-Speed" ausgezeichnet ist.

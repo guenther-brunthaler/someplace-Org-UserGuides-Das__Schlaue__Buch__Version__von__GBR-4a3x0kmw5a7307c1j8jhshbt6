@@ -1,0 +1,24 @@
+﻿Alternative Suchmaschinen
+-------------------------
+
+Im folgenden sind nur solche aufgelistet, welche auch ohne JavaScript funktionieren.
+
+Zensur bzw. "Familien-Filter" wurden dabei wenn möglich ausgeschaltet.
+
+Lokalisiert soweit möglich auf Deutsch/Österreich.
+
+Wenn für eine Suchmaschine zwei URLs angegeben sind, führt die erste zum normalen Suchformular und die zweite ist eine Direkt-Such-URL, an welche man den URL-codierten Suchbegriff (ohne Leerzeichen) direkt dran kleben kann.
+
+
+qwant
+-----
+
+Eigener Such-Index, jedoch durch Bing ergänzt. Vermutlich daher Bing-dominiert. Axel Springer ist beteiligt, daher Dominanz von pro-US-amerikanischen Werten und Zensur im Sinne geistigen Eigentums in den Suchergebnissen zu befürchten.
+
+----
+https://lite.qwant.com/?l=de&locale=de_at&s=0&theme=0&ta=5&a=1
+----
+
+----
+https://lite.qwant.com/?l=de&locale=de_at&s=0&theme=0&ta=5&a=1&q=
+----

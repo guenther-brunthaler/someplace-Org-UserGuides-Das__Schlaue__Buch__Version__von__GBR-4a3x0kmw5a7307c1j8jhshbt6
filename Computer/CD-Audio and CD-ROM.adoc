@@ -1,0 +1,95 @@
+﻿CD-Audio ("Red Book") spezifiziert die Audio-CD.
+
+Eine Red-Book CD nimmt 74 Minuten Audio als 16-Bit (2's complement signed integer, Little-Endian) Stereo mit 44100 Hz auf.
+
+12 Audio-Samples (6 links + 6 rechts) mit zusammen 24 Bytes bilden einen "Frame".
+
+Dann kommen noch 64 Bits (8 Bytes) ECC (CIRC) kommen noch zu jedem Frame hinzu, weiters 8 Bits "Subchannel-Data" zusammen also 33 Bytes.
+
+Diese werden dann als EFM (eight-to-fourteen) codiert, die alle 8-Bit-Blöcke des Frames in 14 Bit-Blöcke konvertiert. Außerdem werden noch 3 "merging"-Bits zum Ergebnis hinzu gefügt, so dass aus jedem 8-Bit-Block tatsächlich zu einem 17-Bit-Block wird.
+
+Die 33 Bytes jedes Frames werden also zu 561 Bit.
+
+27 weitere Bits (ein 24-Bit-Pattern sowie ebenfalls 3 "merge"-Bits) werden an den Beginn jedes solchen Frames hinzu gefügt, was in Summe 588 Bits ergibt.
+
+Insgesamt besteht jeder Frame daher aus 588 Bits Rohdaten, die zu 192 Bit Audio-Daten decodiert werden.
+
+Auf der Audio-CD sind die oben genannten Daten als "program area"-Spur vorhanden. Davor gibt es eine "lead-in" Spur und danach eine "lead-out"-Spur.
+
+Lead-In und Lead-Out sind genau wie die "program area" codiert, enthalten aber nur "0"-Wert Samples, allerdings normale/gültige Subchannel-Data.
+
+Die Subchannel-Data der Lead-In-Spur enthält mehrere Kopien des "Table Of Contents" (TOC) der Disc.
+
+Der TOC enthält die Start-Positionen aller Audio-Spuren innerhalb der "program area", sowie die Start-Position der Lead-Out-Spur.
+
+Die Start-Positionen sind im MSF-Format angegeben (Minutes, Seconds, Frames). Jeder Timecode-Frame entspricht dabei 1/57tel Sekunde sowie 98 Daten-Frames (wie oben beschrieben).
+
+Auch die Subchannel-Data der "program area" enthalten Time-Codes, dort werden sie allerdings benutzt um die aktuelle Position zu kennzeichnen, damit die Disc einen bestimmten Time-Code finden und für die Wiedergabe anspringen kann.
+
+Die "program area" kann bis zu 99 Audio-Spuren/"Titel" enthalten, und jeder Titel kann bis zu 100 "Indizes" enthalten (Positionen welche man innerhalb des Titels anspringen kann).
+
+Die meisten Titel verwenden nur Index 1 und Index 0 für den "pre-gap" (kurze Pause zwischen 2 Titeln, soweit vom Ersteller der CD gewünscht).
+
+Manche CDs enthalten "versteckte Spuren", die oft als Index 2 oder 3 in der letzten Spur erreichbar sind.
+
+CD-ROM ("Yellow Book") spezifiziert die Computerdaten-CD-ROM.
+
+Grundlage jedes CD-ROM Datensektors mit 2048 Bytes ist dabei ein Timecode-Frame, der 98 Daten-Frames mit je 192 Bytes Nettodaten umfasst - zusammen also 2352 Bytes. (Netto-Bytes noch vor der EFM-Modulation und Zugabe von "Merge"-Bits, ECC und Header-Pattern).
+
+Die 304 Bytes dieser Kapazität welche nicht für die Computer-Daten sichtbar sind, werden für Header-Information (16 Bytes) sowie zusätzliche ECC/EDC genutzt.
+
+Es stehen dazu zwei Modi zur Verfügung, Mode 1 (der normalerweise genutzte) und Mode 2.
+
+Modus 1 fügt den 2048 Daten Bytes neben dem erwähnten 16-Byte-Header noch eine 32-Bit CRC hinzu. Weiters kommen noch 284 Bytes an ECC hinzu: Ein "Reed-Solomont Product-like Code" (RSPC).
+
+Modus 2 ist für Video-Daten oder andere verlustbehaftete, weniger wichtige Daten gedacht. Er stellt alle 2352 Bytes abzüglich des 16-Byte Headers für Nutzdaten zur Verfügung, zusammen also 2336 Bytes pro Sektor.
+
+Als Dateisystem auf den Datensektoren kommt normalerweise ISO-9660 zum Einsatz, mit diversen optionalen Erweiterungen wie Joliet oder Rock Ridge für längere Dateinamen und Sonderzeichen (die in ISO-9660 sehr beschränkt/verboten sind).
+
+CD-ROM XA Erweiterung
+
+definiert wiederum ein leicht verändertes Sector-Layout als im Yellow-Book und definiert einen neuen "Mode 2" in den Varianten "Form 1" und "Form 2". Einer der Modi fügt dem Yellow Book "Mode 2" zusätzliche Fehlererkennung, aber ebenfalls keine -korrektur hinzu.
+
+XA wurde vor allem geschaffen um einen Migration von der CD-i ("Green Book") zu normalen CD-ROMs zu ermöglichen, und definiert daher vergleichbare Möglichkeiten/Formate.
+
+XA wird vor allem für Video CDs, Photo CDs und ähnliche Spezial-Anwendungen benutzt.
+
+Damit eine CD-ROM als Datenträger vom Computer gebootet werden kann, wurde die Bootable CD-ROM Spezifikation "El Torito" definiert.
+
+Kapazität:
+
+* Eine 193 MB "Mode 1" CD-ROM kann 21 Minuten Audio speichern (80 mm)
+
+* Eine 650 MB "Mode 1" CD-ROM kann 74 Minuten Audio speichern (120 mm). Dies ist die ursprüngliche Standard-Größe.
+
+* Eine 700 MB "Mode 1" CD-ROM kann 80 Minuten Audio speichern (120 mm).
+
+* Eine 800 MB "Mode 1" CD-ROM kann 90 Minuten Audio speichern (120 mm).
+
+* Eine 900 MB "Mode 1" CD-ROM kann 99 Minuten Audio speichern (120 mm).
+
+EFM ("Eight-To-Fourteen-Modulation"):
+
+Diese weiter oben erwähnte Modulation verwendet eine simple Lookup-Table. Diese ist so aufgebaut dass zwischen zwei benachbarten "1"-Bits immer 2 bis 10 "0"-Bits liegen. Weiters sind die Codeworte so aufgebaut dass sich dabei irgendwelche wünschenswerten Eigenschaften bezüglich der Energiedichte bei niedrigen Frequenzen ergeben.
+
+CDs benutzen NRZI zur Datenspeicherung, so dass ein "1"-Bit als Wechsel zwischen Pit und Land (oder umgekehrt) codiert wird. Durch EFM wird daher garantiert, dass jedes Pit/Land zumindest 2 Aufzeichnungs-Taktzyklen lang ist.
+
+Die garantierte Maximallänge von 10 "0"-Bits (ohne Pit/Land-Wechsel) wiederum sorgt dafür dass nie mehr als 10 Takte gezählt werden brauchen in denen sich nichts auf der CD ändert (Pit zu Land oder umgekehrt).
+
+EFM erfordert weiters (die ebenfalls oben erwähnten) 3 "merging" Bits zwischen zwei codierenden 14-Bit-Blocks. Diese 3 Bits enthalten keine Nutzdaten, müssen aber so gesetzt sein dass die oben genannten Invarianten bezüglich der kürzesten/längsten Bitfolge gewahrt bleiben.
+
+Es ist wichtig festzuhalten, dass EFM nichts mit Fehlererkennung oder -korrektur zu tun hat (zumindest nicht im näheren Sinn - es sei denn die Codierung hat Redundanzen für Bitfehler was ich nicht weiß).
+
+CIRC ("Cross-interleaved Reed–Solomon coding"):
+
+Korrigiert Burst-Fehler bis zu 3500 Bits (in direkter Folge), das sind 2,4 mm entlang der Spurführung.
+
+Weiters kann sie Fehler bis zu 12000 Bits (8,5 mm) interpolieren ("ungefähr" korrigieren).
+
+CIRC verteilt die Fehlerkorrektur-Information dabei über 109 Daten-Frames.
+
+Wenn CIRC überfordert ist, interpoliert ein Audio-CD Player meist zwischen den benachbarten unbeschädigten Samples/Frames.
+
+RSPC ("Reed-Solomont Product-like Code"):
+
+Ist in ISO/IEC 10149 definiert.

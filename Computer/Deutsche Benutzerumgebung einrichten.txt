@@ -1,0 +1,11 @@
+
+# Mate?
+$ system-config-language
+$ system-config-keyboard
+
+Debian
+
+$ dpkg-reconfigure locales
+$ dpkg-reconfigure console-data
+$ dpkg-reconfigure console-setup
+$ dpkg-reconfigure keyboard-configuration

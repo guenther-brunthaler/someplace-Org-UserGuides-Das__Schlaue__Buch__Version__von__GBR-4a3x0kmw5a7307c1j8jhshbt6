@@ -1,0 +1,118 @@
+﻿Android - ADB
+=============
+v2025.69
+
+Dieses Dokument behandelt die Einrichtung und verwendung der 'Android Debug Bridge' (ADB).
+
+. Als erstes muss man sich das "adb"-Paket mit dem ADB-Client am PC installieren.
++
+Auf Debian-basierten Systemen wie Raspberry Pi OS heißt das Paket auch exakt so.
+
+. Dann muss man den Entwickler-Modus des Phones aktivieren.
++
+Diesen findet man bei meinem Modell (Android 13) in der "Einstellungen"-App unter "Über das Telefon". Dort muss man dann noch ganz nach bis nach unten scrollen wo als letzter Eintrag "Build-Nummer" steht. (Es gibt noch andere Untermenüs wo Build-Nummern angeführt sind, doch dies sind die falschen.)
++
+Nun 7 x (angeblich, bei mir reichten 4 x) auf die Build-Nummer tippen, und der Entwickler-Modus ist frei geschalten. Eine Sprechblase informiert einen währenddessen wie oft man noch tippen muss.
+
+. Darauf hin wird das "Einstellungen"-Menü "System", "Entwickleroptionen" zugänglich, in dem es *unzählige* Optionen gibt. Man scrollt sich geradezu dämlich. Brauchen tut man allerdings nur die folgenden Punkte:
++
+--
+* "Entwickleroptionen verwenden"
++
+Damit kann man den Entwickler-Modus wieder abschalten, so dass das "Entwickleroptionen"-Menü wieder komplett verschwindet. (Man bleibt allerdings im Menü bis man es verlässt. Erst dann kommt man nicht mehr hinein.)
+
+* "Bildschirm aktiv lassen"
++
+Das ist angeblich erforderlich um mit der ADB zu arbeiten.
+
+* "USB-Debugging"
++
+Für Debugging via USB-Kabal als auch via Wi-Fi erforderlich.
+
+* "Debugging über WLAN"
++
+Nur für Debugging via Wi-Fi zusätzlich erforderlich.
+
+* "Über USB installierte Apps prüfen"
++
+Das will ich ganz sicher nicht! Wieder dieser unsympatische Spitzel-Scan, mit dem Google auf dem Phone herumchnüffeln will.
++
+Abschalten!
+--
+
+. Wenn man glaubt nun bereits via Wi-Fi den `adb`-client benutzen zu können, irrt man.
++
+--
+Denn das ADB am Handy muss zuerst jedes Gerät von dem aus debugged werden soll mit irgend einem RSA-Schlüssel autorisiert werden.
+
+Doch das geht nur über USB!
+--
+
+. Konkret: Man muss dazu die oben erwähnten Entwickler-Optionen einschalten
+
+. Dann ein datenfähiges (nicht nur ladefähiges) USB-C Kabel am Phone anschließen
+
+. Und schließlich
++
+--
+am PC die Kommandos
+
+----
+pc$ adb kill-server # nicht erforderlich wenn noch kein ADB-Server am PC läuft.
+pc$ adb tcpip 5555
+----
+
+ausführen.
+--
+
+. An dieser Stelle fragt einen das Handy dann den PC zu autorisieren
++
+Dabei muss man zustimmen.
+
+. Danach sollte
++
+----
+pc$ adb devices
+----
++
+das Handy anzeigen. Ist dies nicht der Fall, noch einmal "kill-server" und dann erneut versuchen.
+
+. Wenn der Befehl hingegen funktioniert hat, kann man dann das USB-Kabel abziehen
+
+. Und statt dessen
++
+----
+$ adb connect 10.238.122.180
+----
++
+ausführen, wobei dies die IP Adresse sein muss (hier nur als Beispiel) unter welcher das Handy gemeinsam mit dem PC im selben Wi-Fi Netzwerk hängt.
+
+. Danach ist man dann endlich wie Wi-Fi verbunden
++
+--
+und das Handy wird trotz fehlendem USB-Kabel wieder bei
+
+----
+pc$ adb devices
+----
+
+angezeigt.
+
+Ärgerlich: Das USB-Debugging muss man dabei in den Entwickler-Optionen eingeschaltet lassen! Ist dies nicht der Fall, wird dem PC mit adb der Zugriff verweigert.
+
+Zumindest danach ist es auch nicht mehr erforderlich, dass das Display eingeschaltet ist - es funktionierte auch bestens als ich diese Entwickler-Option wieder abschaltete.
+
+Ich vermute übrigens, die Behauptung dass das Display leuchten muss ist ohnehin ein Unsinn, und es geht mehr darum den Schlafmodus nach einiger Zeit zu vermeiden. Das sollte ein Wake-Lock vom Termux aber genau so erreichen. Falls nicht, kann man immer noch die erwähnte Entwickler-Option wieder einschalten.
+--
+
+. ADB-Verbindung testen mit einem Kommando
++
+--
+wie z. B. mittels
+
+----
+pc$ adb shell "pm list packages"
+----
+
+Wenn dies eine Liste aller installierten Apps anzeigt, funktioniert adb.
+--

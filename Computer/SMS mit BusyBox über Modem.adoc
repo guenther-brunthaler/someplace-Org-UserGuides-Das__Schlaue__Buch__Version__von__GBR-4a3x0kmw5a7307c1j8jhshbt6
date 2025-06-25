@@ -1,0 +1,151 @@
+﻿SMS über das Modem benutzen
+===========================
+v2023.258
+
+
+Versenden neuer SMS
+-------------------
+
+Annahmen für dieses Beispiel (für Echteinsatz nach Bedarf anpassen):
+
+* Programm-Paket "`busybox`" ist installiert.
+
+* Verwendetes Modem-Gerät: `/dev/ttyACM0`
+
+* SMS-Empfänger-Telefonnummer: `+43 (1) 1503`
+
+* SMS-Text: "`Dies ist ein Test!`"
+
+* Eingabe der Tastenkombination `[Strg]+[z]` dargestellt als: "`^Z`"
+
+* Eingabe der Tastenkombination `[Strg]+[x]` dargestellt als: "`^X`"
+
+----
+$ busybox microcom /dev/ttyACM0
+AT
+AT Z
+AT E1
+AT +CMGF=1
+AT +CMGS="+4311503"
+Dies ist ein Test!^Z
+^X
+----
+
+Es empfiehlt sich, die obigen Zeilen in einen Text-Editor anzupassen und an die konkreten Bedürfnisse anzupassen, so dass man die Zeilen danach einzeln per Copy/Paste ins Terminal-Fenster kopieren kann.
+
+Das Modem sollte jedes dieser Kommandos mit "`OK`" quittieren, bevor man das jeweils nächste eingibt.
+
+Nach dem letzten obigen "`AT`"-Kommando und noch vor der Eingabe des SMS-Textes reagiert das Modem mit einem veränderten Prompt-Text.
+
+Nun gibt man den SMS-Text ein, maximal 160 Bytes. Das Drücken von `[Strg]+[z]`, im Beispiel dargestellt als "`^Z`", beendet die Eingabe und versendet die SMS.
+
+Man sollte *nicht* zusätzlich danach auch noch die Eingabetaste drücken!
+
+Das Modem sollte nach der Annahme des SMS-Textes eine Ausgabe wie
+
+----
++CMGS: 149
+
+OK
+----
+
+als Rückmeldung geben. Dies signalisiert das erfolgreiche Absenden der SMS. Die Nummer ist immer eine andere, ich vermute es ist ein SMS-Zähler oder die Nummer eines Speicher-Registers den die ausgehende SMS verwendete.
+
+Danach muss man nur bis zum Ablauf des Inaktivitäts-Intervalls warten, damit das "`busybox`"-Kommando wieder beendet wird und die SMS/Modem-Sitzung damit endet.
+
+
+Auflisten vorhandener SMS
+-------------------------
+
+Dies listet nicht eine bestimmte SMS auf, sondern alle SMS welche einer von mehreren vordefinierten Kategorien entsprechen.
+
+----
+AT+CMGL=?
++CMGL: ("REC UNREAD", "REC READ", "STO UNSENT", "STO SENT", "ALL")
+AT+CMGL="ALL"
++CMGL: 0,"REC UNREAD","easybank",,"23/08/08,15:38:14+08"
+eBanking Login [...]
+OK
+
+----
+
+Der Befehl in der 1. Zeile liefert eine Liste verfügbarer Kategorien für aufzulistende SMS.
+
+Die 2. Zeile ist eine Beispielsausgabe des Befehls in der 1. Zeile. "`ALL`" ist in diesem Fall eine Spezialkategorie und unfasst alle SMS unabhängig von einer konkreten Kategorie.
+
+Die 3. Zeile nutzt dann eine der Kategorien, um alle SMS in dieser Kategorie aufzulisten. In diesem Fall alle SMS.
+
+Die 4. Zeile ist der Anfang der ersten SMS in solch einer Ausgabe. Die `0` nach dem Doppelpunkt in diesem Beispiel entspricht der SMS-Speicherplatznummer unter welcher diese SMS gespeichert ist.
+
+
+Lesen empfangener SMS
+---------------------
+
+----
+AT +CMGR=0
+----
+
+zeigt die SMS mit der Indexnummer 0 an. Diese Indexnummer entspricht normalerweise die erste SMS. Auf manchen Geräten ist allerdings 1 die erst Indexnummer. Ausprobieren.
+
+Ansonsten die Nummer entsprechend erhöhen. Vor diesem Befehl dieselben vorbereitendedn Befehle wie fürs Senden durchführen.
+
+
+Löschen bereits gelesener SMS
+-----------------------------
+
+----
+AT +CMGD=0
+----
+
+löscht die SMS mit der Indexnummer 0.
+
+
+Spezialfall HUAWEI-Modems
+-------------------------
+
+Diese registrieren sich meist als mehrere USB-Geräte, typischerweise `/dev/ttyUSB0`, `/dev/ttyUSB1` und `/dev/ttyUSB2`.
+
+Das erste dieser Geräte ist das primäre Kommando-Interface, jedoch ist dies meist vom PPP-Daemon in Beschlag genommen während eine Internet-Verbindung besteht.
+
+Daher stellen diese Modems noch ein sekundäres Interface zur Verfügung, welches man für SMS verwenden kann auch während eine Internet-Verbindung besteht. Normalerweise ist dies das letzte der vom Modem registrierten Interfaces, im obigen Beispiel `/dev/ttyUSB2`.
+
+Im Gegensatz zum primären Interface gibt das sekundäre aber häufig in periodischen Abständen lästige Status-Meldungen wie "`^BOOT`" oder "`^DSFLOWRPT`" von sich, welche bei der SMS-Eingabe stören würden.
+
+Man kann diese Meldungen mit dem folgenden Befehl abschalten:
+
+----
+AT ^CURC=0
+----
+
+welchen man dann vor den eigentlichen `AT`-Befehlen des obigen SMS-Beispiels eingeben sollte. Normalerweise bleibt die Wirkung erhalten bis man das Modem abschaltet oder neu startet, und auch ein "`AT Z`" reicht nicht zur Rücksetzung.
+
+
+Modem-Gerätedateien finden
+--------------------------
+
+udev erzeugt sowohl unter `/dev/serial/by-id/usb-*` als auch unter `/dev/gsmmodem*` Symlinks auf Modem-Gerätedateien.
+
+Ein HUAWEI-Modem mit 3 Interfaces könnte beispielsweise folgende Symlinks unter `/dev/serial/by-id/` ablegen: `usb-HUAWEI_Technology_HUAWEI_Mobile-if00-port0`,
+`usb-HUAWEI_Technology_HUAWEI_Mobile-if01-port0` und `usb-HUAWEI_Technology_HUAWEI_Mobile-if02-port0`.
+
+Die Zahl nach dem "`-if`" gibt dabei die Nummer des Interfaces an:
+
+* `00` wäre hier das primäre Interface welches vermutlich von `pppd` für die Internet-Verbindung blockiert sein wird.
+
+* `02` (die größte Nummer) ist das sekundäre Kommandointerface, mit dem man SMS-Kommandos absetzen kann während das primäre Interface blockiert ist.
+
+
+Signalstärke auswerten
+----------------------
+
+Um den Versand und Empfang von SMS bzw. allgemein möglichst zuverlässige Datenübertragung zu erzielen, kann man die Signalstärke überprüfen.
+
+----
+AT +CSQ
+----
+
+gibt 2 Werte retour: Signalstärke (RSSI) und Bitfehlerrate (BER).
+
+Ein Wert von 99 für BER bedeutet Wert nicht verfügbar.
+
+Ansonsten sollte man das Gerät so ausrichten, dass RSSI maximiert und BER minimiert wird.

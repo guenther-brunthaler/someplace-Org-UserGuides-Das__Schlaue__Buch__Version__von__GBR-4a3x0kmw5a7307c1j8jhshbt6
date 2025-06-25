@@ -1,0 +1,53 @@
+﻿Aktuelles Verzeichnis mit rdiff-backup sichern
+==============================================
+v2025.33
+
+Oft hat man das Problem, Dateien im aktuellen Verzeichnis schnell und effizient irgendwo anders hin backuppen zu wollen.
+
+Dies kann man mit `rdiff-backup` sehr effektiv erledigen, welches durch seine Verwendung von Rückwärts-Deltas sehr platzsparend arbeitet.
+
+Allerdings ist es eine Herausforerung, die "man"-Page zu studieren und die ganzen Optionen zu erforschen, wenn man es gerade eilig hat.
+
+Das folgende Script kann hier helfen.
+
+Um es zu entpacken, zuerst die nachfolgende Kommandozeile ausführen, welche noch keine Dateien erzeugt sondern die Scripte nur anzeigt:
+
+----
+$ base64 -d << EOF | zcat |less # sh -e
+H4sIAAAAAAACA21SzW6cMBA+M08xIahoNzJsNuqhTUh7yKWXNIccV2qMGcBdsBH2NqSK8lh9gb5Y
+hx+1SbUcPMzfN99nj5Ier7Hd5we8usI4G78YTk8wzbVJXQ1wij+2m+375OICHHkUBL6XHcaenMfo
+E2a4wednJFVbDHdhtNmFWErdUHES4vU73Ma4AXC9yhIonM9e0hv7aBorC5fGt1LV+GGD97Iig83v
+X07VZOK0fep6+52UF7lU+0OX9IUuS4DWFpTNIXiseQhW5G3nHTYa2UJhIVDSEUbsoTYQBM0Kp7a4
+0cy45CYXX15yQr9JaKN6askwlhBO/6S5aL1iNQ0DjhoH7SEgJxXPMQSu1qXHBxq6HqOvd/dfbm9Q
+4PlY+vEBpuuaeC8iMBrHwUxv/J34zbkVj5quV2AYfQ5xx34gBA2qORQkqsbm/CCVGOlPdGfg13n3
+f9Px2r9lXa+NF85LzzVaLfEw4qcKYRJJA6mZThjx04UwrQeomsnj2TCtDbCecYWO8Xm1Uet1Iscj
+l/vJsHI2djx827F5WcCPwb1BStKkKvJvNZO2/ROc4RjQPtWmtOnS8C+qrCl1BbO3jPgDNeVMn/QC
+AAA=
+EOF
+----
+
+Danach einfach die Zeichenkette "`less #`" aus der 1. obigen Zeile entfernen und das Kommando erneut ausführen.
+
+Dadurch werden 3 Dateien erzeugt:
+
+* Das eigentliche Backup-Script. Es wird als `./mkbu` aufgerufen.
+* Datei `rdiff-exclude-globs`. Sie enthält Dateinamen-Muster von auszuschließende Dateien welche Shell-Joker wie `*` und `?` enthalten.
+* Datei `rdiff-excludes`. Sie enthält exakte Pfadenamen von auszuschließenden Dateien.
+
+Alle 3 Dateien müssen vor der Verwendung editiert werden.
+
+In `mkbu` müssen die Zeilen welche mit `src=` und `dst=` beginnen angepasst werden. Sie legen die absoluten oder relativen Pfade fest, welcher Verzeichnisbaum gesichert werden soll, und in welches Backup-Verzeichnis. Letzteres wird automatisch erzeugt falls es noch nicht existiert.
+
+Aus den `*exclude*` Dateien sollten die Beispiel-Exklusionen entfernt und gegen echte ersetzt werden. Werden keinerlei Exklusionen benötigt, können beide Dateien auch leer sein.
+
+Ein paar Anmerkungen zu `rdiff-excludes`:
+
+* Pfadnamen die mit `./` beginnen sind relativ zum Quellverzeichnis.
+* Pfadnamen die mit `/` beginnen sind absolut.
+* Pfadnamen die mit nichts davon beginnen passen auf jede Datei, deren Pfadnamen von irgend einem der Unterverzeichnisse aus betrachtet mit diesem Pfadnamen enden.
+
+Wenn das `./mkbu`-Kommando ohne Argumente aufgerufen wird, machte es ein (weiteres) Backup.
+
+Die Option `-l` listet alle Dateien auf die im letzten Backup vorhanden sind.
+
+Die Option `-i` listet auf, welche inkrementellen Backups vorhanden sind und wie viel Speicherplatz im Backup-Verzeichnis sie belegen.

@@ -1,0 +1,191 @@
+﻿URL, URI und URN
+================
+Günther Brunthaler
+v2019.176
+
+
+Struktur
+--------
+
+----
+URI = scheme ":" [ authority ] path [ "?" query ] [ "#" fragment ]
+----
+
+Beispiele
+~~~~~~~~~
+
+----
+  foo://example.com:8042/over/there?name=ferret#nose
+  \_/   \______________/\_________/ \_________/ \__/
+   |           |            |            |        |
+scheme     authority       path        query   fragment
+   |   _____________________|__
+  / \ /                        \
+  urn:example:animal:ferret:nose
+----
+
+URLs können aus folgenden Teilen bestehen:
+
+----
+https://max:muster@www.example.com:8080/index.html?p1=A&p2=B#ressource
+\___/   \_/ \____/ \_____________/ \__/\_________/ \_______/ \_______/
+  |      |    |           |         |       |          |         |
+Schema   | Kennwort      Host      Port    Pfad      Query    Fragment
+      Benutzer
+----
+
+Bestimmte Zeichen innerhalb dieses Ausdrucks kennzeichnen und trennen die einzelnen Segmente der URL und ermöglichen eine Zerlegung und Verarbeitung des Ausdrucks. Bei einem HTTP-Zugriff beispielsweise:
+
+* leitet das Fragezeichen (?) den Query-String der URL ein,
+* steht das Gleichheitszeichen (=) zwischen dem Namen eines Parameters und seinem Wert,
+* steht das Et-Zeichen (&) als Trennzeichen zwischen Parametern im Query-String,
+* folgt dem Doppelkreuz (#) der Name eines Dokumentenankers (siehe auch URI-Referenz).
+
+Weitere Zeichen haben spezifische Bedeutungen im Dokumentenpfad. Folgende Zeichen gelten als reserviert:
+
+----
+: / ? # [ ] @ $ & ' ( ) * + , ; =
+----
+
+Folgende Zeichen sind nicht reserviert, besitzen also in einer URL keine vorgegebene Bedeutung:
+
+----
+Buchstaben: A-Z, a-z
+Ziffern: 0-9
+- . _ ~
+----
+
+
+URL-Encoding
+------------
+
+URL-Codierung, Prozentkodierung:
+
+Es wird zwar vom RFC 3986 empfohlen, UTF-8 zur Kodierung zu benutzen, aber einen expliziten Standard gibt es noch nicht. Um die URL kodieren zu können, muss man also wissen oder ahnen, welche Zeichenkodierung für die abzurufende Datei benutzt wurde oder welche Kodierung der Zielrechner benutzt. Aus diesem Grund ist es immer noch sinnvoll, nur auf Zeichen aus dem ASCII-Vorrat zurückzugreifen.
+
+
+Data-URL
+--------
+
+----
+data:[<MIME-Typ>][;charset=<Zeichensatz>][;base64],<Daten>
+----
+
+Bettet Base64- oder URL-codierte <Daten> vom <MIME-Typ> als URI ein als wäre es eine externe Ressource, obwohl die "zurück gelieferten" Daten komplett in der URI enthalten sind. Auch wenn der Begriff "Date-URL" verbreitet ist, müsste es korrekter Weise "Date-URI" heißen da eine echte URL immer ein reiner Verweis auf eine andere Ressource ist.
+
+Die Default-Werte sind text/plain;charset=US-ASCII und URL Encoding. Whitespace in <Daten> ist erlaubt und wird ignoriert (wovon ASCII NL nicht ausgeschlossen ist).
+
+
+URN
+---
+
+URNs geben in Gegensatz zu URLs keinen Ort an, sondern einen dauerhafte Namen für eine Ressource.
+
+Jeder URN ist eine URI, aber nicht jede URI ist ein URN. Nur URIs mit dem Schema "urn:" sind URNs.
+
+----
+URN = assigned-name [ rq-components ] [ "#" fragment ]
+assigned-name = "urn" ":" NID ":" NSS
+NID = (alphanum) 0*30(alphanum / "-") (alphanum)
+NSS = pchar *(pchar / "/")
+alphanum = DIGIT / ALPHA
+fragment = *( pchar / "/" / "?" )
+rq-components = [ "?+" r-component ] [ "?=" q-component ]
+r-component = pchar *( pchar / "/" / "?" )
+q-component = pchar *( pchar / "/" / "?" )
+----
+
+wobei
+
+
+NID:: Namespace Identifier (etwa "ietf")
+NSS:: Namespace Specific String (etwa "rfc:2648")
+rq-components:: Exoten-Feature; uninteressant.
+pchar:: Pfad-Zeichen. Darf keines der reservierten Zeichen für den Pfad enthalten, außer diese wurden URL-codiert. In einigen Sonderfällen ist "?" auch uncodiert erlaubt.
+
+
+Tag-URI
+-------
+
+Haben dieselbe Funktion wie URNs, benötigen jedoch keinen registrierten NID. Statt dessen wird ein beliebiger DNS-Name (keine IP-Adresse) oder e-Mail-Adresse, die man zu einem bestimmten Tag, Monat oder Jahr kontrolliert hat, als Ersatz für das Schema bzw. NID verwendet.
+
+----
+tagURI = "tag:" namespace ":" specific [ "?" query ] [ "#" fragment ]
+namespace = authorityName "," date
+authorityName = DNSname / emailAddress
+date = year ["-" month ["-" day]]
+year = 4DIGIT
+month = 2DIGIT
+day = 2DIGIT
+DNSname = DNScomp *( "."  DNScomp )
+DNScomp = alphanum [*(alphanum /"-") alphanum]
+emailAddress = 1*(alphanum /"-"/"."/"_") "@" DNSname
+specific = *( pchar / "/" / "?" )
+fragment = specific
+pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+pct-encoded = "%" HEXDIG HEXDIG
+sub-delims  = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+----
+
+Groß-/Kleinschreibung in <authorityName> wird unterschieden, man soll daher bevorzugt Kleinbuchstaben verwenden wo beides erlaubt ist.
+
+Es wird empfohlen, in Tag-URIs auf URL-Encoding zu verzichten; es ist jedoch in <pchar>s erlaubt.
+
+Das Datum bezieht sich auf Mitternacht (als UTC) des Anfangsdatums eines beliebigen Intervalls, während dem man die Domain/e-Mail-Adresse besessen/kontrolliert hat.
+
+
+Beispiele
+---------
+
+Beispiele für URIs:
+
+----
+urn:isbn:0451450523
+urn:isan:0000-0000-9E59-0000-O-0000-0000-2
+urn:ISSN:0167-6423
+urn:ietf:rfc:2648
+urn:oid:2.16.840
+urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66A
+urn:lex:eu:council:directive:2010-03-09;2010-19-UE
+data:application/octet-stream;base64,vr4MkhoXe0rZigAAAABJRU5ErkJggg==
+tag:xworld.mine.nu,2009:rpo.emgenxx69lwyn5ctlr4nl64ul/srv/scm/public/fsroot/usr/local/share/xworld-u6u5lfxkqqf8e2mjaudapd4al.git/
+tag:xworld.mine.nu,2009:rpo.emgenxx69lwyn5ctlr4nl64ul/~gb/srv/scm/prj/myproject.git
+doi:10.1007/978-3-642-04538-7
+doi:10.1371/journal.pbio.0020449.g001
+hdl:10.1371/journal.pbio.0020449.g001
+----
+
+
+Einzeltypen
+-----------
+
+
+DOI
+^^^
+
+Digital Object Identifier (DOI; deutsch Digitaler Objektbezeichner) nach ISO 26324 bezeichnet einen möglichst eindeutigen und dauerhaften digitalen Identifikator für physische, digitale oder abstrakte Objekte.
+
+Die URIs haben die Form
+
+`doi:10.RRRR/ISBN`
+
+wobei `RRRR` die zumindest 4-stellige Nummer der Herausgeber-Organisation ist, und `ISBN` eine herausgeberspezifische genauere Spezifikation.
+
+Meist wird eine ISBN oder ISSN dafür verwendet, manchmal auch einfach fortlaufende Nummern oder eine gänzlich andere Struktur.
+
+DOIs können bislang in URLs umgewandelt werden, indem der "`doi:`"-Präfix durch "`https://doi.org/`" ersetzt wird.
+
+Obwohl offiziell empfohlen wird, DOIs als vollen URL anzugeben, ist genau genommen nur der Teil, der mit 10. beginnt, der DOI. Der Teil davor bezeichnet einen HTTP-Proxy, den man DOI-Resolver nennt.
+
+Für die meisten wissenschaftlichen Artikel seit dem Jahr 2000, teilweise aber auch bis zur Gründung der Zeitschriften zurückgehend, sind DOIs verfügbar.
+
+
+Das "Handle System"
+^^^^^^^^^^^^^^^^^^^
+
+Das Handle-System stellt für Internetressourcen die Verbindung zwischen eindeutigen und dauerhaften persistenten Identifikatoren (Handle) und zugehörigen digitalen Daten zur Verfügung. So lassen sich beispielsweise Permalinks für Dokumentenserver erzeugen und mit Metadaten wie Zeitschrift und Erscheinungsjahr verknüpfen. Seit 2014 wird es von der DONA-Stiftung in Genf betrieben. Verweise über das Handle-System werden durch ein vorangestelltes hdl: dargestellt.
+
+Die Ziele des Projekts waren, eine eindeutige, persistente Zuordnung von mehreren Instanzen und Attributen zu gewährleisten. Über lokale Namensräume, auf die vom Global Handle Registry verwiesen wird, soll die Dienstleistung im Sinne verteilter Systeme dezentralisiert werden können, ohne die Eindeutigkeit des Handles zu verlieren. Das System soll sicher, effizient und durch die Nutzung von UTF-8 als Zeichenkodierung international nutzbar sein.
+
+Ein „Handle“ besteht aus der "Naming Authority" (Präfix als lokaler Namensraum) und einem lokalen Namen, getrennt durch einen Schrägstrich. So besteht das Handle "hdl:10419/2" aus dem Identifikator 10419 für das wirtschaftswissenschaftliche Archiv EconStor und der lokalen Nummer 2, hier für die Arbeitspapiere des Instituts für Weltwirtschaft. Die „Naming Authority“ kann eine baumartige Struktur haben. So hat der Digital Object Identifier (DOI) die Wurzel 10, während einzelne Verlage oder Organisationen ein Unterelement haben, beispielsweise 1000 für die DOI-Stiftung. Das DOI-Handbuch mit dem lokalen Namen 182 ist dann unter hdl:10.1000/182 erreichbar. Es hängt vom Namensraum ab, ob die Handles case sensitive vergeben werden.

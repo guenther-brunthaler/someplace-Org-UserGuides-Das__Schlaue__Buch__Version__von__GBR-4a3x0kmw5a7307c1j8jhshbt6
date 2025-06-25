@@ -1,0 +1,49 @@
+﻿* Alphabet: In WPA2-Passwörtern (und vermutlich auch SSIDs) können (zumindest) die folgenden ASCII-Zeichen vorkommen: Alle Groß- und Kleinbuchstaben, Dezimalziffern sowie die 26 Sonderzeichen >>>$@^`,|%;.~()/\{}:?[]=-+_#!<<< (zwischen den ">>>" und "<<<"). Zusammen sind das 88 Zeichen. Ein WPA-Passwort maximaler Länge kann daher 406,9 Bit an Informationen enthalten. Allerdings wird dies durch die PBKDF2-Funktion auf 256 Bit reduziert. Das kürzestmögliche Zufallspasswort welche alle Zeichen aus diesem Alphabet nutzt aber dennoch die vollen 256 Bit Entropie für den Schlüssel liefert ist daher 40 Zeichen lang. Die Beschränkung auf dieses Alphabet ist allerdings client-spezifisch. Der Standard selbst erlaubt für WPA2-Passworte alle UNICODE-Codepoints von 0x20 bis 0x7e (das sind 95 ASCII-Zeichen).
+
+* BSS: Ein Basic Service Set entsteht durch Synchronisation grundlegender Parameter mehrerer Geräte, die eines der Geräte mittels Senden eines Vorschlags im Format START beginnt und andere im Format JOIN akzeptieren können. Durch JOIN werden im Wesentlichen nur die möglichen Datenübertragungsraten bestätigt.
+
+* BSSID: Die Basic Service Set Identification bezeichnet jedes BSS eindeutig. Sie entspricht entweder der MAC-Adresse des Wireless Access Points oder wird ersatzweise als Zufallszahl erzeugt.
+
+* ESS: Ein Extended Service Set ist ein BSS mit Verbindung zu anderen Netzen auch anderer Standards wie Ethernet. Ein ESS ist ein Infrastruktur-Netzwerk.
+
+* ESSID: Um mehrere Basisstationen zu einem Netz (auf OSI-Schicht 2) zu verbinden, stellt man an diesen dieselbe SSID ein; sie wird dann als Extended SSID bezeichnet.
+
+* IBSS: Ein Independent Basic Service Set ist ein BSS ohne Verbindung zu anderen Netzen, ein in sich geschlossenes Netzwerk. Ein IBSS kann ein Ad-hoc-Netz sein.
+
+* Passworte/-phrasen: Diese dürfen zwischen 8 und 63 ASCII-Zeichen (siehe weiter oben für das Alphabet) lang sein. Alternativ kann der binäre 256-Bit Schlüssel direkt als 64 hexadezimale Ziffern angegeben werden. Falls der Schlüssel nicht direkt angegeben wird, wird er aus dem Passwort abgeleitet indem die PBKDF2-Funktion auf das Passwort angewendet wird, mit der SSID als Salt, 4096 Iterationen und HMAC-SHA1 als PRF. Das Utility wpa_passphrase kann diese Berechnung ebenfalls ausführen.
+
+* PSK: Pre-Shared Key. So wird der 256-Bit-Schlüssel genannt, der tatsächlich zur Verschlüsselung genutzt wird. Er kann entweder direkt angegeben werden, oder ist das Ergebnis der Anwendung von PBKDF2 auf das Passwort (siehe Erklärung dazu weiter oben).
+
+* Service Set: Bezeichnet nach der Norm IEEE 802.11 alle Geräte in einem WLAN.
+
+* SSID: Ein Service Set Identifier ist ein frei wählbarer Name eines Service Sets, durch den es ansprechbar wird. Da diese Kennung oftmals manuell von einem Benutzer in Geräte eingegeben werden muss, ist sie oft eine Zeichenkette, die für Menschen leicht lesbar ist, und sie wird daher allgemein als Netzwerkname des WLANs bezeichnet. Ein Wireless Access Point kann mehrere SSID zugleich tragen. Solche multiplen SSID ermöglichen einem Wireless Access Point, mehrere Virtual Local Area Networks anzubieten. Ein SSID kann bis zu 32 Byte lang sein und entsprechend bis zu 32 ASCII-Zeichen umfassen (doch siehe oben wegen dem Alphabet). Sendet ein Gerät einen Datenframe mit leerem SSID, senden Wireless Access Points als Antwort jeden SSID, den sie unterstützen.
+
+* "Unsichtbare" WLANs: Als scheinbare Sicherheitsmaßnahme kann die Aussendung (broadcast beacon) der SSID bei manchen Basisstationen abgeschaltet werden. Vor dem Beitritt ist es dann nötig, sie zusätzlich zu einem eventuell verwendeten Kennwort einzugeben. Die Wirkung von Sicherheit durch Verschleiern ist eher gering. Sobald ein Angreifer einen Client mittels eines WLAN-Sniffers beim Beitreten des Netzes oder auch nur der Suche nach einem eingespeicherten Netz belauscht, erfährt er auch die bisher unterdrückte SSID.
+
+* 900 MHz (802.11ah): Operates in sub-gigahertz unlicensed bands.
+
+* 2.4 GHz (802.11b/g/n): Default scheint eine Kanalbreite von 22 MHz zu sein (802.11b). HT20 senkt sie auf 20 MHz ab (802.11g/n). Mit HT40 ist sie auf 40 MHz erhöht (802.11n). In Austria: Kanäle 1-13 sind erlaubt. Kanal 1 entspricht einer Mittelfrequenz von 2412 MHz. Dies geht mit einem Abstand von 5 MHz weiter bis Kanal 12. Nur zwischen Kanal 13 und 14 (2484 MHz Mittelfrequenz, in AT verboten) ist ein 12 MHz Abstand. Da die Kanäle sich wegen ihrer Breite überlappen, muss man dazwischen welche ungenutzt lassen.
+
+* 3.65 GHz (802.11y): 3655–3695 MHz.
+
+* 4.9 GHz (802.11j): 4940 MHz to 4990 MHz
+
+* 5 GHz (802.11a/h/j/n/ac): Austria adopted the same restrictions as in Germany apply, only 5.470–5.5725 GHz is allowed to be used outdoor and indoor.
+
+* 5.9 GHz (802.11p): 5.850–5.925 GHz
+
+* 60 GHz (802.11ad): Also known as WiGig, operates in 60 GHz ISM band.
+
+Wi-Fi Standards:
+
+Wi-Fi 1 "a": Im 2,4 GHz-Band maximal 2 Mbit/s und im 5 GHz Band 54 Mbit/s.
+
+Wi-Fi 2 "b": Nur im 2,4 GHz-Band maximal 11 Mbit/s. Das entspricht etwa der Geschwindigkeit von USB 1.
+
+Wi-Fi 3 "g": Nur im 2,4 GHz-Band maximal 54 Mbit/s. Das dürfte die erste weit verbreitete Version gewesen sein.
+
+Wi-Fi 4 "n": Im 2,4 GHz-Band maximal 150 Mbit/s und im 5 GHz Band 433 Mbit/s. Das ist die älteste heute noch in breitem Einsatz befindliche Version.
+
+Wi-Fi 5 "ac": Nur im 5 GHz Band maximal 1.300 Mbit/s. Das ist die andere weit verbreitete Version.
+
+Wi-Fi 6 "ax": Verwirrende Angaben. Verbreitung noch eher gering (Stand 2025), steigt aber beständig an. Die neuesten Geräte beherrschen es oft. Dürfte im Minimal-Ausbau mit einer Antenne nur moderat schneller als "ac" sein. Doch wenn mehrere Antennen zum Einsatz (scheinen maximal 3 zu sein, vermutlich um jeweils 90 Grad von einander abgewandt in 3 Richtungen des Raums) kommen was aus Platzgründen nur in Routern der Fall sein dürfte, kann die Geschwindigkeit bis etwa 4.800 Mbit/s ansteigen. Das wären entsprechend 1.600 Mbit/s mit einer Antenne. Unter unrealistischen Laborbedingungen wurden gar 10.0000 Mbit/s erreicht. Allerdings gilt das nur für den Gesamt-Datendurchsatz des Routers. Er kann mit mehr Endgeräten gleichzeitig sprechen. Für die einzelnen Endgeräte ist es nur moderat schneller als "ac" (1.600 anstatt 1.300, rund 23 %) wegen besserer spektraler Effizienz. Interessanter für das Endgerät dürften vielmehr zusätzliche Stromspar-Modi sein, die den Akku bei Wartepausen durch Überlastung des Netzwerkes sowie im Leerlauf (gerade keine Übertragungen) besser schonen.

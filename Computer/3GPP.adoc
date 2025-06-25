@@ -1,0 +1,282 @@
+﻿3GPP
+====
+v2022.86
+
+Third Generation Partnerships Projects. Eine Suite von Standards, welche die verschiedenen Generationen (2G, 3G, 4G, 5G usw.) der weltweiten Mobilfunknetze und zugehörigen Netzwerkprotokolle definieren.
+
+
+1G
+--
+
+Es gibt den Begriff '1G' zwar nicht wirklich, aber da es sich sinngemäß um den Vorläufer von '2G' handelt soll es hier fälschlicher Weise so dargestellt werden als wäre es ein eigener Standard gewesen.
+
+Zumindest in Deutschland bestand es als drei Sub-Generationen von analogen Netzen ('A-Netz', 'B-Netz' und 'C-Netz').
+
+A-Netz (ca. 1952–1977):: Analoges Netz mit manueller Vermittlung (Handvermittlung).
++
+--
+Wurde der Funkbereich einer Landfunkstelle verlassen, so brach das Gespräch ab und musste neu aufgebaut werden. Die ersten noch mit Röhren bestückten Geräte waren extrem teuer und voluminös. Sie kosteten je nach Ausführung und Hersteller zwischen 5000 und 6000 DM. Die Technik war im Wesentlichen in einer UKW-Sende-/Empfangseinheit und dem Selektivrufsatz im Kofferraum untergebracht.
+
+* Frequenzbereich zwischen 156 MHz und 174 MHz (2-Meter-Band), Sendeleistung 10 W, handvermittelter Gesprächsaufbau
+* 17 handvermittelte Kanäle (Kanal 30 bis 46) im A1-Netz
+* 19 handvermittelte Kanäle (Kanal 47 bis 63, 86, 87) im A2-Netz
+* 5 teilautomatisierte Kanäle (Kanal 65, 66, 68, 72, 75) im A3-Netz (nur Hamburg)
+* Im Endausbau: 136 Funkverkehrsbereiche mit zusammen über 317 Funkkanälen
+* 50 kHz Kanalabstand (A3-Netz 20 kHz)
+* 10.784 Teilnehmer
+* Frequenzmodulation
+
+Das Netz wurde ständig weiter ausgebaut, bis 1968 ca. 80 % Flächendeckung (Westdeutschland) erreicht wurde. Die Kapazitätsgrenze von knapp 11.000 Teilnehmern wurde 1971 erreicht. Um die Nachfrage zu drosseln, wurde 1972 die monatliche Grundgebühr von 65 DM (45 DM im A2- und A3-Netz) auf 270 DM angehoben. Als das A-Netz 1977 abgeschaltet wurde, hatte es noch 787 Teilnehmer.
+--
+
+B-Netz (1972–1994)::
+--
+Wesentliche Neuerung war die Möglichkeit, Selbstwählverbindungen in beide Richtungen, aus dem Telefonnetz in das Funknetz und umgekehrt, herzustellen. Das bildete einen deutlichen Fortschritt im Vergleich zum A-Netz, das nur über Hand-Vermittlungsstellen zugänglich war.
+
+Ein gravierendes Problem des B/B2-Netzes bestand darin, dass ein Anrufer aus dem Festnetz den vermuteten Standort des Mobiltelefons kennen musste, um es über die Vorwahl des Funkverkehrsbereiches erreichen zu können.
+
+* Zunächst 16.000 Teilnehmer, nach einer Erweiterung der Funkkanäle waren 27.000 Teilnehmer möglich
+* 850 Funkkanäle (Wiederverwendung der gleichen Kanäle in genügend weit voneinander entfernten Funkzonen mitgezählt)
+* 158 Funkstationen
+* Österreich (Ende 1984): 1.770 Teilnehmer
+* Sprechkanäle: 38 bis 1980, danach 75
+* Frequenzbereiche: 2-Meter-Band
+* Duplexabstand 4,6 MHz
+* Kanalabstand: 20 kHz
+* Bandbreite pro Kanal: 14 kHz
+* Modulationsverfahren: FM, 4 kHz Frequenzhub
+* Sendeleistung: ortsfest 10–30 Watt, beweglich 10 Watt
+* Kanäle Kleiner Leistung (KKL): Um 3,92 MHz versetzte Zusatzkanäle verminderter Leistung (0,1 Watt) zur Entlastung in Ballungsgebieten
+* begrenztes Roaming in den Ländern Österreich, Niederlande und Luxemburg
+--
+
+C-Netz (1985–2000)::
+--
+Es war die dritte und letzte analoge Generation des Mobilfunks in Deutschland und wurde nur in Deutschland, Portugal und Südafrika eingesetzt. Andere Länder in Europa (wie zum Beispiel das C-Netz in Österreich) nutzten andere Standards.
+
+Es ersetzte die umständliche Handhabung des B- bzw. B2-Netzes.
+
+Das C-Netz-System unterstützte als erstes System die Trennung von Teilnehmeridentität und Endgerät. Die Teilnehmeridentität bzw. die Zugangsberechtigung waren auf einer Magnetkarte codiert. 1988 wurde der Magnetstreifen durch die TeleKarte mit integriertem Mikrocontroller ersetzt. Damit war dieses Konzept der Vorläufer der heute bekannten SIM-Karte.
+
+Für die damalige Zeit ungewöhnlich waren auch die funktional reich bestückten Hörer, die alle Bedienelemente, LC-Display und LEDs besaßen.
+
+* Gemeinsame Vorwahl für alle Mobil-Teilnehmer, man brauchte nicht mehr zu wissen, wo sich der Teilnehmer aufhielt
+* Unterbrechungsfreier Wechsel von einer Funkstation zur nächsten (Handover)
+* Verschleierung des (analogen) Funksignals erschwerte unberechtigtes Abhören
+* Neben Festeinbau-Geräten auch herausnehmbare oder sogar tragbare Geräte (Mobiltelefon) möglich
+* Größere Kapazität von bis zu 850.000 Teilnehmern
+* Seit Ende 1990 Anrufbeantworter und Rufumleitung als Netzmerkmal
+
+Technik:
+
+* Frequenzbereich: 70-cm-Band
+* Feststation: max. 25 Watt
+* Teilnehmer: max. 15 Watt (Kfz-Einbauversion)
+* 222 Funkkanäle
+* 287 Funkkanäle ab 1991
+* Übertragung von Signalisierungsdaten durch Unterteilen des Audiosignals in jeweils 12,5 ms lange Audioblöcke und 1,25 ms lange 4-Bit-Datentelegramme
+--
+
+D-Netz (seit 1990)::
+--
+Gab es nur in Österreich in analoger Form. (In D wurde es 1991 bereits als erstes digitales Netz auf dem '2G' Standard basierend eingeführt.)
+
+Die analoge Ö-Variante basierte auf dem E-TACS Standard.
+
+Die Mobilgeräte waren zunächst 1 kg und später 250 g schwer.
+
+Weil die C-Mobiltelefone zumeist in Autos verbaut worden sind, wurde der Begriff "Autotelefon" auch noch vielfach für Anschlüsse des D-Netzes verwendet, die mit abnehmendem Gewicht immer seltener nur in Autos montiert und verwendet wurden. 
+--
+
+E-Netz (seit 1994)::
+--
+Dies war das erste digitale '2G' Netz in Österreich, und entsprach dem deutschen D-Netz welches im Vergleich zu Österreich eine Generation übersprungen hatte.
+
+Es gab später auch ein E-Netz in Deutschland, aber das war einfach nur eine verbesserte Version von deren D-Netz und somit immer noch 2G. Da das E-Netz in D etwas später als das E-Netz in Ö heraus kam, dürfte die deutsche Version geringfügig weiter entwickelt gewesen sein.
+--
+
+
+GSM
+---
+
+Global System for Mobile Communication. Wird auch '2G' genannt.
+
+MS (Mobile Station):: Mobiltelefon oder GSM-Modem
+
+SIM (Subscriber Identity Module):: Smartcard welche Zugangsberechtigung regelt
+
+BTS (Base Transceiver Station):: Mobilfunk-Basisstation (auf den Funktürmen). Der maximal zulässig Funkzellen-Radius von GSM liegt bei 34,88 km. Höchstens auf dem flachen Land kommt es zu einer so hohen Reichweite.
+
+BSC (Base Station Controller):: Je nach Netzkonfiguration sind 10 bis 100 BTS an einem BSC angeschlossen. Nicht jede Basisstation hat eine direkte Verbindung zu ihrem BSC. Manchmal wird eine Basisstation über eine andere Basisstation geschleift.
+
+MSC (Mobile Switching Center):: Die Mobilfunkvermittlungsstelle. Sie übernimmt die Verwaltung der Verbindungen und der Nutzerdaten.
+
+HLR (Home Location Register):: In einer sogenannten Heimatdatei (HLR) sind die Daten jedes Kunden gespeichert. Unter anderem auch die Rufumleitungen und die Verbindungen für die Gebührenabrechnung.
+
+VLR (Visitor Location Register):: Das MSC führt dieses Register, welches vermerkt in welcher BTS ein Teilnehmer (über der HLR beschrieben) gerade eingeloggt ist. So kann jederzeit der Standort eines Handys ermittelt werden, wenn es eingeschaltet ist.
+
+AuC (Authentication Center):: Die Beglaubigungszentrale, die Informationen enthält, die die Funkschnittstelle gegen unberechtigtes Abhören schützt. Hierzu zählt der Geheimschlüssel, der auch auf der SIM-Karte abgelegt ist. Dieser wird zur Verschlüsselung und Authentifizierung des Funkkanals verwendet.
+
+IMEI (International Mobile Equipment Identity):: Jedes Handy (Mobile Station) ist mit dieser international gültigen Kennung gekennzeichnet.
+
+EIR (Equipment Identity Register):: Datenbank welche die IMEIs von defekten oder gestohlenen Geräten speichert. (Vermutlich auch von zur Fahndung ausgeschriebenen.)
+
+GMSC (Gateway-MSC):: Ein spezielles MSC. Es stellt den Übergang in andere Netze dar.
+
+SS7 (Zeichengabesystem Nr. 7):: Damit erledigt das GMSC die Signalisierung innerhalb der Netzelemente des Vermittlungssystems.
+
+OMC (Operation and Maintenance Center):: Die Betriebs- und Wartungszentrale eines GSM-Netzes.
+
+OMC-B:: OMC-Bereich welcher die BTS umfasst.
+
+OMC-S:: OMC-Bereich welcher die MSC umfasst.
+
+TRAU (Transcoding und Rate Adaption Unit):: BSC übertragen das GSM-Sprachsignal komprimiert mit 13 kBit/s. Die MSC verarbeiten jedoch ein PCM-Signal mit 64 kBit/s. Die TRAU konvertiert dies. Obwohl dem Radio Sub-System zugeordnet, ist sie häufig im MSC integriert.
+
+
+CSD
+---
+
+Circuit Switched Data.
+
+Leitungsvermitteltes Übertragungsverfahren im GSM-Mobilfunknetz mit einer Datenrate von 9,6 kBit/s. Erfordert ein Übertragungsverfahren mit speziellen Protokollen zur Fehlerkorrektur. Der Verbindungsaufbau einer leitungsvermittelten Datenübertragung unterscheidet sich nur unwesentlich von der Sprachübertragung.
+
+Die Leitungsvermittlung erfolgt mindestens zwischen Mobilfunktelefon bzw. einer speziellen Datenkarte (GSM-Modem) und dem Gateway-MSC (GMSC). Ab dort kann die Übertragung selbstverständlich in ein paketvermitteltes Netz erfolgen.
+
+Eine Datenübertragung mit CSD erfordert eine einwandfreie Funkverbindung zur Basisstation (BTS).
+
+
+GPRS
+----
+
+General Packet Radio Service.
+
+GPRS ist eine Mobilfunktechnik, um im GSM-Netz eine Datenübertragung auf Basis einer verbindungslosen, paketorientierten Übertragungstechniken zu ermöglichen. Im Gegensatz zu verbindungsorientierten Übertragungstechniken wie CSD hat GPRS den Vorteil, dass die gesamte Bandbreite von allen Teilnehmer genutzt werden kann, die in einer Mobilfunkzelle eingebucht sind.
+
+GPRS nutzt die Kanäle, die auch bei GSM für die leitungsorientierten Sprachverbindungen genutzt werden. Durch spezielle Kanalkodierungen (Channelcoder) ergeben sich Brutto-Datenraten von 9.050, 13.400, 15.600 und 21.400 Bit/s. Aufgrund eines Protokolls zwischen Mobilfunktelefon (MS) und BTS/BSC (BSS) auf der Sicherungsschicht (RLC, Radio Link Control) reduziert sich die Datenrate. Theoretisch wären 171,2 kBit/s durch die Bündelung von 8 Kanälen möglich. So bleiben maximal 115,2 kBit/s für die Nutzdaten übrig. Da sich alle Teilnehmer einer Funkzelle die Bandbreite teilen, bleiben ca. 40 kBit/s übrig. Berücksichtigt man das vorhandene Mobilfunkgeräte, ergibt sich eine Übertragungsgeschwindigkeit, die an analoge Modems herankommt (33,6 bis 50 kBit/s). Außerdem hängt die Übertragungsgeschwindigkeit stark von der Qualität der Funkverbindung und der Anzahl der aktiven Nutzer ab. Je mehr Nutzer gleichzeitig Daten übertragen, desto weniger Bandbreite bleibt für den einzelnen Nutzer übrig.
+
+Um die Einführungskosten gering zu halten und das vorhandene System nicht vollständig ersetzen zu müssen, wurden mit GPRS neue Netzelemente eingeführt.
+
+PCU (Packet Control Unit):: In der BSC eingebaut. Ist die Schnittstelle zum SGSN. Sie verarbeitet und überwacht die Datenpakete. Im Fehlerfall wird ein Paket nochmals angefordert.
+
+SGSN (GPRS Support Node):: Empfängt die Daten von der PCU. Der SGSN ist die Schaltzentrale für das Senden und Empfangen der Daten für die mobilen Endgeräte. Die Nutzdaten sowie die zur Signalisierung notwendigen Daten werden auf dem direkten Weg zwischen BSC und SGSN übertragen
+
+BSSGP (vermutlich: BSS Gateway Protocol):: Das Protokoll zur Kommunikation zwischen PCU und SGSN.
+
+BSS (Base Station System):: Bezeichnet in GPRS offenbar die die Kombination aus BTS + BSC, also den Funk-Teil von GSM.
+
+GGSN (Gateway GPRS Support Node):: Die Schnittstelle zu den Datennetzen wie dem Internet oder X.25 (Datex-P) mit Adressierung und Protokollumsetzung. Für das Internet ist das GGSN der Router zu allen mobilen Teilnehmern.
+
+GTP (GPRS Tunnel Protocol):: Das SGSN ist über das GPRS Tunnel Protocol (GTP) mit dem GGSN verbunden. 
+
+SM-GMSC (Short Message Gateway MSC):: Ist mit dem SGSN verbunden und hat die Aufgabe, über GPRS übertragene SMS und MMS weiterzuleiten.
+
+BG (Border Gateways):: Übergänge zwischen zwei GPRS-Netzen von unterschiedlichen Betreibern.
+
+
+EDGE
+----
+
+Enhanced Data Rates for GSM Evolution.
+
+Ist keine eigenständige Übertragungstechnik wie HSCSD, GPRS oder UMTS, sondern eine Erweiterung zur Beschleunigung von GPRS oder HSCSD. Es gibt mit EDGE die Varianten Enhanced GPRS (EGPRS) und Enhanced CSD (ECSD).
+
+EGPRS hat insbesondere für den Netzbetreiber den Vorteil, dass mit weniger Kanälen die gleiche Übertragungsrate wie bei GPRS erreicht werden kann. Um die Nutzdatenrate deutlich zu steigern ist jedoch ein Eingriff in die GSM-Übertragungstechnik notwendig. Aber mit relativ geringem Aufwand eignet sich EDGE als kostengünstige Alternative zu UMTS.
+
+Die hohe Übertragungsraten bei ECSD und EGPRS wird nicht nur durch die Bündelung mehrerer Kanäle erreicht. Mit EDGE wird zusätzlich die Datenrate innerhalb der Kanäle erhöht. Mit einer besonders hochwertigen Modulationsart überträgt EDGE dreimal mehr Bits pro Kanal, ohne dabei mehr Kanäle benutzen zu müssen.
+
+EGPRS verhält sich ähnlich wie UMTS. Es braucht immer zwei bis drei Sekunden, bis es seine volle Datenrate erreicht hat. Beim Empfang von kleinen Dateien, zum Beispiel beim Surfen, macht sich das als unangenehme Verzögerung bemerkbar. Die Pingzeiten bzw. Antwortzeiten liegen zwischen 300 und 400 Millisekunden. Das liegt zwischen GPRS und UMTS.
+
+.EDGE im Vergleich
+[cols="<,>,>", options="header,autowidth"]
+|===
+|      | Senden (Uplink) | Empfangen (Downlink)
+|GPRS  | 1 - 2 kByte/s   | 3 - 5 kByte/s
+|EGPRS | 10 - 12 kByte/s | 15 - 22 kByte/s
+|UMTS  | 7,5 kByte/s     | 40 kByte/s 
+|===
+
+Mit EDGE Evolution von Ericsson und evolved EDGE von Nokia Siemens Networks gibt es zwei Erweiterungen, die die maximale Übertragungsrate auf über 1 MBit/s steigern soll. Doch kaum Relevanz wegen UMTS + HSPA & Co.
+
+
+UMTS
+----
+
+UMTS (Universal Mobile Telecommunications System):: Kombinierte ein 'Core Network' mit einem 'Access Network'. Wird auch '3G' genannt.
+
+Hauptverbreitungszeitraum 2004-2021.
+
+Core Network:: Besteht aus den GSM-Komponenten MSC, GMSC, EIR, HLR, AuC, SGSN und GGSN - kurzum aus GSM mit Ausnahme von dessen Basis-Stationen.
+
+Access Network:: Die Funk-Komponenten von UMTS. Besteht aus GERAN und UTRAN.
+
+RAN (Radio Access Network):: Ein Funknetz.
+
+GERAN (GSM/EDGE RAN):: Das sind die BSS des GSM-Netzes, also dessen BTS und BSC. Dadurch wird in UMTS die Kompatibilität mit 2G ermöglicht, denn das Core Network + GERAN ergibt im wesentlichen GSM.
+
+UTRAN (UMTS Terrestrial RAN):: Das ist sind die neuen leistungsfähigeren Funk-Komponenten von UMTS. Sie existieren zusätzlich bzw. parallel zu GERAN.
+
+Node-B:: Übernehmen in UTRAN die Rolle der BTS von GERAN.
+
+RNC:: Übernehmen in UTRAN die Rolle der BSC von GERAN. Allerdings sind die RNC anders als die BSC direkt mit einander vernetzt. Dadurch wird das sogenannte "Soft-Handover" möglich. Dabei versorgen zwei benachbarte Node-B zugleich dasselbe Endgerät während es sich von einem der beiden zum anderen bewegt.
+
+UE (User Equipment):: Die UMTS-Bezeichnung für die MS von GSM. Also für mobile Endgeräte.
+
+ME (Mobile Equipment):: Damit die UMTS-Komponente immerhalb der UE gemeint zu sein.
+
+USIM (UMTS Subscriber Identity Module):: So nennt UMTS offe UTRAN-fähigen SIMs.
+
+.UMTS im Vergleich
+[options="header,autowidth"]
+|===
+|Zone        | 4              | 3              | 2               | 1
+|Radius      | >20 km         | 350 m - 20 km  | 50 - 300 m     | mehrere 10 m
+|Bewegung    | bis 100 km/h   | bis 500 km/h   | bis 120 km/h   | bis 10 km/h
+|Rate        | bis 144 kBit/s | bis 144 kBit/s | bis 384 kBit/s | bis 2 MBit/s
+|Bezeichnung | Global         | Suburban       | Urban          | Inbuilding
+|            | (World Cell)   | (Macro Cell)   | (Micro Cell)   | (Pico Cell)
+|===
+
+Die Picozelle bezeichnet eine Funkzelle in einem Mobilfunknetz, die sehr klein ist. Picozellen sollen die Netzabdeckung in Gebäuden verbessern. Die räumliche Ausdehnung einer Picozelle ist vergleichbar mit der eines WLAN-Hotspots oder der Reichweite einer DECT-Basisstation für ein schnurloses Telefon.
+
+Im Gegensatz zu Picozellen brauchen Femtozellen keinen direkten Anschluss an das Netz des Mobilfunknetzbetreibers. Ein breitbandiger Internet-Zugang über DSL oder TV-Kabel genügt. Von dort aus werden die Datenpakete ins Netz des Mobilfunknetzbetreibers geroutet.
+
+
+LTE
+---
+
+Long Term Evolution. Wird auch '4G' genannt.
+
+Das Funkzugangsnetz und das Kernnetz wurden für LTE großteils neu konzipiert. Durch eine schlankere Architektur wird der Verbindungsaufbau beschleunigt. Er dauert nur noch 100 ms. Bei UMTS/HSPA waren es noch 1 bis 2 Sekunden. Antwortzeiten zwischen Sender und Empfänger von 20 bis 30 ms und darunter sind nun möglich.
+
+Evolved Packet System (EPS):: Bezeichnung der Netzarchitektur von LTE. Besteht aus EPC und EUTRAN.
+
+Evolved Packet Core (EPC):: Ersetzt das frühere Core Network vom UMTS, also dessen Vermittlungs- und Verbindungsschicht. Alle Komponenten darin haben andere Namen als in GSM/UMTS. Sie heißen nun PCRF, MME (HSS), SGW und PDN-GW.
+
+EUTRAN (Evolved UMTS Terrestrial Radio Access Network):: Ersetzt das UTRAN von UMTS, also dessen Funk-Komponenten.
+
+LTE UE (LTE User Equipment):: Das LTE-Gegenstück zum UE vom UMTS bzw. MS vom GSM.
+
+eNode-B:: Das LTE-Gegenstück des Node-B von UMTS bzw. BTS von GSM.
+
+PCRF (Policy and Charging Rules Function):: Dürfte das LTE-Gegenstück des AuC sein.
+
+MME (Management Mobility Entity):: Ist für die Anmeldung der Teilnehmer am Netz und deren Lokalisierung zuständig. Scheint dem administrativen Teil des MSC zu entsprechen, welches die eigentliche Arbeit ans SGW und PCRF auslagert.
+
+HSS (Home Subscriber Service):: Scheint das LTE-Gegenstück zum HLR zu sein. Das MME greift darauf zu um sich die Teilnehmerdaten zu besorgen.
+
+SGW (Serving-Gateway):: Scheint den Teil des früheren MSC darzustellen welche die eigentlich Weiterleitungs-Arbeit innerhalb des LTE-Netzes abwickelt. Allerdings scheint ein SGW kein statisches Netzwerkelement zu sein, sondern eher eine Art "Worker Thread" der on demand für einen angemeldeten User instanziert wird und dann nur persönlich für diesen die Weiterleitung erledigt.
+
+PDN-GW:: Scheint das LTE-Gegenstück zu GGSN zu sein. Stellt die Verbindung zum Internet dar.
+
+Relay Node:: Stellt eine LTE-Relay-Basisstation dar. Stellen eine Neuerung gegenüber UMTS dar, um die Funk-Reichweite zu vergrößern. Erfüllen eine ähnliche Funktion wie intelligente WLAN-Extender.
+
+
+NGN
+---
+
+Next Generation Network. Wird auch '5G' genannt.
+
+Hauptverbreitungszeitraum seit 2019. Die zumindest zum Zeitpunkt des Verfassens dieses Textes gerade aktuelle Generation.
+
+Der größte Unterschied aus organisatorischer Sicht ist dass es keine Unterscheidung zwischen Sprache, Daten oder sonstigen Übertragungsformen gibt. Alles innerhalb des Netzes basiert auf dem Internet-Protokoll ('All-IP').

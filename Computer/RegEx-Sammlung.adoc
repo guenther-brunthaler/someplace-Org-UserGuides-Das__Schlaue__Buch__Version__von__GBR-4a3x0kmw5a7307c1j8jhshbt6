@@ -1,0 +1,28 @@
+﻿RegEx-Sammlung
+==============
+v2023.133
+
+Häufig benötigte RegeEx für private Projekte.
+
+Die erste Listing-Zeile ist der RegEx, der zweite (optional) der Ersatz.
+
+Vor den Listing-Zeilen steht noch ein Code für die Klasse des RegEx, gefolgt von einer Erklärung was der RegEx bzw. die Substitution tun soll.
+
+
+RegEx-Klassen
+-------------
+
+BRE:: Basic POSIX RegEx
+ERE:: Extendesd POSIX RegEx
+Perl:: Perl-Style RegEx
+
+
+RegExes
+-------
+
+* ERE: "`op=`" zu "`op =`"-Transformation
++
+....
+([][(){}[:alnum:]])(([-+*/%^&|:]+)?=)
+\1 \2
+....

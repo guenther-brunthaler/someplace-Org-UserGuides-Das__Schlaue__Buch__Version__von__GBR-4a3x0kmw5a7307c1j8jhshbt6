@@ -1,0 +1,22 @@
+﻿Also ich habe einen Raspi [...] werden auch Werte von verschiedenen Sensoren in einer mySQL-DB gespeichert. Zusammen mit den Logfiles von OH erzeugt das pro Tag vermutlich eine Schreiblast im zweistelligen MB-Bereich. Gut, nehmen wir das Rotieren das Logfiles noch dazu - sind wir irgendwo tief dreistellig [...] Das Ergebnis war, dass zwei Karten halt nach 1-2 Jahren im Arsch waren.
+
+https://www.heise.de/forum/heise-online/News-Kommentare/Raspberry-Pi-4-Revision-1-2-mit-ausgebessertem-USB-C-Stecker-im-Handel/Re-und-goennt-euch-eine-SSD/posting-36192762/show/
+
+---
+
+Na gut, wenn du immer nur diesen SanDisk-Schrott nimmst, dann sicherlich. Vielleicht probierst du zur Abwechslung mal die Samsung Evo Plus.
+
+Mit den SanDisk hatte ich nur Ärger. Die sind mir am Raspberry Pi tatsächlich ständig verreckt. Mit den Samsung hatte ich bisher noch nicht ein einziges Problem. Keine Instabilitäten und viel höhere und gleichmäßigere Schreib- und Lesegeschwindigkeit als bei den SanDisk bei gleicher Geschwindigkeitsangabe auf der Verpackung.
+
+Und ich habe mittlerweile Langzeiterfahrung mit beiden.
+
+https://www.heise.de/forum/heise-online/News-Kommentare/Raspberry-Pi-4-Revision-1-2-mit-ausgebessertem-USB-C-Stecker-im-Handel/Re-und-goennt-euch-eine-SSD/posting-36192074/show/
+
+---
+
+Ich betreibe einen PI3 seit 2 Jahren 24/7 mit einer Sandisk Karte auf der andauernd geschrieben/gelesen wird und ein Test mit h2testw (vor einer kompletten Neuinstallation) ergab nicht den geringsten Fehler.
+
+https://www.heise.de/forum/heise-online/News-Kommentare/Raspberry-Pi-4-Revision-1-2-mit-ausgebessertem-USB-C-Stecker-im-Handel/Re-und-goennt-euch-eine-SSD/posting-36193054/show/
+
+---
+

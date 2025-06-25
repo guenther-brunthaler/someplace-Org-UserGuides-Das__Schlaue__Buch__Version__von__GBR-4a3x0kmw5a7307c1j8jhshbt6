@@ -1,0 +1,559 @@
+﻿QEMU
+====
+v2025.17
+
+
+How to control the mouse/keyboard grab
+--------------------------------------
+
+In the SDL-based interface, QEMU can "grab" mouse and keyboard.
+
+Then (most) input from those devices will be sent to the guest VM, rather than being interpreted by the host showing the window.
+
+The following keyboard combinations (which will *not* be sent to the guest) control this process:
+
+* `[Ctrl]+[Alt]+[g]`: Start/stop mouse and keyboard grab.
+
+* `[Ctrl]+[Alt]`: Does the same, but might not work in all situations. Use the above keyboard combination then.
+
+* Clicking into the QEMU window using the left mouse button: Does the same, but might not work in all situations either.
+
+* `[Ctrl]+[Alt]+[f]`: Toggle between full-screen and windowed view. Does not change state of the mouse/keyboard grab.
+
+I am not sure whether some of those combinations also work via the VNC interface.
+
+
+QEMU is confused about the current state of modifier keys
+---------------------------------------------------------
+
+Temporary confusion
+~~~~~~~~~~~~~~~~~~~
+
+Sometimes after grabbing/ungrabbing the keyboard, the QEMU guest can get confused about the state of the modifier keys such as `[Shift]`. This can happen if the guest misses a "key up"-event before/after entering the grab.
+
+In order to ensure that the guest is up to par with the current keyboard state, press down and release all modifier keys after entering the grab:
+
+* `[Ctrl]`
+* `[Alt]`
+
+As those are the only modifier keys which need to be pressed for grabbing/ungrabbing the QEMU window, they should be the only ones for which QEMU guest might have missed "key up"-events.
+
+In the case QEMU guest has missed some other "key up"-events and therefore mistakenly thinks that those other keys are still being pressed, do the same to resolve the problem: Just press then release the affected keys.
+
+
+Lasting confusion
+~~~~~~~~~~~~~~~~~
+
+In other cases, such as in the case of the `[Caps Lock]`-Key, QEMU's confusion can become permanent: It is possible to press that key within the Guest and it will actually toggle the guest's current Caps-Lock setting - but this setting will then be the inversion of what the Caps-Lock LED on the real keyboard indicates.
+
+In order to fix this:
+
+* Toogle the problematic modifier key within the guest into the state *not* permanently wanted (i. e. Caps-Lock "on").
+
+* Release the keyboard-grab of the VM, so that the keyboard will now affect the host outside the VM
+
+* Toggle the modifier key again, reverting it back to normal (i. e. Caps-Lock "off")
+
+* Let the VM grab the keyboard again
+
+The guest has missed the last toggling operation as it has been invisible to it; outside of its reach. Therefore the modifier inversion should be history. The modifier state of the guest should now match that of the real keyboard's LED state again.
+
+
+`ping` does not work
+--------------------
+
+This is normal with "-net user" (which is also the default network option). The reason is that `ping` cannot be performed without special privileges. The `ping`-executable on the host has such privileges. The `qemu` executable doesn`t.
+
+
+Adding a temporary drive without restarting the VM
+--------------------------------------------------
+
+In order to add a disk image to a running QEMU instance, issue a command like the following from the QEMU monitor console:
+
+----
+(qemu) info pci
+  ...
+  Bus  0, device   5, function 0: ...
+(qemu) drive_add 6 file=/path/to/file.img,format=raw,if=none,discard=unmap,id=mydisk1
+(qemu) device_add virtio-blk-pci,scsi=off,drive=mydisk1
+----
+
+where `6` is the bus slot number of the new drive. Use the next free device number `info pci` did not show.
+
+The file must already exist (alternatively use `format=qcow2` if appropriate) and may have been created with a shell command like
+
+----
+$ truncate -s 2g /path/to/file.img
+----
+
+The `discard=unmap` option will interpret 'discard' block device commands issued by the guest (e.g. as SATA 'TRIM') as instructions to punch holes into the backing image file, i. e. make them sparse. It it not clear to me whether this option also issues a 'discard' command on the affected portions of the image files before punching the hole, but it is likely.
+
+In order to exploit the 'discard' functionality from within the guest, one can do either of the following:
+
+* Use `fstrim` to search for unallocated space within a mounted file system and 'discard' those regions.
+
+* Use `blkdiscard` directly on a block device. This is useful before a `lvremove` command, because it ensures the space no longer used will be discarded on the backing store.
+
+* Mount the filesystem with the `discard` option. This will immediately discard any sectors which become unallocated during file system operation. However, this option is not recommended due to big overhead on the backing store. It is far better to run `fstrim` regularly (such as daily or hourly) as a cron job.
+
+However, note that adding 'discard'-capability to the block device may not be enough. If 'LUKS' or `dmcrypt` is used, 'discard' needs to be link:LUKS.html[activated for the mapping], too.
+
+'LVM2' on the other hand passes 'discard' through to the underlying block device automatically.
+
+The `id`-Attribute specifies the name which will be displayed for the drive when issuing command like
+
+----
+(qemu) info block
+...
+mydisk1 (#block512): /path/to/file.img (raw)
+    Attached to:      /machine/peripheral-anon/device[2]/virtio-backend
+    Cache mode:       writeback
+----
+
+However, emulated PC needs to support hot-plugging for actually recognizing the added new drive, or a reboot of the emulated machine will become necessary. Try this to avoid rebooting:
+
+----
+$ for m in acpiphp pci_hotplug; do modprobe $m; done
+----
+
+
+Removing the disk image later
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After unmounting and no longer using the new drive, it can be removed with the following command:
+
+----
+(qemu) device_del /machine/peripheral-anon/device[2]
+----
+
+The specified path is the same as the one shown in the "`Attached to:`"-line in the output of the QEMU monitor command "`info block`", except that the last path component (the backend name) has been removed.
+
+Note that there is also a monitor command "`drive_del mydisk1`", but this command is pretty useless, as it only removed the backing store, but not the device itself from the guest.
+
+
+Adding a new USB-Stick
+----------------------
+
+This only works if the VM has 'USB'-support, which reqires at last the `-usb` option. This alone only provides 'USB1'-support (slow), though.
+
+For 'USB2'-support (faster), add `-device usb-ehci`.
+
+For 'USB3'-support (a lot faster), add `-device qemu-xhci`.
+
+To add the USB-stick permanently at start rather than just temporarily, add
+
+----
+n=usbstick
+f=/path/to/file.img
+set -- "$@" -blockdev driver=file,filename="$f",node-name=${n}_img
+set -- "$@" -blockdev driver=raw,file=${n}_img,node-name=${n}_disk
+set -- "$@" -device usb-storage,drive=${n}_disk,id=$n
+----
+
+Passing through host USB devices
+--------------------------------
+
+First, you need to ensure the QEMU process will have any required access rights on the USB resource. It might be easiest to create an UDEV rule for this like the following example:
+
+----
+$ cat /etc/udev/rules.d/10-local-50-samsung-mp8gvq19zcjz7k76pqif44788.rules 
+SUBSYSTEM=="usb", ATTRS{idVendor}=="04e8", ATTRS{idProduct}=="663e", GROUP="v12n", MODE="0660"
+----
+
+This example assumes the qemu process is member of the group "v12n" which has been defined for such situations.
+
+Next, ensure that USB is enabled in qemu command line, and that at least a USB2-capable EHCI host controller device is also added:
+
+----
+$ qemu ... -usb -device usb-ehci,id=ehci ...
+----
+
+The `-usb` option already added an USB1.1 capable UHCI controller.
+
+Then, when the VM runs, enter the QEMU monitor console and
+
+----
+(qemu) info usbhost
+(qemu) device_add usb-host,vendorid=0x04e8,productid=0x663e,id=samsung
+...
+(qemu) device_del samsung
+----
+
+The first command shows USB devices available on the hypervisor host. The second command adds the host USB device with the vendor:product ID 04e8:663e to the emulation and assigns an identifier "samsung" to it.
+
+The last command removes the USB device from the emulation, using the previously assigned ID as a handle.
+
+
+Removing a device without a previously assigned ID
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your forgot to assign an ID, device hot-removal (without restarting the VM) is still possible but complicated.
+
+In this case the QOM-Path for the device needs to be determined. For this start here
+
+----
+(qemu) qom-list /
+----
+which list subcomponents which one has to append after the "/", thus showing a subtree path. Continue this process until a probable path is found, for example:
+
+----
+(qemu) qom-list /machine/i440fx/pci.0/child[7]/ehci.0/child[0]
+----
+
+Then examine the properties in order to ensure it is the right device:
+
+----
+(qemu) qom-get /machine/i440fx/pci.0/child[7]/ehci.0/child[0] vendorid
+1256
+
+(qemu) qom-get /machine/i440fx/pci.0/child[7]/ehci.0/child[0] productid
+26174
+----
+
+Use normal shell commands to format this as an USB identifier as shown by `lsusb`:
+
+----
+$ printf '%04x:%04x\n' 1256 26174
+04e8:663e
+----
+
+Now you know that the QOM path is indeed the correct one.
+
+After this verification the device can now be removed:
+
+----
+(qemu) device_del /machine/i440fx/pci.0/child[7]/ehci.0/child[0]
+----
+
+
+Adding a temporary console without restarting the VM
+----------------------------------------------------
+
+Using virtioconsole
+~~~~~~~~~~~~~~~~~~~
+
+First, in the QEMU monitor console, do this:
+
+----
+(qemu) device_add virtio-serial
+(qemu) chardev-add socket,path=/tmp/mycon0,server,nowait,id=mycon0
+(qemu) device_add virtconsole,chardev=mycon0,name=some_unique_name
+----
+
+The console port will be available in the guest as /dev/hvc0.
+
+Next, on the host, connect to the UNIX socket:
+
+----
+$ unixterm /tmp/mycon0
+----
+
+Finally, again on the host, spawn a getty:
+
+----
+$ setsid agetty hvc0 115200 vt100
+----
+
+Or create a login shell directly:
+
+----
+$ setsid sh -c "bash -l < /dev/hvc0 > /dev/hvc0 2>& 1"
+----
+
+Unfortunately, cursor keys do not seem to work in the unixterm.
+
+
+Using virtioserio
+~~~~~~~~~~~~~~~~~
+
+----
+(qemu) device_add virtio-serial
+(qemu) device_add virtserialport,name=myport0,id=port0
+(qemu) device_del port0
+----
+
+Not tested yet.
+
+
+SDL console screen does not get freshed
+---------------------------------------
+
+Press `[Ctrl]+[Alt]+[1]` in order to refesh the screen.
+
+This actually switches to the console screen from others of the available SDL screens, repainting the new screen. But if the current screen is already the console screen, it still gets repainted.
+
+
+[[qemu_monitor]]
+QEMU monitor console
+--------------------
+
+This console can be used interactively for sending commands to the running QEMU instance, or query its settings.
+
+Unless the monitor console has been redirected somewhere else such as by
+
+----
+-monitor unix:`pwd`/monitor,server,nowait
+----
+
+as part of the QEMU command line, then the monitor console will be multiplexed into the normal QEMU guest screen.
+
+This applies to both the SDL-based interface and the VNC-based interface.
+
+In this case, press `[Ctrl]+[Alt]+[2]` in show the monitor console instead of the guest screen.
+
+Within the multiplexed monitor, the following special keys can then be used:
+
+* `[Cursor up/down]`: Move through command-line history
+
+* `[Cursor left/right]`: Move cursor within current command line
+
+* `[Ctrl]+[Cursor up/down]`: Scroll the scrollback-buffer by 1 line.
+
+* `[Ctrl]+[Page up/down]`: Scroll the scrollback-buffer by 1 screen height.
+
+* `[Tab]`: Tab-completion (if possible at the current cursor position in the current command line)
+
+
+Additional QEMU screens
+-----------------------
+
+QEMU cannot just show the screen contents of the guest - it can show alternative screens as well.
+
+Unless those screens have been disabled or have been redirected elsewhere, switching between the screens is possible via keyboard commands.
+
+
+In the SDL-based or VLC-based interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* `[Ctrl]+[Alt]+[1]` switches back to the guest console screen (or forces repainting it if already shown)
+
+* `[Ctrl]+[Alt]+[2]` switches to the QEMU <<qemu_monitor,monitor console>> screen.
+
+* `[Ctrl]+[Alt]+[3]` switches to the serial-port console screen.
+
+* `[Ctrl]+[Alt]+[4]` switches to the parallel-port console screen.
+
+
+Host and guest forwarding
+-------------------------
+
+Temporarily
+~~~~~~~~~~~
+
+Examples for adding and removing TCP forwardings via the QEMU monitor:
+
+----
+(qemu) hostfwd_add tcp:127.0.0.1:22022-:22
+(qemu) hostfwd_remove tcp:127.0.0.1:22022
+
+(qemu) hostfwd_add tcp::22022-:22
+(qemu) hostfwd_remove tcp::22022
+----
+
+The first example forwards 127.0.0.1:22022 from the hypervisor host to port 22 of the VM.
+
+The second example forwards port 22022 from any interface of the hypervisor host to port 22 of the VM.
+
+
+Permanently
+~~~~~~~~~~~
+
+----
+-net nic,model=virtio,macaddr=1e:22:33:44:55:66
+-net user,hostname=testhost,host=10.54.99.99,net=10.54.0.0/16
+-net user,hostfwd=tcp:127.0.0.1:12345-:22,
+-net 'user,guestfwd=tcp:10.54.22.22:22-cmd:socat STDIO TCP4:10.55.195.44:22'
+----
+
+This will assign a dynamic IP address in the 10.54/16 Network to the guest.
+
+The hypervisor host can be reached from within the guest as 10.54.99.99.
+
+When someone outside of the VM connects to 127.0.0.1:12345 on the hypervisor host, this will be forwarded to the guest at port 22.
+
+When someone inside the VM guest connects to 10.54.22.22:22, it will fork a new socat instance which will forward the TCP connection to 10.55.195.44:22 in the network of the hypervisor host.
+
+Note that although
+
+----
+-net user,guestfwd=tcp:10.54.22.22:22-tcp:10.55.195.44:22
+----
+
+is possible it will most likely *not* do what is expected: Such guest forwardings are lasting connections established when the guest VM starts and shut down when the guest terminated. In other words, no new connections will be established outside of the VM, even though inside the VM it might seem as if there were. Therfore, most services like sshd would not usable with such a 'guestfwd' specification.
+
+
+Enable or disable KSM
+---------------------
+
+KSM ("Kernel Samepage Merging") tries to identify identical but otherwise unrelated memory pages in RAM and replace them by a single shared page, thus saving memory. This can be a good thing, especially if many VMs are running simultaneously.
+
+However, it also puts a runtime burden on the system, because the kernel has to scan all memory pages periodically in order to find new pages which can be shared.
+
+This wastes power on an idle system, and also the number of resulting shared pages is not always worth the effort. Check the current sharing status with
+
+----
+$ grep . /sys/kernel/mm/ksm/*
+----
+
+KSM can be turned on/off at runtime like this:
+
+----
+$ echo 0 > /sys/kernel/mm/ksm/run # stop KSM but continue sharing already-merged pages
+$ echo 1 > /sys/kernel/mm/ksm/run # start KSM
+$ echo 2 > /sys/kernel/mm/ksm/run # stop KSM and unshare any already-merged pages
+----
+
+Unless many VM instances are running, it might be a good idea to first start KSM and let it run for a couple of minutes in order to let the `full_scans` status variable (part of the sharing status) increment.
+
+Then turn it off but leave the already-merged pages shared.
+
+
+Ballooning memory
+-----------------
+
+If you want your VM to use more maximum amount of memory in some situations but reduce that amount normally, you can use memory ballooning.
+
+In order for this to work, the "virtio-balloon" driver must be available in the guest.
+
+Then configure your VM for the maximimum amount of memory it shall use and start it.
+
+Then enable ballooning in the guest by
+
+$ modprobe virtio_balloon
+
+Possibly this will be automatically done by udev - not sure. Anyway, it needs to be loaded.
+
+Then enter the QEMU monitor and issue the following commands:
+
+----
+(qemu) device_add virtio-balloon
+(qemu) info balloon
+balloon: actual=8192
+(qemu) balloon 6144
+(qemu) info balloon
+balloon: actual=6144
+----
+
+The units are MiB of memory. Note that it took the balloon device in the guest some time before ballooning enough so that 6144 MiB RAM was all that was remaining to the guest.
+
+The ballooned memory will then be returned to the hypervisor host.
+
+Note that the amount specified in the QEMU monitor "balloon" command is the amount of memory which should be available to the guest, not the amount which shall be "ballooned away".
+
+
+Discovering available devices
+-----------------------------
+
+QEMU/KVM documentation is lousy. The problem is that QEMU is continuously developed, and available options and drivers change all the time.
+
+Chances are that your qemu-system Executable will have different options than the documentation you found which was for some other version of the program.
+
+Fortunately, QEMU has a lot of options for self-introspection.
+
+For instance, to discover which devices might be added with "`-device`" in the command line or with "`add_device`" in the QEMU monitor, run the command
+
+----
+$ qemu -device "?"
+----
+
+Generally, many of the `qemu-system` command line option support the argument "`?`", and then display a list of supported values for this option rather than starting the emulator. Sometimes the string "`help`" is used rather than "`?`".
+
+Also, sometimes "`,?`" can be appended to get sub-options. For instance,
+
+----
+$ qemu-system-x86_64 -chardev '?'
+$ qemu-system-x86_64 -chardev 'socket,?'
+----
+
+Here the first command listed `socket` as one of the supported arguments for "`-chardev`", and the next command listed parameters avaible to the `socket` backend.
+
+
+QMP
+---
+
+Neben dem QEMU `-monitor` kann man auch zwei weitere Kommando-Interfaces mit den Optionen `-qmp` und `-qmp-pretty` erzeugen. Die beiden letzteren verwenden JSON zur Ein- und Ausgabe. Alle 3 Interfaces können parallel aktiv sein; man ist nicht auf eines davon beschränkt.
+
+Die `-qmp` und `-qmp-pretty` funktionieren identisch, nur dass letzteres seine Ausgaben pretty-printed und daher für manuelle Interaktion bedienungsfreundlicher ist. Das erste Device ist hingegen besser für Scripte, da die Ausgabe platzsparender und daher effizienter zu parsen ist.
+
+Wenn man QEMU mit den folgenden Optionen (man scheint statt `nowait` auch `wait=off` verwenden zu können) gestartet hat,
+
+----
+$ qemu-system-x86_64 [...] \
+	-monitor unix:./monitor,server,nowait \
+	-qmp unix:./qmp,server,nowait \
+	-qmp-pretty unix:./qmppretty,server,nowait \
+	[...]
+----
+
+kann man mit den folgenden Kommandos auf die 3 Interfaces zugreifen:
+
+----
+$ rlwrap socat STDIO UNIX:monitor # QEMU Monitor.
+$ rlwrap socat STDIO UNIX:qmp # JSON interface, machine-friendly.
+$ rlwrap socat STDIO UNIX:qmppretty # JSON-interface, human-friendly.
+----
+
+Nachdem man sich mit einem der JSON-Interfaces verbunden hat, wird man mit einer
+Status-Meldung begrüßt welche diverse Server-Attribute anzeigt.
+
+Um in den Kommando-Modus zu wechseln wo man Befehle erteilen kann, muss zuerst die JSON-Nachricht
+
+----
+{ "execute": "qmp_capabilities" }
+----
+
+eingegeben werden. Danach kann man sich dann eine Liste aller Kommandos mit dem Befehl
+
+----
+{ "execute": "query-commands" }
+----
+
+anzeigen lassen. Wegen der Länge der Liste ist hierzu das qmp-Interface besser geeignet da es die Befehle platzsparender anzeigt.
+
+Hinweis: Mit dem Werkzeug `"jq`" kann man sich JSON-Dateien pretty-printen und auf viele Weise verarbeiten lassen.
+
+Ein Beispiel wie man den "eject"-Befehl einsetzt:
+
+----
+{ "execute": "eject", "arguments": { "device": "ide1-cd0" } }
+----
+
+Es scheint im QMP-Interface allerdings keine grundlegend anderen Kommandos als im QEMU-Monitor zu geben.
+
+Es handelt sich nur um ein für Scripte benutzerfreundlicheres Interface mit ansonsten weitgehend denselben Möglichkeiten. Zumindest ist dies mein Eindruck vom Betrachten der Liste unterstützter Befehle.
+
+
+QEMU Monitor
+------------
+
+Wenn der Monitor mit einem Kommando wie
+
+----
+$ qemu-system-x86_64 [...] -monitor unix:./monitor,server,nowait [...] &
+$ rlwrap socat STDIO UNIX:monitor # QEMU Monitor.
+----
+
+aktiviert und geöffnet wurde, kann man hier viele Kommandos eingeben.
+
+Interessant zu wissen ist, dass man auch hier in vielen Situationen wo man die möglichen Optionen für ein Kommando nicht kennt, eine Liste möglicher Optionen anzeigen lassen kann, indem man "?" als Argument angibt. Etwa:
+
+----
+(qemu) help
+[...]
+device_add [...]
+[...]
+
+(qemu) help device_add
+device_add driver[,prop=value][,...] -- add device, like -device on the command line
+
+(qemu) device_add ?
+Controller/Bridge/Hub devices:
+name "cxl-downstream", bus PCI, desc "CXL Switch Downstream Port"
+name "cxl-rp", bus PCI, desc "CXL Root Port"
+[...]
+----
+
+Der `help` Befehl gab hier unter anderen dem Befehl `device_add` aus. Mit dem `help`-Befehl konnte man zwar eine Kurzanleitung zur Benutzung bekommen, wusste jedoch noch nicht was man als konkrete Werte angeben konnte.
+
+Der Aufruf des Befehls mit `?` als Argument lieferte dann eine lange Liste möglicher Devices.
+----

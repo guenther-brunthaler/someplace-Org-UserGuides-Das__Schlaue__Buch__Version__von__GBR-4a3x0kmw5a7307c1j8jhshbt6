@@ -1,0 +1,94 @@
+﻿Suspend, Hibernate and Wake-On-LAN (WOL)
+========================================
+v2024.353
+
+
+Suspend
+-------
+
+Um ein Suspend-To-RAM auszulösen:
+
+----
+$ echo deep > /sys/power/mem_sleep
+$ echo mem > /sys/power/state
+----
+
+Während ein
+
+----
+$ echo /dev/sda1 > /sys/power/resume
+$ echo disk > /sys/power/state
+----
+
+ein Suspend-To-Disk auslöst. Und hiermit
+
+----
+$ echo reboot > /sys/power/disk
+$ echo disk > /sys/power/state
+----
+
+kann man angeblich den aktuellen Zustand wie bei einem Hibernate sichern, jedoch danach sofort einen Neustart machen um z. B. ein anderes OS zu booten. Wichtig ist dass man dabei auf keinen Datensträger schreibt der während des Hibernatens in Verwendung war.
+
+Das Dokument "doc/Documentation/power/states.txt" im Linux Quelltextbaum erklärt es noch genauer. Demzufolge kann /sys/power/state folgendes sein:
+
+* "mem": Benutzt die Methode in /sys/power/mem_sleep. Dies kann sein:
++
+--
+   * "s2idle" (Suspend-To-Idle): Immer verfügbar, vermutlich nur CPU "HALT"
+   * "shallow" (Power-On Suspend): nur bei HW-Support, besser als "s2idle"
+   * "deep" (Suspend-To-RAM): nur bei HW-Support, besser als "shallow"
+--
+
+* "freeze": Dasselbe wie "mem" mit "s2idle"-Einstellung
+
+* "standby": Dasselbe wie "mem" mit "shallow"-Einstellung
+
+* "disk": Suspend-To-Disk nach Methode in /sys/power/disk:
++
+--
+   * "reboot": Danach einfach sofort neustarten, etwa um anderes OS zu booten
+   * "suspend": höhere Stromersparnis als STR, aber aufwachbar
+   * "shutdown": Danach abschalten - maximale Stromersparnis
+--
+
+Während es für "freeze" und "standby" daher 2 Methoden gibt dies zu erreichen, geht "deep" nur über "mem".
+
+
+Wake On LAN (WOL)
+-----------------
+
+Ich lernte, wie man "Wake On LAN" (WOL) ohne "ethtool" einschaltet:
+
+----
+$ echo enabled > /sys/class/net/eth0/device/power/wakeup
+----
+
+Dabei das `eth0` gegebenenfalls gegen den anderen Namen einer zu verwendenden Netzwerk-Schnittstelle austauschen.
+
+Ausschalten von WOL:
+
+----
+$ echo disabled > /sys/class/net/eth0/device/power/wakeup
+----
+
+Zumindest angeblich.
+
+Denn tatsächlich konnte ich den Rechner damit *nicht* aus seinem Suspend-to-RAM in der initramfs aufwecken.
+
+
+Legacy-Methode
+~~~~~~~~~~~~~~
+
+Laut https://www.mythtv.org/wiki/Wake-on-LAN:
+
+Some motherboards allow a large set of events to wake-up the machine via ACPI. These can be toggled via /proc/acpi/wakeup. Examples of ACPI wakeup events related to Wake-on-LAN:
+
+* 'LAN0', 'LANC' - The ethernet card
+
+* 'P0P2', 'PCI0' - The PCI bridge may need to be allowed to wakeup your machine before WOL works. You can find out which is your PCI bridge by matching the first column of lspci output with the last column of cat /proc/acpi/wakeup.
+
+One-liner to enable a wakeup event (ex: LAN0):
+
+----
+$ grep 'LAN0.*enabled' < /proc/acpi/wakeup >/dev/null || echo LAN0 > /proc/acpi/wakeup
+----

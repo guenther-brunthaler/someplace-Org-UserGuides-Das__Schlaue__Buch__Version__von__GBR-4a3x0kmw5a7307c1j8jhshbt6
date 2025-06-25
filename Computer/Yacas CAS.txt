@@ -1,0 +1,104 @@
+﻿Yacas CAS
+
+Vorteil: Sehr kleine Installation. Ca. 500 kB inklusive ausführlicher HTML Dokumentation (aber ohne PDF was 3 MB zusätzlich wären).
+
+Ausdrücke oder Kommandos einfach eintippen und Eingabetaste. Kein ";" am Ende der Zeilen nötig wie in manch anderen CAS.
+
+"quit" beendet, "restart" setzt alle Einstellungen auf Vorgaben zurück. Dauert eine Berechnung zu lange, kann sie mit [Strg]+[c] abgebrochen werden.
+
+Groß-/Kleinschrift in Namen ist in Yacas *relevant*!
+
+2^3, Mod(120+250,256), 1 << 8, 128 >> 7, 
+FromBase(16, "ffff"), ToBase(10, 65535), a<b, a<=b, a>b, a>=b, a=b, a!=b.
+
+Konstanten: Pi
+
+Kommentare: "/*" ... "*/", "//" bis Zeilenende.
+
+Sin(.3)) Wird nicht ausgewertet
+N(Sin(.3)) Numerische Näherung anzeigen
+N(Sin(.3),40) mit bestimmter Stellenzahl
+
+Funktionen die das Erwartete tun: Gcd, Lcm, Floor, Ceil, Min, Max, Sin, Cos, Tan. ArcSin, ArcCos, ArcTan, Exp, Ln, Sqrt, Abs, Sign, IsZero, IsRational.
+
+[xpr1;xpr2;] ist ein "Block" aus beliebig vielen Ausdrücken; der letzte wird als Ergebnis zurück gegeben. So kann man mehrere Audrücke in einer Zeile schreiben.
+
+a:=10 // Setzt Variable. Ist lokal falls sie im selben Block davor mittels Local(v1,...) deklariert wurde. Clear(v1, ...) löscht Varablen explizit.
+
+{v1,v2}:={xpr1,xpr2} funktioniert auch mit Listen.
+
+myfunc(v1,v2):=xpr definiert eine Benutzerfunktion.
+
+v[i]:=xpr macht v zu einem Vektor und weist zu.
+
+Min(1,99) mit 2 Argumenten oder Min({1,50,99}) mit "Liste" beliebiger Länge.
+
+Add(xpr1, xpr2, ...), Add({list}) addiert variable Anzahl an Werten (also die Summe).
+
+Sum(v,from,to,xpr) führt xpr mit v von from bis to aus und summiert die Ergebnisse.
+
+Factorize({xpr1, xpr2, ...}) tut dasselbe wie die 2. Form von Add() und Factorize(v,from,to,xpr) tut dasselbe wie Sum(), jedoch jeweils mit Multiplizieren (also das Produkt) statt Addieren.
+
+Num(a/b) gibt a, Denom(a/b) gibt b. Round(2.5) gibt 3.
+
+Rationalize(.2) gibt 1/5. Tut nichts bei irrationale Zahlen.
+
+Decimal(xpr) gibt Liste {vorkommastellen,nachkommastellen,{periodische endstellen}} wobei "nachkommastellen" fehlt wenn sie 0 sind. Nicht für irrationale Zahlen.
+
+ContFrac(xpr) nähert Wert als Partialbruch an mit automatischer Wahl der Tiefe, oder mit ContFrac(xpr,tiefe) wie angegeben.
+
+pslq({3, 17, 5}, 13) findet {x,y,z} so dass gilt: 3*x+17*y+5*z=0 auf 13 Dezimalstellen genau.
+
+D(v) xpr, D({v1, v2}) xpr oder D(v,n) xpr berechnen die 1. oder n. Ableitung von xpr nach den Variablen v bzw. v1 und v2.
+
+Integrate(v, lower, upper) xpr berechnet ein bestimmtes Integral und Integrate(v) xpr ein unbestimmtes.
+
+Limit(v, val) xpr nähert xpr unendlich genau an val an, Limit(v, val, Left) xpr und Limit(v, val, Right) tun dies von einer bestimmten Seite der Zahlengerade her. Für val können auch "Infinity" und "-Infinity" benutzt werden.
+
+5! gibt 120
+
+Bin(n, m) gibt Binominal-Koeffizient
+
+Permutations({list}) erzeugt eine Liste aller Anordnungs-Variationen (ohne Sortieren innerhalb der Variationen) der Listenelemente.
+
+Complex(r,i), Re(c), Im(c), I, Arg(c) wobe I^2 gibt -1.
+
+Simplifytry, RadSimpsimplify, FactorialSimplify, LnExpandexpand, LnCombinecombine, TrigSimpCombinec, Expand, SquareFree, Horner - verschiedene Formen der Ausdrucks-Vereinfachungen bzw. Umgestaltungen zu bestimmter Form.
+
+Solve(xpr,v) löst xpr=v wobei "==" als Gleichheitsoperator (anstatt "=" wie überall sonst in Yacas) verwendet werden muss. Solve(xpr) löst xpr=0. Solve ist ein wenig unfähig und versagt oft.
+
+SuchThat(xpr,v) wie Solve(xpr==0,v) jedoch kann v auch ein vorhandener Unterausdruck sein.
+
+OldSolve(xpr,v), OldSolve({xpr, ...}, {v, ...}) probieren wenn Solve versagt. Kann in Gegensatz zu Solve() auch manchmal Gleichungssysteme lösen.
+
+Eliminate(v,val,xpr) ersetzt alle v in xpr gegen val und vereinfacht das Ergebnis. Subst() tut dasselbe, nur ohne Vereinfachung.
+
+Newton(xpr,v,init,epsilon),Newton(xpr,v,init,epsilon,min,max) wie Solve(), jedoch für numerische Näherungen. Oft Rettung wenn Solve versagt. init ist die erste Lösung der Iteration welche stoppt sobald eine Genauigkeit epsilon erreicht wurde. min und max können den Suchbereich beschränken.
+
+MatrixSolve(A,b) löst lineare Gleichungssysteme wobei A deren Koeffizientenmatrix ist und b die Störspalte (die Werte rechts der Gleichheitszeichen). Eine Matrix wird durch geschachtelte Listen ausgedrückt: Innere Zeilenvektoren in äußeren Spaltenvektoren.
+
+PSolve(xpr,v) gibt eine Liste der Nullstellen ("Wurzeln") des Polynoms xpr zurück, das Potenzen von v enthält.
+
+CanProve(xpr) versucht einen logischen Ausdruck zu vereinfachen bzw zu "beweisen" (falls ein Wahrheitswert das Ergebnis ist), in dem neben Variablen die Konstanten "True", "False" und Operatoren "Not", "And", "Or" und "=>" ("impliziert" - Vorsicht, sehr geringer Operatorenvorrang) vorkommen.
+
+Dot(t1,t2) wie auch t2 . t2 sind das Skalarprodukt und CrossProduct(t1,t2) sowie t1 X t2 sind das Kreuzprodukt zweier Vektoren bzw. von Vektor und Matrix.
+
+ZeroVector(n) erzeugt Nullvektor mit n Elementen. BaseVector(n), Identity(n) und ZeroMatrix(r,c) erzeugen in ähnlicher Weise andere Standard-Matrizen/Vektoren.
+
+Diagonal(m) extrahiert die Hauptdiagonale einer Matrix.
+
+Normalize(t), Transpose(m), Determinant(m), Inverse(m) tun was man erwarten könnte.
+
+Factors(xpr) Primfaktorzerlegung
+
+NextPrime(n) nächste Primzahl nach Zahl n. IsPrime(n) testet mit angemessenen Methoden (inklusive Miller-Rabin) ob n eine Primzahl ist.
+
+CoPrime(n1,n2), CoPrime({n1, ...}) testet ob die Zahlen relativ prim sind, d. h. keine gemeinsamen Primfaktoren haben.
+
+Einen Ausdruck zur Berechnung über eine Pipe an yacas senden und es danach beenden:
+
+$ echo "1+1" | yacas -fpc | sed 's/;$//'
+
+Dasselbe, jedoch dass diesmal der Ausdruck in einer Shell-Variable $ausdruck enthalten ist:
+
+$ yacas -pc --execute "[Echo($ausdruck); Exit(); ]"

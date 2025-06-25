@@ -1,0 +1,4 @@
+﻿Dateisysteme - Anmerkungen und Abhilfen
+=======================================
+
+Mit `fatlabel` aus dem Paket `dosfstools` kann man die Datenträgerbezeichnung ("Volume Label") eines logischen Datenträgers ("Volume"), der mit einem Microsoft Windows/MS-DOS VFAT- oder FAT-Dateisystem formatiert ist, anzeigen und auch ändern.

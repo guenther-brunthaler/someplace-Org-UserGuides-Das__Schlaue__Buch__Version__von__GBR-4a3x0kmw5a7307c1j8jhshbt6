@@ -1,0 +1,3 @@
+﻿* Entfernen von ROWSPAN- und COLSPAN-Attributen aus XHTML-Tabellen, und Füllen der dadurch neu entstehenden Zellen durch Duplikate des ursprünglich einzelnen Zellwerts welche mehrere Zellen überspannte.
+
+* Erkennen identischer Werte untereinander oder nebeneinander (mit wählbarer Priorität von vertikal/horizontal) in mehreren Zellen von XHTML-Tabellen, und ersetzen solcher Duplikate durch ROWSPAN- und COLSPAN-Attribute damit eine einzelne Zelle die Zellen mit den identischen Werten überspannt.

@@ -1,0 +1,117 @@
+﻿Request-URLs für Suchmaschinen
+==============================
+Günther Brunthaler
+
+
+Die URLs wurden aus der Dillo-Konfiguration mit dem folgenden Kommando
+----
+$ sed 's/^search_url="\([^ ]*\) \(.*\) \([^ ]*\)"$/\1\n\2\n\3\n/; t; d' ~/.dillo/dillorc
+----
+
+entnommen.
+
+Jeder Eintrag der Liste hat nun das Format
+
+. Suchkürzel-Wort
+. Titel
+. URL
+
+Und leere Zeilen trennen die Einträge.
+
+In der URL wird "%s" durch jenen Text ersetztl der im URL-Feld des Browsers nach dem Suchkürzel-Wort eingegenen wurde.
+
+
+Liste
+-----
+
+Hier ist die Liste der Einträge:
+
+....
+gg
+Google (customized)
+http://www.google.at/search?safe=off&tbo=1&hl=de-AT&gbv=1&prmd=ivns&source=lnt&tbs=li:1&sa=X&q=%s
+
+wd
+Wikipedia (DE)
+http://de.wikipedia.org/w/index.php?search=%s&go=Go
+
+we
+Wikipedia (EN)
+http://en.wikipedia.org/w/index.php?search=%s&go=Go
+
+pr
+Pronounce (EN)
+http://www.speech.cs.cmu.edu/cgi-bin/cmudict?in=%s
+
+en
+LEO.org (EN <-> DE)
+http://pda.leo.org/?lp=ende&lang=de&searchLoc=0&cmpType=relaxed&relink=on&sectHdr=on&spellToler=std&search=%s
+
+in
+Movie number (IMDB)
+http://www.imdb.com/title/tt%s/
+
+im
+Movie name (IMDB) Name
+http://www.imdb.com/find?q=%s&s=tt
+
+ac
+Acronym Finder
+http://www.acronymfinder.com/~/search/af.aspx?pid=osearch&string=exact&acronym=%s
+
+ur
+Urban Dictionary
+http://www.urbandictionary.com/define.php?term=%s
+
+ge
+Geizhals.at
+http://geizhals.at/?fs=%s&x=0&y=0&in=
+
+dw
+Wiktionary (DE)
+https://de.wiktionary.org/w/index.php?title=Spezial:Suche&search=%s
+
+ew
+Wiktionary (EN)
+https://en.wiktionary.org/w/index.php?title=Special:Search&search=%s
+
+act
+Actor (IMDB) Name
+http://www.imdb.com/find?q=%s&s=nm
+
+to
+Torrentz
+http://torrentz.eu/search?q=%s
+
+rfc
+RFC by number
+https://tools.ietf.org/rfc/rfc%s.txt
+
+az
+Amazon.de
+http://www.amazon.de/s/ref=azs_osd_firefox?tag=amznsearchff-20&link_code=qs&index=aps&field-keywords=%s
+
+fn
+First names Etymology
+http://www.behindthename.com/name/%s
+
+dcc
+Dict.cc (EN <-> DE)
+http://www.dict.cc/?s=%s
+
+fd
+Free Dictionary
+http://www.thefreedictionary.com/%s
+
+asin
+Amazon.de (by ASIN)
+http://www.amazon.de/dp/%s
+
+MyCroft
+OpenSearch Plugins
+http://mycroftproject.com/search-engines.html?name=%s
+
+sc
+Scroogle
+https://ssl.scroogle.org/cgi-bin/nbbwssl.cgi?Gw=%s
+....

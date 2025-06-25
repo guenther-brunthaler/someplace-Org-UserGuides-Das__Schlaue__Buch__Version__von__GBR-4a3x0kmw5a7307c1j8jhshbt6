@@ -1,0 +1,10 @@
+Linux-Speicherresourcen
+=======================
+v2020.148
+
+Private:: RAM currently occupied by parts of virtual memory allocated with mmap() and flag MAP_PRIVATE
+Shared:: RAM currently occupied by parts of virtual memory allocated with mmap() and flag MAP_SHARED
+RSS ("Resident Set Size"):: Private + Shared
+PSS ("Proportional Set Size"):: Private + Shared / number_of_sharing_processes
+Swap:: Auslagerungsspeicher den der Prozess benutzt oder reserviert hat
+VIRT ("Virtual Memory"): RSS + Swap

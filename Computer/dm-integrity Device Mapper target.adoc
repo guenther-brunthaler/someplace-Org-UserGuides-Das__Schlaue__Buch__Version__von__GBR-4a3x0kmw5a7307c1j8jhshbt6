@@ -1,0 +1,148 @@
+﻿dm-integrity
+============
+v2020.162
+
+
+Basis-Blockgerät
+----------------
+
+'dm-integrity' erzeugt eine logische Sicht auf ein integritätsgeschütztes darunter liegendes echtes Blockgerät.
+
+Diese logische Sicht stellt erneut ein Blockgerät dar, in dem die zusätzlichen Integritätsinformationen unsichtbar sind welche für die Integritätsprüfung gespeichert werden müssen. Man kann daher auf dem Blockgerät der logischen Sicht beliebige Dateisysteme oder weitere Device-Mappings (wie etwa verschlüsselte Volumes) aufsetzen.
+
+Das Basis-Blockgerät auf welchem die logische Schicht von 'dm-integrity' aufsetzt, soll im folgenden als Variable `$BASE_DEVICE` verwendet werden. So können die Beispiele im Bedarfsfall 1:1 übernommen werden, indem man diese Variable auf ein echtes Blockgerät setzt. Beispiel:
+
+----
+$ BASE_DEVICE=/dev/disk/by-id/usb-SOME_NAME-part1
+----
+
+Auch für die zu erzeugende logische Sicht wird eine Variable festgelegt:
+
+----
+$ PROTECTED=protected_1
+----
+
+Dies führt später dazu, dass im gemounteten Zustand die logische Sicht auf das integritätsgeschützte Blockgerät als `/dev/mapper/$PROTECTED` verfügbar sein wird.
+
+
+Formatieren
+-----------
+
+Ich formatierte die einzige Partition (begann auf 512-Byte Sector # 8) eine 8 TB-Disk wie folgt:
+
+----
+$ integritysetup format --batch-mode --journal-integrity md4 --integrity md4 --progress-frequency 20 --tag-size 16 --sector-size 4096 -D --journal-size $((256*1024*1024)) "$BASE_DEVICE"
+----
+
+Das führte zu einem
+
+----
+$ integritysetup dump "$BASE_DEVICE"
+Info for integrity device /dev/disk/by-id/usb-SOME_NAME-part1.
+superblock_version 1
+log2_interleave_sectors 15
+integrity_tag_size 16
+journal_sections 1598
+provided_data_sectors 15506385192
+sector_size 4096
+flags have_journal_mac
+----
+
+Ohne das `--journal-size` lieferte der `dump`-Unterbefehl hingegen
+
+....
+journal_sections 399
+....
+
+(der Rest war gleich).
+
+
+Erkenntnisse
+~~~~~~~~~~~~
+
+* Per Default ist das Journal rund 64 MB groß. (Allerdings ist noch zu testen ob das von der Sector-Size abhängt.)
+
+* Der Default-Interleave hingegen beträgt rund die Hälfte der Journal-Größe.
+
+* Der checksum-Algorithmus sowohl für die eigentlichen Daten als auch für das Journal wird *nicht* im Superblock abgespeichert, sondern muss bei jedem Öffnen explizit erneut angegeben werden. Was für ein Schwachsinn!
+
+
+Anzeigen der Daten des formatierten Devices
+-------------------------------------------
+
+----
+$ integritysetup dump "$BASE_DEVICE"
+Info for integrity device /dev/disk/by-id/usb-SOME_NAME-part1.
+superblock_version 1
+log2_interleave_sectors 15
+integrity_tag_size 16
+journal_sections 1598
+provided_data_sectors 15506385192
+sector_size 4096
+flags have_journal_mac 
+----
+
+Man beachte, dass weder der Algorithmus für den Schutz des Journals noch für den Schutz der Nutzdaten in dieser Angabe enthalten ist. Aus unerfindlichen Gründen werden die Algorithmen nicht im Superblock gespeichert und müssen tatsächlich bei jedem Öffnen erneut angegeben werden.
+
+
+Mounten des formatierten Blockgeräts
+------------------------------------
+
+----
+$ integritysetup open --journal-commit-time 240000 --journal-integrity md4 --integrity md4 "$BASE_DEVICE" "$PROTECTED"
+----
+
+Man beachte, dass man die Algorithmen für die Integritätsprüfung sowohl des Journal als auch der eigentlichen Nutzdaten selbst bei jedem Mounten erneut angeben muss, da sie nicht im Superblock gespeichert werden.
+
+Die Angabe der `--journal-commit-time` ist normalerweise nicht nötig, jedoch hilfreich wenn sehr viele Daten auf einmal auf das Device geschrieben werden sollen um die Anzahl der Kopfbewegungen (geringfügig) zu minimieren.
+
+
+Anzeige des Integritäts-Status
+------------------------------
+
+Während das Blockgerät gemountet ist, kann man den aktuellen Status ansehen:
+
+----
+$ integritysetup status "$PROTECTED"
+/dev/disk/by-id/usb-SOME_NAME-part1 is active.
+  type:    INTEGRITY
+  tag size: 16
+  integrity: md4
+  device:  /dev/sdg1
+  sector size:  4096 bytes
+  interleave sectors: 32768
+  size:    15506385192 sectors
+  mode:    read/write
+  failures: 0
+  journal size: 268361728 bytes
+  journal watermark: 50%
+  journal commit time: 240000 ms
+  journal integrity MAC: md4
+
+----
+
+und beispielsweise mit der Größe des darunter liegenden Basis-Blockgeräts vergleichen:
+
+----
+$ blockdev --getsz "$BASE_DEVICE"
+15628053153
+----
+
+In diesem Beispiel beträgt der Overhead des Integritätsschutzes (inklusive dem Journal) daher 0,78 % der Speicherkapazität des Basis-Blockgeräts.
+
+Weiters kann man sich auch anzeigen lassen welches Device-Mapping der `integritysetup`-Befehl letztendlich erzeugt hat:
+
+----
+$ dmsetup table "$PROTECTED"
+0 15506385192 integrity 8:97 0 16 J 8 block_size:4096 journal_sectors:524144 interleave_sectors:32768 buffer_sectors:128 journal_watermark:50 commit_time:240000 internal_hash:md4 journal_mac:md4
+----
+
+
+Unmounten des geschützten Blockgeräts
+--------------------------------------
+
+Nachdem man alle Benutzer (darauf gemountete Dateisysteme oder andere Device-Mapper Mappings) entfernt/ungemountet hat welche auf dem integritätsgeschützten Blockgerät `/dev/mapper/$PROTECTED` basieren, kann man auch dieses selbst unmounten:
+
+----
+$ integritysetup close "$PROTECTED"
+----

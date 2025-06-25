@@ -1,0 +1,235 @@
+﻿'WebDAV' Cloud-Server
+=====================
+v2019.153.3
+
+Ein 'WebDAV'-Server kann als simple Cloud-Speicherlösung und 'Dropbox'-Ersatz verwendet werden.
+
+Nebenbei kann er noch als normaler Webserver verwendet werden.
+
+Ein 'WebDAV'-Server funktioniert mit allen verbreiteten Betriebssystemen, weil irgend ein 'WebDAV'-Client findet sich überall.
+
+Für 'Android' gibt es etwa ein 'WebDAV' Plug-in für den 'Total Commander', und auch der quelloffene 'Ghost Commander' hat scheinbar eines.
+
+Windows konnte zumindest früher einmal 'WebDAV' direkt im Explorer mounten.
+
+Unter unter 'Linux' gibt es mit 'davfs2' sogar die Möglichkeit eine 'WebDAV'-URL als Netzwerkdateisystem zu mounten.
+
+Aber solange man keinen schreibenden Zugriff auf 'WebDAV' braucht, ist es gar nicht nötig irgendwelche Spezial-Software zu benutzen: Dann reicht ein simpler Webbrowser für den Zugriff auf die 'WebDAV'-Dateien.
+
+Und dass muss nicht einmal ein besonders toller sein, man kann auch mit 'Dillo' oder 'Lynx' darauf zugreifen.
+
+Überdies kann ein 'WebDAV'-Server auch ganz abseits von Remote-Zugriffen nützlich sein. Wenn etwa zwei Benutzer am selben Rechner Dateien mit einander austauschen wollen, aber beide sind keine privilegierten Benutzer und haben nur auf ihr eigenes 'HOME'-Verzeichnis Schreibzugriff, wollen dieses aber auch nicht allgemein für andere User erreichbar machen. In diesem Fall können sie die gemeinsam zu benutzenden Dateien mittels 'WebDAV' frei geben, und andere Benutzer können diese dann als 'FUSE'-Dateisystem irgendwo in ihrem eigenen 'HOME'-Verzeichnis mounten und so benutzen.
+
+Man braucht auch nicht besonders viel Software am Server um dies zum Laufen zu bekommen: Der extrem leichtgewichtige 'lighttpd'-Webserver war alles was ich benötigte, und man braucht nicht einmal einen privilegierten Benutzer-Account dafür.
+
+Wer Lust hat selber einen 'WebDAV'-Server aufzusetzen, hier ist eine Anleitung (unter 'Raspbian' ausprobiert, sollte aber unter anderen 'Linux'en nicht all zu verschieden sein):
+
+Als Hardware reicht schon der billigste 'Raspberry Pi Zero' für 5 EUR, da sie kaum Rechenkraft erfordert. Wenn man 'Ethernet' und 'WLAN' haben möchte, würde ich aber doch eher einen 'Raspberry Pi 3' empfehlen.
+
+Wenn man bereits 'WLAN' zuhause hat und den neuen Server einfach nur übers 'WLAN' erreichen will, wäre ein 'Raspberry Pi Zero W' für 10 EUR die günstigste Variante. So kann man dem Server zuhause über 'WLAN' erreichen, und wenn man im 'WLAN'-Router eine Weiterleitungsregel für ihn einrichtet auch von außen.
+
+Doch nun zur Installation der eigentlichen 'WebDAV' "Cloud"-Lösung:
+
+'WebDAV'-Konfiguration
+----------------------
+
+Als erstes habe ich irgendwo als normaler Benutzer ohne besondere Rechte ein Verzeichnis mit dem namen `webdav-localserve` angelegt, wo sowohl die Konfiguration des 'WebDAV'-Servers als auch die von 'WebDAV' via 'HTTPS' sichtbaren Dateien in einer Verzeichnis-Struktur untergebracht sind.
+
+In diesem Verzeichnis `webdav-localserve` habe ich dann alle weiteren Schritte durchgeführt ("`cd`" dorthin machen) und dort die Datei `lighttpd.conf` mit dem folgenden Inhalt angelegt:
+
+----
+var.base_dir = "/PATH/TO/SOME/BASE/DIRECTORY/webdav-localserve"
+var.log_dir = var.base_dir + "/log"
+var.state_dir = var.base_dir + "/run"
+var.conf_dir = var.base_dir + "/conf.d"
+
+server.modules = (
+ "mod_access",
+ "mod_accesslog",
+ "mod_auth",
+ "mod_webdav"
+)
+
+server.port = 8080
+# Disable the next line if you are using IPv6
+server.use-ipv6 = "disable"
+server.document-root = var.base_dir + "/webspace"
+
+#server.pid-file = var.state_dir + "/lighttpd.pid"
+accesslog.filename = var.log_dir + "/access.log"
+
+dir-listing.activate = "enable"
+dir-listing.encoding = "utf-8"
+server.indexfiles = ("index.html", "index.htm")
+
+include_shell "/usr/share/lighttpd/create-mime.assign.pl"
+
+ssl.engine = "enable"
+ssl.pemfile = var.base_dir + "/server.pem"
+ssl.cipher-list = "AESGCM:!ECDHE-RSA-AES256-SHA384:AES256-SHA256:!RC4-SHA:!RC4:HIGH:!MD5:!aNULL:!EDH"
+
+auth.backend = "plain"
+auth.backend.plain.userfile = var.conf_dir + "/lighttpd-plain.user"
+auth.require = (
+ "/" => (
+ "method" => "digest",
+ "realm" => "WebDAV",
+ "require" => "user=USERNAME1|user=USERNAME2|user=USERNAME3"
+ )
+)
+
+webdav.activate = "enable"
+webdav.is-readonly = "enable"
+
+$HTTP["url"] =~ "^/incoming($|/)" {
+ webdav.is-readonly = "disable"
+}
+
+# Uncomment these if you want to limit the maximum transfer speed:
+#server.kbytes-per-second = 100
+#connection.kbytes-per-second = 100
+
+# See https://notizen.stephangsell.de/2013/12/lighttpd-owncloud-foldersync-417-und-expectation-failed/
+server.reject-expect-100-with-417 = "disable"
+----
+
+Das muss man natürlich noch anpassen indem man `/PATH/TO/SOME/BASE/DIRECTORY` sowie die `USERNAME1` etc. ändert.
+
+Außerdem braucht man noch ein Zertifikat fürs 'HTTPS', es soll ja schließlich sicher sein. Das folgende Script `genkeys.sh` im selben Verzeichnis erzeugt eines:
+
+----
+# See https://linux4all.dreamwidth.org/26255.html
+set -x
+openssl genrsa -out server.tmp -des3 -passout pass:1234 \
+ -rand /dev/random 2048
+openssl rsa -passin pass:1234 -in server.tmp -out server.pem
+rm server.tmp
+openssl req -new -outform PEM -out server.crt -key server.pem \
+ -keyform PEM -sha1 -x509 -days 3650 -nodes
+cat server.crt >> server.pem
+----
+
+Bei den Fragen kann man einfach auf die `[Eingabetaste]` drücken oder eingeben was einem richtig erscheint - es ist belanglos für die Wirksamkeit. Allerdings bekommen Leute welche das Zertifikat prüfen die Informationen angezeigt, daher sollte das was man eingibt zumindest einen sinnvollen Eindruck machen.
+
+* Für den "Common Name" `CN` ist es beispielsweise gebräuchlich, die 'IP'-Adresse und Portnummer des Rechners anzugeben - einige Web-Browser überprüfen das möglicherweise. Z. B.: "`10.11.12.14:8080`"
+
+* Als "Organizational Unit" `OU` bietet sich "`WebDAV Server`" an
+
+* "Organization" `O` ist der Firmenname, Verein, Behörde die den Server betreibt.
++
+--
+Ich weiß nicht was man als Privatperson hin schreiben soll. Man könnte vielleicht eines der folgenden verwenden:
+
+* "`Casual user`"
+* "`Common user`"
+* "`Individual user`"
+
+Oder man könnte "`WebDAV Server`" als `CN` angeben und weder `O` noch `OU` angeben.
+--
+
+* "Locality" `L` ist üblicherweise die Stadt, z. B. "`Eisenstadt`". Man könnte aber auch gleich die ganze Adresse einzeilig angeben, etwa "`Stephansplatz 99, 1010 Wien`".
+
+* "State" `ST` ist der Bundesstaat oder Bundesland, z. B. "`Burgenland`"
+
+* "Country" `C` ist das Land, z. B. "`Austria`"
+
+Da die damit erzeugten Zertifikate, um *wirklich* sicher zu sein, keiner CA vertrauen und selbst-signiert sind, muss man beim erstmaligen Ansurfen des 'WebDAV'-Servers dessen Zertifikat im Browser anzeigen lassen, den Zertifikats-Fingerprint vergleichen und danach als vertrauenswürdig bestätigen und im Browser speichern.
+
+Den dazu erforderlichen Fingerprint des Zertifikats zeigt man wie folgt an:
+
+----
+$ openssl x509 -in server.pem -noout -fingerprint
+----
+
+Diese Ausgabe sollte man sich notieren und immer dabei haben, etwa am Handy oder einfach auf einem Stückchen Papier ausgedruckt in der Brieftasche.
+
+So braucht man keinem "broken by design"-CA-System zu vertrauen, sondern nur einer simplen Hex-Zahl die man persönlich vergleicht und so sicher sein kann dass man wirklich mit dem richtigen Server (und keinem Man-in-the-Middle) verbunden ist wenn man sein Passwort eingibt.
+
+Wenn man im obigen Befehl das `-fingerprint` gegen `-text` ersetzt, bekommt man auch die ganzen Angaben wie `CN`, `O`, `OU` etc. alle angezeigt. Das ist zwar nicht erforderlich um das Zertifikat zu benutzen oder zu verifizieren, aber es hilft einem heraus zu finden was in einer Zertifikats-Datei enthalten ist deren Dateiname wenig verrät.
+
+Vor dem ersten Start muss man dann noch ein paar Arbeits-Verzeichnisse anlegen welche die obige Konfiguration sich als Unterverzeichnisse von `webdav-localserve` erwartet:
+
+----
+$ mkdir -m700 log run webspace webspace/incoming conf.d
+----
+
+Und dann muss man natürlich noch die User-Accounts anlegen, die Zugriff auf den 'WebDAV'-Server haben sollen.
+
+Dazu ist es nicht nötig *echte* Accounts des Betriebssystems zu verwenden; die Accounts sind nur innerhalb der 'WebDAV'-Lösung gültig.
+
+Der 'WebDAV'-Server wird in diesem Beispiel zudem auch nicht als Systemdienst gestartet sondern als normales Benutzerprogramm gestartet, so dass kein Schreibzugriff nach `/etc` erforderlich ist.
+
+Ansonsten muss man nur noch die Accounts erstellen und die Passwörter vergeben. Nehmen wir an ich habe drei User mit den Namen `USERNAME1`, `USERNAME2` sowie `USERNAME3`, welche die Passworte `M0JRAfl8jVKjeclbes+tWs3MWzUm7p1euEQB6WaMTEo`, `6FW6BeLE1ZTFVvsb5+c5F+TiE9MbJkUyGXl8nvnsi9c` sowie `ipjquvjImbTgXuLxZEDWAYpy6y72C4zrWu2IebaXfk4` verwenden sollen.
+
+Dann legt man im Unterorder `conf.d` folgende Datei an:
+
+----
+$ cat conf.d/lighttpd-plain.user
+USERNAME1:M0JRAfl8jVKjeclbes+tWs3MWzUm7p1euEQB6WaMTEo
+USERNAME2:6FW6BeLE1ZTFVvsb5+c5F+TiE9MbJkUyGXl8nvnsi9c
+USERNAME3:ipjquvjImbTgXuLxZEDWAYpy6y72C4zrWu2IebaXfk4
+----
+
+Also ein simples Format: Benutzername und Passwort pro Zeile, durch einen Doppelpunkt getrennt.
+
+Zugegeben, keine besonders tolle Lösung da die Passworte nicht gehashed und gesalzen sind - schlecht wenn jemand den Server hacked. Allerdings: Dann hat er ohnehin bereits Zugriff auf alle Daten, also GAU ohnehin bereits eingetreten.
+
+Davon abgesehen hat 'lighttpd' einen ausgezeichneten Security Track Record. Wesentlich weniger Bugs als sagen wir einmal 'Apache'. Was sicherlich auch an der Größe liegt, denn 'lighttpd ist nur ein sehr kleines und schlankes Programm. Wo weniger Code ist, können auch weniger Bugs drin sein.
+
+'Lighttpd' braucht auch weniger Ressourcen als selbst 'nginix', der nächstfettere aber immer noch schlanke Konkurrent.
+
+Wenn man noch zusätzliche User anlegen will, muss man weitere Zeilen zur Passwort-Datei hinzu fügen, und in der `lighttpd.conf` Datei das "`user=USERNAME1|user=USERNAME2|user=USERNAME3`" um ein weiteres "`|user=NEUERNAME`" ergänzen.
+
+Das ist eigentlich alles.
+
+
+'WebDAV' Server starten
+-----------------------
+
+Nun muss man den Server nur noch starten:
+
+----
+$ lighttpd -D -f lighttpd.conf
+----
+
+und schon kann man ihn ausprobieren, indem man im Browser die URL https://127.0.0.1:8080/ ansurfed.
+
+Will man ihn wieder stoppen, einfach `[Strg]+[c]` drücken.
+
+In der obigen Konfiguration lauscht der Server auf allen 'IP'-Adressen des Rechners, wenn man daher auch extern im 'Internet' sichtbar ist, kann man den Server auch von dort aus ansurfen.
+
+
+Nutzung
+-------
+
+Anfang ist der Server natürlich noch leer - es sind keine Dateien drauf.
+
+In diesem simplen Beispiel haben alle User dieselben Rechte, alle können ins Unterverzeichnis `incoming` schreiben (dazu braucht man dann allerdings doch einen expliziten 'WebDAV'-Client, der Browser kann nur lesen) und aus allen anderen Verzeichnissen können sie die Dateien nur lesen.
+
+Und der User welcher den 'WebDAV'-Server laufen lässt, sichtet dann die Dateien in `incoming`-Ordner und verschiebt sie bei Bedarf nach außerhalb wo die User sie dann nur noch lesen aber nicht mehr löschen/verändern können.
+
+Die unterschiedlichen Accounts gibt es nur deshalb damit jeder User ein anderes Login hat, und man im Logfile `./log/access.log` sehen kann wer was getan hat.
+
+Wenn man die Konfiguration verfeinert, kann man aber auch Verzeichnisse anlegen die nur einzelne Benutzer einsehen oder beschreiben können.
+
+Doch da dies ein simples Beispiel sein soll, habe ich solche Feinheiten weg gelassen.
+
+
+Fazit
+-----
+
+Dieses Beispiel wie man sich selber einen Cloud-Storage einrichten kann hat zwar 'Lighttpd' verwendet weil ich möglichst schlanke und simple Programme bevorzuge. Aber selbstverständlich kann man dasselbe auch mit 'Apache' oder 'nginx' erreichen, etwa wenn man die ohnehin bereits laufen hat und auch dafür verwenden möchte.
+
+In jedem Fall ist ein lokaler Webserver alles, was man fürs Betreiben von 'WebDAV' braucht.
+
+Wem diese Lösung zu simpel ist, kann ja statt dessen 'owncloud' oder 'seafile' benutzen.
+
+Für jeden ist etwas dabei!
+
+Niemand braucht 'Dropbox' zu verwenden, außer man will. Aber Cloud Storage geht auch billiger.
+
+Außerdem ist die oben skizzierte Lösung sicherer, weil man so nur dem eigenen Server vertrauen muss, und überdies keine Zertifikate zum Einsatz kommen die fremde Leute erzeugt oder beglaubigt haben.
+
+Die Lösung ist so sicher wie die Passworte die man vergeben hat, und die Verschlüsselungs-Algorithmen die man in der Konfigurationsdatei ausgewählt hat.
+
+Vor allem aber braucht man nicht darauf zu vertrauen dass keine neugierigen 'Dropbox'-Mitarbeiter in den Daten herumschnüffeln oder an den Geheimdienst weiter geben wenn sie dazu verpflichtet werden.

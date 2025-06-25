@@ -1,0 +1,22 @@
+Supercomputer
+=============
+
+Schnellster Computer
+--------------------
+
+Stand: 2020-02
+
+Der "Summit" Supercomputer des Oak Ridge National Laboratory (Tennessee, USA) schafft	148,6 PetaFLOPS mit 14,7 GFLOPS/Watt beim Linpack-Benchmark.
+
+
+Effizientester Computer
+-----------------------
+
+Stand: 2019-11
+
+Japan A64FX prototype mit 16,9 GFLOPS/Watt
+
+
+Aktuelle Listen zeigen, dass massiv parallele Prozessoren energieeffizienter arbeiten als Allzweck-Rechenkerne: Im Juni 2017 basierten die zehn energieeffizientesten Green500-Systeme auf Nvidia Tesla GPUs.
+
+Quelle: https://de.wikipedia.org/wiki/TOP500

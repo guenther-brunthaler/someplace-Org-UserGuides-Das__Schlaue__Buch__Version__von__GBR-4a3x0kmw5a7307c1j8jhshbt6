@@ -1,0 +1,142 @@
+﻿Linux Kernel bauen und installieren
+===================================
+v2023.134
+
+
+Platzbedarf für die Installation
+--------------------------------
+
+Um die erforderliche Größe in /boot abzuschätzen, zuerst einmal den für den Bootloader abschätzen.
+
+Der GRUB alleine belegt ca. 12 MB.
+
+Weiters "die anderen" Dateien welche nichts direkt mit dem Kernel zu tun haben. Z. B. ipxe-Module und Rettung-Tools in /bin. Das sind bei mir gerade ca. 18 MB.
+
+Dazu kommen nun 
+
+config-${VERSION}
+initrd.img-${VERSION}
+modules-${VERSION}.txz
+System.map-${VERSION}
+vmlinuz-${VERSION}
+
+welche bei mir zusammen 95 MB (pro $VERSION) sind.
+
+Der Gesamtplatzbedarf ergibt sich nun als Summe aus
+
+* dem Platzbedarf von GRUB oder sonstigem Bootloader
+
+* den "anderen" Dateien
+
+* Der Summe der Kernel-spezifischen Dateien, welche mit der Anzahl der Kernel-Architektur-Varianten (amd64, i386 etc.) multipliziert werden muss, sowie zusätzlich mit dem Faktor 5.
+
+* Danach noch 33 % Platz dazu geben um die mit der Zeit immer größer und fetter werdenden Kernels und Software im Allgemeinen zu kompensieren. Man will /boot schließlich nicht in ein paar Jahren vergrößern müssen. Wenn der Platz knapp ist, kann man hierauf verzichten.
+
+* Das Ergebnis auf die nächsten ganzen 100 MB aufrunden. Auf ein paar Bytes kommt es hier auch nicht mehr an. Wenn der Platz knapp ist, kann man einen kleineren Schwellenwert wie z. B. 5 MB zum Aufrunden nehmen.
+
+Der Faktor 5 erklärt sich wie folgt:
+
+* Pro Kernel-Architektur gibt es eine aktuelle und eine alte Version.
+
+* Hinzu kommt eine uralte Version wenn man zwar Kernel Updates macht jedoch danach nicht immer das System neu startet. Dadurch bleibt auch die laufende Version als zweite alte Kernelversion installiert.
+
+* Und schließlich wird bei Updates zuerst einmal ein weiteres Kernel dazu installiert, bevor das bisherige alte entfernt wird.
+
+* Schließlich sollte man noch den Fall vorsehen, dass man wegen Problemen eine spezielle zusätzliche Kernel-Version braucht. Etwa einen Special-Purpose Custom-Build mit zusätzlichen Backports oder Features im Falle irgendwelcher Migrations-Probleme bei einem Upgrade. Daher insgesamt 5 x den Platzbedarf.
+
+Das mit dem zusätzlichen Platzbedarf nur während der Installation gilt für den GRUB zwar genau so. Aber da dieser viel kleiner als die Kernel-Dateien ist und zu einem anderen Zeitpunkt aktualisiert wird, reicht der fürs zusätzliche Kernel temporär frei gehaltene Platz für das GRUB-Update immer aus.
+
+Im obigen Fall beträgt die erforderliche Größe für /boot also: (12 + 18 + 95 * 5) * 1,33 = 672 MB. Auf 700 MB aufgerundet bekommt man eine gute und für hoffentlich Jahrzehnte zukunftssichere Größe.
+
+
+[[kernel_bootloader_bn8zw6dh5kje45jwjfxk92k38]]
+Kernel/Bootloader
+-----------------
+
+Als erstes sicherstellen dass +/boot+ read-writable gemountet ist, da sonst weder die initramfs noch Kernel oder bootloader aktualisiert werden können.
+
+Falls noch nicht geschehen, das Kernel-Paket installieren oder seine Konfiguration abschließen falls dies davor nicht funktioniert hatte.
+
+Danach eine Kopie der neuen Kernel-Module nach +/boot+ kopieren, für den Fall dass beim Neustart welche in der initramfs fehlen sollten:
+
+Variante 1:: Module nur für eine ausgewählte Kernel-Version.
+--
+----
+KERNEL_VERSION=... # Set it up!
+test -w /boot && ro=false || ro=true
+test $ro = true && mount -o remount,rw /boot
+> /boot/modules-$KERNEL_VERSION.txz
+mkdir -m 700 /tmp/kmod && cd /tmp/kmod
+cp -a /lib/modules/$KERNEL_VERSION .
+find -name "*.ko" -exec strip -g {} +
+tar -c $KERNEL_VERSION | xz -9c > /boot/modules-$KERNEL_VERSION.txz
+cd - && rm -rf /tmp/kmod
+test $ro = true && mount -o remount,ro /boot
+unset KERNEL_VERSION ro
+----
+--
+
+Variante 2:: Module (fast) aller installierten Kernel-Versionen.
+--
+----
+MODULE_SETS=/lib/modules/* # Set it up!
+test -w /boot && ro=false || ro=true
+test $ro = true && mount -o remount,rw /boot
+> /boot/modules.xz
+mkdir -m 700 /tmp/kmod && cd /tmp/kmod
+cp -a $MODULE_SETS .
+find * -name "*.ko" -exec strip -g {} +
+find * | LC_COLLATE=C sort | cpio -oH newc | xz -9c > /boot/modules.xz
+cd - && rm -rf /tmp/kmod
+test $ro = true && mount -o remount,ro /boot
+unset KERNEL_VERSION ro
+----
+--
+
+Wenn GRUB auf einem x86-System als Bootloader installiert sein sollte, diesen rekonfigurieren:
+
+----
+dpkg-reconfigure grub-pc
+----
+
+
+Linux-Kernel selbst bauen
+-------------------------
+
+Wenn kein passendes Kernel verfügbar ist, hier ein Schnellrezept wie man selber eines bauen kann:
+
+----
+mkdir work
+cd work
+# Symlink source and patches (if any). Be more specific if ambiguous.
+ln -s /usr/src/linux-source-* .
+ln -s /usr/src/linux-patch-*
+ls
+#
+tar -xf linux-source-*
+s=`find linux-* -type d -prune`; echo "$s"
+for p in *patch*; do case $p in *[a-z.]xz) xzcat < "$p";; *[a-z.]gz) zcat < "$p";; *) cat < "$p"; esac; done | (cd -- "$s" && patch -p1)
+mkdir build
+cd -- "$s"
+unset MAKEFLAGS; make help | less
+make O=../build defconfig
+cd ../build
+m=../.config
+test -f $m && cp -iv -- "$m" .config && make oldconfig
+make xconfig
+m=`getconf _NPROCESSORS_ONLN`; m=`expr $m = 1 '&' 1 '|' $m + 1`
+m="-j$m -l$m"; echo $m
+ionice -c3 nice make $m
+mkdir stage stage/boot stage/usr
+make modules_install INSTALL_MOD_PATH=stage
+find stage/lib/modules -name "*.ko" -exec strip -g {} +
+make headers_install INSTALL_HDR_PATH=stage/usr
+make install INSTALL_PATH=stage/boot
+r=`make kernelrelease`; echo "$r"
+(cd stage/lib/modules && find * | LC_COLLATE=C sort | cpio -o -H newc) | xz -9c > stage/boot/modules-"$r".cpio.xz
+(cd stage && find lib/modules | LC_COLLATE=C sort | cpio -o -H newc | xz -9cC crc32 > boot/modules-overlay-"$r".cpio.xz)
+ls -l stage/boot
+unset m p s r
+----
+
+Hinweis wegen `xz`-komprimierten Daten: Der im Kernel selbst eingebaute Dekompressor beherrscht angeblich nur die Methoden `none` oder `crc32` für den Integritäts-Schutz. Die Default-Einstellung des `xz`-Utilities ist jedoch `crc64`. Daher sollte man mit der `-C` option eine andere Methode spezifizieren um ein initrd- oder initramfs-Abbild mit `xz` zu komprimieren.

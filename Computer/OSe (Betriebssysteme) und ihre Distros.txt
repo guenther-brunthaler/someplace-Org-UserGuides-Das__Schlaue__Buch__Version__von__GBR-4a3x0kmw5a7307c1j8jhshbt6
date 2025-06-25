@@ -1,0 +1,9 @@
+﻿* DragonFly BSD. Konzentration auf besseres Kernel (Performance, moderne Hardware-Support, Parallelität, Synchronisation), dessen Funktionen teilweise auch von AmigaOS inspiriert wurden. Die mit dem "Hammer"-Dateisystem (ein btrfs-Herausforderer). Chef: Matt Dillon. FreeBSD-Fork. Nur amd64.
+
+* FreeBSD - das am weitesten verbreitete. Unterstützt nur x86, amd64 und Sparc64 an aktuell verbreiteten Plattformen. Begründer einer eigenen BSD-Familie.
+
+* NetBSD - "läuft auf jedem Toaster" unterstützt über 50 Hardware-Plattformen (57 mit Stand 2018-10). Extreme Portabilität, laue Performanz und nur auf eher kleinen/schwachen Geräten verbreitet. Begründer einer eigenen BSD-Familie.
+
+* OpenBSD - Schwerpunkt "Sicherheit" und der streitbare Theo de Raadt als Chef. Unterstützt von aktuell verbreiteten Hardware-Plattformen nur i386, AMD64 und SPARC64. Begründer einer eigenen BSD-Familie.
+
+* MirOS - Stark abgespecktes OpenBSD welches als Boot-Disk Minisystem dient. Ist etwa auf der "GRML Linux"-LiveCD beigepackt.

@@ -1,0 +1,28 @@
+﻿Typografische Feinheiten
+========================
+v2022.335
+
+
+Halbgeviertstrich
+-----------------
+
+U+2013 ("–"), auch als "EN Dash" (ähnlich der Breite eines "N") bezeichnet.
+
+* Gedankenstrich („Du und ich – wir gehören zusammen“)
+* Bis-Strich („1961–1989“)
+* Gegenstrich („Bayern München – 1. FC Karlsruhe“)
+* Spiegelstrich, Kommandostrich (als "Bullet Point" in Listen)
+* Streckenstrich („der Abstand Erde–Mond“)
+* Geldbeträge („15,– EUR“)
+* Wörterbücher („Deutsch–Englisch“)
+* Andere Verwendungen („die Verhandlungen Merkel–Putin“, „einerseits – andererseits“, „Auf die Plätze – fertig – los!“, „die Beziehungen Deutschland–Frankreich“)
+
+
+Geviertstrich
+-------------
+
+U+2014 ("—"), auch als "EM Dash" (ähnlich der Breite eines "M") bezeichnet.
+
+Er wird verwendet als Spiegelstrich und in Tabellen sowie als Gedankenstrich in verschiedenen Sprachen wie dem Englischen und dem Spanischen.
+
+Der sehr lange Geviertstrich wird oft als störend empfunden, da seine Verwendung wegen seiner Länge recht große Löcher in einem Text erzeugt. Er wird im Deutschen kaum verwendet.

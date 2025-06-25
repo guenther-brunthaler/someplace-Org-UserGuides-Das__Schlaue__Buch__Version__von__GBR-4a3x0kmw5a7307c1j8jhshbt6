@@ -1,0 +1,196 @@
+raspios neu installieren
+========================
+v2025.159
+
+Empfehlungen für eine Neu-Installation von Raspberry Pi OS.
+
+Es gibt 3 Versionen zur Auswahl:
+
+* Basisversion: GUI, nur das nötigste (8 GB Speicherkarte erforderlich)
+* Basisversion-light: Kein GUI (4 GB Speicherkarte erforderlich)
+* Basisversion-full: GUI besser ausgestattet (16 GB Speicherkarte erforderlich)
+
+. Die entsprechende Abbild-Datei auf die Speicherkarte kopieren.
+
+. Diese in den Raspberry Pi einstecken
+
+. Tastatur anstecken
+
+. Maus anstecken
+
+. Monitor anstecken
+
+. Netzwerk-Kabel anstecken (optional)
+
+WARNING: Vorsicht beim letzten Punkt: Wenn der Raspberry Pi dadurch Zugang zum Internet erhält, muss man mit 40-50 MB ungefragten Downloads für Paketlisten-Updates rechnen.
+
+
+Erster Start
+------------
+
+* Der Raspi vergrößert das Dateisystem so dass es die Speicherkarte ausfüllt und bootet dann erneut.
+
+* Warten bis die grafische Oberfläche erscheint. Das dauert seine Zeit. Nicht davon verwirren lassen, dass ein Textmodus-Login bereits länger davor angezeigt wird.
+
+* Ein Dialog für Sprache und Tastaturbelegung erscheit. Entsprechend auswählen.
+
+* Wenn man zum Anlegen eines Benutzers aufgefordert wird, den Benutzer "pi" anlegen, Passwort "x". Die Warnung ignorieren dass dieser Benutzer ein Sicherheitsrisiko darstellen soll.
+
+* Aus dem "Einstellungen"-Menü das "Raspi Config"-Tool starten. Auf den Tab mit den Diensten gehen. Dort SSH einschalten und alles andere aus. Auf einem anderen Tab die seriellen Verbindungen abschalten, sowohl für das Login als auch via PIOs.
+
+* Neu starten.
+
+* Man kann nun Maus, Tastatur und Monitor wieder abstecken. Alles weitere sollte sich via SSH erledigen lassen.
+
+
+Zweiter Start
+-------------
+
+Warten bis die LEDs des Raspi nicht oder nur selten blinken. Dann sollte er hochgefahren sein.
+
+Einloggen via
+
+----
+$ subjecthost=myrpi
+$ ssh -p22 -o HostKeyAlgorithms=+rsa-sha2-512 pi@"${subjecthost:?}"
+----
+
+Passwort "`x`".
+
+Nun zum einige Befehle als User root ausführen
+
+----
+$ sudo -i # Passwort "x" nach Aufforderung eingeben.
+
+$ busybox rdate gateway # Update system time.
+
+$ systemctl disable systemd-timesyncd avahi-daemon avahi-daemon.socket # Avoid network traffic.
+
+$ systemctl stop systemd-timesyncd systemd-journald systemd-journald-dev-log.socket systemd-journald-audit.socket systemd-journald.socket avahi-daemon avahi-daemon.socket
+
+
+$ rm -rf /var/log/journal # Disable persistent syslog.
+$ systemctl start systemd-journald
+
+$ tar xv < /dev/tcp/rpo/9999 # Receive various things - see below.
+----
+
+Things to receive via the "rpo" Host:
+
+* busybox (extended custom build)
+
+Nun das "`etc/features`"-Repository mittels git auschecken und unter `/etc/tpl` erreichbar machen.
+
+Copy entry for /tmp to /etc/fstab:
+
+----
+$ grep '[[:space:]]/tmp[[:space:]]' /etc/tpl/fstab.manually >> /etc/fstab 
+$ cat /etc/fstab # Verify /tmp entry is there and the only one.
+----
+
+* Reboot
+
+----
+$ exit # root
+$ exit # pi
+$ ssh -O exit -p22 -o HostKeyAlgorithms=+rsa-sha2-512 pi@"${subjecthost:?}"
+
+$ ssh -o ControlPath=none -p22 -o HostKeyAlgorithms=+rsa-sha2-512 pi@"${subjecthost:?}" sudo shutdown -r now
+----
+
+
+Dritter Start
+-------------
+
+Wieder als User "pi" einloggen und zu "root" werden. Dann
+
+----
+$ stat -f /tmp # Ensure it is a "tmpfs"!
+----
+
+Mit "git" die restlichen Custom-Repositories für /usr/local auschecken, und zusätzlich auch das für:
+
+----
+$ cd /var/cache/apt/archives/partial/apt_sync_inst_packages
+$ ./get.sh
+----
+
+um die Paketeliste vorinstallierter Software zu sichern bevor diese geändert wird.
+
+Things to receive also, possible a different host:
+
+Danach die folgenden Pakete von einem aktuellen armhf Host holen:
+
+* haveged_*_armhf.deb
+* libhavege*_armhf.deb
+* screen_*_armhf.deb
+* libutempter*_armhf.deb 
+* joe_*_armhf.deb
+* clex_*_armhf.deb
+* uuid-runtime_*_armhf.deb
+
+und sie danach mittels `dpkg -i` installieren. Dann:
+
+----
+$ apt-get purge rng-tools-debian rng-tools rng-tools5
+$ systemctl start haveged
+$ systemctl enable haveged
+
+$ set \
+xdg-desktop-portal-rewrite-launchers xdg-desktop-portal xdg-document-portal \
+xdg-permission-store uuidd.socket uuidd cups cups-browsed \
+avahi-daemon avahi-daemon.socket
+$ systemctl disable "$@"
+$ systemctl stop "$@"
+----
+
+Editor einrichten:
+
+----
+$ cp /etc/joe/ftyperc ~/.joe
+$ cp /etc/joe/joerc ~/.joerc
+$ sed -i 's/^[[:space:]]*\(-nobackups\)/\1/' ~/.joerc
+----
+
+Nun die User-Customisierungen von /usr/local/etc/shellrc übernehmen:
+
+----
+mkdir -m 700 ~/.profile.d
+cd ~/.profile.d
+ln -s /usr/local/etc/shellrc ~/.profile.d/
+echo >> ~/.profile \
+      '. ~/.profile.d/shellrc/profile.d.avail/00user_snippets.sh'
+ln -s shellrc/profile.d.avail/10site_recommendations.sh ~/.profile.d
+----
+
+Zusätzliche Symlinks aus ~/.profile.d/shellrc/profile.d.avail auswählen und in ~/.profile.d erstellen.
+
+Anpassungen und Shell-Startscripte in $HOME/.homedir sichern:
+
+----
+cd
+mkdir -m700 .homedir
+
+set .joe .joe_state .joerc .profile.d .bashrc .bash_profile .gitconfig .profile
+
+for f; do test ! -e $f || test -L $f && continue; mv $f .homedir/ && ln -s .homedir/$f .; done
+----
+
+Nun zusätzliche Verzeichnisse für den $PATH erstellen:
+
+----
+mkdir -p \
+/usr/local/bin/locally_merged \
+/usr/local/bin/local \
+"${HOME:?}"/.local/bin/locally_merged \
+"${HOME:?}"/.local/bin/local \
+
+exec bash -l # Pfade benutzen.
+
+cd ~/.homedir
+ln -s ../.local/share/xdg_runtime_dir-ngjjaq42wb5238hup1bmwjtpp.d .volatile
+cd
+----
+
+Als nächstes die SSH-Konfiguration von /etc/tpl/ssh übernehmen.
+

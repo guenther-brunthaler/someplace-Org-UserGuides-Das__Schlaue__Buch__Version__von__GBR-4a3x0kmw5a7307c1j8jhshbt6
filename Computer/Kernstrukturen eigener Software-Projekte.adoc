@@ -1,0 +1,95 @@
+﻿Kernstrukturen eigener Software-Projekte
+========================================
+v2022.126
+
+Dieses Dokument soll die jeweils aktuellste Version zentrale Datenstrukturen oder benannter Funktionen auflisten, die sich immer wieder ändern um "noch besser" zu werden. So dass es leicht ist zu vergessen oder zu verwechseln was momentan gerade als "am besten" gilt.
+
+Natürlich gibt es diese Strukturen in der Regel auch in irgend einem GitHub-Repository, doch nicht hat man Internet-Zugang oder auch nur Lust dort herum zu stöbern.
+
+
+Datenstrukturen
+---------------
+
+----
+typedef struct resource resource;
+struct resource {
+   resource *older;
+   void (*action)(void);
+};
+
+static resource *rlist;
+static int errors;
+
+typedef struct {
+   char *start; /* If NULL then yet unallocated buffer. */
+   size_t length; /* Must be <= allocated but only if allocated != 0. */
+   size_t allocated; /* If non-zero or start == NULL: Slice is resizable. */
+} slice;
+
+typedef struct {
+   resource rsrc;
+   slice descriptor;
+} buffer_resource;
+----
+
+
+Funktionen
+----------
+
+----
+static void release_tracked_until(resource *stop);
+static void track_resource(resource *new_rsc, void (*new_action)());
+static void *untrack_resource(void);
+static void *new_tracked_resource(size_t total_bytes);
+static slice *new_tracked_buffer(void);
+static void *realloc_ck(void *p, size_t newsz);
+static void grow_buffer(slice *buf, size_t bigger_minimum_size);
+static void grow_buffer_by(slice *buf, size_t increment); 
+static void resize_buffer(slice *buf, size_t exact_new_size);
+----
+
+Allgemein hat sich das Naming-Schema von den CFAs abgewendet, und verwendet nun wieder Menschenlesbare Präfixe oder Suffixe:
+
+* `*_ck` wird für gewrappte Funktionen verwendet, die aber nur Fehler prüfen und nicht auch zusätzlich noch etwas zur Ressourcenliste hinzu fügen.
+
+* `new_tracked_*` ist der Präfix für Funktionen die etwas neu allozieren und dies auch in die Ressourcenliste eintragen.
+
+* `tracked` ist der Präfix für Funktionen die neue Einträge zur Ressourcenliste hinzu fügen, obwohl sie mit einem bereits zuvor dynamisch allozierten Objekt arbeiten. Etwa um diesem zusätzliche optionale Komponenten hinzu zu fügen.
+
+Allgemein soll "`tracked_`" darauf hinweisen dass die Ownership hier durch die Ressourcenliste kontrolliert wird, während "`_ck`" nur Fehler im Unterschied zur gleichnamigen Originalfunktion überprüft.
+
+Bei gänzlich neuen eigens entwickelten Funktionen wird das "`_ck`" hingegen weg gelassen. Es soll für jede meiner eigenen Funktionen selbstverständlich sein Fehler zu überprüfen, auch ohne dass man das extra dazu schreiben müsste. Die Unterscheidung zwischen `tracked_` und non-`tracked` Funktionen macht hingegen auch dort Sinn.
+
+
+Aufrufargumente-Auswertung
+--------------------------
+
+----
+int main(int argc, char **argv) {
+   usage_resource usage;
+   resource flusher;
+   track_resource(&flusher, &flusher_action);
+   {
+      int arg= 0;
+      usage.prog_name= "(unnamed_program)";
+      track_resource(&usage.rsrc, &usage_action);
+      if (arg == argc) {
+         need_more:
+         die("Too few arguments!");
+      }
+      usage.prog_name= argv[arg];
+      if (++arg == argc) goto need_more;
+      if (!strcmp(argv[arg], "--")) {
+         if (++arg == argc) goto need_more;
+      } else if (*argv[arg] == '-') {
+         die("Unknown option!");
+      }
+      ...
+      if (++arg == argc) goto args_done;
+      die("Too many arguments!");
+   }
+   args_done:
+   ...
+   release_tracked_until(0);
+}
+----

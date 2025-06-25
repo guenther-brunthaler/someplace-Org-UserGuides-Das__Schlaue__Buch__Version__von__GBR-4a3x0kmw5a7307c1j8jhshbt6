@@ -1,0 +1,38 @@
+﻿Vergessenes Login-Passwort zurück setzen
+----------------------------------------
+
+Wenn man das Windows-Passwort vergessen hat und ein neues setzen will, sich jedoch nicht mehr einloggen kann:
+
+* Windows runterfahren, Rettungs-Medium starten, Windows-System-Partition in diesem mounten.
+
+* Die existierende Datei \WINDOWS\System32\sethc.exe umbenennen.
+
+* Die Datei \WINDOWS\System32\cmd.exe nach sethc.exe kopieren.
+
+* Unmounten, Rettungs-Medium entfernen, Windows neu starten.
+
+* Sobald man im Einlogg-Schirm mit dem unbekannten Passwort ist, 5 x die Shift-Taste drücken. Ein Fenster mit dem Kommandointerpreter öffnet sich!
+
+* Kommando ausführen: "net user USERNAME MYPASSWORD" mit dem gewünschten Benutzername anstatt "USERNAME" und dem gewünschten Passwort anstatt "MYPASSWORD". Falls Leerzeichen in einem von beidem (oder beidem) vorkommen, das jeweilige Argument in doppelte Hochkommas einschließen.
+
+* Nun sollte man sich mit dem neuen Passwort wieder einloggen können!
+
+* Danach sollte man das als sethc.exe kopierte cmd.exe wieder löschen und das umbenannte sethc.exe wiederherstellen, damit niemand anderer mit demselben Trick das Login überspringen kann.
+
+Ebenso besteht die Möglichkeit, das Login-Passwort komplett zu entfernen. Dies kann man in dem Systemeinstellungen erreichen.
+
+
+Passwort für eine Freigabe dauerhaft speichern
+----------------------------------------------
+
+----
+net use X: \\$HOSTNAME\$SHARE /savecred /p:yes
+----
+
+It will then prompt for a username and password, which will be saved and will not prompt even after a reboot.
+
+You can also add the credentials by opening Start → Run → "control userpasswords2" → Advanced → Manage Passwords.
+
+This feature exists on Windows XP and later.
+
+Advice from: https://superuser.com/questions/130352/how-to-save-the-password-for-a-mapped-network-drive

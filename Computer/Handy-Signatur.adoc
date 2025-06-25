@@ -1,0 +1,145 @@
+﻿Handy-Signatur
+==============
+Günther Brunthaler
+v2019.35
+
+
+Erstellen
+---------
+
+Wenn man noch kein signiertes Dokument hat aber eines benötigt.
+
+Schritte für die Signatur-Erstellung:
+
+* Ein PDF-Dokument mit dem zu signierenden Inhalt erstellen (z. B. ein Textverarbeitungsdokument als PDF "ausdrucken")
+
+* Auf die Webseite https://www.buergerkarte.at/pdf-as/wai?locale=de gehen.
+
+* Falls Zweifel an der Authentizität der Webseite bestehen, <<compare_certificates,überprüfen>> ob der SHA-256 Fingerabdruck des Verschlüsselungs-Zertifikats der Webseite den folgenden Wert (Stand 2019-12) hat: 2A:D5:B0:66:CB:A3:CF:DE:84:DC:4E:63:5E:6C:C4:FD:D8:7E:0C:9D:36:E7:10:C6:17:CC:61:AF:2D:0B:D1:C8
+
+* Das zuvor erzeugte noch unsignierte PDF-Dokument mit dem Button "Durchsuchen..." zuerst auswählen und dann mit dem Button "Unterschreiben Handy" die Handy-Signatur einleiten.
+
+* Dabei wird wie üblich zuerst nach der für die Handy-Signatur registrierten Telefonnummer und dem Signatur-Passwort gefragt, dann muss man "weiter ohne App" auswählen, und schließlich erhält man eine mTAN per SMS die man auf der Webseite eingeben muss.
+
+* Das signierte Dokument über den angegebenen Hyperlink von derselben Webseite herunterladen, und dieses dann anstatt dem unsignierten Original weiter verwenden. Das signierte Dokument hat denselben Inhalt wie das unsignierte Original, enthält jedoch zusätzlich noch die elektronische Signatur.
+
+* Mit der Signatur kann der Empfänger die Echtheit und Unverändertheit des PDF-Dokuments sowie die Gültigkeit der Unterschrift selbst überprüfen.
+
+
+Prüfen
+------
+
+Wenn man ein signiertes PDF-Dokument erhalten hat und prüfen möchte ob die digitale Unterschrift korrekt oder eine Fälschung bzw. ungültig ist.
+
+Ein positives Prüfungsergebnis stellt darüber hinaus auch sicher dass das PDF-Dokument seit dem Signieren nicht mehr verändert wurde. Eben so ist dann sichergestellt *wer* das Dokument signiert hat.
+
+Im Falle der Handy-Signatur ist darüber hinaus auch noch der Zeitpunkt sicher gestellt, an dem das Dokument signiert wurde. Dies wiederum stellt sicher dass es das Dokument zu diesem Zeitpunkt bereits gab, und es seit dem auch nicht mehr verändert (oder neu erzeugt und signiert) worden sein kann.
+
+Schritte für die Signatur-Prüfung:
+
+* Auf die Webseite https://www.signatur.rtr.at/de/vd/Pruefung.html gehen.
+
+* Falls Zweifel an der Authentizität der Webseite bestehen, <<compare_certificates,überprüfen>> ob der SHA-256 Fingerabdruck des Verschlüsselungs-Zertifikats der Webseite den folgenden Wert (Stand 2019-12) hat: D7:E4:9F:72:B9:0D:6C:07:FC:2A:2A:A7:EC:D6:25:37:78:70:2E:BC:92:9F:D5:0F:6D:7D:51:4B:97:B0:84:9C
+
+* Das PDF-Dokument auf die Webseite hochladen.
+
+* Das Prüfungsergebnis wird direkt auf der Webseite angezeigt.
+
+* Wenn man einen dauerhaften Beleg dafür haben möchte dass die Unterschrift korrekt war und man dies auch überprüft hat, kann man dort auch einen Prüfbericht herunter laden. Das ist ein PDF namens "report.pdf" (das wiederum selbst signiert ist, aber diese erneute Signatur zu prüfen kann man sich ersparen) wo die Angaben der Signatur und das Prüfungsergebnis drin stehen. Diesen Prüfbericht sollte man umbenennen und am selben Ort wie das geprüfte Dokument aufbewahren.
+
+
+Vertrauliche Daten signieren/prüfen
+-----------------------------------
+
+Ein Vorteil der oben beschriebenen Methode ist dass man abgesehen von beliebiger Software zur Erstellung von PDF-Dateien keine besondere Sofware für die Erstellung und Prüfung der Signaturen installieren muss.
+
+Ein Nachteil ist jedoch dass man das zu signierende oder zu prüfende PDF-Dokument auf die genannten Signatur-Webseiten hochladen muss. Und diese den Dokument-Inhalt daher an Dritte (wie Geheimdienste) weiterleiten oder speichern können, auch wenn sie natürlich hoch und heilig versprechen dies nicht zu tun.
+
+Ein weiterer Nachteil ist dass beim Hochladen sowie Herunterladen der signierten Dateien zusätzliches Übertragungsvolumen anfällt, was bei sehr großen Dateien unerwünscht ist.
+
+Als Alternative bietet sich an, mit der Handy-Signatur nicht die Datei selbst zu signieren, sondern nur einen kryptografischen Hash dieser Signatur.
+
+Ein solcher Hash stellt eine Art Prüfsumme des "eigentlich" zu signierenden Dokuments dar. Doch anders als bei einer normalen Prüfsumme ist es einem Angreifer nicht möglich ein Dokument gezielt so zu verändern dass der Hash trotzdem derselbe bliebe.
+
+Wenn man daher nur den Hash handy-signiert und die vertrauliche Datei dem Empfänger auf andere Weise (etwa mittels verschlüsselter Mail) direkt zukommen lässt, hat das trotzdem dieselbe Beweiskraft als hätte man das vertrauliche Dokument selbst signiert.
+
+Denn es gibt für jede Datei nur einen Hash der genau zu dieser passt, und es ist nicht möglich gezielt eine andere (oder modifizerte) Datei zu fabrizieren welche denselben Hashwert ergibt.
+
+Am besten erstellt man den Hashwert einer Datei mit einem lokal installierten Programm zu diesem Zweck.
+
+Bekannte geeignete Programme sind `sha256sum` und `openssl`, allerdings erfordern diese die Benutzung der Kommandozeile. Außerdem sind sie nicht immer installiert.
+
+Man kann daher auch auf Web-basierte Hash-Generatoren zurück greifen, welche den Hash mittels JavaScript im Webbrowser berechnen, ohne die Datei hochzuladen. Eine Auswahl solcher Generatoren befindet sich weiter unten in diesem Dokument.
+
+
+Interessante Online-Dienste welche offline arbeiten
+---------------------------------------------------
+
+Die hier erläuterten Online-Dienste können hilfreich bei der Verwendung im Zusammenhang mit der Handy-Signatur sein.
+
+Alle der weiter unten angeführten Dienste behaupten ihre Dienste nur mittels JavaScript direkt innerhalb des Web-Browsers offline zu erbringen und keinerlei Daten nach außen zu versenden, so dass man sie bedenkenlos für vertrauliche Daten benutzen könne.
+
+Wenn man diesen Versprechen nicht einfach glauben will, gibt es eine simple Methode sicherzustellen dass tatsächlich keine vertraulichen Daten übertragen werden:
+
+* Zuerst öffnet man die Webseite
+
+* Dann versetzt man den Web-Browser in den "Offline-Mode". Der Browser wird nun nichts mehr aus dem Internet herunterladen oder dorthin versenden.
+
+* Dann erst gibt man die vertraulichen Daten ein bzw. wählt die vertraulichen Dateien für die Verarbeitung durch die Webseite aus.
+
+* Sollte sich heraus stellen dass die Webseite zur Erfüllung ihrer Aufgabe doch noch weitere Ressourcen nachladen muss, führt man die Operation zuerst einmalig mit irrelevanten Testdaten durch bevor man in dem Offline-Modus wechselt. So ist sicher gestellt dass alle erforderlichen Ressourcen bereits im Browser-Cache vorhanden sind, und nichts weiteres mehr von der Webseite nachgeladen werden muss.
+
+* Nach dem Benutzen dieser Dienste schließt man die zugehörigen Tabs im Browser wieder, noch bevor man den Offline-Modus wieder deaktiviert. So wird sichergestellt, dass die Tabs nicht nach dem Verlassen des Offline-Modus vielleicht doch noch etwas absenden können, das sie sich von den vertraulichen Daten gemerkt haben.
+
+Nun folgt nun eine Liste der Dienste:
+
+https://opentimestamps.org/:: Zwar ist der Hauptzweck dieser Webseite ein anderer, aber man kann sie auch zur Offline-Berechnung von kryptografisch sicheren SHA-256 Hashes von lokalen Dateien benutzen indem man Dateien mit der Maus aus einem Dateimanager in ein Feld am Web-Formular zieht. Den nachfolgenden Dialog zum Abspeichern eines Timestamps sollte man abbrechen, da er nicht benötigt wird.
+
+https://passwordsgenerator.net/sha256-hash-generator/:: Damit kann man kryptografische Hashes von Text berechnen, den man direkt in ein Textfeld eintippt. Von den angebotenen Hashverfahren sollte man nur SHA-256 oder SHA-512 wählen, da alle anderen nicht hinreichend zukunftssicher sind.
+
+https://passwordsgenerator.net/:: Erzeugt sichere Zufallspassworte mit wählbarer Länge und Aufbau direkt im Web-Browser. Zumindest so sicher wie man dem Betreiber der Webseite zutrauen will dies kompetent implementiert zu haben.
+
+https://passwordsgenerator.net/qr-code-generator/:: Erzeugt QR-Codes direkt im Web-Browser, die man sofort mit dem Handy abfotografieren kann um so Daten aufs Handy zu übertragen. Man kann bei der Eingabe aus welcher der QR-Code erzeugt werden soll zwischen folgenden Varianten wählen: Beliebiger Text, URL, vCard-Visitenkarte mit vielen Feldern, e-Mail-Nachricht inklusive Betreff und Textinhalt, SMS mit Empfänger-Telefonnummer und Inhaltstext.
+
+https://passwordsgenerator.net/character-count/:: Zeigt die Länge von in ein Feld eingegebenem Text an, während man tippt. Nützlich wenn man den Text anschließend irgend wo anders hin kopieren will. Etwa in ein Eingabefeld wo es eine Fehlermeldung gibt dass der Text länger als die erlaubte Maximallänge von soundso vielen Zeichen sei, einem jedoch verschwiegen wird wie lange der bereits eingegebene Text ist.
+
+https://passwordsgenerator.net/base64-decode/:: Kann Text den man in ein Textfeld eingibt oder kopiert als Base-64 kodieren sowie wieder decodieren. Unterstützt auch Umlaute und UNICODE-Zeichen. Zumindest soweit auch die Eingabefelder des Web-Browsers dies unterstützen, was normalerweise aber der Fall sein sollte.
+
+https://passwordsgenerator.net/Case-Convert/:: Kann Groß-/Kleinschreibung von in ein Textfeld kopiertem oder eingetipptem Text auf vielfältige Weise anpassen: Alles in Großbuchstaben umwandeln, alles in Kleinbuchstaben, vertauschen von Groß- und Kleinbuchstaben, ersten Buchstaben jedes Wortes in Großbuchstaben, nur den ersten Buchstaben des ganzen Textes als Großbuchstaben. Nützlich wenn man einen simplen Texteditor verwendet der diese Funktion nicht anbietet. Etwa in einem Eingabefeld des Web-Browsers auf einer anderen Webseite.
+
+https://countwordsfree.com/comparetexts:: Damit kann man den Inhalt zweier Textfelder vergleichen. Sehr nützlich etwa zum sicheren Vergleich von langen Hash-Werten, bei denen es einem nicht genug ist nur auf den ersten Blick zu sehen dass einem kein Unterschied auffällt. Zeigt einem sowohl die Anzahl der unterschiedlichen Zeichen (0 falls identisch) als auch die Anzahl der Worte und Zeichen in jedem Text an. Unterschiedliche Zeichen werden (soweit vorhanden) zudem weiter unten auf desselben Webseite farblich hervorgehoben angezeigt. Weiters wird ein QR-Code Generator geboten, eine Auswertung für eingegebenen Text (Anzahl der Zeichen, Worte, Sätze, Absätze, Ziffern usw.), URL-Encoding sowie Decoding, Baumdarstellung (aufklappbar) für XML/JSON-Quelltext, Umwandlung zwischen XML und JSON, Quelltext-Formatter für JavaScript/CSS/HTML, "Minifier" für CSS- und JavaScript-Quelltext.
+
+https://www.quickdiff.com/:: Ein zeilenbasierter offline-Textvergleich für den Web-Browser. Zeigt nur die Unterschiede von Textzeilen als Ganzes an, nicht die von einzelnen Zeichen darin. Man kopiert den zu vergleichenden Text in ein linkes und ein rechtes Textfeld, und die unterschiedlichen Zeilen werden einem dahinter farblich hervor gehoben in einem "unified diff"-ähnlichen Format angezeigt.
+
+
+Interessante Online-Dienste
+---------------------------
+
+Die hier erläuterten Online-Dienste können ebenfalls hilfreich bei der Verwendung im Zusammenhang mit der Handy-Signatur sein.
+
+Anders als bei den weiter oben erwähnten Diensten kann man die nachfolgenden Dienste nicht einfach im Offline-Modus benutzen da sie eine Online-Verbindung erfordern.
+
+Man sollte sie daher für keine vertraulichen Daten einsetzen.
+
+https://hnet.com/mail/:: Stellt eine zufallsbasierte "Wegwerf" e-Mailadresse zur Verfügung die man für die Zusendung von Einmal-Mails verwenden möchte, und zeigt auch gleich die für diese Adresse eingegangenen Mails an so dass man sie im Browser anzeigen kann. Nützlich zur Vermeidung von Spam um die eigene echte e-Mail-Adresse nicht angeben zu müssen wenn man gezwungen ist eine e-Mail-Adresse anzugeben um irgendwelche Bestätigungsmails zu erhalten.
+
+https://www.free-proxy.com/:: Ein simpler Web-Proxy um eine andere Webseite scheinbar von wo anders aus zu besuchen als wo man sich tatsächlich befindet. Man gibt einfach die URL der anderen Seite ein, und diese wird in einem Unterfenster angezeigt. Man kann auch zwischen verschiedenen Proxy-Servern in verschiedenen Ländern auswählen. So kann man auch regionale Beschränkungen umgehen, wenn Webseiten etwa abhängig vom Herkunftsland andere Inhalte anzeigen oder sich weigern bestimmte Inhalte anzuzeigen. Zugleich stellt dieser Dienst eine simple Form der Anonymisierung dar, außer natürlich dem Betreiber des Dienstes gegenüber.
+
+
+[[compare_certificates]]
+Zertifikatsvergleich
+---------------------
+
+Um zu vergleichen ob das Verschlüsselungs-Zertifikat der gerade angezeigten Webseite einem vorgegebenen SHA-256 Fingerabdruck entspricht, muss man sich zuerst einmal den tatsächlich vorgefundenen Fingerabdruck der Webseite anzeigen lassen.
+
+Dazu klickt man im Firefox zunächst auf das Schloss-Symbol an linken Rand des Feldes in dem die Adresse der aktuellen Webseite angezeigt wird, und klickt dort wo "sichere Verbindung" angezeigt wird auf den Pfeil nach rechts und dort auf die Schaltfläche "weitere Informationen". Ein Informations-Dialogfeld öffnet sich.
+
+Dort gibt es einen Button "Zertifikat anzeigen", der wiederum ein weiteres Dialogfeld öffnet.
+
+Dort findet sich im Abschnitt "Fingerabdruck" auch das SHA-256 Fingerabdruck den man zum Vergleiche benötigt.
+
+Zur Durchführung des Vergleichs empfehle ich, ein neues leeres Dokument in einem Texteditor zu öffnen, und die beiden zu vergleichenden SHA-256 Fingerabdrücke direkt unter einander in 2 Zeilen hinein zu kopieren.
+
+Man braucht dann nur noch die Zeile entlang zu schauen, ob an jeder Stelle dieselben Zeichen in der Zeile darüber bzw. darunter zu sehen sind. Ein Unterschied dabei springt einem dann sofort ins Auge.
+
+Alternativ, oder wenn man keinen Texeditor zur Verfügung hat, kann man auch die oben erwähnten online-verfügbaren Offline-Dienste zum Vergleich zweier Texte benutzen, wo man dann die beiden zu vergleichenden Fingerabdrücke in je eines der Textfelder für den Vergleich hinein kopiert und danach dem Button zum Vergleichen drückt.

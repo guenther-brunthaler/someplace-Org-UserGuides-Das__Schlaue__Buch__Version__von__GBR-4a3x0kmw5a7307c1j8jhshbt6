@@ -1,0 +1,265 @@
+﻿Mozilla Firefox
+===============
+v2024.99
+
+Meine Einstellungen für GUI+AddOns.
+
+
+Installierte AddOns
+-------------------
+
+* https://addons.mozilla.org/de/firefox/addon/tunable-image-block/['Tunable Image Block'] Blockieren von Bildern die eine bestimmte Größe überschreiten; übersteuerbar
+
+* https://addons.mozilla.org/de/firefox/addon/umatrix/['uMatrix'] stellt eine Matrix aus Domains und Webseiten-Features wie Bildern, Cookies und Scripten dar, die man mit mehrstufigen Prioritäten und selektiv aktivieren oder blockieren kann, und dies auf Wunsch auch dauerhaft speichern.
+
+* https://addons.mozilla.org/de/firefox/addon/canvasblocker/['CanvasBlocker'] schützt durch Veränderung browserinterner JS-APIs vor manchen Fingerprinting-Techniken. Kann allerdings die Performance von manchen Webseite-Scripten drastisch verschlechtern.
+
+* https://addons.mozilla.org/de/firefox/addon/decentraleyes/['Decentraleyes'] Ersetzt einige wenige aber sehr verbreitete nachladbare JavaScript-Libraries für das Nachladen von Content aus DNS durch modifizierte Versionen, welche das Datenschnüffeln der Originale unterlassen. So kann man Webseiten welche diese Libraries erfordern immer noch benutzen, aber wird weitaus weniger ausspioniert.
+
+* https://addons.mozilla.org/de/firefox/addon/cookie-autodelete/['Cookie AutoDelete'] löscht automatisch die Cookies welche ein Tab gesetzt hat sobald er geschlossen wird. Ausnahmen können erteilt werden.
+
+
+Optionale AddOns
+----------------
+
+* https://addons.mozilla.org/de/firefox/addon/search-engines-helper/['Search Engines Helper'] erlaubt es, Custom-URLs für Suchmaschinen zu Firefox hinzu zu fügen. Danach kann man dieses AddOn wieder deaktivieren, da die Suchmaschinen dann dennoch vorhanden bleiben.
+
+* https://addons.mozilla.org/de/firefox/addon/tab-count-webext/['Tab Count'] fügt einen simplen Zähler rechts von den Tabs hinzu, wie viele Tabs derzeit offen sind. Dieses AddOn kann man vorübegehend aktivieren wenn man dies wissen möchte.
+
+* https://addons.mozilla.org/de/firefox/addon/ublock-origin/['uBlock Origin'] ist ein AdBlocker ähnlich 'uMatrix' aber besser für ahnungslose Leute geeignet. Blockiert zwar weniger Traffic, behindert die reguläre Funktion von Webseiten aber auch weniger. Ähnlich wie 'Tunable Image Block' kann UBO die maximale Größe von Grafiken beschränken die herunter geladen werden. Man erspart sich daher letzteres Plugin zu installieren.
+
+* https://addons.mozilla.org/de/firefox/addon/temporary-containers/['Temporary Containers'] fügt einen Button hinzu mit dem ein temporärer Container für Webseiten erzeugt werden kann. Alle Webseiten die in diesem Container besucht werden sehen gemeinsame Cookies und ähnliche Ressourcen, jedoch nicht solche von außerhalb diesem Container.
+
+
+Verworfene AddOns
+-----------------
+
+* https://addons.mozilla.org/de/firefox/addon/clearurls/['ClearURLs'] löscht URL-Parameter wie `utm_source` welche häufig zum Tracking mussbraucht werden. Leider beziehen die rund 250 RegEx-Regeln nur auf spezifische bekannte Webseiten, während sie sonst nichts nützen. Nur eine Handvoll generischer Regeln gibt es. Außerdem lassen die Regeln sich nicht im AddOn anzeigen oder bearbeiten.
+
+
+Toolbar
+-------
+
+Die Icons/Elemente auf der Haupt-Symbolleiste habe ich nun so angeordnet (von links nach rechts):
+
+Variante: Mit AddOns
+~~~~~~~~~~~~~~~~~~~~
+
+. 'Tunable Image Block' Bildgrößen-Blocker
+
+. 'Sidebars anzeigen' ein/aus (Seitenleisten für Lesezeichen/Chronik)
+
+. 'Lesezeichen-Symbole'
++
+--
+Innerhalb dieser nur ein Lesezeichen:
+
+** +Pxy+ (als Name), URL: +about:config?filter=/^network[.]proxy[.]type;/+
+*** 0=kein Proxy, 1=manuell in FF-Einstellungen konfigurierte Proxies
+
+Dieses Lesezeichen ist mit den folgenden Schlagworten versehen:
+
+....
+firefox, setting
+....
+
+--
+
+. flexibler Leerraum
+
+. Navigations-Buttons 'zurück', 'neu laden', 'nach vor'
+
+. flexibler Leerraum
+
+. Button Downloads/Download-Fortschritt
+
+. 'Haus'-Button
+
+. Lesezeichen-Menü-Button (das anpassbare der Lesezeichen-Menüs)
+
+. URL-Zeile/Suchfeld
+
+. 'uMatrix' Blocker für Bilder/Scripte/Weiteres
+
+
+Variante: Ohne AddOns
+~~~~~~~~~~~~~~~~~~~~~
+
+. 'Lesezeichen-Symbole'
++
+--
+Innerhalb dieser die folgenden Lesezeichen von links nach rechts:
+
+* +JS+ (als Name), URL: +about:config?filter=/^javascript[.]enabled;/+
+* +Img+ (als Name), URL: +about:config?filter=/^permissions[.]default[.]image;/+
+** 2=keine Bilder, 3=alle von selber Domain, 1=alle
+* +Pxy+ (als Name), URL: +about:config?filter=/^network[.]proxy[.]type;/+
+** 0=kein Proxy, 1=manuell in FF-Einstellungen konfigurierte Proxies
+
+Alle diese Lesezeichen sind mit den folgenden Schlagworten versehen:
+
+....
+firefox, setting
+....
+
+--
+
+. 'Sidebars anzeigen' ein/aus (Seitenleisten für Lesezeichen/Chronik)
+
+. flexibler Leerraum
+
+. Navigations-Buttons 'zurück', 'neu laden', 'nach vor'
+
+. flexibler Leerraum
+
+. Button Downloads/Download-Fortschritt
+
+. 'Haus'-Button
+
+. Lesezeichen-Menü-Button (das anpassbare der Lesezeichen-Menüs)
+
+. URL-Zeile/Suchfeld
+
+
+AddOn-Einstellungen
+-------------------
+
+Tunable Image Block
+~~~~~~~~~~~~~~~~~~~
+
+....
+Take settings to open new Site:
+[x] from Options
+[ ] from current Tab
+
+[ ] Disable on new empty Tab
+
+Image Max. Size: [10] KB (Schieberegler)
+....
+
+
+uMatrix
+~~~~~~~
+
+Einstellungen
+^^^^^^^^^^^^^
+
+Komforteinstellungen
+++++++++++++++++++++
+
+....
+[x] Zeige die Zahl der blockierten Anfragen auf dem Icon an
+[x] Verstecke die Platzhalter für blockierte Elemente
+    [x] Verstecke die Platzhalter für Elemente auf der Blacklist 
+[x] Verschleiere <noscript> Tags wenn Skripte der aktuellen Domain blockiert werden
+[ ] Aktiviere die Unterstützung der Speicherung in der Cloud
+[ ] Deaktiviere Tooltips 
+....
+
+
+Matrix
+++++++
+
+....
+Schriftgröße: (mittel)
+
+Standardgeltungsbereich: Domain
+
+[ ] Anzeige für farbenblinde Benutzer 
+....
+
+
+Privatsphäre
+++++++++++++
+
+....
+[ ] Lösche geblockte Cookies. 
+[ ] Lösche nicht blockierte Sitzungscookies [60] Minuten nach ihrer letzten Benutzung.
+[ ] Lösche Lokaler Speicher-Inhalt (Local Storage) für blockierte Hostnamen
+[x] Lösche den Browser-Cache alle [60] Minuten.
+[x] Verschleiere den HTTP Referrer, wenn das Ziel eine Drittseite ist.
+[ ] Nur HTTPS: verbiete gemischte Inhalte.
+[x] Blockiere alle hyperlink auditing Versuche.
+....
+
+
+Meine Regeln
+^^^^^^^^^^^^
+
+....
+[x] Automatische Aktualisierung der Assets
+....
+
+Alle weiteren Häkchen außer `Importieren...` sind angekreuzt.
+
+
+Detailbeschreibungen AddOns
+---------------------------
+
+Tunable Image Block
+~~~~~~~~~~~~~~~~~~~
+
+zum Blockieren per Vorgabe von Bildern die eine bestimmte Größe überschreiten, welche man aber aber auf Wunsch trotzdem individuell nachladen kann. Außerdem kann man die erlaubte Maximalgröße jederzeit anpassen, was dann pro Domain dauerhaft gespeichert wird.
+
+
+uMatrix
+~~~~~~~
+
+'uMatrix' ist (ebenso wie auch 'uBlock Origin') ein Spin-Off des AddOns 'HTTP Switchboard' ("'HTTPSB'") - all diese AddOns stammen von selben Autor. 
+
+Während 'uBlock Origin' ("'UBO'") eher ein Ersatz für Adblock Plus ist, ist 'uMatrix' eher ein Ersatz für 'NoScript'.
+
+Die Features von 'uMatrix' und 'UBO' überschneiden sich: 'UBO' ist für den Ansatz "Whitelisting by Default" ausgelegt, 'uMatrix' hingegen für "Blacklisting by Default".
+
+'UBO' geht davon aus dass nichts gefiltert werden soll was nicht auf einer der vielen Filterlisten steht.
+
+'uMatrix' filtert hingegen alles außer das was man explizit erlaubt hat. Zwar lässt sich dies auch per Generalschalter umschalten so dass alles erlaubt wird was auf keiner Blacklist steht, aber dann würde man gefährlich leben da die Blacklists von 'UBO' viel umfangreicher sind.
+
+'uMatrix' ist ein Matrix-basierter Blocker. Er stellt alle Aspekte einer Webseite die sich blockieren lassen als eine Matrix da.
+
+Die dargestellten Einstellungen der Matrix beziehen sich immer auf einen bestimmte Domain oder Subdomain zu der die gerade angezeigte Webseite gehört. Dazu ist links oben im sog. 'Scope-Selector' der Domainname kompett dargestellt, und man kann mit der Maus einen Suffix an Namenskomponenten wählen. Wählt man dabei lediglich den "`*`" nach dem Domainnamen aus, sieht man die Default-Vorgaben für alle Domains.
+
+* Die Spalten entsprechen den zu blockenden Kategorien:
++
+--
+. Cookies
+. CSS (Formatvorlagen)
+. Bilder
+. andere Medien (Videos und Audio, Media-PlugIns)
+. JavaScript (werden im Browser ausgeführt, potenziell sehr gefährlich)
+. XHR ('XMLHttpRequest', 'WebSockets', direkte Kommunikation zwischen JavaScripten und Servern: "'AJAX'")
+. Frames (visuell abgetrennte Teilfenster der Webseite)
+. andere (alle sonstigen Arten von nachgeladenen Ressourcen)
+--
+
+* Die Zeilen der Matrix entsprechen den Domains und Subdomains der Ressourcen, welche die Webseite nachlädt.
++
+--
+Sie können in mehrere Zeilenbereiche unterteilt sein (von oben nach unten):
+
+. Aktuelle Domain (was gerade im 'Scope-Selector' ausgewählt ist)
+. Whitelisted Domains
+. Graylisted Domains
+. Blacklisted Hostnamen
++
+Diese lassen sich mit einem kleine Pfeil auf- und zuklappen. Im zugeklappten Zustand wird nur die Anzahl der blackgelisteten Hostnamen angezeigt.
+
+--
+
+Außerdem gibt es einen Generalschalter.
+
+Man kann nun jede Zeile, Spalte oder Zelle explizt erlauben, verbieten oder "graylisten" (weder/noch).
+
+Bei widersprüchlichen Einstellungen gilt folgende Priorität (von der höchsten beginnend):
+
+* Zelle (bestimmtes Feature einer bestimmten Domain oder Subdomain oder blackgelistetem Hostnamen)
+* Zeile (alle Features für eine bestimmte Domain oder Subdomain oder blackgelistetem Hostnamen)
+* Spalte (dieses Feature für alle Domains und Subdomains und blackgelisteten Hostnamen)
+* Blacklist (separate verwaltete Liste von Hostnamen)
+* Generalschalter (bestimmt die Vorgabe für alles Graygelistete)
+
+Vorgenommene Änderungen werden zunächst nur temporär gespeichert, lassen sich aber mit einem Klick auf das Schloss-Symbol permanent abspeichern.
+
+Wenn im kleinen Dreieck links oben in der Zelle bzw. im Zeilenkopf eine gegensätzliche Farbe als im Rest des Felds angezeigt wird, dann bedeutet es dass diese Einstellung temporär verändert wurde, und das Dreieck zeigt die Original-Einstellung an.
+
+https://github.com/gorhill/uMatrix/wiki/The-popup-panel[hier] findet man eine genauere Beschreibung.

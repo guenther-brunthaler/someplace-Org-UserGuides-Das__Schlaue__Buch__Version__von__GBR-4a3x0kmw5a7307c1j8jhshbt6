@@ -1,0 +1,4 @@
+﻿
+Tastenkombinationen verschiedener Geräte, welche nach dem Einschalten Spezial-Funktionen aktivieren.
+
+ASUS EEePC Netbook: [Esc] Bootmedium-Auswahlmenü, [F2] BIOS-Setup

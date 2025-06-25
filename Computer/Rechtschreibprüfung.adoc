@@ -1,0 +1,16 @@
+﻿Rechtschreibprüfungen
+=====================
+v2020.29
+
+Dieses Dokument erläutert bekannte Probleme sowie Tipps und Tricks beim Umgang mit verschiedenen Rechtschreibprüfungsprogrammen.
+
+Kate, Kwrite, KDE
+-----------------
+
+KDE benutzt ein eigenes Framework für Rechtschreibprüfungen, welche die meisten (alle?) KDE-Programme betreffen welche die Option zur Rechtschreibprüfung anbieten. Darunter zumindest die hier in der Überschrift genannten Programme.
+
+Alle diese Programme sollten einen ähnlichen Dialog zur Konfiguration der Rechtschreibprüfung anbieten.
+
+Dort ist als erstes wichtig dass die benötigten Wörterbücher installiert und ausgwählt sind.
+
+Ganz besonders wichtig ist jedoch dass die Option "Enable autodetection of language" abgeschaltet ist, da diese völlig unzuverlässig funktioniert und meist die falschen Wörterbücher für die Sprache verwendet. Zumindest für Deutsch ist dies ein praktisches Problem.

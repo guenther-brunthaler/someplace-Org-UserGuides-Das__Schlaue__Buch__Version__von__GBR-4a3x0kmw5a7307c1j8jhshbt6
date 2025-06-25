@@ -1,0 +1,105 @@
+﻿Bridge-Setup
+============
+v2019.140
+
+
+Kurzvariante
+------------
+
+Bevor ein Netzwerkinterface der Bridge hinzu gefügt werden kann, kann es in jedem beliebigen Zustand sein. Aus Sicherheitsgründen sollte es jedoch besser "down" sein, damit die Bridge es nicht benutzen kann bevor es richtig konfiguriert ist.
+
+Damit es später in der Bridge auch aktiv sein und korrekt funktionieren kann, muss es zu diesem Zeitpunkt allerdings bereits "up" gebracht worden sein und darf keine IP-Adresse mehr haben (0.0.0.0).
+
+Ein typischer Fall ist wenn man das Netzwerkinterface zu einer Bridge gleiche namens machen will. Nehmen wir an das Interface hätte den Namen $IFC und die Ethernet MAC-Adresse $MAC mit der IP-Adresse $IP und Subnetzmaske $MASK.
+
+----
+$ BR=eth0
+$ IFC=${BR}nic
+$ MAC=22:33:44:55:66:77
+$ IP=192.168.0.35
+$ MASK=255.255.255.0
+
+$ ifconfig $BR down # For changing name and for secure adding to bridge
+$ nameif $IFC $MAC # rename
+$ brctl addbr $BR # new bridge with same name as old IFC
+$ brctl addif $BR $IFC
+$ ifconfig $IFC 0.0.0.0 up # Activate interface in bridge
+$ ifconfig $BR $IP netmask $MASK up
+----
+
+IP-Forwarding oder NAT braucht in diesem Fall für keines der Interfaces aktiviert zu werden; $IFC funktioniert wie vorher nur dass man nun auch andere Interfaces damit verbinden könnte. Etwa ein TAP-Device von einer QEMU-Instanz.
+
+Auch solche weiteren hinzugefügten Devices müssen eine IP-Adresse von 0.0.0.0 haben und "up" sein. Es ist OK das Device erst "up" zu machen nachdem man es bereits der Bridge hinzu gefügt hat.
+
+Konkret kann man durch "up"- und "down"-nehmen der NICs auf denen eine Bridge basiert deren Komponenten temporär ein- oder abschalten, ohne die NICs dazu von der Bridge entfernen zu müssen.
+
+
+Ausführlicher
+-------------
+
+Mit einer Bridge kann das physikalische Ethernet-Interface des Virtualsierungs-Hypervisor-Hosts zugleich auch als Ethernet-Interface für eine oder mehrere VMs genutzt werden.
+
+Das hat denselben Effekt als hätte jede VM ihre eigene Ethernet-Karte und alle hingen am selben Ethernet-Bus.
+
+Um dies zu erreichen, muss man zunächst die bestehende IP-Adresse der Ethernet-Schnittstelle des Hosts entfernen. Die Schnittstelle bleibt allerdings "UP".
+
+Dann erstellt man ein bridge-Device, und gibt ihm die frühere IP-Adresse der Ethernet-Schnittstelle. Auch das Bridge-Device soll "UP" sein.
+
+Nun fügt man der Bridge das Ethernet-Device hinzu.
+
+Nun ist alles wie vorher, nur dass man statt der Ethernet-Schnittstelle das Bridge-Device für den Netzwerkzugriff des verwendet.
+
+Zusätzlich hat man nun aber die Möglichkeit, TUN/TAP-Devices welche VMs erzeugt haben, ebenfalls zur Bridge hinzu zu fügen.
+
+Alle an der Bridge beteiligten Schnittstellen müssen UP sein und dürfen (aus der Sicht des Rechers der das Bridge-Device betreibt) keine IP-Adresse zugewiesen haben.
+
+Nur das Bridge-Device selbst hat eine IP-Adresse, und zwar jene welche vor der Einführung der Brige die Ethernet-Schnittstelle hatte (welche nun, ohne IP-Adresse, Teil der Bridge ist).
+
+Beispiel: Umstellung des Ethernet-Interfaces "ethlan" (über welches auch die Default-Route führt) auf die neue Bridge "brlan":
+
+----
+$ route -n # Default Gateway anzeigen
+$ GATEWAY=... # Abgelesenes Default-Gateway hier speichern
+$ route del default # Unnötig, wird auch automatisch entfernt
+$ ifconfig ethlan # Bisherige IP und Netmask anzeigen
+$ IP_AND_NETMASK=... # Abgelesenes hier speichern
+$ ifconfig ethlan 0.0.0.0 # IP-Adresse entfernen
+$ brctl addbr brlan # Neue bridge erzeugen
+$ brctl addif blrlan ethlan # Altes Interface der Bridge hinzu fügen
+$ ifconfig brlan $IP_AND_NETMASK # Alte IP nun der Bridge zuweisen
+$ route add default gw $GATEWAY # Route wieder setzen, jetzt über Bridge
+----
+
+Man beachte, dass die Bridge danach dieselbe MAC-Adresse wie das Ethernet-Device hat.
+
+Nun kann man TUN/TAP-Schnittstellen welche VMs erzeugt haben mit "addif" zur Bridge hinzu fügen. Sie erhalten keine IP - diese wird nur innerhalb der VM gesetzt.
+
+Um die VMs vom Host auf dem die Bridge läuft aus erreichen zu können, können für VMs die eine anderes Netzwerk verwenden Interface-Aliase der Bridge hinzu gefügt werden:
+
+----
+$ ifconfig brlan:brvm23 192.168.81.2/24 up
+----
+
+Dies fügt ein Interface-Alias "brvm23", welches tatsächlich aber dieselbe Bridge ist, hinzu. Das Alias "brvm23" kann jedoch eine andere IP und Netmask als "brlan" haben, die kompatibel mit der zu erreichenden VM "23" sind. (Die zugehörige Route für das neue Alias wird dabei automatisch erstellt.)
+
+Wenn man eine Bridge wieder löschen will nachdem man alle Interfaces aus ihr entfernt hat, muss man sie zuvor mit ifconfig "down" nehmen bevor "brctl delbr" funktioniert.
+
+Um die Bridge mit einem VDE-Switch zu verbinden, zunächst einmal einen neuen TAP VDE-Plug dafür erzeugen.
+
+Hier wird solch ein Plug als Interface ethbvm erzeugt und mit Port 4 des VDE switches mit dem Control-Directory der -s Option verbunden, so dass Mitglieder der Gruppe vde2-net auf den neuen Plug zugreifen können:
+
+----
+$ start-stop-daemon --start --quiet --pidfile /var/run/vde2/ethbvm-plug.pid --make-pidfile --background --exec dpipe vde_plug2tap -p 4 -s /var/run/vde2/ethvm.ctl ethbvm = vde_plug -g vde2-net -m 660 /var/run/vde2/ethbvm.ctl
+----
+
+Dann das neue Interface zur Bridge hinzu fügen
+
+----
+$ brctl addif blrlan ethbvm
+----
+
+und es "up" bringen, damit es beispielsweise von einer KVM-VM aus mittels "-net vde" verwendet werden kann:
+
+----
+$ ifconfig ethbvm up
+----

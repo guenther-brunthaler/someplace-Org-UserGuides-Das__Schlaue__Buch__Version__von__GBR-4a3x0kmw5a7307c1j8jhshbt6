@@ -1,0 +1,279 @@
+﻿Google-Suchoperatoren
+=====================
+v2020.118
+
+
+Suchen die auch ohne JavaScript funktionieren
+---------------------------------------------
+
+----
+some words preferably all appearing in query or variants of them
+----
+
+normal query
+
+----
+"a phrase with multiple words in this order"
+----
+
+phrase die exakt vorhanden sein muss
+
+----
+price high OR low
+----
+
+Findet sowohl "price high" als auch "price low"
+
+----
+-not_this_word
+----
+
+try to exclude specific words or phrases from search results; may be ignored
+
+----
+12000..13000
+----
+
+Express matching positive numeric value ranges
+
+before * after - allow any number of words between "before" and "after" in a document
+
+----
+date:$MONTHS
+----
+
+Search for 'new' pages Google added to its search index in the last $MONTHS. Only the values 3, 6 and 12 are supported.
+
+Note there is no way to search for the time when the document was published or authored first. (Unless of course the date can be found as part of the text using the normal numeric value range operator.) It is also unclear whether the "added" refers to the time when a web page was added to the index first, or the time the spider refreshed it, or to the time that the spider spotted differences against the previously indexed version. (Hopefully the last one!)
+
+----
+daterange:${FROM_JULIAN}-${UNTIL_JULIAN}
+----
+
+restrict search result to pages added (see `date:` operator) within a specific date range. Note that Julian integer dates refer to noon rather than midnight of that day. Use this for conversion: http://jwebnet.net/advancedgooglesearch.html#advDateRange (JavaScript needs to be enabled).
+
+----
+site:www.acme.com
+----
+
+restrict results to those from a particular domain or subdomain
+
+----
+link:www.google.com
+----
+
+Die Umkehrung von "site:" - Dokumente welche einen Hyperlink auf diese Domain oder Subdomain enthalten
+
+----
+related:$URL
+----
+
+Webseiten die ähnlichen Inhalt wie die genannte haben
+
+----
+info:$URL
+----
+
+die Info welche ein Suchtreffer für diese Webseite anzeigen würde
+
+----
+filetype:pdf
+----
+
+Einschränken auf bestimmte Dateitypen
+
+----
+inurl:word
+----
+
+Ähnlich wie "site:", durchsucht jedoch die ganze URL des indizierten Dokuments
+
+----
+allinurl:word
+----
+
+"inurl:" für alle Such-Teilausdrücke annehmen
+
+----
+intext:word
+----
+
+Require "word" to be part of the web pages normal body text, rather than a page title or keyword
+
+----
+intitle:word
+----
+
+Dieses eine Wort nur im Titel suchen
+
+----
+allintitle:word1 word2
+----
+
+"intitle:" für alle Such-Teilausdrücke annehmen
+
+----
+define:nihilism
+----
+
+Look up dictionary definition for a word or phrase
+
+----
+weather Vienna, Austria
+----
+
+Show weather report
+
+----
+stock quotes MSFT
+----
+
+Show stock quotes for a company
+
+----
+time Vienna, Austria
+----
+
+Show local time for some city
+
+----
+Vienna, Austria map
+----
+
+Maps for specific city
+
+----
+1090, Austria map
+----
+
+Maps for specific ZIP area
+
+----
+Austria map
+----
+
+Maps for whole country
+
+----
+population Vienna, Austria
+----
+
+----
+unemployment rate Vienna, Austria
+----
+
+----
+housing Vienna, Austria
+----
+
+Mietpreise etc. Synonyme: "home" or "real estate"
+
+----
+$package_tracking
+----
+
+die Tracking Nummer eingeben
+
+----
+patent 5123123
+----
+
+Suche nach Patentnummern
+
+
+Suchen die Geolocation support aber kein JavaScript erfordern
+-------------------------------------------------------------
+
+----
+movies
+----
+
+show nearby movies in theaters
+
+----
+Star Wars
+----
+
+Show movie showtimes for particular movie
+
+
+Suche nur mit aktiviertem JavaScript
+------------------------------------
+
+----
+timer
+----
+
+Countdown timer
+
+----
+10.5 cm in miles
+----
+
+Unit conversion
+
+----
+99 EUR in ATS
+----
+
+Currency conversion
+
+----
+pi^2+sqrt(144)/99
+----
+
+Calculator
+
+
+Modifikatoren für Such-URLs
+---------------------------
+
+Die folgenden Ausdrücke können an bereits bestehende Google Such-URLs angehängt werden, um deren Funktionalität zu modifizieren:
+
+----
+&tbs=rltm:1
+----
+
+Real time results (???)
+
+----
+&tbs=qdr:s
+----
+
+Past second.
+
+----
+&tbs=qdr:n
+----
+
+Past minute.
+
+----
+&tbs=qdr:h
+----
+
+Past hour.
+
+----
+&tbs=qdr:d
+----
+
+Past 24 hours (day).
+
+----
+&tbs=qdr:w
+----
+
+Past week.
+
+----
+&tbs=qdr:m
+----
+
+Past month.
+
+----
+&tbs=qdr:y
+----
+
+Past year.

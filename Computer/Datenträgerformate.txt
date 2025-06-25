@@ -1,0 +1,5 @@
+﻿Datenträgerformate
+==================
+
+3,5" Floppy:: 2 Seiten zu je 80 Spuren mit 18 Sektoren pro Spur und 512 Byte / Sektor.
+ 300 RPM. 500 kHz MFM. Effektive Lesegeschwindigkeit (mit Spurwechsel) 15 kB/s. 10 Jahre Data Retention bei geschützter Lagerung.

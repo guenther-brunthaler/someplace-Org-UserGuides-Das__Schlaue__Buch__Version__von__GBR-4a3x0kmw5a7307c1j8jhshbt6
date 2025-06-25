@@ -1,0 +1,138 @@
+﻿Größen-Einheiten
+================
+v2025.97
+
+Speichergrößen-Einheiten
+------------------------
+
+[cols="<,<,>,<,<,>",options="header,autowidth"]
+|===
+| Dezimal    | Einheit | log10 | Binär      | Einheit| log2
+| Byte       | B       |     0 | Byte       | B      |    0
+| Kilobyte   | kB      |     3 | Kibibyte   | KiB    |   10
+| Megabyte   | MB      |     6 | Mebibyte   | MiB    |   20
+| Gigabyte   | GB      |     9 | Gigbiyte   | GiB    |   30
+| Terabyte   | TB      |    12 | Tebibyte   | TiB    |   40
+| Petabyte   | PB      |    15 | Pebiyte    | PiB    |   50
+| Exabyte    | EB      |    18 | Exbibyte   | EiB    |   60
+| Zettabyte  | ZB      |    21 | Zebibyte   | ZiB    |   70
+| Yottabyte  | YB      |    24 | Yobibyte   | YiB    |   80
+| Ronnabyte  | RB      |    27 | Ronbiyte?  | RiB    |   90
+| Quettabyte | QB      |    30 | Quebibyte? | QiB    |  100
+| Googolbyte | n/v     |   100 | Goobibyte? | n/v    |  333,333...
+|===
+
+
+Größenmultiplikator-Vorsilben
+-----------------------------
+
+[cols=">,<,<,<",options="autowidth"]
+|===
+|1.000.000.000.000.000.000.000.000.000.000 | Quetta | Q  | 10^30^
+|    1.000.000.000.000.000.000.000.000.000 | Ronna  | R  | 10^27^
+|        1.000.000.000.000.000.000.000.000 | Yotta  | Y  | 10^24^
+|            1.000.000.000.000.000.000.000 | Zetta  | Z  | 10^21^
+|                1.000.000.000.000.000.000 | Exa    | E  | 10^18^
+|                    1.000.000.000.000.000 | Peta   | P  | 10^15^
+|                        1.000.000.000.000 | Tera   | T  | 10^12^
+|                            1.000.000.000 | Giga   | G  | 10^9^
+|                                1.000.000 | Mega   | M  | 10^6^
+|                                    1.000 | Kilo   | k  | 10^3^
+|                                      100 | Hecto  | h  | 10^1^
+|                                       10 | Deca   | da | 10^1^
+|                                        1 |        |    | 10^0^
+|                                      0,1 | Deci   | d  | 10^-1^
+|                                     0,01 | Centi  | c  | 10^-2^
+|                                    0,001 | Milli  | m  | 10^-3^
+|                                0,000 001 | Micro  | µ  | 10^-6^
+|                            0,000 000 001 | Nano   | n  | 10^-9^
+|                        0,000 000 000 001 | Pico   | p  | 10^-12^
+|                    0,000 000 000 000 001 | Femto  | f  | 10^-15^
+|                0,000 000 000 000 000 001 | Atto   | a  | 10^-18^
+|            0,000 000 000 000 000 000 001 | Zepto  | z  | 10^-21^
+|        0,000 000 000 000 000 000 000 001 | Yocto  | y  | 10^-24^
+|    0,000 000 000 000 000 000 000 000 001 | Ronto  | r  | 10^-27^
+|0,000 000 000 000 000 000 000 000 000 001 | Quecto | q  | 10^-30^
+|===
+
+
+Benannte Bitgrößen
+------------------
+
+[option="header,autowidth"]
+|===
+| Bitzahl | Immer | Bezeichnung | Anspielung auf
+| 1       | Ja    | bit         | binary digit
+| 2       | Ja    | tayste      | tasty, ein schmackhafter Bissen
+| 2       | Ja    | crumb       | Noch kleineres "Brösel" eines Bytes als ein Nybble
+| 2       | Nein  | quarter     | 25-cent US-Münze, 1/4 eines Byte
+| 4       | Nein  | nybble      | nibble, ein Bissen von einem Byte; ein halbes Byte
+| 4       | Nein  | nibble      | non-US Variante (Commonwealth-Staaten) von "nybble"
+| 5       | Ja    | nickle      | 5-cent US-Münze, Anspielung auf "nybble"
+| 8       | Nein  | byte        | "binary term"; meistens 8 Bit, aber nicht immer
+| 8       | Ja    | octet       | Bevorzugt wenn die exakte Bitzahl wichtig ist
+| 10      | Ja    | deckle      | "Dezimales" Nybble, welches 10 statt 4 Bit enthält
+| 16      | Ja    | playte      | "Plate", welches mehrere "crumbs" enthält
+| 32      | Ja    | dynner      | "Dinner", Analogie von Bit auf Byte für tayste
+|===
+
+Bis auf 'bit', 'nybble', 'nibble', 'byte' und 'octet' erfreuen sich die obigen Begriffe nur geringer Verbreitung und werden oft als dümmlich angesehen.
+
+
+Googolplex
+----------
+
+Ein 'Googol' = +10^100^+.
+
+Ein 'x-plex' = +10^x^+.
+
+Ein 'Googolplex' = +10^Googol^+.
+
+
+Humorvolle Speichergrößen-Bezeichungen
+--------------------------------------
+
+* GB, GiB:
++
+--
+* Gabelbissen
+* Gänseblümchen
+* Ganzheitsbetrachtungen
+* Garantiebedingungen
+* Garantiebelege
+* Gartenblumen
+* Gastbeiträge
+* Geissböcke
+* Geistesblitze
+* Gelenksbänder
+* Gemeinbesitz
+* Gemeindebedienstete
+* Gemeinschaftsbedarf
+* Gemüsebouillon
+* Genickbrüche
+* Genügsamkeitsbeweise
+* Geradebiegungen
+* Geriatriebonzen
+* Gesundheitsbrote
+* Getriebebolzen
+* Ghettoblaster
+* Glanzbeschichtung
+* Gleitbügel
+* Glitterbeschichtungen
+* Glockenblumen
+* Gnadenbeutelungen
+* Goldbären
+* Goodie-Bonbons
+* Gottes-Belobigungen
+* Grammelschmalzbrote
+* Granulatbehälter
+* Graubleche
+* Graubärte
+* Graubrote
+* Grießbonbons
+* Grießbrei
+* Großbauern
+* Großbritannier
+* Grundbedingungen
+* Gunstbezeugungen
+--

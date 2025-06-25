@@ -1,0 +1,7 @@
+Mit Wireshark die Pakete mit protokollieren, und dann in folgendes Paket schauen (irrelevante Unterpakete wurden aus dieser Kopie der Ausgabe entfernt):
+
+Bootstrap Protocol (ACK)                                                        
+    Option: (6) Domain Name Server                                              
+        Length: 8                                                               
+        Domain Name Server: 10.240.0.100                                        
+        Domain Name Server: 10.240.0.200                                        

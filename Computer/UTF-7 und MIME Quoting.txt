@@ -1,0 +1,41 @@
+﻿UTF-7 (in RFC 1642 definiert) codiert Text als eine der folgenden Sequenzen:
+
+ASCIIOHNEPLUS
+ASCIIOHNEPLUS+BASE64keinbase64
+ASCIIOHNEPLUS+BASE64-ASCIIOHNEPLUS
+ASCIIOHNEPLUS+-ASCIIOHNEPLUS
+
+wobei ASCIIOHNEPLUS beliebiger ASCII-Text ist der kein literales "+"-Zeichen enthält.
+
+Der letzte Fall zeigt die Codierung eines literalen "+".
+
+keinbase64 ist ASCII-Text welcher keine Zeichen aus dem für "MIME quoted-printable" modifizierten BASE-64 Alphabet enthält.
+
+BASE64 enthält nur Zeichen aus diesem BASE-64 Alphabet und codiert einen Octet-Stream aus serialisierten UTF-16BE-Zeichen.
+
+Die Bits dieses Streams werden mit dem ersten (höchstwertigen) Bit beginnend von links her in 6-Bit Blöcke zerhackt, wobei der letzte Block falls erforderlich durch Anhängen von 0-Bits auf 6 Bit aufgefüllt wird.
+
+Dann wird jede 6-Bit-Gruppe als Wert von 0 bis 64 durch das entsprechende Zeichen des oben erwähnten speziellen BASE-64 Alphabets ersetzt.
+
+Dieses Alphabet besteht aus: "A".."Z", "a".."z", "0".."9", "+", "/".
+
+Im Gegensatz zu UTF-7 konvertiert "MIME Quoted-Printable" (RFC 2045 Seite 25) immer 3 Octets in 4 BASE-64 Zeichen, wobei "=" zum Padding benutzt wird falls weniger als 3 Octets an noch zu konvertierenden Binärdaten zur Verfügung stehen:
+
+3 Octets -> 4 Zeichen
+2 Octets -> 3 Zeichen + "="
+1 Octet  -> 2 Zeichen + "=="
+
+Oder anders formuliert, die letzte 6er-Gruppe wird genau so wie bei UTF-7 mit 0-Bits aufgefüllt um das letzte BASE-64 Zeichen zu bilden. Dann werden jedoch noch so viele "=" dran gehängt, dass die Gesamtzahl der BASE-64-Zeichen im Encoding ein Vielfaches von 4 ergibt.
+
+Einzeiler zum Ausdruck des Alphabets:
+
+$ perl -e'for(A..Z,a..z,0..9,"+","/"){printf"%02x $_\n",$n++}'|paste - - - - - - - -
+
+"Normales" BASE-64, wie es von "base64" oder "openssl base64" erzeugt wird, scheint dasselbe Alphabet (für welches dort auf RFC 4648 verwiesen wird) und "="-Padding zu benutzen wie "MIME Quoted-Printable". Mit dem Unterschied dass Zeilenumbrüche (auch mehrfache; nicht jedoch andere "Whitespace"-Zeichen) an beliebiger Stelle innerhalb des Encodings erlaubt sind und ignoriert werden.
+
+UTF-7 Umlaute in NFD werden durch den Basis-Buchstaben gebildet, gefolgt von "+Awg-" (0xcc, 0x88 in UTF-8). Das scharfe "ß" ist hingegen in NFC als auch NFD "+AN8-" (0xc3, 0x9f in UTF-8).
+
+$ t7='Bo+Awg-ses u+Awg-bles Ro+AN8!'
+$ echo $t7 | LC_CTYPE=C.UTF-8 sh -c 'iconv -f UTF-7 | idn -n' | iconv -f UTF-8
+$ echo $t7 | uconv -f UTF-7 -x '::nfkc;'
+Böses übles Roß!

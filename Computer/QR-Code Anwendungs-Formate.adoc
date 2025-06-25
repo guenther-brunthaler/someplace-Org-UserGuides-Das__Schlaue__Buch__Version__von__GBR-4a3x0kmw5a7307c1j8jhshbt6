@@ -1,0 +1,78 @@
+﻿QR-Code Anwendungsformate
+=========================
+v2022.87
+
+
+QR-Code zur Übermittlung von WiFi-Zugangsdaten
+----------------------------------------------
+
+----
+WIFI:T:{Authentifikation};S:{SSID};P:{PSK};H:true;
+----
+
+Die einzelnen Felder besitzen dabei folgende Bedeutung.
+
+\{Authentifikation}::
++
+--
++nopass+:: Keine Authentifikation
++WEP+:: WEP Authentifikation
++WPA+:: WPA/WPA2 Authentifikation
+--
+\{SSID}:: Name des W-LAN (wird benötigt)
+\{PSK}:: Passwort bzw. pre-shared key
++H+:: Gibt an ob das W-LAN "versteckt" ist
+
+
+Example: WPA2, Name "Test", Passwort "geheim" und nicht versteckt.
+
+----
+WIFI:T:WPA;S:Test;P:geheim;;
+----
+
+Quelle dieser Weisheiten: https://www.qr-code-generator.com/solutions/wifi-qr-code/
+
+
+VCARD
+-----
+
+----
+BEGIN:VCARD
+VERSION:2.1
+FN:Max Mustermann
+N:Mustermann;Max
+TITLE:Dr.-Ing.
+TEL;CELL:+49 163 1737743
+TEL;WORK;VOICE:+49 123 7654321
+TEL;HOME;VOICE:+49 123 123456
+EMAIL;HOME;INTERNET:max.mustermann@example.com
+EMAIL;WORK;INTERNET:work@example.org
+URL:http://example.com
+ADR:;;Musterstraße 123;Musterstadt;;77777;Deutschland
+ORG:ACME Inc.
+END:VCARD
+----
+
+Wenn man sich an das oben dargestellte vCard 2.1-Schema hält, unterstützen alle relevanten Smartphone QR-Reader den vCard-Inhaltstyp, auch sehr alte Software kann mit diesen QR Codes umgehen.
+
+
+MECARD
+------
+
+Diese Format scheint zumindest Android zu beherrschen:
+
+----
+MECARD:N:{Vorname} {Zweiter Vorname} {Nachname};ORG:{Unternehmen};TEL:{Mobil};TEL:{Mobil};TEL:{Privat};EMAIL:{Privat};EMAIL:{Geschäftlich};EMAIL:{Sonstige};;
+----
+
+Die tatsächlichen Werte wurden oben durch Platzhalter in geschweiften Klammern ersetzt. (Die Platzhalter müssen vor einer Verwendung natürlich entfernt werden.) Die in den Platzhaltern verwendeten Namen entsprechen den Feldnamen in der Android "Kontakte"-App (zumindest bei meinem Gerät lauten die Feldnamen nach dem Import wie oben).
+
+Leider werden die Feldbezeichnungen nicht übertragen, so dass innerhalb der identisch benannten Felder die Reihenfolge signifikant ist. Die obige Reihenfolge wurde durch Tests ermittelt. Zusätzliche der oben wiederholten Felder werden ebenfalls beim Import ignoriert.
+
+Das Android-Adressbuch kennt noch mehr Felder, aber die werden offenbar nicht von diesem Format unterstützt bzw. beim Import ignoriert.
+
+Man kann allerdings ungenutzte Schlüssel-Wert-Paare für `ORG`, `TEL` und `EMAIL` einfach weglassen.
+
+`N` ist vermutlich verpflichtend. Das Unter-Feld `{Zweiter Vorname}` ist jedoch optional; ohne dieses ist zudem auch `{Nachname}` optional.
+
+Ebenso wohl auch das letzte (leere) Feld, welches vermutlich den Datensatz terminiert.

@@ -1,0 +1,188 @@
+﻿Firefox Settings
+================
+v2024.39
+
+
+about:config-Settings
+---------------------
+
+In den folgenden Text-Feldern ist die erste Zeile die Pseudo-URL und die zweite Zeile der empfohlene Wert. Die Pseudo-URLs lassen sich auch Bookmarken!
+
+'''
+
+----
+about:config?filter=security.ssl.require_safe_negotiation
+false
+----
+
+Wenn der Android Firefox sich weigert eine Vorschaltseite wegen einer veralteten SSL-Version anzuzeigen, dies temporär setzen. Sobald man die Auflagen der Vorschaltseite bewältigt hat und noch bevor man mit dem eigentlichen Internet-Zugriff beginnt, wieder auf "true" setzen.
+
+----
+about:config?filter=browser.urlbar.trimURLs
+false
+----
+
+verhindert, dass der Firefox das URL-Schema ("http://" etc.) bei der Anzeige im URL-Bar unterdrückt.
+
+----
+about:config?filter=view_source.wrap_long_lines
+true
+----
+
+zeigt den Quelltext einer HTML-Seite immer ohne Horizontal-Scrolling an bzw. bricht überlange Zeilen automatisch um.
+
+----
+about:config?filter=/^permissions.default.image/
+2
+----
+
+Schaltet Bilder ab. Allgemein unterstützte Werte:
+
+[horizontal]
+1:: Allow all images to load, regardless of origin. (Default)
+2:: Block all images from loading.
+3:: Prevent third-party images from loading
+
+----
+about:config?filter=javascript.enabled
+false
+----
+
+Ausführung von JavaScript durch Webseiten verbieten.
+
+----
+about:config?filter=network.proxy.type
+0
+----
+
+Ändert den Modus der Verwendung der konfigurierten Proxies:
+
+[horizontal]
+0:: (default): Direct connection to the Internet (no proxy used)
+1:: Manual proxy configuration (use values in network.proxy.*)
+2:: Autoconfiguration by URL (use value in network.proxy.autoconfig_url)
+4:: Auto-detect proxy settings for this network
+5:: Use system proxy settings. (Default in Linux.)
+
+----
+about:config?filter=browser.newtabpage.activity-stream.showSponsored
+false
+----
+
+Verhindert die Anzeige von Werbung in neuen Tabs.
+
+----
+about:config?filter=browser.tabs.closeWindowWithLastTab
+false
+----
+
+Beim Schließen des letzten Tabs wird das Fenster nicht geschlossen. Leider kann man diese Settings nicht aufs letzte offene Browserfenster einschränken; es gilt für jedes.
+
+----
+about:config?filter=browser.display.use_document_fonts
+0
+----
+
+Ob Webseiten die Festlegung von Fonts für die Darstellung erlaubt wird.
+
+[horizontal]
+0:: Nur die im Browser konfigurierten Schriftarten dürfen verwendet werden
+1:: Die Webseite kann auch andere Fonts benutzen (lokal installierte oder downloadbare falls erlaubt)
+
+----
+about:config?filter=gfx.downloadable_fonts.enabled
+false
+----
+
+Ob Webseiten das Downloaden von Fonts erlaubt wird. Potenziell gefährlich.
+
+----
+about:config?filter=network.prefetch-next
+false
+----
+
+Deaktiviert das spekulative vorauseilende Laden von anderen Webseiten im Hintergrund, auf welche die gerade angezeigte Webseite verweist.
+
+----
+about:config?filter=/^browser.search.update;/
+false
+----
+
+Deaktiviert die periodischen automatischen Aktualierungsprüfungen für Suchmaschinen-Plugins.
+
+----
+^geo[.]enabled
+false
+----
+
+Deaktiviert die Übermittlung des eigenen Standorts an Websites.
+
+----
+media.autoplay.enabled
+false
+----
+
+Verhindert, dass Webseiten auch ohne aktiviertes JavaScript dennoch Videos automatisch abspielen können.
+
+----
+browser.sessionstore.interval
+180000
+----
+
+Erhöht die Intervalle zum Sichern von Wiederherstellungsinformationen für die aktuelle Session von 15 Sekunden auf 3 Minuten. Das kann die Dauer-Schreibbelastung des Datenträgers auf welchem das Profil liegt deutlich verringern.
+
+----
+widget.gtk.overlay-scrollbars.enabled
+false
+----
+
+Verhindert, dass unter GTK3+ der Scrollbalken bei zu einem dünnen Strich wird wenn nicht zufälliger Weise gerade der Mauszeiger darüber schwebt.
+
+----
+widget.non-native-theme.scrollbar.style
+4
+----
+
+Das ändert den Scrollbalken-Stil auf jenen von Windows 10, welches einen zwar hässlich klotzigen aber angenehm breiten Scrollbalken verwendete.
+
+----
+widget.non-native-theme.scrollbar.size.override
+20
+----
+
+Dieses Setting wird wirksam wenn "`widget.non-native-theme.scrollbar.style`" nicht gesetzt ist und wirkt dann als Alternative dazu. Der Balken wird hierbei zwar weniger breit, sieht aber auch nicht mehr ganz so klotzig-primitiv aus.
+
+
+Regex Filtering
+~~~~~~~~~~~~~~~
+
+The "about:config?filter="-URLs as well as the Search textbox in the "about:config"-Dialog supports either simple Substring search (however "*" can still be used as a wildcard to match any number of character) or Regular expressions (EREs).
+
+Regular Expressions must be enclosed within "/" and an Option-letter "i" is allowed after the closing "/" to indicate case-insensitive matching.
+
+The RegEx will be matched with "Name;Value" of a preference. Which means a "$" will not match the end of the Name but ";" will.
+
+
+Anzeige der Änderungen
+~~~~~~~~~~~~~~~~~~~~~~
+
+Man kann die "about:config"-Ansicht auch nach "Status" sortieren, da sieht man dann alle geänderten Settings beisammen.
+
+
+Firefox Sync
+------------
+
+Die Einstellungen sind unter
+
+----
+about:preferences#sync
+----
+
+zu finden. Dort einstellen:
+
+[options="autowidth"]
+|===
+|[ ] Tabs        | [ ] Chronik
+|[x] Lesezeichen | [ ] Add-ons
+|[x] Passwörter  | [x] Einstellungen
+|===

@@ -1,0 +1,163 @@
+﻿Snapshots und COW-Devices unter Linux
+=====================================
+v2025.100
+
+Oft will man Daten auf einem existierenden Block Device ändern, ohne aber etwas auf das Device zu schreiben.
+
+Dafür kann man das "`snapshot`"-Target des Device-Mappers verwenden. Lesezugriffe gehen aufs Original-Device, aber alle Schreibzugriffe landen in einem Temporärfile (auch Änderungen werden aus diesem gelesen).
+
+IMPORTANT: Wird für ein solches "`snapshot`" ein "`snapshot-origin`" oder "`snapshot-merge`" als Basis genommen, muss solch ein Basis-Device vor dem Hinzufügen oder Entfernen des "`snapshot`" in den "`suspend`"-Zustand versetzt werden. Ansonsten droht Datenkorruption.
+
+
+Erzeugen eines beschreibbaren Snapshots
+---------------------------------------
+
+Dies erzeugt ein nicht-persistentes beschreibbares Snapshot aus einem Block-Gerät.
+
+Festlegen der variablen Angaben:
+
+. Variante: Von einem Read-Only Block-Gerät das seinen Inhalt während der Existenz des Snapshots niemals ändert.
++
+----
+$ ro_original=/dev/cdrom0
+----
+
+. Variante: Von einem beschreibbaren Block-Gerät das seinen Inhalt während der Existenz des Snapshots möglicherweise ändern wird.
++
+----
+$ rw_original=/dev/sda
+$ ro_original=/dev/mapper/tmp_orig
+
+$ echo "0 `blockdev --getsz ${rw_original:?}` snapshot-origin ${rw_original:?}" \
+  | dmsetup create ${ro_original##*/} && dmsetup mknodes
+----
+
+Festlegen der restlichen variablen Angaben:
+
+----
+$ rw_snapshot=/dev/mapper/tmp_snap
+$ tmp_file_dir=${TMPDIR:-/tmp}
+$ tmp_size=30M
+----
+
+Snapshot mit diesen Angaben erstellen:
+
+----
+$ rw_snapshot_name=${rw_snapshot##*/} \
+&& tmp_file_dir=${TMPDIR:-/tmp} \
+&& tmp_size=30M \
+&& cks=`expr 4096 / 512 # 4 KiB` \
+   \
+&& tmp_file=`mktemp -- "${tmp_file_dir:?}"/snapshot_backing.XXXXXXXXXX` \
+&& truncate -s "$tmp_size" -- "${tmp_file:?}" \
+&& loop=`losetup -f` \
+&& losetup -- "${loop:?}" "${tmp_file:?}" \
+&& modprobe dm-snapshot \
+&& echo "0 `blockdev --getsz ${ro_original:?}` snapshot ${ro_original:?} ${loop:?} N $cks" \
+   | dmsetup create ${rw_snapshot_name:?} && dmsetup mknodes
+----
+
+wobei
+
+* `$cks`: Chunk size für Änderungen. Die kleinste Einheit in der Änderungen aufgezeichnet werden. In Einheiten von 512-Byte-Blocks.
+
+* "`N`": Kein permanentes Snaphot. Braucht weniger RAM als "`P`" welches einen Reboot überleben könnte (vorausgesetzt `$tmp_file` würde ihn auch überleben). Und "`PO`" unterrichtet zusätzlich Tools davon wenn ein Snapshot überläuft.
+
+
+Entfernen eines Snapshots
+-------------------------
+
+Um das zuvor angelegte Snapshot mittels der dabei gesetzten Shell-Variablen später wieder zu zerstören:
+
+----
+dmsetup status ${rw_snapshot_name:?} \
+&& dmsetup remove ${rw_snapshot_name:?} \
+&& losetup -d "${loop:?}" \
+&& rm -- "${tmp_file:?}" \
+&& unset ro_original rw_snapshot rw_snapshot_name \
+      tmp_file_dir tmp_size cks tmp_file loop
+----
+
+
+Erläuterung
+-----------
+
+Noch einmal in Kurzform:
+
+....
+<start> <length> snapshot <origin> <COW device> <persistency> <chunksize>
+....
+
+Dies reicht als einziges Mapping aus wenn die Basis eines Snapshots sich niemals verändert während das Snapshot existiert.
+
+....
+<start> <length> snapshot-origin <base>
+....
+
+ist davor zusätzlich nötig wenn die Basis des Snapshots verändert werden könnte während das temporäre Snapshot existiert.
+
+Dies verwendet man wenn das Device auf dem das Snapshot basiert selbst geändert werden soll. Denn "`snapshot`" erwartet ein unverändertes `<origin>`. Ein "`snapshot-origin`"-Device schafft diese Illusion, obwohl der Inhalt von `<base>` sehr wohl von außerhalb der Snapshots verändert wird.
+
+Jeder Schreibzugriff auf das `snaphot-origin` Mapping sorgt dafür, dass alle snapshots die dieses Mapping ihrerseits als `<origin>` verwenden, eine Kopie des Original-Inhalts vor der Änderung in ihre COW-Devices bekommen. Erst danach werden die Änderungen nach `<base>` geschrieben.
+
+Somit sehen die snapshots den Originalinhalt vor der Änderung die tatsächlich im Originaldevice durchgeführt wurde.
+
+....
+<start> <length> snapshot-merge <base> <COW device> <persistency> <chunksize>
+....
+
+Kann die Änderungen des COW-Devices gegenüber `<base>` tatsächlich in `<base>` einbringen.
+
+Funktioniert jedoch nur für `<persistency>` "`P`" und "`PO`".
+
+IMPORTANT: Falls `<base>` beim Befüllen von `<COW device>` die Basis eines `snaphot-origin` gewesen ist, darf es dies nicht mehr sein (d. h. das Mapping muss zuvor entfernt werden) wenn das `snapshot-merge` gestartet wird.
+
+Nach dem Laden der `snapshot-merge` Table beginnt ein Kernel-Prozess mit dem Kopiervorgang.
+
+
+Füllstand des Snapshots anzeigen
+--------------------------------
+
+----
+$ dmsetup status <base>
+----
+
+gibt darüber Auskunft wie weit der Vorgang schon gediehen ist. Bei einem "`snapshot`"-Target verrät derselbe Befehl, wie viel Platz im COW-Device noch frei bzw. bereits belegt ist.
+
+Die Ausgabe des obigen `dmsetup status` bedeutet das folgende, wobei nur hier nur die Angaben vom Ende der Zeile erläutert werden:
+
+....
+<sectors_allocated>/<total_sectors> <metadata_sectors>
+....
+
+Die Einheiten dieser Zahlenwerte sind 512-Byte Sektoren. Der Wert "`<sectors_allocated>`" enthält dabei den Wert "`<metadata_sectors>`".
+
+Oder anders ausgedrückt, "`<sectors_allocated> - <metadata_sectors>`" ergibt die Netto-COW-Änderungen, "`<sectors_allocated>`" die Brutto-Änderungen inklusive Metadaten.
+
+Ein simples Snapshot verwendet keine Metadaten, daher ist der letzte Wert dort immer Null.
+
+
+Swapping
+--------
+
+Wenn lokal zu wenig Speicherplatz für das Snapshot-Device vorhanden ist, kann man Speicherplatz auch via `/dev/nbd*` von einem anderen Rechner beziehen. Allerdings muss man darauf achten, dass ein Swap-Device weder direkt oder indirekt über NDB geleitet wird:
+
+----
+$ sed 's/^[^[:alnum:]]*//; /\.$/ q' /usr/src/linux/drivers/block/nbd.c
+Network block device - make block devices work over TCP
+
+Note that you can not swap over this thing, yet. Seems to work but
+deadlocks sometimes - you can not swap over TCP in general.
+----
+
+In Notfällen kann man es dennoch versuchen, indem man nbc-client mit der "`-swap`"-Option benutzt. Das senkt die Wahrscheinlichkeit für Deadlocks zumindest stark.
+
+
+Alternativen
+------------
+
+Es gibt Alternativen zu den oben erläuterten Befehlen, die je nach Situation besser geeignet sein können.
+
+* "`dm-clone`". Dieses ist besser für den Fall geeignet, dass man ein Blockgerät kopieren möchte, und das neue Blockgerät bereits benutzen kann als wäre die Kopie bereits erfolgt, jedoch noch bevor der Kopiervorgang tatsächlich abgeschlossen wurde.
+
+* Thin provisioning. Dies erlaubt viele Snapshots und auch Snapshots von Snapshots, basierend nur auf einem einzigen Pool-Device für ale COW/Metadaten zu erzeugen. Verwenden, wenn man mehr als ein einziges Snapshot benötigt.

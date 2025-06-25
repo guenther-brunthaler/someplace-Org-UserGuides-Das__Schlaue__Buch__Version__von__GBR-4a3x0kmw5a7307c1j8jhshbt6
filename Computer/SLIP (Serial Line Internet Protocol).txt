@@ -1,0 +1,19 @@
+﻿Das RFC 1055 "Serial Line Internet Protocol" (SLIP) Überträgt Datagramme des Internet Protokolls zwischen zwei Endpunkten, welche durch einen sequentiellen Datenstrom (serielle Schnittstelle, UNIX Pipe) verbunden sind.
+
+Zwei spezielle Byte-Werte sind definiert:
+
+* 192 als "SLIP END"
+* 219 als "SLIP ESC"
+
+Ein Paket wird übertragen, indem alle Bytes des Paket gesendet werden, bis ein "SLIP END" Byte empfangen welches anzeigt dass das Paket nun komplett ist.
+
+Während der Übertragung werden die beiden Bytes "SLIP END" und "SLIP ESC" wenn sie als Teil der Paketdaten vorkommen durch folgende Bytesequenzen ersetzt:
+
+* literal "SLIP END" -> "SLIP ESC", 220
+* literal "SLIP ESC" -> "SLIP ESC", 221
+
+Alle Byte-Werte in dieser Kurzbeschreibung sind dezimal.
+
+Unter UNIX wird SLIP normalerweise mit dem Befehl "slattach" an eine zeichenorientierte Gerätedatei gebunden. Damit kann auch das CSLIP-Protokoll anstelle von SLIP aktiviert werden, welches "Van Jacobson" RFC 1144 Header-Compression verwendet.
+
+SLIP ist ein sehr primitives und auch nicht besonders effizientes Protokoll; normalerweise wird statt dessen PPP (RFC 1548, RFC 1172, RFC 1331, RFC 1332) verwendet das wesentlich mächtiger, allerdings auch deutlich komplexer ist und zahlreiche Konfigurations-Optionen kennt.

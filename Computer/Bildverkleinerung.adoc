@@ -1,0 +1,110 @@
+﻿Bildverkleinerung
+=================
+v2025.103
+
+Der untenstehende Befehl erlaubt es, die Namen beliebig vieler selektierter Bilddateien in die Zwischenablage zu kopieren, und verkleinert dann alle diese Dateien mit einem Befehl.
+
+Zum Selektieren der Bilder benutzt man am besten den 'pcmanfm'-Dateimanager, und markiert die gewünschten Dateien mit der Maus.
+
+Als erstes schaltet man dazu am besten auf die "Miniaturansicht" um, so dass man kleine Versionen der Bilder direkt im Fenster des Dateimanagers angezeigt bekommt. Dazu wählt man im Menü "Ansicht" das Untermenü "Ordneransicht:" und dort "Miniaturansicht" aus. (Später sollte man die Ansicht dann wieder auf "Listenansicht" zurück stellen, weil diese für das allgemeine Arbeiten mit Dateien besser geeignet ist.)
+
+Nun klickt man mit der linken Maustaste alle Bilddateien an welche verkleinert werden sollen, während man die +[Strg]+-Taste gedrückt hält. (Alternativ kann man auch mit dem linken Mausknopf ein Rechteck aufziehen, welches alle Dateinamen im Rechteck selektiert.)
+
+Sind alle gewünschten Dateien auf diese Weise markiert, ruft man den Punkt "Dateifpad kopieren" aus dem Kontextmenü auf, welches man durch Drücken des rechten Mausknopfs erhält.
+
+Dadurch wird eine Liste mit Pfadnamen aller markierten Dateien in die Zwischenablage kopiert.
+
+Der folgende Befehl liest diese Liste dann aus der Zwischenablage aus und verkleinert sie auf eine einheitliche Größe:
+
+----
+$ true "Optionales Nachinstallieren fehlender Hilfsprogramme." \
+  && : "Nur erforderlich, falls einer der nachfolgenden Befehle" \
+  && : "über fehlende Hilfsprogramme klagen sollte." \
+  && : "Version dieses Befehls: v2025.102" \
+  && sudo apt-get install zenity xclip imagemagick libavif-bin
+
+$ true "Bilddateien im JPEG- oder PNG-Format deren" \
+  && : "Pfadnamen sich in der Zwischenablage befinden in" \
+  && : "AVIF-Dateien umwandeln und zugleich (aber nur" \
+  && : "falls sie davor größer waren) auch noch auf" \
+  && : "Full-HD Auflösung verkleinern." \
+  && : "Version dieses Befehls: v2025.102" \
+  && for u in xclip convert avifenc; do
+  command -v $u > /dev/null || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | (TF=`mktemp -- "${TMPDIR:-/tmp}/avifconv-XXXXXX.png"` \
+  && trap "rm -- '$TF'" 0 && while IFS= read -r f; \
+  do test -z "$f" && continue || test -f "$f" \
+  && convert -resize '1920x1080>' -quality 15 "$f" "$TF" \
+  && avifenc -- "$TF" "${f%.*}.avif"; done)
+
+$ true "AVIF-Bilddateien deren Pfadnamen sich in der" \
+  && : "Zwischenablage befinden verlustfrei in" \
+  && : "PNG-Dateien umwandeln und nichts an der" \
+  && : "Auflösung ändern. Die PNG-Bilder können" \
+  && : "danach mit gewohnten Befehlen zu JPEG-Dateien" \
+  && : "verkleinert werden." \
+  && : "Version dieses Befehls: v2025.102" \
+  && for u in xclip avifdec; do
+  command -v $u > /dev/null || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" && avifdec -- "$f" "${f%.*}.png"; done
+
+$ p=480000 q=50 && : "Bilddateien in allen Formaten" \
+  && : "(außer AVIF) deren Pfadnamen sich in der" \
+  && : "Zwischenablage befinden zuerst unter" \
+  && : "Beibehaltung des Seitenverhältnisses auf eine" \
+  && : "Fläche von $p Pixel verkleinern (aber nur falls" \
+  && : "sie davor größer waren) und danach im JPEG-Format" \
+  && : "mit einer Kompressions-Qualität von $q %" \
+  && : "als neue Dateien abspeichern." \
+  && : "Version dieses Befehls: v2025.103" \
+  && for u in xclip convert; do command -v $u > /dev/null \
+  || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" && convert -resize "${p}@>" \
+  -quality $q% "$f" "${f%.*} Q$q% Rsz${p}px.jpg"; done
+
+$ r=45 q=50 && : "Bilddateien in allen Formaten" \
+  && : "(außer AVIF) deren Pfadnamen sich in der" \
+  && : "Zwischenablage befinden zuerst auf $r % der" \
+  && : "Originalgröße verkleinern (oder aber vergrößern" \
+  && : "falls $r größer als 100 % ist) und danach im" \
+  && : "JPEG-Format mit einer Kompressions-Qualität" \
+  && : "von $q % als neue Dateien abspeichern." \
+  && : "Version dieses Befehls: v2025.103" \
+  && for u in xclip convert; do command -v $u > /dev/null \
+  || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" && convert -resize $r% -quality $q% \
+  "$f" "${f%.*} Q$q% Rsz$r%.jpg"; done
+----
+
+Die verkleinerten Dateien befinden sich in den selben Ordnern wie die Originaldateien, sind jedoch am Text "-verkleinert" erkennbar welcher an alle Dateinamen angehängt wurde.
+
+Man kann die Anzeige im 'pcmanfm' für das aktuelle Fenster bzw. Tab filtern so dass er nur diese Dateien anzeigt, indem man man im Menü "Ansicht" auf "Verkleinern" geht und den Text
+
+....
+*-verkleinert*
+....
+
+ins Textfeld der "Wähle Filter"-Abfrage eingibt.
+
+Um später wieder alle Dateien anzuzeigen, benutzt man den Befehl noch einmal doch gibt den Text
+
+....
+*
+....
+
+also nur einen Stern als Filterausdruck ein.

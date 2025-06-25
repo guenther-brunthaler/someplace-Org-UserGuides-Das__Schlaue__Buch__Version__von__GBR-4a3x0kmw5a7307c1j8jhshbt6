@@ -1,0 +1,80 @@
+﻿E-Mail via telnet senden/empfangen
+==================================
+v2022.32
+
+Wenn kein Mailprogramm installiert ist und man dennoch Mails lesen und empfangen will, kann man dies über die Kommandozeile tun.
+
+Hier ist das Vorgehen exemplarisch für GMX beschrieben.
+
+Zuerst muss man sich in dem POP3-Server einloggen.
+
+Ohne Verschlüsselung (heute nur noch selten verwendet):
+
+----
+$ telnet some_mailserver.test.com 110
+----
+
+Oder mit SSL (meist der Fall):
+
+----
+$ openssl s_client -host pop.gmx.net -port 995
+----
+
+Danach muss man üblicherweise Usernamen/Passwort eingeben - was nur bei der 2. Methode sicher ist.
+
+Bei der 1. Methode sollte man statt dessen auf den APOP-Befehl zur Identifizierung zurück greifen - so wird zumindest nur ein gesalzener Hash das Passwortes unverschlüsselt übermittelt, und nicht das Passwort selbst. Den eigentlichen Inhalt der übertragenen Mails kann ein Angreifer aber dennoch einsehen.
+
+Wichtige POP3-Kommandos
+-----------------------
+
+STAT:: Anzahl der Mails und Auslastung der Mailbox in Bytes anzeigen
+LIST:: Liste aller vorhandenen Mails, jeweils Nummer und Größe der Nachricht
+RETR NN:: Vollständige Mail mit der betreffenden Nummer NN anzeigen
+TOP NN ZZ:: Nur Beginn der Mail mit der Nummer NN. Vollständiger Header plus ZZ Zeilen des eigentlichen Inhalts.
+DELE NN:: Markiert die betreffende Mail auf dem Server als gelöscht. Beim Beenden der Sitzung wird die Löschung dann durchgeführt.
+QUIT: Sauberes Beenden der Sitzung. Während der Sitzung zum Löschen markierte Mails werden tatsächlich gelöscht.
+HELP:: Viele POP3-Server unterstützen diesen Befehl und zeigen darauf hin eine Liste aller verfügbaren Befehle an, die üblicherweise umfangreicher ist als die oben genannten.
+
+Beispiel-Session
+----------------
+
+----
+$ openssl s_client -host pop.gmx.net -port 995
+[...]
++OK POP server ready [...]
+USER 12345678
++OK password required for user "12345678"
+PASS my_secret_email_server_password
++OK mailbox "12345678" [...]
+STAT
++OK 7012 392829932
+QUIT
+DONE
+----
+
+Nur die Zeilen welche mit USER, PASS, STAT oder QUIT beginnen wurden dabei vom Benutzer selbst eingegeben. Die restlichen Zeilen sind nur Rückmeldungen des Mailservers mit dem man sich durch das openssl bzw. telnet-Kommando verbunden hat.
+
+Versenden
+---------
+
+Hier kommt das SMTP-Protokoll zum Einsatz. Auch hier gibt es wieder verschlüsselte und unverschlüsselte Versionen.
+
+Die meisten unverschlüsselten Server verwenden dabei für die Anmeldung das Verfahren AUTH PLAIN; bei dem man nicht direkt Username/Passwort angibt sondern daraus erst einen Hash generieren muss:
+
+----
+$ perl -MMIME::Base64 -e 'print encode_base64("\000meinname\000meinpasswort")'
+AG1laW5uYW1lAG1laW5wYXNzd29ydA==
+----
+
+dessen Ausgabe man an den SMTP-Server verfüttert:
+
+----
+$ openssl s_client -host mail.irgend.wo -port 25 -starttls smtp
+[...]
+AUTH PLAIN AHVzZXItanUAc2VjcmV0
+235 Authentication succeeded
+----
+
+Für einen ausführlicheren Artikel siehe
+
+https://www.heise.de/security/artikel/E-Mail-Verschluesselung-austesten-785451.html

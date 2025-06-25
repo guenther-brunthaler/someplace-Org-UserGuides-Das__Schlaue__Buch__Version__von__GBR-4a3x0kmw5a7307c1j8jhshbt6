@@ -1,0 +1,121 @@
+﻿Midnight Commander
+==================
+v2023.281
+
+
+tmux-Probleme
+-------------
+
+Der Midnight Commander hat unter tmux manchmal Probleme. Diese verschwinden oft wenn man `mc` mit der Option `-x` startet.
+
+Unter GNU `screen` scheint es diese Probleme nicht zu geben.
+
+`xterm` "frisst" mehrere Tastenkombination mit der `[Enter]`-Taste. Folgender `~/.Xresources` Eintrag mag dies beheben (Debian-Patch):
+
+----
+! Leave [Alt]+[Enter], [Ctrl]+[Enter] and [Shift]+[Ctrl]+[Enter] alone.
+XTerm*omitTranslation: fullscreen
+----
+
+
+Einstellungen
+-------------
+
+.Optionen|Paneloptionen:
+....
+[x] SI-Größeneinheiten verwenden
+...
+[ ] Versteckte Dateien anzeigen
+....
+
+.Listenmodus (links):
+....
+(*) benutzerdefiniert: "full bsize | type name"
+[x] Benutzer-Ministatus: "perm | mtime | name | owner | group"
+....
+
+.Listenmodus (rechts):
+....
+(*) benutzerdefiniert: "half type name"
+[x] Benutzer-Ministatus: "bsize | mode | mtime | owner | group"
+....
+
+Danach nicht vergessen, mit dem Menüpunkt `Optionen|Einstellungen speichern` diese Einstellungen auch dauerhaft zu speichern! Sonst sind sie beim Beenden des `mc` vergessen.
+
+Manchmal kommt es vor dass der Ministatus das angegebene Format scheinbar ignoriert. In diesem Fall ist der Textcursor im Eingabefeld vermutlich nicht am Anfang, und momentan unsichtbare zusätzliche Format-Angaben befinden sich daher davor. Wenn man im Feld mit dem Cursor nach links fährt, kommt man schließlich bis zum tatsächlichen Feldanfang.
+
+
+Wichtige Tastenkombinationen
+----------------------------
+
+Diese findet man auch in der Hilfe, aber hier in aller Kürze um langes Suchen zu ersparen:
+
+[options="autowidth"]
+|====
+| `[Einfg]` | Select/unselect entries
+| `[Alt]+[s]` | Quick jump to panel entries by typing the first few characters
+| `[Strg]+[AltGr]+[\\]` | Directory bookmarks
+| `[Alt]+[Shift]+[h]` | Directory history
+| `[Alt]+[y]` | Back in directory history
+| `[Alt]+[u]` | Forward in directory history
+| `[Ziffernblock +]` | Select files
+| `[Ziffernblock -]` | Unselect files
+| `[Ziffernblock *]` | Invert selection
+| `[Alt]+[q]` | Enter next special character literally
+| `[Alt]+[t]` | Toggle through listing modes
+| `[Alt]+[i]` | Make other panel use the same directory
+| `[Alt]+[o]` | Show contents of selected directory in other panel
+| `[Alt]+[e]` | Select character set encoding of directory entries
+| `[Alt]+[h]` | Show command line history
+| `[Alt]+[p]` | Back in command line history
+| `[Alt]+[n]` | Forward in command line history
+| `[Alt]+[Eingabe]` +
+  `[Strg]+[Eingabe]` | Copy basename of current entry into command line
+| `[Strg]+[Umschalt]+[Eingabe]` | Copy full path name of current entry into command line
+| `[Alt]+[Tab]` | Complete file-, command-, variable-, user- or hostname
+| `[Strg]+[o]` | Show/hide output of last command line command
+| `[Strg]+[x][p]` | Paste path of current panel
+| `[Strg]+[x][Strg]+[p]` | Paste path of other panel
+| `[Strg]+[x][t]` +
+  `[Strg]+[x][Strg]+[t]` | like for [p] but for selected entries
+|====
+
+
+Diff/Merge
+----------
+
+Mit `[Strg]+[x][d]` kann das im `mc` mitgelieferte Programm `mcdiff` gestartet werden, mit dem Textdateien verglichen oder zusammengeführt werden können.
+
+Dabei wird die im linken `mc`-Panel aktuelle Datei auch im linken `mcdiff`-Panel angezeigt. Also dieselbe links/rechts Reihenfolge. Und zwar völlig egal welches `mc`-Panel gerade (durch etwaiges Drücken der `[Tabulator]`-Taste) das aktuelle ist.
+
+Mit der `[Eingabetaste]` bzw. `[Rückwärts-Löschtaste]` springt man in der Anzeige zwischen den verschiedenen 'Chunks' (Bereiche von Zeilen mit unterschiedlichem Inhalt) vor- bzw. zurück, wobei der aktuelle verglichene Chunk immer mit der ersten Zeile in den Panelen beginnt. Die Länge der Chunks erkennt man an ihrer unterschiedlichen Farbe.
+
+Mit der `[F5]`-Taste wird der aktuelle Chunk selektiv vom rechten ins linke Panel kopiert. Wobei dieses rechts/links sich auf die Anordnung in den `mc`-Panelen vor dem Aufruf von `mcdiff` bezieht. Das ist zugleich die anfängliche Reihenfolge der Panele in `mcdiff`. Die Änderungen durch `[F5]` sind nur temporär, erst `[F2]` speichert sie ab.
+
+In `mcdiff` kann man mit `[Strg]+[u]` das linke und rechte Vergleichspanel vertauschen. Aber dies hat keinerlei Einfluss darauf von welcher Datei in welche die Chunks kopiert werden und betrifft nur die Anzeige.
+
+Falls man nach mehrfachem Vertauschen der Panele in `mcdiff` nicht mehr sicher ist was das ursprünglich linke Panel war in welches mit `[F5]` kopiert wird, kann man immer den "`*`" Status-Indikator neben dem Dateinamen betrachten. Diesen setzt `mcdiff` nur in jenem Panel in welches Chunks hinein kopiert wurden (und welches auch mit `[F2]` gespeichert würde), und das daher die Zieldatei der Zusammenführung darstellt.
+
+
+Vermeiden von Security Leaks
+----------------------------
+
+Einige Dateien welche die Komponenten des MC verwenden enthalten potenziell sensitive Informationen wie Pfade zuletzt geöffneter Dateien, den Inhalt des MC-internen Clipboards, Undo-Daten welche auch Passwörter enthalten könnten, usw.
+
+Diese Dateien sollte man nach Möglichkeit in ein tmpfs symlinken, so dass es nie auf einen persistenten Datenträger geschrieben wird. Dies betrifft die folgenden Pfadnamen:
+
+....
+~/.local/share/mc/filepos
+~/.local/share/mc/mcedit/mcedit.clip 
+....
+
+Sollten diese Dateien noch nicht existieren kann man das folgende tun um sie anzulegen:
+
+* `mc` starten
+* Eine neue Datei mit `mcedit` erstellen (abspeichern nicht erforderlich), beliebigen Text eingeben, diesen mit `[F3]` markieren und dann mit einem Menübefehl in die 'Clipdatei' kopieren.
+
+Hinweis: In älteren Versionen des MC waren diese Dateien statt dessen relativ zum Verzeichnis `~/.mc` abgelegt. Dieses Verzeichnis kann entfernt werden, sobald die Dateien nach `~/.local/share/mc` migriert wurden.
+
+Die oben nicht erwähnte Datei `~/.local/share/mc/history` ist ein besonderer Problemfall: Sie speichert nicht nur sensitive Information wie die Search/Replace History, sondern ebenso auch Informationen wie die benutzerdefinierten Listenmodi und die Hotlist-Einträge welche man nicht verlieren möchte.
+
+Wenn man diese Datei daher persistent speichert sollte man `mcedit` nicht mehr zum Bearbeiten vertraulicher Informationen benutzen. Speichert man sie nur volatil, verliert man bei jedem Neustart sämtliche Anpassungen.

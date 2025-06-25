@@ -1,0 +1,32 @@
+﻿D-BUS Cleanup
+=============
+
+Wegen der dämlichen Art und Weise wie D-BUS über Umgebungsvariablen seine Adresse bekannt gibt, bekommtn Prozesse dies oft nicht mit und starten dann einen weiteren D-BUS-Prozess. So sammeln sich im Laufe der Zeit immer mehr davon ab. Benötigt wird aber nur einer davon tatsächlich.
+
+Diese Anleitung soll helfen, die überflüssigen Kopien des Prozesses wieder los zu werden.
+
+Als erstes dafür sorgen, dass die `$DBUS_SESSION_BUS_ADDRESS` sowie `$DISPLAY`-Variablen welche in einem frischen Terminal Fenster zu sehen sind, auch in derjenigen Shell auf denselben Wert gesetzt sind in der man die folgenden Befehle ausführen will.
+
+Dann mit
+
+----
+$ socket=`echo $DBUS_SESSION_BUS_ADDRESS | sed 's/^[^=]*=//; s/,.*//'` && echo "Current D-BUS instance uses socket $socket"
+$ pid=`mktemp -- "${TMPDIR:-/tmp}"/dbus-kill.XXXXXXXXXX`
+$ LANG=C netstat -Aunix -anp 2> /dev/null | grep LISTEN \
+  | grep -F "$socket" | awk '{print $(NF - 1)}' | cut -d / -f 1 > "$pid" && echo "Current D-BUS instance has PID `cat "$pid"`"
+----
+
+die PID des tatsächlich referenzierten D-BUS Prozesses zu ermitteln. Dann die anderen D-BUS-Prozesse ermitteln und killen:
+
+----
+$ ps -Ao comm,pid,args | grep ^dbus-daemon | awk '{print $2}' | sort | comm -23 - "$pid" | tee /dev/stderr | xargs kill
+$ rm -- "$pid" && unset socket pid # Get rid of tempfile
+----
+
+Schließlich ein Test, ob der aktuelle D-BUS noch funktioniert:
+
+----
+$ dbus-send --dest=org.freedesktop.DBus --print-reply / org.freedesktop.DBus.ListNames
+----
+
+sollte ein Array anzeigen.

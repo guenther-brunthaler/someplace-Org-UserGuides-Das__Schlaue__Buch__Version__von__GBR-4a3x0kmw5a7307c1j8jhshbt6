@@ -1,0 +1,120 @@
+﻿systemd
+=======
+v2023.112
+
+
+Nicknames
+---------
+
+* bottleneckd
+* hubforeverythingd
+* meddlewitheverythingd
+* overheadd
+* ramverprassungsd
+* ramwasted
+* ressourcenverprassungsd
+* saudaemlichd
+* singlepointoffailured
+* sinnlosd
+* systemdaemlich
+* systemdammit
+* systemdeadlock
+* systemdeath
+* systemdebility
+* systemdecapitation
+* systemdecline
+* systemdefunct
+* systemderanged
+* systemdespicable
+* systemdestroyer
+* systemdestructor
+* systemdevil
+* systemdictator
+* systemdildo
+* systemdirt
+* systemdisgust
+* systemdocuismissing
+* systemdocumissing
+* systemdocuwrong
+* systemdoom
+* systemdown
+* systemdownfall
+* systemdread
+* systemdreadful
+* systemdreck
+* systemdummy
+* systemdung
+* systemdünnschiss
+* systemrindenmulch
+* überwichtigd
+* unnötigd
+* uselessd
+* verschwenderd
+* wasserkopfd
+
+...which is...
+
+* crapware
+* devilware
+* evilware
+* germware
+* junkware
+* nagware
+* sorrowware
+* troubleware
+* wretchware
+* yukkware
+
+
+Derogative terms
+----------------
+
+* poettering-teufelsdreck
+* spoettering-teufelsdreck
+
+
+Derogative Slogans
+------------------
+
+"systemd + jailer = systemdealer: Der erste Schuss ist gratis. Der zweite trifft dich in den Rücken!"
+
+
+Annoying systemd-related services
+---------------------------------
+
+'journald':: This is the 'systemd' replacement for traditional logging systems like 'syslogd', 'rsyslogd', 'syslog-ng' and 'klogd'. In comparision to those traditional loggers, 'journald' logs much more detail (mostly irrelevant stuff traditional loggers did not log for good reason), uses binary log files that cannot be viewed except with special tools and become corrupted beyond repair sometimes and uses a lot of memory. Even though it is possible to instruct 'journald' to forward log entries to traditional logging daemons, 'journald' must still be running to do this. It is not possible to stop 'journald' completely or uninstall it, because it has become part of the 'systemd' process and is no longer a separate program. 'journald' is one of the most controversial components of 'systemd', and IMO it really sucks.
+
+'logind':: Most people wonder what this 'systemd service' is actually good for, which needs to run constantly for no apparent reason. It turns out that it is mostly a replacement for the traditional 'acpid' daemon which handles 'ACPI' events like closing the lid of a laptop or pressing special 'ACPI'-controlled buttons like the "standby" button.
+
+'pulseaudio':: This is an audio daemon like the alternatives 'esound' or 'jackd'. Different than 'jackd' which has an actual purpose (high precision and low-latency audio mixing), 'pulseaudio' (like 'esound') is completely useless and only causes problems. It can do nothing relevant the underlying Linux audio system ('ALSA') can't already do, and only adds overhead and complexity. The only reason to install 'pulseaudio' is that some programs won't work without it. But most programs can use either 'pulseaudio' or 'ALSA' by editing their configuration, and then it is possible to uninstall or at least not start this useless and annoying daemon.
+
+
+RAM usage
+---------
+
+The command
+
+----
+ps -Ao rss,user,comm | sort -nr | awk '$2 == "root" && $3 ~ /systemd/ {print; s+= $1} END {printf "\n%.1f MiB RAM total\n", s / 1024}' | sed 's/root *//'
+----
+
+outputs the following on my current machine:
+
+....
+ 9744 systemd
+ 6328 systemd-journal
+ 6204 systemd-logind
+ 5056 systemd-udevd
+
+26.7 MiB RAM total
+....
+
+Although certainly not too much for a modern desktop machine, consider you would be running an original 'Raspberry 1 Model A' with just 128 MiB RAM instead.
+
+Then 'systemd' would waste about 1/5th of all your precious RAM - just for its own nefarious purposes!
+
+
+Buggy as hell
+-------------
+
+https://www.opencve.io/cve?vendor=systemd_project

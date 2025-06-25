@@ -1,0 +1,199 @@
+﻿LUKS - Linux Unified Key Setup
+==============================
+v2025.100
+
+LUKS ist ein Standard zur Einrichtung von `dmcrypt`-targets des Linux Device Mappers, mit dem das Kernel Blockgeräte verschlüsseln kann.
+
+Dazu legt man mit dem `cryptsetup`-Kommando einen LUKS-Header am Beginn des zu verschlüsselnden Blockgerätes an, welches den (zufallsgenerierten) tatsächlichen Schlüssel mit einer oder mehreren Pass-Phrases verschlüsselt speichert.
+
+Dies wird zudem auf eine Weise getan, um die Rekonstruktion eines irgendwann zu löschenden Schlüssels zu erschweren, wenn nur Fragmente aber nicht der gesamte ehemalige Header erhalten ist (etwa durch Austausch-Sektoren einer teilweise beschädigten Festplatte).
+
+Das ursprüngliche LUKS (Version 1) hat einen starren ca. 2 MB großen Header und bietet nur Verschlüsselung, jedoch keinen Schutz vor böswilliger Veränderung der Daten. Dafür bietet es allerdings das Feature 'Anti-Forensic Information Splitter', welches bei LUKS Version 2 wieder abgeschafft wurde.
+
+'Anti-Forensic Information Splitter' ist ein Feature das es verhindern soll, dass Kopien alter Versionen des LUKS Headers existieren nachdem eine Passphrase geändert wurde. Solche Kopien kann die Firmware eines Laufwerks z. B. durch den automatischen Austausch unzuverlässiger Sektoren erstellen ohne dass man etwas davon bemerkt.
+
+Sollte eine Passphrase kompromittiert werden und man sie darauf hin ändern, könnte ein Angreifer dem solch eine alte Kopie des LUKS-Headers in die Hände fällt darauf hin das Laufwerk mit der alten Passphrase immer noch entsperren. Der AFIS von LUKSv1 verhindert dies.
+
+Ab LUKS Version 2 (z. B. in Debian-10 verfügbar) hat der Header eine wählbare Größe (auch wenn der Default bescheuerte 16 MiB groß ist) und bietet (optional) journal-basierte Erkennung von Veränderung der Daten.
+
+Ich ermittelte dass `--luks2-keyslots-size 512k` die kleinste Größe war um einen LUKS-Header einzurichten der zumindest 2 Keyslots unterstützt. Für nur einen Keyslot reichte auch `256k`. (Ich probierte allerdings nichts anderes als Potenzen von 2. Tatsächlich muss der Wert nur ein Vielfaches von 4096 Bytes sein.) Auf jeden Fall sollte das Argument für diese Option mindestens die Anzahl der Keyslots mal 256k (tatsächlich sind dies binäre KiB und nicht etwa dezimale kB) sein.
+
+In beiden Varianten ist es wichtig die `--use-random` Option beim Anlegen eines neuen verschlüsselten Volumes anzugeben, da es sonst keine Garantie gibt dass der Schlüssel wirklich zufällig ist.
+
+Eventuell vorher die Dienste `haveged` (für Geräte ohne Hardware-Zufallsgenerator) oder `rng-tools` (wenn ein Hardware-Zufallsgenerator vorhanden ist dem man auch halbwegs traut) installieren, um zu garantieren dass `/dev/random` nicht blockiert.
+
+Weiters ist es empfehlenswert bei LUKS-2 die `--label`-Option zu verwenden, um dem Volume einen Namen zu geben aus welchen man den zu verwendenden Mapping-Namen ableiten kann. Wenn man das Volume etwa mittels `--label myhost-level0-enc` erzeugt, könnte man daraus ableiten dass der später zu verwendende Mapping-Name wohl `myhost-level0-dec` sein wird.
+
+Wenn man mehrere Schlüssel verwendet, sollte man mit `--key-slot` festlegen welcher Schlüssel wo abgelegt wird, damit man ihn später bei Bedarf zielgerichtet entfernen kann bzw. sein Vorhandensein mittels `cryptsetup luksDump` überprüfen.
+
+Wenn die `--key-file` option benutzt wird, wird anders als bei der Eingabe vom Terminal ein Newline nicht als Ende der Eingabe angesehen sondern als Teil der Pass-Phrase. Die Datei sollte daher kein Newline am Ende enthalten, wenn man das Passwort in anderen Situationen auch über die Tastatur eingeben soll.
+
+Ebenfalls nützlich kann die Option `--readonly` sein, wenn man verhindern möchte dass das Journal-Replay von Dateisystemen wie 'ext4' selbst dann auf das Blockgerät schreiben kann wenn man das Dateisystem read-only mountet.
+
+Weiters ist `--type luks2` offensichtlich der Default bei Versionen von `cryptsetup` deren `luksFormat`-Befehle welche es überhaupt unterstützen, so dass man nichts besonderes tun muss um LUKS-2 zu benutzen.
+
+Die `--allow-discards` Option ist erforderlich, wenn man 'discard'-Befehle (wie durch SATA 'TRIM' ausgelöst) von einem LUKS-Mapping auf das darunter liegende Blockgerät durchreichen lassen möchte.
+
+Das ist nötig, wenn man das Dateisystem am LUKS-Volume mit der Option `discard` mountet, oder aber die Befehle `fstrim` oder `blkdiscard` damit verwenden möchte.
+
+Keine Chance hat man allerdings bei 'dm-integrity'-Mappings, und damit auch nicht bei LUKS-Volumes welche die Integrität der verschlüsselten verifizieren (da sie eine 'AEAD'-Cipher wie 'aes-gcm' verwenden): 'dm-integrity' ignoriert alle 'discard'-Kommando und leitet sie nicht an das darunter liegende Blockgerät weiter.
+
+'discard' ist nützlich bei SSDs und virtuellen Datenträgern in QEMU, nicht jedoch bei "richtigen" Festplatten (außer möglicherweise bei SMR).
+
+Im Falle von Datenträgern in QEMU konvertiert 'discard' die entsprechenden Sektor-Bereiche als 'sparse holes' in der Abbild-Datei des Datenträgers, bzw. markiert die Bereiche als sparse im Falle von 'qcow2' Abbild-Dateien.
+
+
+Beispiel
+--------
+
+Gemeinsame Vorbereitung:
+
+----
+$ PSW_FILE=/path/to/myhost_fde.psw
+$ MASTER_KEY_FILE=/path/to/master-key.bin
+$ CRYPT_DEV=`readlink -f /dev/disk/by-id/...`
+$ # Next line: MAPPING *must* end with "-dec".
+$ MAPPING=myhost-level0-dec
+$ unset UUID # Dont't enforce a particular LUKS UUID.
+
+$ if command -v keygen-octets-by-harvesting-entropy
+then
+    bitgen() {
+        keygen-octets-by-harvesting-entropy `expr ${1:?key bits} / 8`
+    }
+else
+    bitgen() {
+        dd if=/dev/random bs=1 count=`expr ${1:?key bits} / 8` 2> /dev/null
+    }
+fi
+----
+
+Sollte `$MAPPING` einen bereits existierenden Eintrag in der `/etc/crypttab` haben und man möchte deren `UUID=` für das neue LUKS Volume wiederverwenden, den folgenden Befehl durchführen:
+
+----
+UUID=`sed "s/^${MAPPING:?}"'[[:space:]]\{1,\}UUID=\([-[:xdigit:]]\{1,\}\).*/\1/; t 1; d; :1; q' /etc/crypttab` && echo $UUID
+----
+
+256-Bit Zufallspasswort erzeugen:
+
+----
+$ bitgen 32 | openssl base64 | tr -d = \
+| if test -z "${PSW_FILE:?}" || test -e "${PSW_FILE:?}"; \
+then echo "ERROR: Not overwriting '${PSW_FILE:?}'" >& 2; false; \
+else cat > "${PSW_FILE:?}"; ls -od -- "${PSW_FILE:?}"; fi
+----
+
+Oder aber Passwort manuell eingeben (sowie Helper-Script `enter_psw` erzeugen):
+
+----
+$ { base64 -d || openssl base64 -d; } << EOF | gzip -dc | cpio -vidm
+H4sIALVvjl4CA+1RTWsCMRTseX/F7Fb8OCwmirX1oCiuUOihSI9CTd0nCWh2SWKXUvvfu2ZX8NBS
+6LWdw8u8eTO8B2FDNmQ95pH4esuTOfsafDCfTfv8rl91dYwtZtXbu/kmNz2VAUsWpB2Z59wWV9ch
+ui9Kd60MRmi889Fkq3YEpV2GQqqNREmseCU4SfA5SpELa4vMpB+BI+sQIiZEDR5hFTSb8FqcIlqn
+ymixJ8SxH69rw/jCvJH7LEV58dlUybkpT9gieiw3IZdGWEJb6fzgoDMHK7NCdyao3W1nRI6Wde4N
+tJFZCwyl7Pv4JJw6SSJFrHm9vlNF/XQVHI8VixZC7Q6GwgjjJnoBu/iXH8HZ7zA7k6fl9P4hWYZh
+ePWPP4VPBhVAnAAEAAA=
+EOF
+$ ./enter_psw "${PSW_FILE:?}"
+----
+
+Parameter auswählen:
+
+----
+$ CIPHER='xchacha20,twofish-adiantum-plain64' KEY_BITS=256
+$ CIPHER='serpent-xts-benbi' KEY_BITS=256
+$ CIPHER='aes-xts-plain64' KEY_BITS=`expr 256 \* 2`
+$ CIPHER='xchacha12,aes-adiantum-plain64' KEY_BITS=256
+----
+
+Master-Key erzeugen:
+
+----
+$ bitgen ${KEY_BITS:?} \
+  | if test -z "${MASTER_KEY_FILE:?}" || test -e "${MASTER_KEY_FILE:?}"; \
+  then echo "ERROR: Not overwriting '${MASTER_KEY_FILE:?}'" >& 2; false; \
+  else cat > "${MASTER_KEY_FILE:?}"; ls -od -- "${MASTER_KEY_FILE:?}"
+  fi
+----
+
+LUKS Volume erzeugen:
+
+* LUKS-1 (mit Anti-Forensischem Information Splitter):
++
+----
+$ : ${MAPPING:?} && MPFX=${MAPPING%-dec} && if test "$MAPPING" != "$MPFX"; then tr -d '\n' < "${PSW_FILE:?}" \
+| echo cryptsetup luksFormat \
+    --type luks1 --key-file=- --use-random \
+    --volume-key-file="${MASTER_KEY_FILE:?}" \
+    --cipher="${CIPHER:?}" --key-size=${KEY_BITS:?} \
+    --key-slot=0 --label="$MPFX-enc" `test "$UUID" && echo --uuid $UUID` \
+    "${CRYPT_DEV:?}"; else echo "ERROR: '$MAPPING' must end with '-dec'."; fi && unset MPFX
+----
+
+* LUKS-2 (ohne Anti-Forensischem Information Splitter):
++
+----
+$ : ${MAPPING:?} && MPFX=${MAPPING%-dec} && if test "$MAPPING" != "$MPFX"; then tr -d '\n' < "${PSW_FILE:?}" \
+| echo cryptsetup luksFormat \
+    --type luks2 --key-file=- --use-random --luks2-keyslots-size=512k \
+    --volume-key-file="${MASTER_KEY_FILE:?}" \
+    --cipher=${CIPHER:?} --key-size=${KEY_BITS:?} \
+    --key-slot=0 --label="$MPFX-enc" `test "$UUID" && echo --uuid $UUID` \
+    "${CRYPT_DEV:?}"; else echo "ERROR: '$MAPPING' must end with '-dec'."; fi && unset MPFX
+----
+
+Die beiden obigen Kommandos zeigen zunächst nur den Befehl an der ausgeführt würde. Um die Kommandos tatsächlich auszuführen, muss das "`echo`" vor dem "`cryptsetup`" entfernt werden.
+
+Header-Informationen anzeigen:
+
+----
+$ cryptsetup luksDump "${CRYPT_DEV:?}"
+----
+
+Crypto-mounten:
+----
+$ tr -d '\n' < "${PSW_FILE:?}" \
+| cryptsetup luksOpen --key-file=- "${CRYPT_DEV:?}" "${MAPPING:?}"
+----
+
+Crypto-entmounten:
+----
+$ cryptsetup luksClose "${MAPPING:?}"
+----
+
+#2.# Schlüssel hinzufügen (neuen Schlüssel per Tastatureingabe):
+
+----
+$ tr -d '\n' < "${PSW_FILE:?}" \
+| cryptsetup luksAddKey --key-slot=1 --key-file=- "${CRYPT_DEV:?}"
+----
+
+
+Debian-based Full-Disk Encryption 
+---------------------------------
+
+`/etc/crypttab` must contain the UUID of the LUKS device and the mapping name for the decrypted volume like this:
+
+----
+myhost-level0-dec UUID=66666666-6666-6666-6666-666666666666 none luks
+----
+
+`/etc/fstab` needs an entry for mounting "/", such as
+
+----
+/dev/mapper/myhost-level0-dec  /  ext4  defaults,noatime  0  1
+----
+
+The kernel command line needs to contain options like
+
+----
+elevator=deadline root=UUID=55555555-5555-5555-5555-555555555555 rootfstype=ext4 fsck.repair=yes rootwait ro
+----
+
+which specifies the UUID of the decrypted root filesystem.
+
+After setting updating these, the initramfs needs to be updated:
+
+----
+$ update-initramfs -u
+----

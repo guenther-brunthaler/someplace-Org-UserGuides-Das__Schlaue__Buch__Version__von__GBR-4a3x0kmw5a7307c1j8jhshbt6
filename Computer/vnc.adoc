@@ -1,0 +1,131 @@
+﻿VNC
+===
+v2025.98
+
+
+Dedizierter VNC-Server und -Client
+----------------------------------
+
+Dies startet einen virtuellen Framebuffer-Server auf einem Computer, der ein X11-Display unabhängig von physischen Display auf derselben Maschine bereit stellt und von VNC Clients "besucht" werden kann.
+
+In den Beispielen wird TCP Port 7453 verwendet - tatsächlich tut es jeder ab 5900. Wobei kann ein paar Nummern über letzterer Portnummer frei halten sollte, da einige VNC-implementationen die Portnummer fix als 5900 + X11 `$DISPLAY`-Nummer festlegen.
+
+Die `*.key` Datei wurde von `vncpasswd` (oder einfach zufällig) erzeugt; es besteht aus einen (8 Bytes) oder zwei Keys (dann 16 Byte): Eines ist der normale Zugriffs-Key, der andere für Read-Only Zugriff.
+
+Beide Keys sind viel zu schwach und schützen lediglich gegen "irrtümliches" Zugriffen von anderen lokalen Benutzern auf den TCP-Port. Übers Netzwerk sollte der Transport immer mittels SSH oder gleichwertigem geschützt werden.
+
+
+Mittels TigerVNC
+~~~~~~~~~~~~~~~~
+
+Diese Setup tunnelt die Netzwerverbindung zwar über SSH, aber lokale Clients könnten die schwache Verschlüsselung knacken und dann unerlaubt auf den VNC-Server zugreifen.
+
+Um dies abzusichern könnte man den Server in einem eigenen Network Namespace starten. Damit sind eine Ports isoliert. Den Namespace überbrücken könnte man dann mit einem UNIX Domain Socket welcher sich anders als TCP Ports mit UNIX Zugriffsrechten schützen lässt.
+
+Auf der Client-Seite kann der `ssvncviewer` sich direkt mit UNIX Domain Sockets verbinden, um die erwähnte Sicherheitslücke mit TCP-Ports zu vermeiden.
+
+Update: `XtigerVNC` kann auch direkt an UNIX-Sockets lauschen! Das sollte man ausnutzen. Die UNIX Sockets auf Client und Server verbindet man direkt durch einen SSH-Tunnel (stdin/stdout - ohne Port-Weiterleitung). `socat` kann dabei helfen.
+
+
+Server
+^^^^^^
+
+----
+$ tigervncserver -rfbport 7453 -geometry 1920x1080 -depth 24 -localhost yes -rfbauth ~/.vnc/passwords/'john@doehost.key'
+----
+
+Hinweis: `tigervncserver` ist ein Wrapper-Script um `XtigerVNC` herum welches dessen Benutzung vereinfacht, indem es sich z. B. um solche Details wie das Verwalten der `.Xauthority` kümmert.
+
+
+Client
+^^^^^^
+
+----
+$ ssvncviewer -passwd ~/.vnc/passwords/'john@doehost.key' -compresslevel 9 -quality 3 -encodings "copyrect tight hextile" localhost::7453
+----
+
+`ssvncviewer` ist eine TightVNC-Implementierung welche auch an UNIX Sockets lauschen kann, anstatt nur über TCP Sockets wie das Original.
+
+
+Remote-Zugriff via x11vnc
+-------------------------
+
+Im Unterschied zum dezidierten VNC-Server wird hier ein reales physisches X11-Display fernbedient. Das ist weniger effizient als über den dezidierten Server, erlaubt aber die ac-hoc Fernwartung einer grafischen Oberfläche. Das x11vnc-Paket kann jederzeit im laufenden Betrieb hinzu installiert werden ohne die laufende X11-Setzung deswegen unterbrechen zu müssen.
+
+Wenn die "`-ncache 10`"-Option von `x11vnc` verwendet wird welche (in diesem Fall) die 10-fache Speichermenge des benötigten Bildspeichers sowohl auf VNC Server als auch Client zum Cachen vom Pixelinformation alloziert, kann es nötig sein die "`-ycrop`"-Option des VNC-Viewers zu verwenden falls der Cache angezeigt anstatt automatisch verborgen wird. Der "`ssvncviewer`" ist ein Beispiel wo dies erforderlich bzw. empfehlenswert ist.
+
+Die `-ncache`-Option ist vor allen beim häufigen Umschalten von Fenstern mit [Alt]+[Tab] am VNC Server nützlich und erspart dann große Mengen an Datenübertragung. Es ist unklar welche VNC-Implementierungen alle "`-ncache`" unterstützen, aber zumindest SSVNC tut es angeblich.
+
+
+Erster Versuch (erfolglos)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Lokal am Fernwartungs-Client-Rechner ausgeführt:
+
+----
+$ ssvncviewer exec="ssh -T root@remotehost x11vnc -display :0 -auth /home/remoteuser/.Xauthority -ncache 10 -q -inetd"
+----
+
+
+Zweiter Versuch (erfolglos)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Am remote Host wo ein normaler X11-Desktop läuft:
+
+----
+$ mkfifo -m600 /tmp/x11vnc.in /tmp/x11vnc.out
+$ x11vnc -display :0 -auth ~remoteuser/.Xauthority -ncache 10 -loop -q -inetd < /tmp/x11vnc.in > /tmp/x11vnc.out 2> /dev/null &
+----
+
+und dann lokal:
+
+----
+$ ssvncviewer exec="ssh -T root@remotehost 'sh -c \"cat > /tmp/x11vnc.in & cat /tmp/x11vnc.out\"'"
+----
+
+...was aber leider um nichts besser funktionierte.
+
+
+Konventionell
+~~~~~~~~~~~~~
+
+Das ist die unsichere konventionelle Methode wo der remote-Client den VNC-Server auf localhost:5900 auf Verbindungen warten lässt:
+
+----
+$ x11vnc -display :0 -listen 127.0.0.1 -npipv6 -autoport 5900 -ncache 10 -forever -input KMBCF -auth ~remoteuser/.Xauthority
+----
+
+Nachteil: Jeder lokale User am Remote-Client kann ebenfalls diesen Zugang nutzen.
+
+Ein Tipp falls er ständig jammert dass er nicht auf dem Port 5900 listenen kann: Prüfen, ob Interface "lo" überhaupt up ist!
+
+Um diesen VNC-Server zu erreichen, muss man einen SSH-Tunnel dafür erzeugen. Z. b. so:
+
+----
+# Normal direct connection:
+$ ssh -L 127.0.0.1:24372:127.0.0.1:5900 remoteuser@remotehost
+
+# Using a configured shared connection:
+$ ssh -O forward -L 127.0.0.1:24372:127.0.0.1:5900 remoteuser@remotehost
+# Later, after VNC is done: Stop forwarding over shared connection:
+$ ssh -O cancel -L 127.0.0.1:24372:127.0.0.1:5900 remoteuser@remotehost
+----
+
+In einer 2. lokalen Shell kann man dann den VNC Viewer aufrufen und durch den Tunnel mit dem Server verbinden:
+
+----
+$ ssvncviewer -compresslevel 9 -quality 3 -encodings "copyrect tight hextile" 127.0.0.1::24372
+----
+
+
+droidVNC-NG
+-----------
+
+Wenn die gleichnamige Android-App verwendet werden, gelten die folgenden Übersetzungen für Tastendrücke im VNC-Viewer:
+
+* `[Strg]+[Umschalt]+[Esc]` - Button mit Quadrat-Symbol
+* `[Pos1]` - Button mit Kreis-Symbol
+* `[Ende]` - Button Ein/Aus/Standby/Dunkelschalten
+* `[Esc]` - Button mit Dreieck-Symbol
+
+Wenn im VNC Viewer der Android-Bildschirm höher angezeigt wird als er tatsächlich ist, kann die "`-ycrop`"-Option vieler VNC-Viewer benutzt werden, um die Höhe zu beschränken.

@@ -1,0 +1,22 @@
+﻿
+RAID 0: Striping – Beschleunigung ohne Redundanz
+
+RAID 1: Mirroring – Spiegelung
+
+RAID 2: Bit-Level Striping mit Hamming-Code-basierter Fehlerkorrektur. Spielt in der Praxis keine Rolle mehr. Das Verfahren wurde nur bei Großrechnern verwendet.
+
+RAID 3: Byte-Level Striping mit Paritätsinformationen auf separater Festplatte. Der wesentliche Gedanke ist ein möglichst hoher Leistungsgewinn mit Redundanz im Verhältnis zum Anschaffungspreis.
+
+RAID 4: Leistung + Parität, Block-Level Striping mit Paritätsinformation auf einer dezidierten Platte. Ein Nachteil bei klassischem RAID 4 besteht darin, dass die Paritätsplatte bei allen Schreib- und Leseoperationen beteiligt ist. Wegen der fest definierten Paritätsplatte bei RAID 4 wird stattdessen fast immer RAID 5 bevorzugt.
+
+RAID 5: Leistung + Parität, Block-Level Striping mit verteilter Paritätsinformation
+
+RAID 6: Block-Level Striping mit doppelter verteilter Paritätsinformation. Funktioniert ähnlich wie RAID 5, verkraftet aber den gleichzeitigen Ausfall von bis zu zwei Festplatten.
+
+RAIDn: Dieses RAID wird definiert durch die Gesamtzahl der Festplatten (n) sowie die Anzahl der Festplatten, die ohne Datenverlust ausfallen dürfen (m). Als Schreibweise hat sich RAID(n,m) oder RAID n+m eingebürgert.
+
+RAID DP: Block-Level Striping mit doppelter Paritätsinformation auf separaten Festplatten. Weiterentwickelte Version von RAID 4. Hierbei wird eine zweite Parität nach derselben Formel wie die erste Parität P berechnet, jedoch mit anderen Datenblöcken. Die erste Parität wird horizontal, die zweite Parität Q diagonal berechnet. RAID-DP-Sets bestehen in der Regel aus 14 + 2 Platten. Somit liegt der Brutto-Netto-Verschnitt ähnlich niedrig wie bei RAID 4/RAID 5. RAID DP vereinfacht die Wiederherstellung. Die Rechenoperationen beschränken sich im Gegensatz zum RAID 6, wo ein Gleichungssystem zu lösen ist, auf einfache XOR-Operationen.
+
+NRAID: Streng genommen handelt es sich nicht um ein wirkliches RAID – es gibt keine Redundanz. Bei NRAID (auch als linear mode oder concat(enation) bekannt) werden mehrere Festplatten zusammengeschlossen.
+
+Obwohl die RAID-Level 0, 1 und 5 die weitaus größte Verwendung finden, existieren neben den Leveln 0 bis 6 noch „RAID-Kombinationen“. Hier wird ein RAID nochmals zu einem zweiten RAID zusammengefasst. Man bezeichnet diese Kombinationen dann etwa als RAID 05 (0+5). Selten werden RAIDs auch mit mehr Layern zusammengefasst (z. B. RAID 100).

@@ -1,0 +1,76 @@
+﻿Text aus PDFs extrahieren
+=========================
+v2020.319
+
+Der simpelste Fall: Aus einem PDF welches Text enthält diesen extrahieren:
+
+----
+$ pdftotext -layout some.pdf
+$ less -S some.txt # ansehen und scrollen, abbrechen mit 'q'
+----
+
+Ein PDF, welches zwar Text enthält, aber keinen extrahierbaren: Dies zunächst in Grafikbilder `000.tif`, `001.tif` etc. umwandeln, welche man dann wie weiter unten erläutert per OCR erkennen lassen kann:
+
+----
+$ gs -dNOPAUSE -sDEVICE=tifflzw -sOutputFile=%03d.tif -r300 -dBATCH -q screwed.pdf
+----
+
+Ein PDF welches nur Text in Form von Grafiken enthält direkt in Text umwandeln:
+
+----
+$ command -v tesseract || sudo apt-get install tesseract-ocr tesseract-ocr-deu tesseract-ocr-deu-frak tesseract-ocr-eng tesseract-ocr-equ
+$ tesseract -l deu text_as_gfx.pdf - | less -S
+----
+
+was die Ausgabe dann eben so anzeigt/scrollt wie oben.
+
+Gibt diese Kommando jedoch Fehler aus wie
+
+....
+Error in fopenReadStream: file not found
+Error in pixRead: image file not found: %PDF-1.5
+....
+
+oder ist die Textgrafik zu bunt als dass die OCR sinnvoll Text damit erkennen könnte, muss man die Bilder vorher manuell nach S/W wandeln um der OCR zu helfen.
+
+Als erstes mit dem folgenden Script alle im PDF enthaltenen Grafiken verlustlos als separate Grafikdateien speichern:
+
+----
+$ wget https://raw.githubusercontent.com/guenther-brunthaler/usr-local-bin-xworld-jv3gwuidf2ezyr5vbqavqtxyh/master/pdf-save-contained-images-losslessly
+$ sh pdf-save-contained-images-losslessly text_as_gfx.pdf
+----
+
+Das erzeugt dann die Grafikdateien als
+
+....
+text_as_gfx-000.jpg
+text_as_gfx-001.tif
+text_as_gfx-002.png
+....
+
+...abhängig von nativen Grafikformat, in dem die Grafiken innerhalb des PDFs vorliegen.
+
+Nun kann man einen simplen Schwellwertfilter versuchen, um diese Grafik nach S/W zu wandeln:
+
+----
+$ command -v convert || sudo apt-get install imagemagick-6.q16
+$ convert -threshold 50% text_as_gfx-000.jpg - | display -
+----
+
+Das zeigt bereits das Umwandlungsergebnis an. Mit anderen %-Werten versuchen bis der Text gut sichtbar ist.
+
+Danach dann als S/W-Grafik abspeichern:
+
+----
+$ convert -threshold 50% text_as_gfx-000.jpg out.png
+----
+
+Dies speichert das Konvertierungs-Ergebnis als Datei 'out.png' ab. Dann noch die OCR darüber laufen lassen:
+
+----
+$ tesseract -l deu out.png - | less -S
+----
+
+und sich das Ergebnis als Text anzeigen lassen/scrollen.
+
+Diese Schritte zur Extraktion/Anzeige einer einzelnen Seite nun für alle restlichen Dateien wiederholen, welche das pdf-save-contained-images-losslessly-Script aus dem PDF extrahiert hat.

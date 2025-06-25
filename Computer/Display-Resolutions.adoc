@@ -1,0 +1,39 @@
+﻿Display-Resolutions
+===================
+v2020.270
+
+Die "K" und "HD"-Varianten werden häufig als Synonyme eingesetzt, obwohl sie es genau genommen nicht sind.
+
+Die "K"-Varianten stammen aus der Kinotechnik.
+
+Die "HD"-Varianten stammen aus dem Heimelektronik-Bereich (Verkaufte Medien, Fernseher, Monitore).
+
+
+1K und HD
+---------
+
+HD ist 1280 x 720.
+
+Vermutung: 1K wäre eigentlich 1024 x 540.
+
+
+2K und Full-HD
+--------------
+
+Full-HD ist 1920 x 1080.
+
+Vermutung: 2K wäre eigentlich 2048 x 1080.
+
+
+4K und UHD
+----------
+
+UHD ist 3840 × 2160.
+
+4K ist 4096 × 2160.
+
+
+8K
+--
+
+Vermutung: 8K ist 7168 x 4320.

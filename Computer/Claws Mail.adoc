@@ -1,0 +1,27 @@
+﻿Claws Mail
+==========
+v2023.15
+
+
+Deaktivieren gemeingefährlicher Tastenkürzel
+--------------------------------------------
+
+Die Tastenkombination `[Strg]+[Enter]` für sofortiges "Senden" sollte entfernt werden, und dieselbe Tastenkombination statt dessen für "Später senden" redefiniert.
+
+Ansonsten besteht die Gefahr, durch irrtümliches Betätigen dieser Tastenkombination eine Mail verfrüht abzusenden.
+
+Besonders tückisch ist dies bei einer Mail welche verschlüsselt versendet werden soll, jedoch wurde sie noch nicht verschlüsselt da sie noch nicht fertig gestellt ist.
+
+
+Ändern von Tastenkürzeln
+------------------------
+
+Dazu muss zunächst im Claws-Menü "Konfiguration" im Punkt "Einstellungen" auf die Kategorie "Sonstiges" -> "Vermischtes" gegangen werden.
+
+Dort muss sowohl "Tastenkürzel aktivieren" als auch "Benutzerdefinierte Tastenkürzel" angewählt werden.
+
+Man kann nun in die entsprechenden Menüs gehen und während ein Menüpunkt hervorgehoben werden die neue Tastenkombination drücken, oder die `[Rückwärts-Löschtaste]` um eine Tastenkombination komplett zu entfernen.
+
+Danach muss man allerdings unbedingt erneut ins Konfigurationsmenü gehen und dort "Benutzerdefinierte Tastenkürzel" abwählen. Nur dann werden die zuvor geänderten Kürzel auch sicher dauerhaft gespeichert sowie vor irrtümlichen Veränderungen geschützt.
+
+Ansonsten kann es vorkommen, dass jüngst geänderte Tastenkürzel nach dem Beenden des Programms wieder vergessen werden, während früher "erlernte" unverändert bestehen.

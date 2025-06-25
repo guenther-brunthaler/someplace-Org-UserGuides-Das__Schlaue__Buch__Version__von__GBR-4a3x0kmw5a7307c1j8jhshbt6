@@ -1,0 +1,226 @@
+﻿SIM-Karten Kommandos
+====================
+Guenther Brunthaler
+v2024.242
+
+
+Kommando-Modus
+--------------
+
+Um die in den weiteren Abschnitten dieses Dokuments angegebenen 'AT'-Kommandos eingeben zu können, muss man zuerst einmal in den Kommandomodus des Modems gelangen wo es solche Kommandos entgegen nimmt.
+
+Dazu im Terminal bei getrennter Internetverbindung (falls diese über das Modem und die abzufragende SIM läuft, ansonsten wäre es natürlich egal) das folgende Kommando ausführen:
+
+----
+$ busybox microcom /dev/gsmmodem
+----
+
+bzw. ein anderes Modem-Gerät unter `/dev/serial/by-id/*` wählen, falls mehrere Modems angeschlossen sind.
+
+Der Kommandomodus wird durch das Drücken von `[Strg]+[x]` beendet.
+
+
+SIM-Karte prüfen
+----------------
+
+Es kann geschehen dass das Modem zwar funktioniert, die SIM-Karte jedoch nicht. Weiters kann die SIM-Karte durch eine PIN gesperrt sein die man erst eingeben muss, bevor man die SIM-Karte normal benutzen kann.
+
+Für beides dient das
+
+----
+AT +CPIN?
+----
+
+Kommando. Wenn die SIM-Karte betriebsbereit ist, gibt es `READY` zurück.
+
+Wenn die SIM-Karte eine PIN-Abfrage aktiviert hat und diese noch nicht eingegeben wurde, wird hingegen "`PIN REQUIRED`" (oder sinngemäß ähnliches) zurück gegeben.
+
+Falls hingegen "`SIM ERROR`", "`SIM FAILURE`" (oder sinngemäß ähnliches) zurück gegeben wird, funktioniert die SIM-Karte nicht richtig. Entweder ist sie abgelaufen, wurde vom Provider gesperrt, ist physisch kaputt, oder hat schlechten Kontakt mit den Kontakt-Pins des Modems oder des Kartenlese-Geräts.
+
+Im letzteren Fall hilft oft ein herausnehmen und erneutes hinein stecken der SIM-Karte (man muss dann ein Reset-Kommando zum Modem schicken damit die Änderung erkannt wird).
+
+Hilft das nichts, kann man versuchen die Kontakte aufzurauen falls sie oxidiert sind. Weiters kann der Anpressdruck zu schwach sein, vor allem wenn die Kontaktfedern im Modem schon sehr alt sind. In diesem Fall hat es bereits geholfen, ein normales Blatt Schreibmachinenpapier in SIM-Form auszuschneiden und zwischen SIM-Rücken und den SIM-Einschubrahmen im Modem zu schieben. Das kann auch helfen wenn die SIM-Karte dünner ist als das Modem sich erwartet, und deswegen schlechten Kontakt hat.
+
+Falls "`PIN REQUIRED`" (oder ähnliches) vom Kommando zurück kam, sollte man nun die PIN eingeben, indem man zuerst im Kommandomodus den Befehl
+
+----
+AT +CPIN="1234"
+----
+
+ausführt um die PIN einzugeben. Natürlich muss man statt `1234` hier die tatsächlich verwendete PIN der SIM-Karte eingeben.
+
+NOTE: Die PIN hat aber in keinem Fall etwas mit den PUKs zu tun! Sollte die SIM-Karte mehrere PINs haben, dann immer die PIN 1 bei "`+CPIN`" verwenden.
+
+Die eingegebene PIN bleibt aktiv bis das Modem abgesteckt wird, der Computer ausgeschaltet wird an dem es hängt, oder es einen Reset durchführt. Letzteres kann durch ein Modem-spezifisches Kommando geschehen (z. B. "`AT +CFUN=6`" bei mehreren HUAWEI-Modems) oder computerseitig ausgelöst werden, etwa durch einen Reset des gesamten USB-Busses nach dem Aufwachen des Computers aus einem Schlafmodus.
+
+
+ICCID
+-----
+
+Die 'ICCID' ist eine nicht oder nur mäßig geheime Seriennummer der SIM-Karte. 
+
+Um sie zu ermitteln, im Kommando-Modus des Modems (siehe weiter oben) eingeben:
+
+----
+AT ^ICCID?
+----
+
+Alternativ bei anderen Modems:
+
+----
+AT ^ICCID
+AT +CCID
+----
+
+Die 'ICCID' sollte mit "`89`" beginnen, gefolgt von der internationalen Landesvorwahl. Also etwa "`8943`".
+
+Manchmal und offenbar SIM-abhängig können jedoch alle angezeigten Ziffern in der Befehlsausgabe paarweise vertauscht worden sein. Also etwa "`9834`".
+
+Weiters ist an die angezeigte 'ICCID' in der Ausgabe manchmal ein "`F`" angehängt welches nicht zur 'ICCID' gehört. Befindet sich dieses an der vorletzten anstatt der letzten Stelle, ist dies ebenfalls ein Indikator dafür dass die angezeigten Ziffern vertauscht sind.
+
+Im Fall der vertauschten Ziffern muss man die Ziffern zunächst in Gruppen zu je 2 Ziffern unterteilen, etwa durch das Einfügen von Leerzeichen. Dann vertauscht man die Reihenfolge der beiden Ziffern in jeder Gruppe, und entfernt dann wieder die Leerzeichen.
+
+Die folgende Kommandozeile vertauscht die Ziffern einer 'ICCID' in der Zwischenablage paarweise:
+
+----
+$ xclip -o -selection clipboard | sed 's/^.\(..\)*$/0&/; s/\(.\)\(.\)/\2\1/g' | xclip -i -selection clipboard
+----
+
+NOTE: Diese Kommandos fügen eine führende Null hinzu falls die 'ICCID' in der Zwischenablage eine ungerade Anzahl an Zeichen haben sollte. Dies gegebenenfalls korrigieren bzw. bedenken wenn man das Ergebnis aus der Zwischenablage wieder irgend wo hin einfügt.
+
+Die 'ICCID' scheint immer 19 (mit der hexadezimalen "`F`"-Füllziffer welches nicht zur 'ICCID' gehört) oder 20 Dezimalziffern zu haben. Offensichtlich wird die 'ICCID' intern als 10 Bytes packed BCD gespeichert.
+
+
+Zeit
+----
+
+Einige Geräte unterhalten eine Systemzeit, oder können die Zeit direkt vom Netzwerk holen:
+
+----
+AT +CCLK?
++CCLK: "2024/08/29,00:58:20"
+
+AT ^NWTIME?
+ERROR
+----
+
+In diesem Beispiel wird nur eine Systemuhr bereit gestellt, und die Zeit wird bei diesem Gerät in UTC angegeben. Das Holen der Zeit von Netzwerk funktioniert hingegen nicht.
+
+Hinweis: Die Zeit war um mehrere Minuten falsch bzw. ungenau. Auf der anderen Seite ist es mir ohnehin unbegreiflich woher das Gerät die Zeit bezogen hat.
+
+
+Gerätestandort
+--------------
+
+Einige Geräte haben Support für GPS, A-GPS und ähnliche Navigationsdienste.
+
+----
+AT ^WPDOM?
+ERROR
+----
+
+Das Beispielgerät verfügt über keinen derartigen Support.
+
+
+Aufdruck-Varianten am SIM-Gehäuse
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Nicht immer ist die gesamte 'ICCID' komplett am Gehäuse aufgedruckt. Einige SIM-Karten drucken nur einen Suffix der 'ICCID' ab, und ersetzen den weggelassenen Präfix durch einen Buchstaben.
+
+Wenn ein "-" im Aufdruck vorkommt, beendet dieser immer die 'ICCID' (nur deren letzte Ziffer folgt danach noch).
+
+Dabei wurden die folgenden Varianten beobachtet:
+
+* 3 Reihen mit je 5 Ziffern sowie einer Reihe mit 4 Ziffern
+
+* 3 Reihen mit je 5 Ziffern sowie einer Reihe mit 3 Ziffern, einem "-" und der letzten Ziffer
+
+* 2 Reihen zu je 6 Ziffern und eine dritte mit 7 Ziffern
+
+* Die ersten 6 Ziffern werden in der 1. Reihe durch "S" ersetzt, gefolgt durch die 3 nächsten Ziffern. Danach folgen 2 Reihen mit je 5 Ziffern
+
+* Nur die 10 letzten Ziffern der 'ICCID' sind als eine erste Reihe abgedruckt, wobei ein "-" vor der letzten Ziffer eingefügt wurde. Danach folgen weitere Code-Angaben in einer Zeile, die nichts mit der 'ICCID' zu tun haben.
+
+
+IMSI
+----
+
+Dies ist eine weitere Seriennummer der SIM-Karte, welche allerdings als vertraulich gilt und zum Tracken der SIM-Karte durch Strafverfolgungsbehörden und Provider benutzt wird.
+
+Um sie zu ermitteln, im Kommando-Modus des Modems (siehe weiter oben) eingeben:
+
+----
+AT +CIMI
+----
+
+
+Telefonnummer der SIM-Karte
+---------------------------
+
+Um sie zu ermitteln, im Kommando-Modus des Modems (siehe weiter oben) eingeben:
+
+----
+AT +CNUM
+----
+
+Tatsächlich gibt dieses Kommando einfach einen vordefinierten Telefonbucheintrag aus der SIM-Karte zurück, der normalerweise die eigene Telefonnummer der Karte enthält.
+
+Leider ist dem aber nicht immer so, dann bekommt man nur "`OK`" (falls der Eintrag nicht existiert oder leer ist) oder "`ERROR`" (möglicherweise wenn das spezielle Telefonbuch für den Eintrag nicht existiert).
+
+Mit dem folgenden Befehl kann man die Nummer aber selbst setzen, so dass `+CNUM` sie danach zurück melden wird:
+
+Als erstes ermittelt man das aktuell selektierte Telefonbuch im Modem:
+
+----
+AT +CPBS?
+----
+
+Das gibt etwas aus wie
+
+....
++CPBS: "SM",7,200
+....
+
+wobei "`SM`" im Beispiel dieser Ausgabe das aktuelle Telefonbuch darstellt (7 von 200 Telefonbucheinträgen sind in diesem Beispiel belegt). Dies merkt man sich, um später darauf zurück schalten zu können.
+
+NOTE: "`SM`" ist normalerweise das normale Telefonbuch welches direkt auf der SIM-Karte gespeichert ist. Oft gibt es zusätzlich noch ein weiteres normales Telefonbuch welches nicht in der SIM-Karte sondern direkt im Gerät (etwa Smartphone oder Modem) gespeichert ist.
+
+Dann wechselt man auf das Telefonbuch wie die eigene Nummer gespeichert sein darf. Dazu muss man erst einmal ermitteln welche Telefonbücher es überhaupt gibt:
+
+----
+AT +CPBS=?
+----
+
+zeigt eine Liste an. Darin sollte es eines mit dem Namen "`ON`" geben. Dies ist dann das Telefonbuch aus dem `CNUM` sich bedient, und man kann es wie folgt zum aktuellen Telefonbuch machen:
+
+----
+AT +CPBS="ON"
+----
+
+Die eigene Telefonnummer speichert man nun in den ersten (und typischerweise einzigen verfügbaren) Telefonbuch-Slot ab. Davor vergewissert man sich aber dass dieser leer ist um nichts irrtümlich zu überschreiben:
+
+----
+AT +CPBR=1
+----
+
+und wenn dem so ist ("`not found`", "`ERROR`" oder leere Ausgabe) schreibt man die eigene Rufnummer in diesen Slot:
+
+----
+AT +CPBW=1,"+43xxxxxxx....",,"Eigene Rufnummer"
+----
+
+NOTE: `1` ist hier die Nummer des Slots in welchen der Telefonbuch-Eintrag geschrieben werden soll, beginnend mit `1`. Gibt man statt diesem Argument nur eine leere Zeichenkette an, wird automatisch der nächste freie Eintrag gesucht und beschrieben.
+
+Nun sollte der CNUM-Befehl diese Nummer retour liefern:
+
+----
+AT +CNUM
+----
+
+Schließlich setzt man wieder das vorherige Telefonbuch als aktuelles zurück:
+
+----
+AT +CPBS="SM"
+----
+
+wobei man anstatt `SM` den Telefonbuch-Code verwendet den man mit "`AT +CPBS?`" zuvor ermittelt hat.

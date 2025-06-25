@@ -1,0 +1,657 @@
+﻿Linux-System reinstallieren
+===========================
+v2023.176
+
+Diese Anleitung beschreibt die wesentlichen Schritte bei der Installation eines neuen Linux-Systems über ein altes das nicht mehr funktioniert oder "ausgemistet" werden soll da bereits zu viele Dateileichen in /etc, /usr usw. existieren welche man los werden möchte.
+
+
+Neues System Herunterladen und vorbereiten
+------------------------------------------
+
+Dieser Schritt ändert noch nichts am bestehenden System.
+
+----
+url=https://github.com/guenther-brunthaler
+url=$url/debootstrap-helper-um488rt7p1u1fg01j5nay14hc
+git clone --depth=1 "$url" debootstrap-helper
+cd debootstrap-helper
+----
+
+Das debootstrap-* Script in diesem Verzeichnis unterstützt verschiedene Phasen der Vorbereitung einer neuen Installation in einem Unterverzeichnis.
+
+Wenn man es mit dem Argument "help" aufruft, erhält man eine Übersicht der restlichen Befehls-Argumente.
+
+Grundsätzlich beginnt man dabei mit dem Befehl "download" welcher alle Download für die Installation eines Minimalsystems durchführt. Dies kann man auch auf einem anderen Rechner als dem Zielrechner erledigen der über mehr Bandbreite für Downloads verfügt. Dann kopiert man das Download-Verzeichnis auf den eigentlichen Zielrechner.
+
+Nach dem "download"-Befehl kommt "create" dran - dies entpackt die Downloads und installiert das eigentliche Basis-System in ein Unterverzeichnis.
+
+Danach kann man dann mit "setup" einen Root-Jail erzeugen und diesen mit "enter" betreten.
+
+Nun setzt man die Installation fort, typischer Weise indem man den SSH-Server dazu bringt Verbindungen von außerhalb des Root-Jails anzunehmen.
+
+Danach loggt man sich dann per SSH in den Root Jail ein, so dass man auf gewohnte Art und Weise darin arbeiten kann.
+
+Man sollte das System nun so weit weiter konfigurieren, dass man es als Ausgangsbasis fürs Klonen neuer Installationen benutzen kann.
+
+Auch sollte man die Pakete auf den neuesten Stand aktualisieren und alle zusätzlichen Pakete installieren und einrichten, die man in den meisten geklonten Installationen installiert haben wollen wird.
+
+Sobald das System fertig installiert und bereit zum Klonen ist, stoppt man den SSH-Server im Root-Jail, verlässt den Root Jail wieder und baut ihn mit dem Kommando "teardown" des Helper-Scriptes wieder ab.
+
+Danach sollte man noch kontrollieren ob wirklich alles aus den Root-Jail ungemountet wurde.
+
+Man hat nun eine Basis-Installation die als Ausgangspunkt für die Reinstallation dienen wird.
+
+Man kann diese Basis-Installation auch für spätere erneute Reinstallationen archivieren.
+
+
+Altes System sichern
+--------------------
+
+Zuerst konfiguriert man ein initramfs welches man mit SSH (typischer Weise mit dem Paket "dropbear") betreten kann, noch bevor das eigentliche System hochgefahren wird.
+
+Sobald dies erfolgt ist, mountet man manuell das alte Basis-System in einen Mount-Point, inklusive aller eventuell darin gemounteten Dateisysteme wie /usr, /var etc.
+
+Von den Dateien in "/", "/usr", "/var" und "/srv" die man teilweise behalten wird wollen, zumindest aber vom alten "/etc", macht man nun ein Backup in irgend ein anderes Verzeichnis - typischer Weise irgendwo nach "/root" oder "/home" wo ausreichend Platz ist. Oder man kopiert die Dateien auf einen externen Dateinträger oder übers Netzwerk auf einen anderen Rechner.
+
+Zum Sichern benutzt man am besten den "tar"-Befehl mit GNU-Erweiterungen, um ACLs, Extended Attributes, Sparseness von Dateien usw. zu erhalten.
+
+Es gibt dazu eine andere Anleitung +tar - vollständige Dateisysteme kopieren.txt+ welche dies erläutert.
+
+Ein paar Hinweise was man häufig sichern möchte:
+
+* Separat herunter zu ladende Level-Dateien für kommerzielle Spiele in +/usr/games+ oder +/usr/share/games+
+
+* Ähnliches für kommerzielle oder manuell installierte Programme in +/opt+
+
+* Ähnliches für selbstinstallierte Programme oder Scripte in +/usr/local+
+
+* Recovery-Shells und -Utilities in +/boot+
+
+
+Altes System leeren
+-------------------
+
+Nun löscht man diejenigen Teile des alten Systems, welche durch die Reinstallation überschrieben werden sollen.
+
+Zunächst legt man ein temporärverzeichnis "/old" an und verschiebt alles andere was sich in "/" befand dort hinein.
+
+Für etwaige Mount-points von "/usr" etc. macht man dasselbe - also den Inhalt nach "/usr/old/" verschieben.
+
+Dann löscht man in aus diesen "old"-Verzeichnissen alles was man bereits gesichert hat - optimaler Weise das meiste, damit diese Verzeichnisse nur noch wenig Platz belegen.
+
+Allerdings wird man bestimmte Verzeichnisse wie /old/home oder /old/srv/www vielleicht komplett oder zum größten Teil behalten wollen, und löscht diese daher nicht.
+
+
+Neues System installieren
+-------------------------
+
+Man kopiert nun - am besten ebenfalls mittels tar - die vorbereitete Installation zum Klonen in das Dateisystem, wobei die bereits existierenden old-Verzeichnisse nicht angerührt werden.
+
+Danach verschiebt man die Inhalte aus den old-Verzeichnissen die man behalten wollte in die neuen Verzeichnisse und löscht die nunmehr leeren old-Verzeichnisse.
+
+Ein Sonderfall dabei ist das alte "/etc" - dies sollte man nach /oldetc in die neue Wurzel des Dateisystems verschieben. Das ist wichtig damit die chown/chgrp-Befehle weiter unten dieses Verzeichnis ignorieren.
+
+
+Vorbereitung für RootJail
+-------------------------
+
+Die verbleibenden Schritte müssen in einem RootJail in der initramfs ausgeführt werden.
+
+
++/etc/fstab+
+~~~~~~~~~~~~
+
+Übernehmen von Einträgen der alten +/etc/fstab+. Dabei nicht vergessen allfällig mittlerweile geänderte Dateisystem-Typen, Mount-Optionen und UUIDs anzupassen.
+
+
+Root-Jail betreten
+------------------
+
+Hier sind 3 Scripte nützlich, welche mit geringen Anpassungen ans aktuelle System angepasst werden können.
+
+Das erste Script initialisiert einen Root-Jail, betritt ihn aber noch nicht.
+
+----
+cd /dir/to/become/toplevel/dir/of/root/jail
+cat << '===' > rj_setup.sh
+#! /bin/sh
+set -e
+trap 'test $? = 0 || echo "$0 failed!" >& 2' 0
+test -d proc
+mount -o mode=1777,size=70% -t tmpfs jail_tmp tmp
+(
+cd run
+mount -o mode=775,size=100m -t tmpfs jail_run ../run
+tar -c * | tar -C ../run -x
+)
+mount --rbind /proc proc
+mount --rbind /sys sys
+mount --rbind /dev dev
+mount -t ext4 /dev/vg_xeeepc/usr usr
+mount -t ext4 /dev/vg_xeeepc/var var
+mount -t ext4 /dev/vg_xeeepc/srv srv
+mount -t ext4 /dev/vg_xeeepc/home home
+echo "Root jail has been prepared!"
+===
+----
+
+Die +mount+-Befehle in diesem Script müssen offensichtlich angepasst werden.
+
+Dieses erste Script wird als erstes aufgerufen.
+
+Das zweite Script versucht diese Initialisierungen wieder rückgängig zu machen:
+
+----
+cat << '===' > rj_teardown.sh
+#! /bin/sh
+umount home
+umount var
+umount srv
+umount usr
+umount run
+umount tmp
+umount sys/fs/pstore
+umount sys/fs/fuse/connections/
+for m in sys/fs/cgroup/*
+do
+	umount $m
+done
+umount sys/fs/cgroup
+umount sys/
+umount dev/pts/
+umount dev
+umount proc/sys/fs/binfmt_misc
+umount proc
+mount | grep devuan
+echo "Root jail has been torn down (or at least tried to do so)!"
+===
+----
+
+Dieses zweite Script wird als letztes aufgerufen, sobald man den Root-Jail nicht mehr braucht und alles herunterfahren/unmounten/neustarten will.
+
+Der dritte Script schließlich betritt den Root-Jail:
+
+----
+cat << '===' > rj_enter.sh
+#! /bin/sh
+echo "Trying to enter root jail!"
+unshare -u env -i TERM=$TERM HOME=/home/root $(which chroot) . bin/bash -l
+echo "Left root jail."
+===
+----
+
+Die Angabe für das HOME-Verzeichnis im Root-Jail muss in diesem Script vermutlich angepasst werden.
+
+Dieses Script kann beliebig oft aufgerufen werden um den Root-Jail wieder zu betreten, wenn man ihn mit +exit+ kurzzeitig wieder verlassen musste.
+
+Der Root-Jail wird in einem separaten UTS-Namespace ausgeführt, was bedeutet dass man darin +hostname+ ausführen kann ohne dass dies sich auf das System außerhalb des Root-Jails auswirkt. Allerdings muss man dies jedes Mal wiederholen wenn der Root-Jail betreten wird, da beim vorangegangenen +exit+ der Namespace mit dem neuen +hostname+-Setting zerstört wurde.
+
+Typische erste Aktionen nach jedem Betreten des Root-Jails:
+
+----
+hostname `cat /etc/hostname`
+. /etc/default/locale && export LANG LANGUAGE && locale
+exec bash -l
+----
+
+
++/etc/passd+ und +/etc/group+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Das erste was man im Root-Jail tun sollte, ist die Benutzerdatenbanken zu synchronisieren.
+
+Dieser Punkt ist nur nötig, wenn Dateien mit anderen Besitzern als "root" vom alten System übernommen werden. Dies ist allerdings meist der Fall.
+
+Da es bereits vordefinierte User und Gruppen im neuen System gibt, fügt man am besten die fehlenden von alten System hinzu.
+
+Dazu extrahiert man am besten zuerst eine Aufstellung der alten Accounts:
+
+* Liste der manuell (nicht automatisch durch Pakete) angelegten +/etc/group+-Einträge welche spezielle GIDs haben
+
+* Liste von restlichen manuell angelegten +/etc/group+-Einträge
+
+* Liste der +/etc/passwd+-Einträge von manuell angelegten Benutzern
+
+Zur Auswahl ist es am besten die Listen numerisch nach UID/GID zu sortieren, da die vordefinierten Systemgruppen und -user andere Nummernbereiche haben und so leicht von manuell angelegten Usern/Gruppen unterschieden werden können.
+
+
+Alte Gruppen mit benutzerdefinierten GIDs anlegen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+"Benutzerdefiniert" soll in diesem Kontext bedeuten, dass man eine spezielle numerische GID für eine Gruppe wünscht, und dass es einem *nicht* recht ist wenn diese automatisch vom neuen System vergeben wird.
+
+Dazu kopiert man die die alten Gruppen zunächst in eine Arbeitsdatei und editiert sie dann, wobei man alle Gruppen entfernt welche *keine* benutzerdefinierten GIDs haben:
+
+----
+OLD_ETC=/path/to/old/etc
+test -f "$OLD_ETC"/passwd || echo 'Bad $OLD_ETC!' >& 2
+sort -t : -k 3,3n "$OLD_ETC"/group > /tmp/g
+"${EDITOR:-"${VISUAL:-vi}"}" /tmp/g
+----
+
+Man beachte dass diese Liste nach GIDs sortiert ist, so dass man anhand der Nummernbereiche schnell benutzerdefinierte Gruppen von Systemgruppen unterscheiden können sollte (letztere müssen auf jeden Fall aus der Liste entfernt werden).
+
+Der folgende Befehl zeigt nun an was getan würde um diese Gruppen anzulegen:
+
+----
+while IFS=: read name dummy gid dummy
+do
+	echo groupadd -g $gid $name
+done < /tmp/g
+----
+
+Sieht diese Ausgabe gut aus, den Befehl wiederholen jedoch das +echo+ dabei entfernen, um die Befehle tatsächlich auszuführen.
+
+Falls es GID-Kollisionen gibt, wird der +groupadd+ Befehl mit einer entsprechenden Fehlermeldung versagen.
+
+Dies sollte normalerweise aber nicht vorkommen, da benutzerdefinierte GIDs üblicherweise nicht im selben Nummernbereich liegen wie Systemgruppen diese verwenden.
+
+Man sollte aus diesem Grund auch die Datei +/etc/login.defs+ bearbeiten und dort die Settings für GID_MIN und GID_MAX so anpassen, dass der Nummernbereich für alle vordefinierten GIDs außerhalb des Bereichs von GID_MIN bis GID_MAX liegt. (Natürlich setzt dies voraus dass die benutzerdefinierten GIDs tatsächlich einen eingeschränkten Nummernbereich bilden.)
+
+
+Alte Gruppen ohne benutzerdefinierten GIDs anlegen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dazu wiederholt man die Befehle zum Anlegen und Bearbeiten der Datei +/tmp/g+ wie im Fall der benutzerdefinerten GIDs, nur dass man diesmal alle Zeilen löscht außer für benutzerdefinierte Gruppen die eine beliebige noch freie GID bekommen sollen und von denen nur der Gruppenname relevant ist.
+
+Der folgende Befehl zeigt nun an was getan würde um diese Gruppen anzulegen:
+
+----
+while IFS=: read name dummy
+do
+	echo groupadd $name
+done < /tmp/g
+----
+
+Auch hier ist das +echo+ vor dem +groupadd+ zu entfernen, um die Befehle tatsächlich auszuführen.
+
+
+Alte Benutzer mit benutzerdefinierten UIDs/GIDs anlegen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Auch hier erstellt man zuerst eine nach UIDs sortierte Liste der alten User und entfernt dann alle Eintrags-Zeilen, deren User man nicht auch am neuen System mit derselben UID und GID wie am alten System anlegen möchte:
+
+----
+sort -t : -k 3,3n "$OLD_ETC"/passwd > /tmp/u
+"${EDITOR:-"${VISUAL:-vi}"}" /tmp/u
+----
+
+Als nächstes wird eine Zuordnungstabelle erzeugt, welcher User im alten System Mitglied welcher Gruppen war (und welche auch bereits im neuen System angelegt wurden):
+
+----
+cut -d : -f 1,4- "$OLD_ETC"/group \
+| sed '/:$/d; :1; /,/ !b; h; s/,.*//; p; g; s/:[^,]*,/:/; b 1' \
+| sort -t : -k 1,1 > /tmp/m0 \
+&& cut -d : -f 1 /etc/group | sort \
+| join -t : - /tmp/m0 | sort -t : -k 2,2 -k 1,1 > /tmp/m \
+&& rm /tmp/m0 && cat /tmp/m
+----
+
+Der folgende Befehl zeigt nun an was getan würde um die primären Gruppen der User anzulegen:
+
+----
+while IFS=: read name dummy dummy gid dummy
+do
+	echo groupadd -g $gid $name || {
+		echo FAILED: $name; break
+	}
+done < /tmp/u
+----
+
+Auch hier ist das +echo+ vor dem +groupadd+ zu entfernen, um die Befehle tatsächlich auszuführen.
+
+Der folgende Befehl zeigt nun an was schließlich getan würde um die eigentlichen User anzulegen:
+
+----
+while IFS=: read name dummy uid gid gecos dir shell
+do
+	groups=`echo $name | join -t : -o 2.1 -2 2 - /tmp/m | paste -d , -s`
+	echo useradd -u $uid -g $gid -c "$gecos" -d $dir -s $shell \
+		${groups:+-G $groups} $name \
+	|| {
+		echo FAILED: $name; break
+	}
+done < /tmp/u
+----
+
+Auch hier ist das +echo+ vor dem +useradd+ zu entfernen, um die Befehle tatsächlich auszuführen.
+
+
+Alte Benutzer ohne vordefinierte UIDs anlegen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Auch hier erstellt man zuerst eine nach UIDs sortierte Liste der alten User und entfernt dann alle Eintrags-Zeilen, deren User man nicht auch am neuen System neu anlegen möchte:
+
+----
+sort -t : -k 3,3n "$OLD_ETC"/passwd > /tmp/u
+"${EDITOR:-"${VISUAL:-vi}"}" /tmp/u
+----
+
+Als nächstes ist, falls noch nicht vorhanden, die Datei +/tmp/m+ mit demselben Befehl anzulegen wie im Abschnitt über das Hinzufügen von Benutzern mit benutzerdefinerten UIDs beschrieben.
+
+Der folgende Befehl zeigt dann an was getan würde um die restlichen ehemaligen User anzulegen:
+
+----
+while IFS=: read name dummy
+do
+	G=`echo $name | join -t : -o 2.1 -2 2 - /tmp/m | paste -d , -s`
+	echo useradd ${G:+-G $G} $name || {
+		echo FAILED: $name; break
+	}
+done < /tmp/u
+----
+
+Auch hier ist das +echo+ vor dem +useradd+ zu entfernen, um die Befehle tatsächlich auszuführen.
+
+
+Zusätzliche Gruppen für user +root+ ergänzen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Da der User +root+ bereits existiert, wurde er von den obigen Befehlen nicht aktualisiert. Statt dessen fügt man seine zusätzlichen Gruppen aus dem alten System am einfachsten händisch hinzu:
+
+----
+grep root "$OLD_ETC"/group
+gpasswd -a root $GRUPPE
+----
+
+Den 2. Befehl so oft mit einer weiteren +$GRUPPE+ wiederholen bis alle Gruppen zum User +root+ hinzu gefügt wurden.
+
+Weiters sollte man auch die Login-Shell und das Home-Directory der alten Konfiguration mit der neuen vergleichen und sicher stellen dass dies korrekt ist.
+
+
+UIDs/GIDs migrieren
+^^^^^^^^^^^^^^^^^^^
+
+Es gibt nun alle Benutzer und Gruppen die man aus dem alten System übernehmen wollte auch im neuen System, doch die alten und neuen zugehörigen UIDs und GIDs stimmen nicht notwendiger Weise in allen Fällen überein.
+
+Hmmm. Das ist kompliziert...
+
+Ich spare mir diesen Fall lieber bis es wirklich nötig ist!
+
+Statt dessen sollen die neuen fehlenden User einfach wie weiter oben beschrieben mit derselben ID angelegt werden wie im alten System.
+
+Dann ist eine UID/GID Migration nicht erforderlich.
+
+Andernfalls muss man zuerst dies UIDs/GIDs auch in allen Dateien ersetzen.
+
+Dazu definiert man zunächst einmal eine Liste aller Directories innerhalb von Device-Grenzen welche nach zu ändernden UIDs/GIDs durchsucht werden sollen (gegebenenfalls ergänzen, und verschlüsselte Dateisysteme zuvor nicht zu mounten vergessen):
+
+----
+set /home /opt /root /srv /usr/local /home/mnt/*
+n=$# && while test $n != 0
+do
+	if test -d "$1"
+	then
+		set -- "$@" "$1"
+	fi
+	shift
+	n=$(($n - 1))
+done
+echo "$*"
+----
+
+Diese Liste ist nun als die Argumente ($1, $2 etc.) der aktuellen Shell-Instanz gesetzt.
+
+Man beachte, dass die Liste nur solche Verzeichnisbäume zu enthalten braucht, in denen nicht ohnehin alle Dateien automatisch "root" oder anderen vordefinierten Systembenutzern gehören.
+
+Der folgende Befehl ändert dann UID oder Usernamen $FROM in UID/Usernamen $INTO:
+
+----
+find -H "$@" -xdev -user $FROM -exec chown -- $INTO {} +
+----
+
+Und dieser tut dasselbe für GID oder Gruppennamen:
+
+----
+find -H "$@" -xdev -group $FROM -exec chgrp -- $INTO {} +
+----
+
+Wenn man die Argumente ab +-exec+ entfernt, suchen die Befehle nur nach Dateisystemobjekten mit dem angegebenen Besitzer.
+
+Mit diesen Befehlen "bewaffnet" kann man nun kollidierende vorhandene GIDs in neue noch unbenutzte GIDs ändern.
+
+
+Sicherstellen dass alle Dateien einen Besitzer haben
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Dazu sind als Vorbereitung die Schritte aus dem vorherigen Abschnitt auszuführen (falls nicht bereits erledigt), welche die positionalen Argumente der aktuellen Shell als Liste von zu durchsuchenden Dateisystemen bzw. Top-Level Directories setzen.
+
+Der folgende Befehl zeigt dann Dateien ohne gültigen Benutzer oder Gruppe an:
+
+----
+find -H "$@" -xdev -nogroup -o -nouser | tee /tmp/unk
+----
+
+Man kann dann aus dieser Liste aller verwaisten Einträge entfernen, die *nicht* an user +root+ in Besitz genommen werden sollen, und für die verbleibenen Einträge genau dies tun:
+
+----
+sort -o /tmp/unk /tmp/unk
+"${EDITOR:-"${VISUAL:-vi}"}" /tmp/unk
+# sed 's/./\\&/g' /tmp/unk | xargs chown root.
+----
+
+
+Vorhandene Passworte übernehmen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dieser Schritt erspart einem, alle Passworte neu erstellen zu müssen.
+
+Er geht davon aus, dass die üblichen Shadow-Dateien benutzt werden (kein NIS, LDAP oder ähnliches).
+
+Er sollte ausgeführt werden bevor neue Passworte vergeben werden, da er alle bestehenden durch die alten überschreibt soweit ein Benutzer/Gruppen mit übereinstimmenden Namen im alten und neuen System existiert. (Die UID/GID brauchen nicht überein zu stimmen.)
+
+
+Benutzer-Passworte
+++++++++++++++++++
+
+----
+cut -d : -f 2 "$OLD_ETC"/shadow \
+| sed 's/...*/1/; t; s/.*/0/' \
+| paste -d : - "$OLD_ETC"/shadow \
+| sed 's/^1://; t; d' \
+| sort -t : -k 1,1 \
+| tee /tmp/u
+while IFS=: read name rest
+do
+	sed "/^$name:/"'!d' /tmp/u > /tmp/m
+	if test -s /tmp/m
+	then
+		cat /tmp/m
+	else
+		echo "$name:$rest"
+	fi
+done < /etc/shadow \
+| tee /tmp/t \
+&& wc -l /etc/shadow /tmp/t
+cat /tmp/t > /etc/shadow \
+&& rm /tmp/t
+----
+
+
+Gruppen-Passworte
++++++++++++++++++
+
+----
+cut -d : -f 2 "$OLD_ETC"/gshadow | sed 's/...*/1/; t; s/.*/0/' \
+| paste -d : - "$OLD_ETC"/gshadow \
+| sed 's/^1://; t; d' \
+| sort -t : -k 1,1 \
+| tee /tmp/g
+while IFS=: read name rest
+do
+	sed "/^$name:/"'!d' /tmp/g > /tmp/m
+	if test -s /tmp/m
+	then
+		cat /tmp/m
+	else
+		echo "$name:$rest"
+	fi
+done < /etc/gshadow \
+| tee /tmp/t \
+&& wc -l /etc/gshadow /tmp/t
+cat /tmp/t > /etc/gshadow \
+&& rm /tmp/t
+----
+
+
+Temporärdateien entfernen
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Diese werden nach Abschluss der obigen Arbeiten nicht mehr gebraucht:
+
+----
+rm -f /tmp/unk /tmp/u /tmp/g /tmp/m /tmp/t
+----
+
+
+SSH-Konfiguration anpassen
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Die neuen Dateien zuerste backuppen:
+
+----
+cd /etc/ssh
+set moduli ssh_config sshd_configsh
+for f
+do
+	cp -ip $f $f.upstream
+done
+----
+
+Dann die Patches der alten Dateien erstellen und anwenden:
+
+----
+for f
+do
+	(cd "$OLD_ETC" && diff -u $f.upstream $f) > $f.patch
+done
+for f
+do
+	patch -i $.patch $f
+done
+----
+
+Fehlgeschlagene Patches manuell, mit +wiggle+ oder mit +imediff2+ anwenden.
+
+Testen ob die Syntax der SSH-Server-Konfigurationsdatei immer noch gültig ist:
+
+----
+/usr/sbin/sshd -f /etc/ssh/sshd_config -T
+----
+
+Die neuen/temporären SSH-Schlüssel löschen:
+
+----
+rm -f ssh_host_*
+----
+
+Danach alten SSH-Schlüssel und +moduli+-Datei ins neue +/etc/ssh+ verschieben.
+
+
+SSH-Server starten
+~~~~~~~~~~~~~~~~~~
+
+----
+invoke-rc.d --force ssh start
+----
+
+Falls das nicht funktioniert oder das SSH-Login nicht funktioniert, kann man testweise den SSH-Server auch direkt für eine einzelne Verbindung starten (mit Ausgabe der Meldungen ins Terminal):
+
+----
+/usr/sbin/sshd -f /etc/ssh/sshd_config -d
+----
+
+Die Idee ist dass man während dieser Verbindung den eigentlichen SSH-Server im Root-Jail startet. Falls der SSH-Port bereits vom Host-System des Root-Jails belegt ist, einfach mit der Option `-p` einen anderen Port angeben.
+
+Funktioniert dies nicht, kann man den SSH-Server auch dauerhaft im Vordergrund des Root-Jails laufen lassen:
+
+----
+/usr/sbin/sshd -f /etc/ssh/sshd_config -De
+----
+
+Auch hier gegebenenfalls die `-p` Option hinzu fügen.
+
+
+Root-Jail verlassen
+-------------------
+
+Vorher testen, ob man sich via SSH in den Root-Jail einloggen kann.
+
+Wenn ja, dann kann man in der lokalen Shell den Root-Jail verlassen:
+
+----
+exit
+----
+
+Der Rest der Konfiguration erfolgt nun über SSH.
+
+
+Verschlüsselung konfigurieren
+-----------------------------
+
+Im Falle eines verschlüsselten Systems sicher stellen dass die folgenden Dateien und zughörige Einträge in der +/etc/fstab+ konsistent mit denen des alten Systems sind. Wenn möglich UUIDs oder +/dev/disk/+-Symlinks anstatt expliziter Devicenamen verwenden.
+
+....
+/etc/crypttab
+/etc/cryptmount/cmtab
+....
+
+
+Initramfs Konfigurieren
+-----------------------
+
+Sicherstellen, dass alle initramfs-Anpassungen aus der alten Konfiguration in die neue übernommen wurden.
+
+Insbesondere auf die Konfiguration der IP-Adresse sowie für +dropbear+ die +authorized_keys+ achten. Auch die Zugriffsrechte der letzteren müssen stimmen!
+
+
+Kernel/Bootloader
+-----------------
+
+Dies ist link:Linux%20Kernel%20bauen%20und%20installieren.html#kernel_bootloader_bn8zw6dh5kje45jwjfxk92k38[hier] dokumentiert.
+
+
+System nach systemd migrieren
+-----------------------------
+
+Falls +/dev/log+ kein Socket sein sollte, diesen löschen und danach dem systemd-journald  Service sowie die zugehörigen .socket-Targets stoppen und neu starten. Ansonsten funktioniert +logger+ nicht unter systemd.
+
+
+Statisches /dev erzeugen
+------------------------
+
+`/dev` wird unter Linux normalerweise als spezielles Pseudo-Dateisystem vom Typ `devtmpfs` gemountet.
+
+Das ist jedoch nur eine Option. Man kann es eben so gut auch als `tmpfs` oder gleich als normales persistentes Dateisystem mounten, und darin die benötigten Device Nodes persistent statisch anlegen.
+
+Der folgende Befehl erzeugt ein Script welches, in `/dev` ausgeführt, dort den Inhalt eines brauchbaren initialen `/dev` erzeugt.
+
+Dieser Inhalt, oder eine Kopie davon in einem `tmpfs`, kann dann später durch `udev` oder `mdev` noch um zusätzliche Device Nodes erweitert werden.
+
+----
+$ unexpand > mk_initial_devs << '====='
+#! /bin/sh
+
+# Make initial/basic device nodes.
+# v2023.176
+
+while read args
+do
+        mknod -m $args
+done << EOF
+666 null c 1 3
+666 zero c 1 5
+666 full c 1 7
+666 tty c 5 0
+600 console c 5 1
+666 ptmx c 5 2
+666 random c 1 8
+666 urandom c 1 9
+EOF
+mkdir pts shm
+ln -s /proc/self/fd fd
+ln -s fd/0 stdin
+ln -s fd/1 stdout
+ln -s fd/2 stderr
+=====
+----

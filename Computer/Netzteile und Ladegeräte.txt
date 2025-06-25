@@ -1,0 +1,14 @@
+﻿Ein Netzteil bzw. Netzgerät unterscheidet sich fundamental von einem Ladegerät.
+
+* Ein richtiges Netzteil ist eine Spannungsquelle mit elektronisch begrenztem Maximalstrom. Ein Netzteil versucht die Spannung, auch bei kurzzeitig hoher Stromentnahmen, bis zu seinem Maximalstrom stabil zu halten.
+
+* Ein einfaches Ladegerät ist eine Stromquelle mit elektronisch begrenzter Maximalspannung. Das Ladegerät versucht einfach nur den Maximalstrom zu liefern, unabhängig von der Spannung.
+
+Das bedeutet, dass ein Ladegerät sich nur dann als Netzteil eignet, wenn die Begrenzung der Maximalspannung nicht nur nach oben, sondern auch nach unten präzise arbeitet. Also wie bei einem Netzteil elektronisch geregelt ist und nicht nur aus einer billigen Zener-Diode besteht.
+
+So sind die als "Netzteil" beworbenen Steckernetzteile meist nur einfache Ladegeräte.
+Insbesondere Anwender leiden darunter, weil die sich darauf verlassen müssen, dass der Händler ihnen keinen Schund andreht.
+
+Die Spannung (Volt, V) eines Netzteils ist ein Nennwert, der eingehalten werden muss. Das heißt, Netzteilspannung und Gerätebetriebsspannung müssen zusammenpassen. Beide Werte dürfen nicht wesentlich voneinander abweichen.
+
+Der Strom (Ampere, A) und die Leistung (Watt, W) eines Netzteils sind hingegen Nennwerte, die nicht überschritten werden dürfen. Hierbei ist zu beachten, dass ein 10-W- bzw. 2-A-Netzteil (bei 5 V) nicht beim Nennwert und auch nicht darüber hinaus betrieben werden darf. Wenn man die 2 A ziehen will, dann wird das Netzteil zwangsläufig in einen instabilen Zustand gebracht. Das heißt, die Spannung bricht zusammen und das versorgte Gerät fällt aus. Wenn man 2 A braucht, dann nimmt man also nie ein 2-A-Netzteil, sondern eine Stufe darüber. Mindestens 20 % bis 30 % mehr. Also mindestens 2,5 A. Besser mehr.

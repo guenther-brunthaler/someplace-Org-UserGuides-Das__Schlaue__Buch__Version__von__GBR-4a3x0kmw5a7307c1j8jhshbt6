@@ -1,0 +1,431 @@
+﻿VPN
+===
+v2023.98
+
+Ein VPN kann in vielen Situtionen nützlich sein. Z. B. wenn man in einem QEMU/KVM Guest arbeitet, der mit `-net user,restrict=on` vom Internet isoliert ist, aber man später dennoch Downloads im Guest durchführen möchte.
+
+
+SSH
+---
+
+OpenSSH unterstützt die Errichtung von ad-hoch VPNs, die allerdings nicht sehr stabil sind da sie nicht länger "leben" als die SSH-Verbindung. Für langfristige VPNs ist es daher ungeeignet. Aber um so praktischer für Ad-Hoc VPNs, die man nur vorübergehend für ein paar Stunden braucht.
+
+Der größte Vorteil: Man braucht keine zusätzliche Software zu installieren oder zu konfigurieren. Ein OpenSSH Server- und Client reichen aus.
+
+Allerdings muss am SSH-Server das Tunnel-Feature freigeschaltet werden.
+
+Es ist zudem empfehlenswert, SSH "Keep Alive"-Metadatenpakete senden zu lassen wenn einige Zeit lang keine Nutzdaten über die SSH-Verbindung übertragen wurden, um zu verhindern dass der Tunnel wegen Inaktivität beendet wird (z. B. von einer NAT-Firewall).
+
+
+[[config_remote_ssh]]
+Remote SSH-Server konfigurieren
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Die folgenden Befehle erstellen geeignete Konfigurationsdateien für `sshd`:
+
+----
+cd /etc/ssh/sshd_config.d
+
+cat << 'EOF' > allow_tunnels-1nhx71s2rmzw4zynnna5fv961.conf
+# v2021.303
+PermitTunnel yes
+EOF
+
+cat << 'EOF' > bearable_algos-1nh19fqkplx556usk7ufm2yih.conf
+# I have little trust in the crptographic algorithms shipping with recent
+# versions of openssh. Below is the selection best I could find, pitiful as it
+# is.
+#
+# v2021.303
+
+Ciphers chacha20-poly1305@openssh.com,3des-cbc,aes256-gcm@openssh.com,aes256-ctr
+HostKeyAlgorithms ssh-rsa-cert-v01@openssh.com,ssh-rsa
+KexAlgorithms sntrup4591761x25519-sha512@tinyssh.org,diffie-hellman-group-exchange-sha256
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+PubkeyAcceptedKeyTypes rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-256
+EOF
+
+cat << 'EOF' > keepalives-1njpdds3di1krj6711t71pxg2.conf
+# v2021.303
+
+ClientAliveInterval 1800
+EOF
+
+cat << 'EOF' > listen_port-1nkic2fgnia2hp34ydlnq9fff.conf
+# v2023.91
+
+Port 874
+EOF
+
+cat << 'EOF' > no_ipv6-1nlcukp1f7thsivpydlrlpcuf.conf
+# v2021.303
+
+AddressFamily inet
+EOF
+
+cat << 'EOF' > rsa_only-1nnw8xfx5fr16te8qj8l8t78s.conf
+# By explicitly specifying one host key, others will only be used if specific
+# entries for then exist also. This can in fact be used do disable all the
+# other key types.
+#
+# v2021.303
+
+HostKey /etc/ssh/ssh_host_rsa_key
+EOF
+
+cd -
+
+(f=/etc/ssh/sshd_config && grep -qF $f.d $f || echo "Include $f.d/*.conf" >> $f)
+
+/etc/init.d/ssh reload
+
+/usr/sbin/sshd -f /etc/ssh/sshd_config -T | less # Show effective configuration.
+----
+
+Weiters muss bereits ein SSH-Zugang vom SSH-Client zum SSH-Server eingerichtet sein. Kurzcheck dazu:
+
+* SSH-Server ist gestartet
+
+* Falls SSH indirekt über den `inetd`- oder `xinetd`-Superserver gestartet wird anstatt als Dienst zu laufen, muss das leere Verzeichnis (normaler Mode `755`) existieren falls das "Privilege Separation"-Feature genutzt wird (was normalerweise der Fall ist). Und der (`x`-) `inetd`-Dienst selbst muss in diesem Fall natürlich auch gestartet sein.
+
+* User hat ein Passwort gesetzt (oder, alternativ, PAM-Support ist für SSH aktiviert).
+
+* `~/.ssh` existiert, gehört dem User, und hat mode `0700` (oktal).
+
+* (optional) `~/.ssh/authorized_keys` existiert, gehört dem User, und hat Mode `0600` (oktal).
+
+* Falls der SSH-Server konfiguriert wurde nur Mitgliedern einer bestimten Gruppe wie z. B. `sshlogin` zu gestatten, muss der User zu einem Mitglied dieser Gruppe gemacht worden sein.
+
+
+Aufbau
+~~~~~~
+
+Mit diesen Vorbereitungen nun eine Anleitung, wie man ein VPN zwischen dem lokalen Rechner und einer QEMU VM herstellen kann die mit "`restrict=on`" gestartet wurde, daher noch keinen Zugang zum Internet (oder zum Hypervisor-Host) hat.
+
+Die folgenden Anweisungen benutzen konkrete Portnummern und IP-Adressen um anschaulich zu bleiben. Sollten andere Portsnummern oder IP-Adressen gewünscht sein, ist es sinnvoller statt dessen die <<abstract_ssh,abstrahierte Zusammenfassung>> aller Befehle zu verwenden.
+
+Weiters gehen wir davon aus dass zwar ein SSH-Server im Guest auf Port `875` auf Verbindungen wartet, dieser jedoch von außerhalb der VM momentan ebenfalls nicht erreichbar ist.
+
+Als erstes erzeugen wir im QEMU-Monitor ein Host-Forwarding, welches `127.0.0.1:11167` am Hypervisor auf den SSH-Server im Guest weiterleitet:
+
+----
+(qemu) hostfwd_add tcp:127.0.0.1:11167-:875
+----
+
+Dieser Schritt ist natürlich unnötig wenn man das VPN zwischen nicht-virtualisierten Rechnern einrichtet.
+
+Nun erzeugen wird das VPN (vom Hypervisor-Host aus):
+
+----
+user@hypervisor$ sudo --preserve-env=SSH_AUTH_SOCK -i
+root@hypervisor$ test -d "$HOME"/.ssh/shared_connections || mkdir -m 700 "$HOME"/.ssh/shared_connections
+
+root@hypervisor$ ssh -p 11167 -fNS "$HOME"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=300 -w 5:6 root@127.0.0.1
+----
+
+Der erste Befehl ist nur nötig wenn wir nicht bereits der User "root" sind.
+
+Das `5:6` hingegen bedeutet, dass am Hypervisor (genauer gesagt jene Seite der Kommunikation welche den `ssh`-Befehl ausführt) die Schnittstelle `tun5` mit dem VPN verbunden ist, im VM-Guest hingegen die Schnittstelle `tun6`.
+
+Die "`-o Control`"*-Optionen sind im Grunde unnötig; sie sorgen nur dafür dass eine Shared Connection anstatt einer eigenständigen aufgebaut ist. Das hat keine Auswirkungen auf den Betrieb des VPN. Aber es ist nötig um das VPN später wieder einfach beenden zu können.
+
+Der `mkdir` Befehl erstellt ein Verzeichnis, in dem Control-FIFOs für Connection Sharing angelegt werden, falls dieses Verzeichnis nicht bereits existiert.
+
+Nun wird das VPN noch konfiguriert:
+
+----
+root@hypervisor$ ifconfig tun5 192.168.37.1 pointtopoint 192.168.37.2 netmask 255.255.255.0
+root@hypervisor$ gateway_setup -e tun5
+----
+
+Das "`gateway_setup`"-Script (aus dem `git`-Repository mit der link:github%20URLs.html[abstrakten URL] `tag:xworld.mine.nu,2009:usr-local-sbin-xworld-kc9tlsxdgsgaaydrhzc10qr7p.git`) richtet ein NAT-Gateway ein, welches den vom Guest durch den Tunnel kommenden Datenverkehr über die Default-Route des Hypervisors weiter leitet. 
+
+Mit anderen Worten, das Script aktiviert IP-Forwarding/Masquerading über `tun5` ins (typischerweise) Internet.
+
+Dies kann der Guest dann nutzen:
+
+----
+root@guest$ ifconfig tun6 192.168.37.2 pointtopoint 192.168.37.1 netmask 255.255.255.0
+root@guest$ route add default dev tun6
+root@guest$ echo nameserver 9.9.9.9 >> /etc/resolv.conf # Optional
+root@guest$ ping -W5 -c1 8.8.8.8 # Test connection to Google servers
+----
+
+Die in den `ifconfig`-Befehlen angegebenen `pointtopoint`-Adressen stellen einfach die IP-Adresse der `tun`*-Schnittstelle am anderen Ende der Verbindung dar.
+
+Das VPN selbst stellt dabei das Netzwerk `192.168.37/24` dar; es wird jedoch nicht direkt sondern nur zur Weiterleitung des Netzwerk-Verkehrs mittels Default-Route genutzt.
+
+Ich stellte dabei fest, dass das Beispiel für die Verwendung von "`ssh -w`" in der `ssh` man-Page fehlerhaft war da sie auf das "pointtopoint"-Schlüsselwort vergessen hatten. Dadurch tat der Befehl irgend etwas anderes, jedoch nicht das beabsichtigte.
+
+
+Mehrfach-Nutzung der Tunnel-Verbindung
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Die SSH-Verbindung durch welche der VPN-Datenverkehr getunnelt wird, lässt sich auch für andere SSH-Zwecke verwenden, ohne dazu eine zusätzliche Verbindung aufbauen zu müssen.
+
+Dies hat den Vorteil dass keine Ressourcen (kryptografischer Schlüsseltausch, zusätzliche TCP-Verbindung) zusätzlich benötigt werden. Außerdem erfolgt der Verbindungsaufbau schneller ("sofort") da tatsächlich überhaupt keine neue Verbindung aufgebaut wird, sondern vielmehr die existierende zusätzlich benutzt wird.
+
+`ssh`
+^^^^^
+
+----
+root@hypervisor$ ssh -p 11167 -S "$HOME"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=300 root@127.0.0.1
+----
+
+
+`scp`
+^^^^^
+
+----
+root@hypervisor$ scp -P 11167 -o ControlPath="$HOME"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=300 some_local_file root@127.0.0.1:/destination/path/on/remote/
+
+root@hypervisor$ scp -P 11167 -o ControlPath="$HOME"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=300 root@127.0.0.1:/source/path/on/remote/ ./
+----
+
+Anmerkung: Diese Mehrfachnutzung einer SSH-Verbindung ist nicht VPN-spezifisch sondern funktioniert auch ohne VPN-Tunnel. Jedoch ist sie im Falle eines VPN-Tunnels über SSH besonders naheliegend, da hier permanent eine SSH-Verbindung besteht welche man mitbenutzen kann.
+
+
+Abbau
+~~~~~
+
+Um das bestehende VPN zu beenden:
+
+----
+root@guest$ route del default dev tun6
+root@guest$ ifconfig tun6 0.0.0.0 down
+----
+
+Und auf dem Rechner welche den VPN-Tunnel initiierte:
+
+----
+root@hypervisor$ gateway_setup -d tun5
+root@hypervisor$ ifconfig tun5 0.0.0.0 down
+
+root@hypervisor$ ssh -p 11167 -S "$HOME"/.ssh/shared_connections/%C -o ControlMaster=auto -O exit root@127.0.0.1
+
+root@hypervisor$ exit # Optional: Terminate "sudo", become prior user
+----
+
+
+[[abstract_ssh]]
+Abstrahierte Zusammenfassung
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Die folgende Zusammenfassung führt dieselben Befehle durch wie weiter oben anhand konkreter Beispiele gezeigt, verwendet jedoch Shell-Variablen für die konkreten Port-Nummern, IP-Adressen und Schnittstellen.
+
+Die Shell-Variablen werden dabei nur einmal gesetzt und ansonsten nur verwendet, so dass die Anweisungen einfach an andere Werte anpassbar sind.
+
+
+Remote SSH-Server vorbereiten
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dies sind dieselben Schritte wie <<config_remote_ssh,hier>> angegeben.
+
+
+Setzen der Variablen
+^^^^^^^^^^^^^^^^^^^^
+
+Hier werde die Variablen (am lokalen Rechner) so gesetzt, dass die weiter oben gezeigten konkreten Befehle daraus resultieren. Die tatsächlich gesetzten Variablenwerte sollten dabei nach eigenen Wünschen angepasst werden.
+
+----
+cat << 'EOF' > tun.env
+ssh_connect=root@127.0.0.1 ssh_connect_port=11167
+
+ssh_sharing_timeout_secs=300
+
+local_tun_ifc=tun5 remote_tun_ifc=tun6 tun_pair=${local_tun_ifc#tun}:${remote_tun_ifc#tun}
+
+vpn_net=192.168.37 vpn_netmask=255.255.255.0
+
+vpn_local_ip=${vpn_net?}.1 vpn_remote_ip=${vpn_net?}.2
+
+export ssh_connect ssh_connect_port ssh_sharing_timeout_secs local_tun_ifc remote_tun_ifc tun_pair vpn_net vpn_netmask vpn_local_ip vpn_remote_ip had_uid
+EOF
+
+${VISUAL:-$EDITOR} tun.env
+. ./tun.env
+----
+
+Die Variablen können als normaler Benutzer gesetzt werden. Falls erforderlich, wird später wo erforderlich ein `sudo` gemacht.
+
+Sollte man mehrere unterschiedliche Konfigurationen in verschiedenen Shells benutzen wollen, empfehle ich zwar immer denselben Dateinamen "`tun.env`" zu verwenden, die Dateien jedoch für jede Konfiguration in einem separaten Unterverzeichnis zu erstellen in welches mit `cd` gewechselt wird um die Konfiguration zu benutzen.
+
+
+Zeit auf Remote-Rechner mittels rdate setzen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dies setzt voraus, dass auf dem lokalen Rechner ein `rdate`-Service auf Port 37 läuft. Andernfalls kann man `inetd` entsprechend umkonfigurieren:
+
+----
+$ cat /etc/inetd.conf
+127.0.0.1,myhostname:
+...
+*:time          stream  tcp     nowait  root    internal
+----
+
+wobei anstatt `myhostname` der Name oder die IP-Adresse des eigenen lokalen Rechners zu verwenden ist.
+
+Falls die `inetd.conf` angepasst werden musste, den `inetd` neu starten:
+
+----
+$ /etc/init.d/openbsd-inetd reload
+----
+
+Nun da der 'time'-Service läuft, kann man diesen dann nutzen um die Zeit bei Bedarf auf der Remote-Maschine mittels `rdate` zu setzen:
+
+----
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=ssh_connect,ssh_connect_port,ssh_sharing_timeout_secs,had_uid,SSH_AUTH_SOCK -i
+
+ssh -p ${ssh_connect_port?} -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} -R 127.0.0.1:37:127.0.0.1:37 ${ssh_connect?}
+
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=had_uid -i
+
+busybox rdate 127.0.0.1
+
+test ${had_uid?} != 0 && exit
+
+exit # Return from remote
+
+test ${had_uid?} != 0 && exit
+----
+
+
+VPN-Aufbau
+^^^^^^^^^^
+
+Am lokalen Rechner auszuführen:
+
+----
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=ssh_connect,ssh_connect_port,ssh_sharing_timeout_secs,local_tun_ifc,remote_tun_ifc,tun_pair,vpn_net,vpn_netmask,vpn_local_ip,vpn_remote_ip,had_uid,SSH_AUTH_SOCK -i
+
+test -d "${HOME?}"/.ssh/shared_connections || mkdir -m 700 "${HOME?}"/.ssh/shared_connections
+
+ssh -p ${ssh_connect_port?} -fN -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} -w ${tun_pair?} ${ssh_connect?}
+
+ifconfig ${local_tun_ifc?} ${vpn_local_ip?} pointtopoint ${vpn_remote_ip?} netmask ${vpn_netmask?}
+
+gateway_setup -e ${local_tun_ifc?}
+
+ssh -p ${ssh_connect_port?} -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} -t ${ssh_connect?} remote_tun_ifc=$remote_tun_ifc vpn_net=$vpn_net vpn_netmask=$vpn_netmask vpn_local_ip=$vpn_local_ip vpn_remote_ip=$vpn_remote_ip 'exec $SHELL -l'
+----
+
+Das letzte Kommando sollte zum Remote-Rechner verbinden. Dort die restlichen Befehle auszuführen:
+
+----
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=ssh_connect,ssh_connect_port,ssh_sharing_timeout_secs,local_tun_ifc,remote_tun_ifc,tun_pair,vpn_net,vpn_netmask,vpn_local_ip,vpn_remote_ip,had_uid -i
+
+ifconfig ${remote_tun_ifc?} ${vpn_remote_ip?} pointtopoint ${vpn_local_ip?} netmask ${vpn_netmask?}
+
+route add default dev ${remote_tun_ifc?}
+
+grep -q ^nameserver /etc/resolv.conf || echo nameserver 9.9.9.9 >> /etc/resolv.conf
+
+ping -W5 -c1 ${vpn_local_ip?} # Test connection back to local
+
+ping -W5 -c1 8.8.8.8 # Optional: Test connection to Google
+
+test ${had_uid?} != 0 && exit
+
+exit # Return from remote
+----
+
+Wieder zurück am lokalen Rechner:
+
+----
+test ${had_uid?} != 0 && exit
+
+ping -W5 -c1 ${vpn_remote_ip?} # Test connection to remote
+----
+
+
+Additional ssh sessions
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Re-use shared tunnel for `ssh`:
+
+----
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+
+ssh -p ${ssh_connect_port?} -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} ${ssh_connect?}
+----
+
+
+More efficient `scp` invocations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Re-use shared tunnel for `scp`:
+
+----
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+scp -P ${ssh_connect_port?} -o ControlPath="${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} some_local_file ${ssh_connect?}:/destination/path/on/remote/
+
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+scp -P ${ssh_connect_port?} -o ControlPath="${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} ${ssh_connect?}:/source/path/on/remote/ ./
+----
+
+
+VPN Teardown
+^^^^^^^^^^^^
+
+Zum Remote-Rechner verbinden und gesetzte Variablen "mitnehmen":
+
+----
+: unset ssh_connect; test "$ssh_connect" || . ./tun.env
+
+ssh -p ${ssh_connect_port?} -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -o ControlPersist=${ssh_sharing_timeout_secs?} -t ${ssh_connect?} remote_tun_ifc=$remote_tun_ifc vpn_net=$vpn_net vpn_netmask=$vpn_netmask vpn_local_ip=$vpn_local_ip vpn_remote_ip=$vpn_remote_ip 'exec $SHELL -l'
+----
+
+Dann am Remote-Rechner auszuführen:
+
+----
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=ssh_connect,ssh_connect_port,ssh_sharing_timeout_secs,local_tun_ifc,remote_tun_ifc,tun_pair,vpn_net,vpn_netmask,vpn_local_ip,vpn_remote_ip,had_uid -i
+
+route del default dev ${remote_tun_ifc?}
+
+ifconfig ${remote_tun_ifc?} 0.0.0.0 down
+
+test ${had_uid?} != 0 && exit
+
+exit
+----
+
+Nun wieder zurück am lokalen Rechner ausführen:
+
+----
+had_uid=`id -u`
+
+test ${had_uid?} = 0 || sudo --preserve-env=ssh_connect,ssh_connect_port,ssh_sharing_timeout_secs,local_tun_ifc,had_uid -i
+
+gateway_setup -d ${local_tun_ifc?}
+
+ifconfig ${local_tun_ifc?} 0.0.0.0 down
+
+ssh -p ${ssh_connect_port?} -S "${HOME?}"/.ssh/shared_connections/%C -o ControlMaster=auto -O exit ${ssh_connect?}
+
+test ${had_uid?} != 0 && exit
+
+unset ssh_connect ssh_connect_port ssh_sharing_timeout_secs local_tun_ifc remote_tun_ifc tun_pair vpn_net vpn_netmask vpn_local_ip vpn_remote_ip had_uid
+----
+
+
+Einschränkungen
+~~~~~~~~~~~~~~~
+
+Ein VPN auf SSH-Basis kann immer nur zwei Rechner (einen ssh-Client mit einem SSH-Server) direkt mit einander verbinden, also ist eine separate VPN-Instanz am Server pro Client erforderlich.
+
+Allerdings ist es möglich, am Server eine link:Bridge%20Setup%20-%20Linux.html[Bridge] einzurichten, welche dann die separaten VPNs mit einander verbindet, so dass auch unterschiedliche Clients einander gegenseitig über denselben Server erreichen können.
+
+OpenVPN hat keine solche Einschränkung und eine Server-Instanz kann viele Clients gleichzeitig verwalten, ist dafür aber komplizierter einzurichten.

@@ -1,0 +1,86 @@
+﻿How to get traditional scrollbars in GTK+ 3 apps
+================================================
+v2025.93
+
+
+Direkte Instruktionen für GTK+ 3
+--------------------------------
+
+. Zu Datei `~/.config/gtk-3.0/gtk.css` hinzufügen:
++
+----
+/* START GTK Scrollbar width changes initially 2025-04-03, Revision 1 */
+scrollbar slider {
+        min-width: 15px;
+        min-height: 15px;}
+/* END GTK Scrollbar width changes initially 2025-04-03, Revision 1 */
+----
+
+. Zu Datei `~/.config/gtk-3.0/settings.ini` hinzufügen:
++
+----
+# START GTK Scrollbar width changes initially 2025-04-03, Revision 1
+[Settings]
+gtk-primary-button-warps-slider=false
+# END GTK Scrollbar width changes initially 2025-04-03, Revision 1
+----
+
+
+Alternativ/Zusätzlich
+---------------------
+
+Instruktionen (https://unix.stackexchange.com/questions/542029/how-to-get-traditional-scrollbars-in-gtk-2-and-3-apps-in-debian-10[Quelle]), wie man die unerträglich nervenden GTK3+ Scrollbars in *normale* Scrollbars umwandeln kann.
+
+Mousepad z. B. hat danach wieder normale Scrollbalken die aussehen wie die vom GTK2+. Eine echte Wohltat!
+
+Zwar mögen die standardmäßigen GTK3+ Strich-Scrollbalken die überdies auch noch automatisch ausgeblendet werden sinnvoll auf einem Netbook mit geringer Auflösung sein - aber auf jedem Monitor normaler Größe sind sie einfach nur ein Ärgernis.
+
+----
+$ openssl base64 -d << EOF | xzcat > ~/.config/gtk-3.0/gtk2xfce4basic.css
+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
+EOF
+----
+
+Danach den Hinweisen in den Kommentaren in dieser Datei folgen.
+
+
+GTK+ 2
+------
+
+. Zu Datei `~/.gtkrc-2.0` hinzufügen:
++
+----
+# START GTK Scrollbar width changes initially 2025-04-03, Revision 1
+style "cs-scrollbar-style" {
+GtkScrollbar::slider-width = 22
+}
+
+class "GtkScrollbar" style "cs-scrollbar-style"
+# END GTK Scrollbar width changes initially 2025-04-03, Revision 1
+----

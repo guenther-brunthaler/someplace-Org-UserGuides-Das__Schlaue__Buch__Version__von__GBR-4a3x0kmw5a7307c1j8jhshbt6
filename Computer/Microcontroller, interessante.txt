@@ -1,0 +1,16 @@
+﻿https://de.wikipedia.org/wiki/Msp430
+
+Der MSP430 ist ein 16-Bit-RISC-Mikrocontroller der Firma Texas Instruments. Er [...] ist für Anwendungen mit niedrigstem Stromverbrauch optimiert. Der Prozessorkern ist mittels Compiler in der Programmiersprache C und/oder Assembler programmierbar.
+
+Die MCU gilt in der Elektronik als Quasi-Standard, wird aber zunehmend von Cortex-M-Derivaten verdrängt.
+
+Neuerdings werden auch FRAM basierende MSP430 angeboten. Dieser Speichertyp lässt sich, im Vergleich zu Flash, schneller und mit viel weniger Energie beschreiben.
+
+Der MSP430 beherrscht mehrere Power-Down-Modi, in denen die Befehlsverarbeitung gestoppt oder der Takt abgeschaltet wird. Im niedrigsten Modus liegt der Stromverbrauch, je nach Typ, bei 0,4 µA. Will man eine Echtzeituhr realisieren, werden ca. 2 µA benötigt. Die CPU kann durch verschiedene Interrupts wieder aufgeweckt werden.
+
+
+https://en.wikipedia.org/wiki/ESP32
+
+Eine günstigere Alternative zum Arduino/ATmega/AVR, mit größeren Speicher und Wi-Fi bereits in der Grundausstattung.
+
+Noch weniger Strom als die AVR-CPUs fressen die PIC-CPUs. Diese sind aber schon an der Grenze zu lächerlich leistungsschwach und nur für Spezialaufgaben geeignet. Dafür aber auch sehr billig.

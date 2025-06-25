@@ -1,0 +1,648 @@
+﻿2FA
+===
+Guenther Brunthaler
+v2023.174
+
+How to set up time- or event-based 2-factor authentication in Linux.
+
+The easiest way to setup 2FA for Linux seems to be the "Google Authenticator" PAM component. (PAM is a Linux framework for extending authentication methods using plug-in modules.)
+
+
+Installing Google Authenticator
+-------------------------------
+
+Google Authenticator consists of a PAM plug-in module as well as a userspace application.
+
+The module performs the actual authentication checks when logging in, and the application is used to set up 2FA for the current user.
+
+There is an official Debian package which can be installed, and the module installed by it is also fine for being used.
+
+Unfortunately, the userspace application has a security flaw, and needs to be patched in order to generate a safe shared authentication key.
+
+The build and installation instructions are more detailed for Debian-based systems than for other ones.
+
+If you are not sure whether this applies to your system, run the following commands in a terminal windows for probing your system type:
+
+----
+case `command -v apt dpkg dpkg-deb | wc -l` in
+3) echo This is a Debian-based system;;
+*) echo This is NOT a Debian-based system
+esac
+----
+
+Linux-Distributions *not* based on Debian
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You are on your own for now.
+
+
+Debian-based Linux-Distributions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use the following instructions if your system's package management is based on 'dpkg'.
+
+. Die Tools installieren, die nötig sind um das neue Zeugs überhaupt
+bauen zu können bauen.
++
+--
+Doch noch bevor du irgendwas anders machst, stelle sicher dass nicht
+die C Shell läuft, sondern eine POSIX-Shell wie die bash oder ksh!
+
+\Z. B. mittels
+
+----
+$ exec bash -l; exec -l ksh; exec -l ash; echo 'NO shell found!!!'
+----
+
+Als nächstes benötigen wir "fakeroot". Das brauchen wir um als
+nicht-privilegierter User überhaupt Pakete bauen zu können.
+
+Installiere dieses Paket daher, falls es noch nicht installiert ist:
+
+----
+$ command -v fakeroot || sudo \
+  apt-get -o APT::Get::Mark-Auto=1 install fakeroot
+----
+
+Führe die folgenden Schritte dann als normaler User durch. Also nicht
+als "root".
+
+. Erzeuge dir irgendwo ein Arbeitsverzeichnis
++
+--
+----
+$ cd /path/to/somewhere
+$ mkdir gauth
+$ cd gauth
+----
+--
+
+. Installieren der zum Bauen benötigten Tools (Compiler usw)
++
+--
+Das erledigt man am einfachsten mit einem Abhängigkeitspaket, welches
+als Abhängigkeit alle benötigten Tools hat.
+
+Vorteil: Nach dem erfolgreichen Bauen des eigentlichen Programms kann
+man dieses Paket wieder entfernen, da die Compiler etc. dann nicht mehr
+gebraucht werden.
+
+Als nächstes lege die folgende Textdatei an:
+
+----
+$ cat << 'EOF' > t
+Package: google-authenticator-bdeps-20230509$
+Version: 1.0$
+Architecture: all$
+Maintainer: None <none@nowhere.invalid>$
+Depends: git, c-compiler, autoconf, automake, libtool, libpam0g-dev, $
+libqrencode-dev, dpkg-dev, alien, fakeroot$
+Provides: meta-03e4d2fe9e3b11e88c3db827$
+Section: misc$
+Priority: optional$
+Multi-Arch: foreign$
+Description: Build dependencies for fixing the flawed original $
+google-authenticator userspace application$
+EOF
+----
+
+Nicht über die "$" wundern - die habe ich dran gefügt weil die Zeilen
+für die Mail zu lange waren und von mir daher umgebrochen wurden.
+
+Nun entfernen wir diese Umbrüche wieder um die benötigte Originaldatei
+herzustellen:
+
+----
+$ mkdir deps
+$ mkdir deps/DEBIAN
+$ cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
+  > deps/DEBIAN/control
+----
+
+Du kannst dir das Ergebnis ansehen - die Paketbeschreibungsdatei sollte
+nun wieder frei von Umbrüchen sein:
+
+----
+$ cat deps/DEBIAN/control
+----
+
+Damit sind die Erfordernisse für den Bau eines Abhängigkeitspakets
+erfüllt - so ein Paket enthält nicht mehr als eine DEBIAN/control Datei.
+
+Erzeugen des Abhängigkeits-Pakets:
+
+----
+$ fakeroot dpkg-deb -b deps
+----
+
+Das erzeugt das Abhängigkeitspaket unter dem Namen "deps.deb".
+
+Aufräumen:
+
+----
+$ rm -r deps t
+----
+
+Nun installieren wir das neue Abhängigkeitspaket:
+
+----
+$ sudo dpkg -i deps.deb
+----
+
+Das dpkg wird nun jammern, dass die im Paket angeforderten
+Abhängigkeiten nicht erfüllt sind. Mit dem folgenden Befehl bringen wir
+sie dazu, nachinstalliert zu werden:
+
+----
+$ sudo apt-get install --fix-broken
+----
+
+Da das Abhängigkeitspaket nun installiert ist, können wir die
+Paketdatei wieder löschen:
+
+----
+$ rm deps.deb
+----
+
+Nun sollten alle benötigten Tools und Utilities installiert und das
+Arbeitsverzeichnis wieder leer sein.
+--
+--
+
+. Die Quelltexte vom Google Authenticator besorgen
++
+--
+----
+$ repourl='https://github.com/google/google-authenticator-libpam.git'
+$ commit=366ace3e5849d0d259915ddff22c8ec55e40b3ad
+$ git init
+$ git remote add origin "${repourl:?}"
+$ git fetch -q --depth=1 origin "${commit:?}"
+$ git reset --hard FETCH_HEAD
+----
+
+Die Quelltexte sollten nun im aktuellen Verzeichnis sein.
+
+Als nächstes korrigieren wir einen Mangel, der die Verwendung potenziell minderwertiger Zufallszahlen erlaubt:
+
+----
+$ sed -i 's|/dev/urandom|/dev/random|g' src/google-authenticator.c
+----
+--
+
+. Configure-Script erzeugen
++
+--
+Das für dem Bau benötigte ./configure-Script wird normalerweise nie in
+git eingecheckt, da sie erzeugt werden kann.
+
+Statt dessen wird für diesen Zweck normalerweise ein Script beigelegt,
+häufig unter dem Namen "autogen.sh". In diesem Fall heißt es anders:
+
+----
+$ sh bootstrap.sh
+----
+
+Diese Script sollte einige Sekunden herum werkeln und am Ende ein
+./configure Script erzeugen.
+
+Wir können es nun benutzen.
+--
+
+. Konfigurieren des Builds
++
+--
+----
+$ ./configure CFLAGS="-D NDEBUG -pipe -O2 -mtune=native" \
+              LDFLAGS="-s -Wl,-O1,--as-needed,--hash-style=gnu"
+----
+
+Das sollte uns ein Makefile erzeugen.
+--
+
+. Den eigentlichen Build durchführen
++
+--
+Als erstes ermitteln wir die Anzahl paralleler Build-Prozesse anhand
+der vorhandenen CPU-Cores:
+
+----
+$ n=`getconf _NPROCESSORS_ONLN || echo 1` && n=`expr $n + 1` && echo $n
+----
+
+Dann bauen wir:
+
+----
+$ make -l$n -j$n
+----
+
+Damit sollte alles gebaut sein.
+
+Nur dann weiter machen, wenn dies nicht mit irgend einem Fehler
+versagte!
+--
+
+. Ein Staging-Directory erstellen
++
+--
+Wir installieren die Dateien nicht direkt an ihren Bestimmungsort,
+sondern erst in ein Staging-Directory:
+
+----
+$ make install DESTDIR="$PWD"/stage
+----
+
+Dabei installiert "make" ein bisschen zu viel in dieses Directory. Wir
+löschen den unnötigen Schrott wieder:
+
+----
+$ find stage -name '*.la' -exec rm -- {} +
+----
+
+Der Inhalt des Staging-Directories ist nun dazu bereit, installiert zu
+werden.
+
+Man könnte es nun einfach rüberkopieren. Aber so etwas ist ja ein
+Pfusch und macht Probleme wenn man das Zeugs später wieder
+deinstallieren wollen! Etwa wenn es irgendwann ein neueres
+fehlerbereinigtes Original-Debian-Paket geben sollte.
+
+Daher bauen wir auch hierfür ein Debian-Paket! Nun allerdings eines das
+auch Dateien enthält.
+--
+
+. Installationspaket bauen
++
+--
+Wir beginnen auch hier mit der Beschreibungsdatei.
+
+Ich habe sie ebenfalls für die E-Mail umgebrochen und mit '$' am
+Zeilenende abgesichert, damit du es hier aus der Mail problemlos ins
+Terminal-Fenster kopieren kannst:
+
+----
+$ cat << 'EOF' > t
+Package: libpam-google-authenticator$
+Source: google-authenticator$
+Version: 20230505-1.09-g366ace3$
+Architecture: @ARCH@$
+Maintainer: None <none@nowhere.invalid>$
+Depends: libc6 (>= 2.25), libpam0g (>= 0.99.7.1), libqrencode4, $
+oathtool$
+Provides: meta-03e4d2fe9e3b11e88c3db827$
+Section: admin$
+Priority: optional$
+Homepage: https://github.com/google/google-authenticator/$
+Description: Two-step verification$
+ The Google Authenticator project includes implementations of one-time$
+ passcode generators for several mobile platforms, as well as a$
+ pluggable authentication module (PAM). One-time passcodes are $
+generated$
+ using open standards developed by the Initiative for Open$
+ Authentication (OATH) (which is unrelated to OAuth).$
+ .$
+ These implementations support the HMAC-Based One-time Password (HOTP)$
+ algorithm specified in RFC 4226 and the Time-based One-time Password$
+ (TOTP) algorithm currently in draft.$
+EOF
+----
+
+Nun wie schon beim ersten Paket die "$" entfernen und eetwaige Umbrüche
+rückgängig machen:
+
+----
+$ mkdir stage/DEBIAN
+$ cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
+  > stage/DEBIAN/control
+----
+
+Allerdings enthält die Datei auch noch einen Platzhalter für die
+Architektur des aktuellen Geräts, welchen wir durch die des lokalen
+Geräts ersetzen müssen:
+
+----
+$ eval `dpkg-architecture | grep ^DEB_HOST_ARCH=`; echo $DEB_HOST_ARCH
+$ sed -i "s/@ARCH@/$DEB_HOST_ARCH/" stage/DEBIAN/control
+----
+
+Auch hier das Ergebnis kontrollieren ob es richtig aussieht:
+
+----
+$ cat stage/DEBIAN/control
+----
+
+Und bauen dann das Paket:
+
+----
+$ fakeroot dpkg-deb -b stage
+----
+
+Das Paket hat nun den langweiligen Namen "stage.deb". Wir benennen es
+nun in einen besser geeigneten Namen um, da wir das Paket danach auch
+aufheben können um es auf anderen Rechnern zu installieren:
+
+----
+$ dpkg-name stage.deb
+----
+
+Dies benennt die Datei in
+"libpam-google-authenticator_1.09-20230505-g366ace3_armhf.deb" um.
+Zumindest wenn du sie ebenfalls auf einem Raspi baust.
+
+Danach noch aufräumen:
+
+----
+$ rm -r stage t
+----
+--
+
+. Installationspaket installieren
++
+--
+Nun installieren wir das neue Paket sauber mit dem Paketmanager:
+
+----
+$ sudo dpkg -i libpam-google-authenticator_*.deb
+----
+
+Nur falls er sich über fehlende Libraries aufregt den folgenden Befehl
+absetzen um diese zu installieren:
+
+----
+$ sudo apt-get install --fix-broken
+----
+
+Damit sind wir fertig!
+
+Du kannst nun die neue *.deb-Datei irgendwo hin weg sichern, falls du
+es auch auf andere Debian-Rechner mit derselben Hardware-Architektur
+installieren willst.
+--
+
+. RPM erzeugen
++
+--
+Als nächstes sind wir lustig und versuchen das Paket in ein
+Fedora-Paket umzuwandeln damit man es auch dort installieren kann:
+
+----
+$ fakeroot alien --to-rpm libpam-google-authenticator_*.deb
+----
+
+Das erzeugt falls man das ganze am Raspi tat eine Datei
+
+----
+libpam-google-authenticator-1.09_20230505-1.armhf.rpm
+----
+
+die sich theoretisch auf einer Fedora-Distro mit derselben
+Hardware-Architektur installieren lassen sollte.
+
+Ob es auch tatsächlich klappt ist eine andere Frage. So könnte die
+Installation z. B. versagen weil abhängige Pakete unter Fedora anders
+heißen.
+
+Da du deine Fedora-Rechner aber vermutlich nicht unter armhf sondern
+amd64 betreibst, wirst du die obigen Bau-Instruktionen wohl auf einem
+Debian-basierten amd64-Rechner durchführen müssen.
+
+Zumindest wenn du sie 1:1 ohne Anpassungen durchführen willst. Weil ich
+habe keinen Schimmer mehr (lange ist es her) wie man unter Red Hat
+Pakete baut oder installiert.
+
+Wenn du kein Debian, Ubuntu oder dergleichen für amd64 hast, mache das
+ganze am besten mit einer Debian Live-DVD in einer VM.
+
+Gib der VM nur genug Speicher - oder eine virtuelle Disk die du als
+riesigen Swap-File anlegst - damit sich alles im RAM der Live-DVD
+ausgeht ohne dass du ein Dateisystem einrichten musst.
+
+Die gebauten Installationspakete für Debian und Fedora (siehe weiter
+unten) sicherst du dann mit scp aus der VM bevor die diese wieder
+herunter fährst.
+--
+
+. Aufräumen
++
+--
+Nun kann das Arbeitsverzeichnis wieder gelöscht werden, da alles
+erledigt ist.
+
+Falls man das heruntergeladene git-Repository nicht verlieren will,
+kann man es irgendwo anders hin klonen:
+
+----
+$ git clone --bare . /path/to/elswhere/google-authenticator-libpam.git
+----
+
+Danach alles vorhin Angelegte wieder löschen:
+
+----
+$ cd ..
+$ rm -rf gauth
+----
+--
+
+. Build-Tools wieder loswerden
++
+--
+Dieser Schritt ist *optional*. Da das Paket nun gebaut und installiert
+ist, benötigen wir die ganzen anfangs installierten Build-Tools nicht
+mehr.
+
+Du kannst sie daher wieder deinstallieren um Platz zu sparen.
+
+Zuerst das Abhängigkeits-Paket:
+
+----
+$ sudo apt-get purge google-authenticator-bdeps-20230509
+----
+
+Danach alle nun nicht mehr benötigten Abhängigkeiten deinstallieren:
+
+----
+$ sudo apt-get autoremove --purge
+----
+--
+
+. Fertig
++
+--
+Das war's!
+
+Ich hoffe, es funktioniert alles tatsächlich so wie ich es hier
+beschrieben habe.
+--
+
+
+PAM configuration
+-----------------
+
+If there are files `/etc/pam.d/$SERVICE`, then those files contain rules of the line format:
+
+....
+type control module-path module-arguments
+....
+
+Otherwise, the file `/etc/pam/pam.conf` contains rules of the following line format:
+
+....
+service type control module-path module-arguments
+....
+
+Both formats are equivalent; in the first case the missing `service` field is assumed to be the same as `$SERVICE` (the configuration file name).
+
+The PAM man page frequently used the term "stacked", but fails to actually explain what that means.
+
+Which is: PAM-Entries for the same service (such as "login") and type (such as "auth") are considered to be a sequence ("stack") of rules rather than independent individual rules.
+
+The rules within a stack are executed in the same relative order as they appear in the PAM configuration files.
+
+If some rule is said to "stop processing the remaining rules of the stack", this only affects the rules within the current stack (say "auth") but not rules from other stacks (such as "session").
+
+All rules of a service are considered for execution in the same order in which they are present in their configuration file, no matter to which stack every line belongs.
+
+However, the outcome of previous rules determines whether such a rule is actually executed. If a previous rule stopped execution of the remaining rules for the same stack, further rules of this stack will not be executed.
+
+
+Enabling TOTP-1FA
+~~~~~~~~~~~~~~~~~
+
+This allows authentication to all services using TOTP only on Debian-style PAM setups (but only if the account has been configured with a TOTP password using the `google-authenticator` utility): Insert the following line
+
+----
+auth    sufficient                      /usr/local/lib/security/pam_google_authenticator.so nullok
+----
+
+somewhere before the first `auth`-line in `/etc/pam.d/common-auth`.
+
+For instance, the affected section of that file might look like this after the insertion:
+
+----
+# here are the per-package modules (the "Primary" block)
+auth    sufficient                      pam_google_authenticator.so nullok
+auth    [success=2 default=ignore]      pam_unix.so nullok
+auth    [success=1 default=ignore]      pam_ldap.so use_first_pass
+# here's the fallback if no module succeeds
+----
+
+The `nullok` means that using TOTP is optional and the normal authentication (such as password login) will be used if no TOTP code has been setup yet. This is useful if not all users are using TOTP logins.
+
+
+Enabling TOTP-2FA
+~~~~~~~~~~~~~~~~~
+
+This requires both a TOTP code and the normal login password in order for the user to successfully authenticate.
+
+The PAM configuration is the same as for TOTP-1FA, except that `sufficient` must be replaced by `required`.
+
+Also, if no logins without 2FA shall be possible, remove the `nullok` option. Be warned though that no logins will be possible for accounts which have not already run `google-authenticator` in order to set up 2FA credentials.
+
+Also note that it is also possible to add the `pam_google_authenticator.so` rule to a specific `/etc/pam.d/*` file rather than to `common-auth`. In this case, only a particular service will make use of 1FA or 2FA, while the settings in `common-auth` are shared among all service types (`ssh`, `login`, `su`, etc.)
+
+
+Testing the installation
+------------------------
+
+If everything is correct, the following commands should work like this:
+
+----
+$ command -v google-authenticator
+/usr/local/bin/google-authenticator
+
+$ grep /dev/urandom /usr/local/bin/google-authenticator || echo NOT FOUND
+NOT FOUND
+
+$ grep /dev/random /usr/local/bin/google-authenticator || echo NOT FOUND
+Binary file /usr/local/bin/google-authenticator matches
+----
+
+Man kann das Ding nun benutzen, genau wie in der man-Page erläutert.
+
+Hier als Beispiel wie man eine zeitbasierte Authentifikation erstellt:
+
+=========================
+$ google-authenticator -t -Q UTF8                               
+Warning: pasting the following URL into your browser exposes the OTP secret to Google:                                                                         
+  https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/gb
+@xrpi3%3Fsecret%3DTILW7JWXYRM3NIFPYJC5COPASE%26issuer%3Dxrpi3                
+                                                                                
+  █▀▀▀▀▀█ ██▄█ ▀█▀ █▄  █▀█ ▄  ▀ █▀▀▀▀▀█  
+  █ ███ █ ▄█ ▀ ▀█▀▀  ▀  ▄▀ ███  █ ███ █  
+  █ ▀▀▀ █   ▄▄█  ▀▀▄█▄▄ ▄ ██▀▀▀ █ ▀▀▀ █  
+  ▀▀▀▀▀▀▀ █▄█ █ █▄█ ▀ █ ▀ █ ▀▄█ ▀▀▀▀▀▀▀                                     
+  ▀▄█▀ ▀▀▀▄█▄▀▄ ▄█  █ ▄█ █▀ █▀▀ █▄ █▄█▀                                    
+  ▄█▀▀█▀▀█▀█▄▀██  █ █▀█ ▀▀ █▀ ▀▄█▀▀█▄                                        
+  ▀ ▄▄▀▄▀█ █ █▀▀ ▀▄██▀ ▄▀▀  ██ ▄█ █▀ █▀     
+   ▀▄▄ ▀▀███▀ ▀▄▄ ▀  ▀▄▄█▄█ ▄▄▀▄ ▀█ ▀▀   
+  ▀▀▀  █▀▄▀▄ █▄█▄  ▀▄▄ ▀ ███▄    █ ▄█▄█       
+  ████▀▄▀ ▀▄▄▄█ ▀▄▄█▄ █ ▄▄▄ ▄█▀▀▄▀██▀▀█  
+   ▀   █▀ ██▄▀ ▄▀█▄▄█▀██▄██ █ ▄█  ▀█▀▀█  
+   ▄▀█ █▀▄█ ▄▀▀▄█ █▄▀▄▄▀ ▀▀██  ▄█▄██▄▄▄  
+  ▀ ██▄▀▀ ▀▀██▀█▀ ▀  ▀ ▀ ▀ █▀▀█▀▀▄▄ ▀▄█  
+  ▄▀  █ ▀ █▀▀█▄  ▄ ▀▄▄▄█▀▄▄▀ ▄ ▀▄▀█ ▀▀   
+    ▀▀ ▀▀ ▄█▄█▄▄█ ▀▀█▀ ███▄█▄▄█▀▀▀██▄▄▄  
+  █▀▀▀▀▀█ █▀█▀█ █▀ ▄█  ▄▀▄▀ ▀▄█ ▀ █▄  ▀  
+  █ ███ █ ▄▄█▄█▀ ██  ▀▀▄ ▄▀ ▀ ███▀██▄▀█  
+  █ ▀▀▀ █ ▀█▀ ▀▄██  █▄  ▀▀██▀▀█▀▀█▀█▄    
+  ▀▀▀▀▀▀▀ ▀ ▀ ▀   ▀   ▀ ▀  ▀▀   ▀▀ ▀ ▀▀  
+                                         
+Your new secret key is: TILW7JWXYRM3NIFPYJC5COPASE
+Enter code from app (-1 to skip): -1
+Code confirmation skipped
+Your emergency scratch codes are:
+  78997976
+  22422406
+  23283417
+  12138545
+  26107186
+
+Do you want me to update your "/home/gb/.google_authenticator" file? (y/n) y
+
+Do you want to disallow multiple uses of the same authentication
+token? This restricts you to one login about every 30s, but it increases
+your chances to notice or even prevent man-in-the-middle attacks (y/n) y
+
+By default, a new token is generated every 30 seconds by the mobile app.
+In order to compensate for possible time-skew between the client and the server,
+we allow an extra token before and after the current time. This allows for a
+time skew of up to 30 seconds between authentication server and client. If you
+experience problems with poor time synchronization, you can increase the window
+from its default size of 3 permitted codes (one previous code, the current
+code, the next code) to 17 permitted codes (the 8 previous codes, the current
+code, and the 8 next codes). This will permit for a time skew of up to 4 minutes
+between client and server.
+Do you want to do so? (y/n) n
+
+If the computer that you are logging into isn't hardened against brute-force
+login attempts, you can enable rate-limiting for the authentication module.
+By default, this limits attackers to no more than 3 login attempts every 30s.
+Do you want to enable rate-limiting? (y/n) y
+
+$ cat ~/.google_authenticator
+TILW7JWXYRM3NIFPYJC5COPASE
+" RATE_LIMIT 3 30
+" DISALLOW_REUSE
+" TOTP_AUTH
+78997976
+22422406
+23283417
+12138545
+26107186
+=========================
+
+Den obigen QR-Code kann man am Handy direkt in die FreeOTP-App einscannen, mit dem QR-Code Icon in dieser App.
+
+Anmerkung: Der obige QR-Code enthält *nicht* die Google-URL vor der gewarnt wird, sondern folgende:
+
+otpauth://totp/gb@xrpi3?secret=TILW7JWXYRM3NIFPYJC5COPASE&issuer=xrpi3
+
+Aber die Warnung war ja auch nur vor dem Browser, und den QR-Code sollte man statt dessen direkt in die OTP-App einscannen.
+
+Man kann beim Aufruf der Tools mit -i einen "issuer" angeben und mit -l ein "label".
+
+Der Issuer ist der Rechner für den der Code zum Einloggen gedacht ist. Default ist der Hostname des aktuellen Rechners; normalerweise sollte das gut genug sein.
+
+Das Label hingegen ist das was in der FreeOTP-App als Eintragstitel angezeigt wird. Default ist user@hostname wobei "user" natürlich der aufrufende User ist und "hostname" der Name des eigenen Rechners. Unter der Annahme dass man ein Login für diesen Rechner erzeugen will, passt das normalerweise auch.
+
+Aber wenn du mehr als einen Dienst hast, kannst du mit -l unterschiedliche Namen für die Einträge erzeugen.

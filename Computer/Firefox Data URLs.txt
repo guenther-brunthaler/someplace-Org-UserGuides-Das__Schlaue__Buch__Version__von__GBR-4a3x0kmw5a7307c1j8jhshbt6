@@ -1,0 +1,32 @@
+﻿Firefox Data-URLs
+=================
+v2020.101
+
+Data-URLs stellen Daten dar, die man direkt in die URL-Zeile gepastet hat, anstatt sie aus einer externen Datei oder Webseite laden zu müssen.
+
+JSON
+----
+
+Mit den beiden Data-URL-Präfixen
+
+----
+data:application/json,
+
+data:application/json;base64,
+----
+
+gefolgt von URL- (1. Variante) oder base64- (2. Variante) encodete Text im JSON-Format, stellt der Firefox die JSON-Daten in einer aufklappbaren Baumstruktur dar, mit unterschiedlichen Farben für Schlüssel und Werte.
+
+Es steht auch ein Button zur Verfügung, um den JSON-Quelltext hübsch mit Einrückungen zu reformatieren oder aber in eine platzsparende einzeilige Form ohne unnötige Leerzeichen zu bringen.
+
+Das Ergebnis lässt sich direkt in eine Datei exportieren, oder in die Zwischenablage.
+
+Natürlich kann Firefox auch *.json-Dateien öffnen und genau so behandeln, so dass er als Pretty-Printer benutzt werden kann.
+
+Für das URL-encoden kann man dieses JavaScript Offline-Applet benutzen:
+
+https://onlinestringtools.com/url-encode-string
+
+Für das base64-encoden kann man dieses JavaScript Offline-Applet benutzen:
+
+https://onlinestringtools.com/convert-string-to-base64

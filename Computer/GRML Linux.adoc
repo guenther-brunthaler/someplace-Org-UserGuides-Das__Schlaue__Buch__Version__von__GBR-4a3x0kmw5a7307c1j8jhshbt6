@@ -1,0 +1,230 @@
+﻿GRML Linux
+==========
+v2024.77
+
+Die letzte brauchbare Version ist "2014.03". (Bei 2014.11 funktioniert der PXE-Server nicht, und MirOS fehlt ebenfalls. Ab "2017.05" ist systemd an Bord und somit nicht nur unbrauchbar sondern auch deutlich fetter ohne jeden Mehrwert.)
+
+
+Empfehlenswerte Boot-Optionen
+-----------------------------
+
+Im Bootloader-Menü ins 32- oder 64-Bit Untermenü gehen, und dort die 'forensic' Option wählen. Das stellt sicher dass nur der Boot-Datenträger gemountet wird und andere Datenträger beim Hochfahren nicht automatisch beschrieben oder gemountet werden.
+
+Nach dem Hochfahren kann man in der Shell den Befehl
+
+----
+$ grml2ram
+$ eject /dev/sdb1
+----
+
+eingeben um GRML zuerst in den RAM zu kopieren so dass der USB-Stick vom dem gestartet wurde nicht mehr benötigt wird, und diesen dann unzumounten so dass man ihn entnehmen kann (anstatt "`/dev/sdb1`" die Partition angeben von der GRML zuvor noch gemountet war).
+
+
+Dinge die in GRML fehlen
+------------------------
+
+* `pm-suspend`
+* NTFS write access
+
+
+Grafisches Terminalausgaben minimieren
+--------------------------------------
+
+Wenn man GRML in einer virtuellen Maschine startet deren Bildschirmausgaben als Rastergrafik über eine möglicherweise volumensbeschränkte Datenverbindung übertragen werden, kann es vorteilhaft sein die Startmeldungen über eine emulierte serielle Verbindung zu erhalten sowie am Ende des Bootvorgangs auch eine Login-Shell über diese zu erhalten.
+
+Das reduziert nicht nur die Übertragung von Grafikdaten sondern verhindert auch ständige Neuübertragen jedes Mal wenn der Cursor in der grafisch übertragenenen virtuellen Konsole blinkt.
+
+Dazu fügt man im Falle von QEMU Optionen wie die folgenden zum Start der VM hinzu:
+
+----
+-vga vmware
+-display none
+-vnc unix:$PWD/console
+-monitor unix:$PWD/monitor,server,nowait
+-chardev socket,path=$PWD/serial,server,nowait,mux=on,id=char0
+-serial chardev:char0
+----
+
+In der laufenden VM muss man dann nur mehr kurz die grafische Konsole über VNC benutzen, um einen Boot-Eintrag auszuwählen und mit der Tabulator-Taste zu editieren. Dann fügt man der Kernel-Kommandozeile folgenden Eintrag hinzu:
+
+----
+-console=ttyS0,115200n8
+----
+
+und startet den Bootvorgang mit der Eingabetaste. Man kann den VNC-Viewer dann schließen und alles weitere über
+
+----
+$ x-terminal -e sh -c "rlwrap unixterm serial" &
+----
+
+bedienen. Wenn man dabei anstatt `serial` ein `monitor` einsetzt, erhält man statt dessen Zugriff auf die Monitor-Konsole von QEMU.
+
+Sollte QEMU tatsächlich auf einem entfernten Rechner laufen, sind noch zusätzliche Schritte nötig: Die UNIX-Domain Sockets `console`, `monitor` und `serial` müssen dann von dort ins aktuelle Directory weiter geleitet werden. Am sichersten kann dies mittels `socat` erreicht werden, welches UNIX-Domain Sockets direkt durch eine SSH-Verbindung tunneln kann. So wird die Verwendung unsicherer TCP-Sockets zu diesem Zweck vermieden.
+
+
+Schlankes SSH-System starten
+----------------------------
+
+Wenn man GRML nicht direkt am Gerät an welchem man arbeitet startet sondern auf einem weniger gut zugänglichen Gerät oder in einer VM, im Menü des GRML-Bootloaders am besten jene Variante auswählen die einen SSH-Server startet.
+
+* Dabei die Kommandozeile des Bootloaders editieren und ein `ssh=some_passsword` hinzu fügen. Dadurch kann man die folgenden Schritte bequem über ein SSH-Login von einem anderen Gerät/Account aus durchführen.
+
+* Voraussetzung dafür ist allerdings ein laufender DHCP-Server auf einem anderen Gerät im Netz.
+
+* Wenn dabei man den Bootloader-Eintrag "Copy To RAM" nutzt, kann man die DVD-ROM bzw. den USB-Stick dem Abschluss des Bootvorgangs entnehmen, da dann kein Zugriff auf das Medium mehr erforderlich ist. (Natürlich ist dies nur sinnvoll wenn man das System *nicht* in einer VM gebootet hat, sondern auf einem physischen Rechner.)
+
+Wenn GRML startet, startet es jede Menge unnötiger Dienste und Rechenzeitverschwendender Programme, die man wieder stoppen sollte falls die Knoppix längerfristig läuft.
+
+* Falls das ganze in keinem sicheren LAN stattfindet, als erstes einen temporären SSH-Schlüssel erzeugen und diesen dann in `~root/.ssh/authorized_keys` hinterlegen und `/etc/ssh/sshd_config` editieren um Passwort-Logins zu verbieten. Danach mit `/etc/init.d/ssh restart` neu starten. Ein SSH-Login in einer 2. Shell testen bevor man sich aus der laufenden SSH-Session ausloggt!
+
+* Editieren von `/etc/inittab` und den `getty`-Eintrag für `tty1` durch eine Kopie dessen von `tty9` ersetzen (und die "9" gegen "1" ersetzen). Dann die Runlevel-Liste aller `getty`-Einträge außer für `tty1` (bei reinen SSH-Fernwartungen kann man auch tty1 entfernen) auf "5" setzen. Danach `telinit Q` ausführen. Dann mit `htop` alle Dienste killen die immer noch auf anderen Terminal als tty1 laufen.
+
+* `chsh` ausführen und `/bin/bash` als Default-Shell für User `root` einstellen.
+
+* Unnötige Dienste wie avahi, nfs & co killen. Vor allem auch rsyslog! Im Grunde braucht nichts als ein getty, udevd und sshd laufen (letzteres nur falls man für die Arbeiten per SSH eingeloggt ist).
+
+* Um wieder ein syslog zu bekommen, in einem "screen" den folgenden Befehl laufen lassen:
+
+----
+$ busybox syslogd -C200 && busybox klogd
+$ clear && busybox logread | tail -n $LINES && busybox logread -f
+----
+
+
+PXE-Terminal-Server
+-------------------
+
+Allerdings hat 2014.03 einen Bug bei "grml2usb": Es versagt wenn man nicht auf die 1. Partition installieren will. Einfach Script editieren und den Check immer erfolgreich machen. Mit
+
+----
+$ mkdiskimage -4 /dev/sdb 0 64 32
+$ grml2usb --force --fat16 --bootloader-only /lib/live/mount/medium /dev/sdb4
+----
+
+konnte ich damit einen sehr kleinen USB-Stick als ZIP-USB bootbar machen, so dass er das Booten via PXE über USB 1.1 auf meinem uralten Rechner anbietet.
+
+Nun kann man im laufenden GRML den Terminalserver starten, der einen dann fragt ob man zusätzliche Boot-Optionen an per PXE gebootete Clients übergeben möchte.
+
+Bevor man den Terminalserver startet, sollte man allerdings zuvor etwaige andere bereits im LAN laufende DHCP-Server stoppen, da der Terminalserver selbst einen installiert und startet.
+
+Allerdings sollte man vor dem Booten von dem GRML welches den Terminalserver betreiben soll durchaus einen DHCP-Server laufen haben, damit man es sich erspart die IP-Konfiguration händisch vorzunehmen. Jedoch sollte man diesen externen DHCP-Server wieder stoppen bevor man den Terminalserver startet:
+
+----
+$ grml-terminalserver
+----
+
+Das startet eine Interaktive Konfiguration. Sobald man während dieser nach zusätzlichen Boot-Optionen für die PXE-Clients gefragt wird, kann man z. B. folgendes eingeben:
+
+----
+ssh=$MYPASSWORD toram
+----
+
+Die erste Option sorgt dafür dass am PXE-Client am Ende des Bootvorgangs ein SSH-Server gestartet wird, wo User "root" sich mit $MYPASSWORD als Passwort anmelden kann.
+
+Die letztere Option sollte man hingegen nur verwenden, wenn die Maschine mindestens 512 MiB RAM hat. Dadurch werden die SquashFS-Images von der GRML-Installation auf welcher der Terminalserver läuft in ein RAM-Dateisystem am PXE-Client kopiert, so dass ein permanenter Zugriff auf den NFS-Server des PXE-Servers nicht mehr erforderlich ist. Wenn man danach auch noch eine statische IP-Adresse am Client einstellt, kann man den PXE-Server sogar komplett stoppen, während das übers Netzwerk gestartete GRML am PXE-Client davon unbeeindruckt weiter läuft.
+
+
+PXE-Clients fernwarten
+----------------------
+
+Dazu bootet man die Clients mittels PXE übers Netzwerk vom wie oben erläutert gestarteten PXE-Server unter Angabe eines SSH-Passworts für die Erstanmeldung.
+
+Am PXE-Terminalserver findet man mit
+
+----
+$ cat /var/lib/dhcp/dhcpd.leases
+----
+
+eine Liste der vergebenen DHCP-Leases - die letzte davon hat typischer Weise der gerade übers Netz gestartete Client.
+
+Dessen GRML sollte man dann genau wie oben beschrieben einrichten, nur dass man hier natürlich NFS *nicht* stoppen darf. (Es sei denn man hat die `toram`-Option benutzt - dann ist NFS nach Abschluss des Bootvorgangs nicht länger erforderlich.)
+
+Falls man den DHCP-Server so konfiguriert hat dass er ein anderes Subnetz benutzt als man dies normalerweise im eigenen LAN tut, kann man ein Alias für das Netzwerk-Interface des LANs anlegen, welches eine IP-Adresse im selben Subnet wie der DHCP-Server des Terminalservers hat. Etwa so (mit Administrator-Rechten:
+
+----
+$ ifconfig eth0:pxe 10.54.159.16 netmask 255.255.0.0 up
+...
+$ ifconfig eth0:pxe down
+----
+
+Dies geht davon aus dass `eth0` die LAN-Schnittstelle am eigenen Rechner ist welche eine völlig andere IP-Adresse und Subnet-Maske hat, und erzeugt eine Alias-Schnittstelle namens eth0:pxe mit der angegebenen anderen IP-Adresse und Subnet-Maske. Der Name hinter dem Doppelpunkt ist beliebig, sollte aber nicht zu lange sein und nur alphanumerische Zeichen enthalten.
+
+Vorsicht, dass das angegebene Netzwerk nicht mit dem bereits benutzten Netzwerk der originalen IP-Adresse kollidiert! Dies wird sonst mit einer Fehlermeldung verweigert werden.
+
+Das obige Beispiel verwendet eine statische IP-Adresse. Ich habe noch nicht heraus gefunden, wie man den DHCP-Client dazu bringen kann die Adresse von DHCP-Server anzufordern und sie einer Alias-Adresse zuzuweisen.
+
+
+Dateisysteme reparieren
+-----------------------
+
+Leider ist GRML zu alt um alle Features von neuen ext4-Dateisystemen zu unterstützen. Man kann aber mit `qemu-nbd` (GRML enthält nicht das normale 'nbd-Server' Package) die Disks exportieren welche die zu reparierenden Datenträger enthalten. Etwa so:
+
+----
+$ qemu-nbd -p 33777 -tv /dev/sda
+----
+
+Auf einem anderen PC kann man dann mit einer alten Version von `nbd-client` (älter als Version 3.11) diese Disk als nbd-Device verbinden. Etwa so:
+
+----
+$ nbd-client-2.9.16-8_i386.bin 10.157.171.255 33777 /dev/nbd0
+----
+
+Warnung: Der Partition-Scan von NDB ist fehlerhaft, immer nur das ganze exportierte Device verwenden (also etwa nur /dev/nbd0 und nicht etwa /dev/nbd1). Falls erforderlich, kann man das nbd-Device dann mit `losetup -P` mounten welches dann die Partitions korrekt erkennt:
+
+----
+$ losetup -P /dev/loop0 /dev/nbd0
+----
+
+Beim Reparieren von verschlüsselten Volumes unbedingt darauf achten, dass der `/dev/mapper`-Name des entschlüsselten Devices exakt gleich demjenigen ist den das System später nach dem Hochfahren ebenfalls verwenden wird. Ansonsten hängt sich systemd beim Versuch auf, das Crypto-Device zu konfigurieren.
+
+
+GRML 2017.05
+------------
+
+Auch wenn ich wenig von dieser Version halte, bleibt einem oft nichts anderes übrig als sie zu verwenden da sie ein neueres Kernel und neuere Treiber hat - insbesondere kann sie moderne ext4-Dateisysteme mounten.
+
+----
+mkdir -m 700 ~/.ssh
+cd /etc/ssh
+cat pxeserver.prv > ssh_host_rsa_key
+cat pxeserver.pub > ssh_host_rsa_key.pub
+rm pxeserver.p*
+mv 'root@pxeserver.pub' ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+systemctl stop ssh
+systemctl start ssh
+systemctl isolate multi-user
+set rsyslog.service syslog.socket ntp ser2net uml-utilities
+systemctl disable --now "$@"
+systemctl stop "$@"
+rm -rf /etc/systemd/system/getty*
+systemctl daemon-reload
+systemctl stop systemd-journald systemd-journald-audit.socket systemd-journald-dev-log.socket systemd-journald.socket
+sed -i 's/^#\(ForwardToKMsg\)=no/\1=yes/' /etc/systemd/journald.conf
+systemctl start systemd-journald.socket
+----
+
+Run a syslog-viewer in a separate `screen` shell:
+
+----
+dmesg -Tw
+----
+
+Kill the dhcp clients, assume eth0 has already a good address, but eth1 shell be set up for the terminal server.
+
+----
+unexpand << 'EOF' >> /etc/network/interfaces
+iface eth1 inet static
+        address 192.168.55.1
+        netmask 255.255.255.0
+        network 192.168.55.0
+        broadcast 192.168.55.255
+        gateway 192.168.55.88 # That's YOU!
+        dns-nameservers 0.0.0.0
+EOF
+if up eth1
+----
+
+Add --verbose to `ifup` in order to diagnose any problems.
+
+However, don't care: The terminalserver is buggy and won't start anyway!

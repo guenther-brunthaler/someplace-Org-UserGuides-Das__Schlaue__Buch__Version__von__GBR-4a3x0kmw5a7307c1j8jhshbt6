@@ -1,0 +1,30 @@
+﻿PDF-Dokumente bearbeiten
+========================
+v2025.98
+
+
+Auflösung enthaltener Raster-Grafiken reduzieren
+------------------------------------------------
+
+* In Inkscape mit Default-Optionen importieren
+
+* Als PDF ausdrucken
+
+
+Re: How do I optimize an embedded bitmap?
+
+there is an option to alter the DPI of rasters
+
+The dpi are used for the rasterization of filter effects if 'Rasterize filter effects [x]' is checked, not for bitmap images linked to or embedded in the SVG file in general.
+
+You can use the rasterization of filter effects though to trick inkscape into changing the dpi of such bitmap images by applying an identity filter effect (a filter effect with parameters which result in no visible effect) to them: e.g. the 'Color Matrix' filter primitive with default matrix values, or the 'Blend' filter primitive with the mode 'Normal'. Then adjust the dpi value as needed when saving a copy as PDF/PS/EPS.
+
+Choose Edit > Make a Bitmap Copy to create a rasterised image with the same resolution as the document. This works equally good with vector graphics and imported bitmap images. Since bitmaps are uncompressed your SVG would probably increase in size, but with some luck your pdf export will take care of that for you.
+
+This works well, the only issue being that you need to do it for every single image, manually. It's a shame there is no way to export PDFs and have all images automatically converted.
+
+2022-10-24
+
+Wow!  I came back very unhopeful that there would be a response yet, and there were already three!
+
+It turns out the shortcut wasn't working for me either, but the menu did the trick.  However shift + ctrl + P worked great to open up preferences, then I went down and selected "Imported Images" within  preferences, then changed "Resolution for Create Bitmap copy" to 120 dpi.  

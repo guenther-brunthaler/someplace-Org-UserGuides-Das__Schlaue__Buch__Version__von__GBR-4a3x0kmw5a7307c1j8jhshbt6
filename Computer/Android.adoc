@@ -1,0 +1,83 @@
+﻿Android
+=======
+Guenther Brunthaler
+v2020.153
+
+Android-spezifische Details in diesem Dokument beziehen sich auf das Modell HUAWEI Y330-U1 mit Android 4.2.2. Andere Geräte oder Android-Versionen werden vermutlich andere Menüeinträge und Dateisystem-Layout haben. Diesen Variationen ist mit entsprechenden Anpassungen bei der praktischen Anwendung der hier erteilten Ratschläge zu begegnen.
+
+
+Allgemein
+---------
+
+* Screenshot machen: Zuerst die Ein/Aus/Standby-Taste drücken und gedrückt halten, und nur einen Sekundebruchteil später auch die "Leiser"-Taste drücken und gedrückt halten. Nun warten bis der Screenshot erfolgt, was entweder durch ein Geräusch und/oder durch eine Animation gemeldet wird. Nun beide Tasten wieder loslassen.
+
+* Standardverknüpfung eines Dateityps zurück setzen, so dass wieder nach der App zum Öffnen gefragt wird, nachdem man früher einmal "Immer" geantwortet hat: In den Systemsteuerung unter "Anwendungen" jene App suchen, welche derzeit für "immer" mit dem Dateityp verknüpft ist. Es gibt einen Button zum Löschen aller Verknüpfungen von Dateitypen mit dieser App. Leider können nur alle gemeinsam gelöscht werden, nicht einzelne.
+
+* USB-Debugging aktivieren: USB-Verbindungs-Methode auf "PC Suite" einstellen, und "USB-Debugging" in den Entwickler-Optionen aktivieren. Zur Deaktivierung die Verbindungs-Methode auf "nur Laden" zurück stellen, und natürlich die Debugging-Option wieder deaktivieren.
+
+* Y330 vom Computer aus als Internet-Gateway benutzen. Internet-Verbindung am Phone herstellen. USB-Kabel anstecken. USB-Verbindungs-Methode auf "PC Suite" einstellen. In der "Einstellungen"-App (der Systemsteuerung des Y330) in "Drahtlos & Netzwerke" gehen und dort auf "Tethering & mobiler Hotspot". Dort den Punkt "USB-Tethering" aktivieren. Am PC am anderen Ende des USB-Kabels die Treiber "usbnet" und "cdc_ether" laden (falls udev dies nicht bereits automatisch getan hat), und das Netzwerkgerät "usb0" (Standard-Benennung) als Netzwerkgerät benutzen. Hinweis: Wenn Die "USB-Tethering"-Option ausgegraut ist, dann hat sich die USB-Verbindungmethode geändert. Korrigieren indem man wieder die oben beschriebene auswählt.
+
+
+Dateisystem
+-----------
+
+`/mnt/asec/*/pkg.apk`:: die installierten Apps; ein Unterverzeichnis pro App
+
+`/mnt/cd-rom`:: Installer für Windows wenn es das Telefon als USB-CDROM erkennt
+
+`/storage/sdcard0`:: "interne SD-Karte", im Telefon fest eingebauter Massenspeicher
+
+`/storage/sdcard1`:: "externe SD-Karte", eine echte eingesteckte SDXC-Karte.
+
+
+Nützliche vorinstallierte Utilties
+----------------------------------
+
+`mksh`:: Eine Android-Portierung der Korn Shell. Erfordert allerdings eine Terminal-Emulator-App - zumindest für interaktive Benutzung.
+
+
+Alle Apps archivieren
+---------------------
+
+Um alle installierten Apps auf den PC zu speichern, etwa um sie ohne erneuten Download aus dem Internet auf beliebig viele Geräte installieren zu können, oder weil es das Original nicht mehr zum Downloaden gibt, das folgende tun:
+
+. Am PC unter Debian (bzw. davon abgeleiteten Linux-Distributionen wie Ubuntu) die folgenden Kommandos ausführen, um sicher zu stellen dass alle erforderlichen Hilfsprogramme installiert sind:
++
+----
+$ for p in adb apktool; do command -v $p || sudo apt-get install $p; done
+----
+
+. Das Android-Gerät in den USB-Debugging Mode versetzen. Meist reicht dazu schon das Anstecken des USB-Kabels und eine entsprechende Auswahl aus dem darauf hin am Android-Gerät erscheinenen Menüs.
+
+. Am PC ein Download-Verzeichnis für die Apps erstellen und dort die unten stehenden Befehle ausführen.
+
+----
+$ adb pull /mnt/asec
+----
+
+Dabei wird neben den Apps (`*.apk`-Dateien) auch viel unnötiges herunter geladen, das man wieder löschen kann. Das folgende Befehl löscht alles unnötige und bennennt die `.apk`-Dateien um, so dass danach nur noch `.apk`-Dateien mit dem Namen der App übrig sind:
+
+----
+$ for f in asec/*/pkg.apk; do d=${f%/*}; p=${d#*/}; mv -i -- "$f" "$p.apk"; done && rm -r asec
+----
+
+Die `.apk`-Dateien haben nun die "wahren" Namen der Apps, aber das sind leider nicht die welche einem unter Android angezeigt werden.
+
+Mit dem folgenden Befehl benennt man die Dateien nun so um, dass alle Dateinamen das Format "`iiii - nnnn.apk`" haben, wobei statt `iiii` der "wahre" interne Name der App eingesetzt wird, und statt `nnnn` der Anzeigename der App wie man ihn unter Android zu sehen bekommt.
+
+----
+
+$ eval `locale -ck LC_ADDRESS | grep ^lang_ab=`; : {lang_ab:=en}
+
+aapt dump badging com.ghisler.android.TotalCommander-1.apk | awk -v L=$lang_ab 'function g(what) {t= $0; i= 1; w(); p(":"); if (what == "") { s(); return q(); } for (;;) {s(); if (w() == what) return q(); w(); s(); p(","); }} function s() {return p("[[:space:]]*")} function w() {return p("[[:alnum:]_]")} function q(    h) {h= p("")} function p() {} /^package:/ {i= g("name")} $0 ~ "^application-label-" L ":" {n= g()} /^application:/ {if (n == "") n= g("label")} END {print n " - " i ".apk"}'
+
+
+package: name='com.ghisler.android.TotalCommander' versionCode='242' versionName='2.91' platformBuildVersionName='8.0.0'
+
+
+application-label-de:'Total Commander'
+
+application: label='Total Commander' icon='res/mipmap-anydpi-v26/icon.xml' banner='res/drawable-xhdpi-v4/banner320x180.png'
+
+
+----
