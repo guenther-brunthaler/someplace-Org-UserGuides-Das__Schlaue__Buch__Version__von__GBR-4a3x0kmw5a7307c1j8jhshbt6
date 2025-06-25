@@ -1,4 +1,4 @@
-raspios neu installieren
+﻿raspios neu installieren
 ========================
 v2025.159
 

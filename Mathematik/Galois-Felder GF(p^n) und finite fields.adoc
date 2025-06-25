@@ -1,4 +1,4 @@
-Galois-Felder GF(p^n) und finite fields
+﻿Galois-Felder GF(p^n) und finite fields
 =======================================
 v2025.159
 
