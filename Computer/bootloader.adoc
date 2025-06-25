@@ -1,0 +1,91 @@
+﻿Bootloader
+==========
+v2023.186
+
+
+extlinux
+--------
+
+In der Konfigurationsdatei sind die Befehle vor dem ersten `label`-Abschnitt global.
+
+Alle Kommandos zwischen einem `label`-Abschnitt und dem nächsten (oder bis zum Ende der Datei) gehören zu diesem Abschnitt.
+
+Sie werden ausgeführt, wenn der Name des Abschnitts als Kommando ausgeführt wird, oder durch einen Menübefehl im `label`-Abschnitt aktiviert werden.
+
+
+Timer
+~~~~~
+
+`timeout 0` beendet den Timer (falls in der Konfigurationsdatei aktiviert), welcher nach seinem Ablauf automatisch das `default`-Kommando ausführt.
+
+Während dem Editieren einer nicht-leeren Kommandozeile wird ein Timeout automatisch unterbrochen, und nach dem Absenden des Befehls wieder neu gestartet.
+
+Die Einheiten des `timeout`-Werts sind 1/10 Sekunden.
+
+Wenn der Timer abläuft, wird der `ontimeout`, `ui`-Befehl oder ansonsten der `default`-Befehl (in dieser Reihenfolge der Präferenz, jeweils nur wenn in der Konfigurationsdatei vorhanden) ausgeführt.
+
+
+path
+~~~~
+
+Die Argumente dieses Kommandos sind durch Leerzeichen getrennte Suchpfade wo `lib*.c32` Dateien gesucht werden.
+
+Der Pfad muss absolut sein und mit `/` beginnen welches dem Wurzelverzeichnis des Volumes entspricht auf dem extlinux installiert wurde. Pfadkomponenten werden ebenfalls durch `/` getrennt.
+
+Beispiel:
+
+----
+path /syslinux/modules/bios
+----
+
+Das aktuelle Verzeichnis hingegen, zu dem alle nicht-absoluten Pfade relativ sind, ist dasjenige in dem sich die Konfigurationsdatei befindet.
+
+Daran ändert scheinbar auch das Ausführen eines `config`-Befehls mit einer Konfigurationsdatei in einem anderen Verzeichnis nichts.
+
+
+com32
+~~~~~
+
+Das Argument ist `some_command_name.com32` gefolgt von optionalen Argumenten.
+
+
+Weitere Kommandos/Module
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+TUI = Text User Interface. Eine vom Konzept her grafische Bedienungsoberfläche, jedoch mit Textmodus-Zeichen anstatt Grafik.
+
+hdt:: Hardware Detection Tool. TUI.
+
+lua:: Ein Lua-Interpreter mit einigen integrierten Spezialbefehlen zur Interaktion mit dem Bootloader.
++
+--
+Eine mächtige High-Level Programmiersprache. Bietet Objektorientierung, Closures, Exceptions und sogar Koroutinen.
+
+Bietet ein CLI mit History und editierbarer Kommandozeile.
+
+Interaktiv verwendbar, etwa als Taschenrechner.
+
+Führt normalerweise aber Scripte aus um komplexe Aufgaben in Konfigurationsdateien auszuführen, für welche die anderen Befehle nicht mächtig genug sind.
+--
+
+rosh:: Read-Only shell. Hat vor allen eingebaute `cd` und `less`-Befehle.
+
+menu:: Simples Menüsystem
++
+--
+Erlaubt es in `label`-Abschnitten der Konfigurationsdatei einen Menü-Eintragsnamen festzulegen, und baut dann ein simples Menü aus diesen Einträgen auf in dem man mit den Cursortasten einen Eintrag zur Ausführung auswählen kann.
+
+Dieses Menüsystem kommt in den meisten Fällen zum Einsatz.
+--
+
+cmenu:: Komplexes Menüsystem
++
+Gegenüber dem simplen Menüsystem hat es mehr Features, wie Radio-Buttons, Kontext-Hilfe, aufklappbare Untermenüs und weitere Scherze. Normalerweise Overkill.
+
+mboot:: Lädt ein Kernel welches dem Multiboot-Standard entspricht
++
+Dieser Standard wird von einigen Nicht-Linux-Betriebssystemen wie z. B. Solares unterstützt, welche so ebenfalls direkt gebootet werden können.
+
+chain:: Chain-Loader
++
+Erlaubt es, Dateien als abgespeicherte MBRs oder Bootsektor zu benutzen und davon zu booten.

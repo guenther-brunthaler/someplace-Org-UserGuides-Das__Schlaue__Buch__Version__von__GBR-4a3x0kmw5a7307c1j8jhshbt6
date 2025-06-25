@@ -1,0 +1,17 @@
+﻿Bei manchen Notebooks drückt ein geschlossener Deckel aufs Touchpad und erzeugt dadurch ungewollte Eingabe-Events.
+
+Dies kann man verhindern, indem man das Touchpad vorübergehend deaktiviert.
+
+Dazu benötigt man das Utility "xinput" auf dem (unter Debian) gleichnamigen Paket.
+
+Damit kann man das Touchpad dann mit einem Kommando ähnlich dem folgenden deaktivieren:
+
+$ xinput disable "AlpsPS/2 ALPS DualPoint TouchPad"
+
+Der tatsächliche Name des Touchpad-Geräts variiert jedoch.
+
+Welche Geräte es gibt und wie sie heissen, erfährt man mit
+
+$ xinput list
+
+Später kann man das Gerät dann natürlich mit "enable" statt "disable" wieder reaktivieren.

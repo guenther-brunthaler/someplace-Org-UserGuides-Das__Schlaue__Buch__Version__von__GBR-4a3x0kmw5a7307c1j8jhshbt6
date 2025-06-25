@@ -1,0 +1,52 @@
+﻿Historische Entwicklung des Mobilfunks in Österreich
+====================================================
+
+1866 Gründung der Österreichischen Post- und Telegraphenverwaltung (PTV, auch ÖPT).
+
+1881 kam das Telefon nach Wien.
+
+1895 wurden die privat betriebenen Telefonnetze verstaatlicht und von der PTV übernommen. 
+
+1903 Erste Münztelefone wurden vorgestellt.
+
+1910 Beginn der Automatisierung der Vermittlung. 
+
+1974 Erstes Mobilfunknetz (Autotelefon) in Österreich.
+
+1978 Beginn der Digitalisierung des Telefonnetzes.
+
+1992 ISDN startet als Pilotversuch in Wien.
+
+1994 Das GSM-Netz wurde österreichweit freigeschaltet. GSM nutzt eine feste Bandbreite von 200 kHz.
+
+1996 Mobil Austria AG als Mobilfunksparte der Telekom Austria gegründet. Ging aus dem Funktechnischen Dienst (FTD) der ehemaligen Post- und Telegraphenverwaltung (PTV) hervor.
+
+2000 wurde GPRS (General Packet Radio Service) auf den Markt gebracht. Damit waren Geschwindigkeiten von bis zu 75 kbit/s möglich und damit in etwa vergleichbar mit den V.90-Festnetzmodems, die bis zu 56 kbit/s erreichten. Zu diesem Zeitpunkt waren Laptops allerdings noch vergleichsweise teuer, Mobile Working kein Thema und mobile Datenkarten noch Mangelware.
+
+2003 nahm A1 das erste UMTS-Netz Österreichs in Betrieb. UMTS nutzt eine feste Bandbreite von 5 MHz.
+
+2004 waren die ersten Mobile-TV-Angebote bei A1 verfügbar: z. B. gab es CNN live am Handy über Streaming-Technologie.
+
+2005 wurde das inzwischen schnell angewachsene UMTS-Netz durch eine Komplementär-Technologie ergänzt: EDGE (Enhanced Datarate for GSM Evolution). EDGE beschert mit der 8PSK-Modulation bis zu 236 kbit/s im Downlink. Damit ergänzt EDGE UMTS vor allem in den ländlichen und schwer zugänglichen Gebieten Österreichs. UMTS und EDGE wurden komplementär aufgebaut, um eine möglichst große Flächendeckung zu erzielen.
+
+2006 wurde HSDPA (High Speed Downlink Packet Access) mit zunächst 1,8 Mbit/s eingeführt. Mitte des Jahreswurde das A1-HSDPA-Netz auf 3,6 Mbit/s aufgerüstet.
+
+2007 wurde das HSDPA-Netz weiter hochgerüstet auf bis zu 7,2 Mbit/s. 2007 brachte noch eine weitere Innovation: HSUPA (High Speed Uplink Packet Access), für schnelleren Daten-Uplink.
+
+2009 startete Mobilkom Austria den kommerziellen Betrieb von HSPA+ mit bis zu 21 Mbit/s. HSUPA wurde auf 5,76 Mbit/s in den verkehrsintensiven Teilen des Netzes beschleunigt.
+
+2010 Mobilfunk- und Festnetzsparte der Telekom Austria Group werden zur A1 Telekom Austria verschmolzen. Auflösung der mobilkom austria AG.
+
+2012 LTE wird in Österreich eingeführt. LTE basiert ausschließlich auf IP, d.h. auch Sprache wird bis zu den Handys in IP Pakete verpackt. Bei der ersten Einführung der LTE Netze war der VoLTE Dienst (Voice over LTE) nicht verfügbar. Sobald ein Telefongespräch geführt wurde, wurde das Handy auf das 3G oder 2G Netz des Netzbetreibers zurückgeschaltet (Circuit Switched Fallback). LTE bietet IP Datenraten von bis zu 3000 Mbits/s im Downlink und bis zu 1500 Mbits/s im Uplink. Laufzeiten der IP Pakete durch das Netz  om der Größenordnung 5 ms. Zellradien von einigen Metern bis zu 100 Kilometer. Mobilitätsgeschwindigkeiten bis zu 500 km/h. Flexible Bandbreiten von 1,4 MHz, 3 MHz, 5 MHz, 10 MHz, 15 MHz und 20 MHz.
+
+2015 Ursprünglich vorgesehene Einführung (nach einem Testbetrieb 2014) von VoLTE in Österreich. Dabei wird eine IP Verbindung über den P-GW zum IMS (IP Multimedia Subsystem) aufgebaut. Dort findet der eigentliche Verbindungsaufbau zu einem Gesprächspartner statt, der sich im Festnetz, oder in einem 2G, 3G oder 4G Mobilnetz befinden kann. LTE stellt nur den Trägerdienst zum IMS zur Verfügung, verpackt in IP Pakete.
+
+2017 Beginn der Forschung zu 6G. Ein Ziel ist es, Datentransferraten von bis zu 400 Gbit/s erreichen zu können.
+
+2019 wurde in Österreich das erste kommerzielle 5G-Netz in den ersten fünf Gemeinden in Echtbetrieb genommen.
+
+2021 Rund die Hälfte aller Haushalte sind vom 5G-Netz abgedeckt.
+
+2025 In diesem Jahr soll 5G flächendeckend in Österreich verfügbar sein. Vorgesehen sind laut Ausbauverpflichtung der RTR rund 3.200 Sendeanlagen.
+
+2030 (ungefähr) Das 6G-Netz soll in Deutschland in Betrieb gehen.

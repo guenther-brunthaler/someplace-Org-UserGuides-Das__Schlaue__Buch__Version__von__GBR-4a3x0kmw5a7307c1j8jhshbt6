@@ -1,0 +1,11 @@
+Umwandeln von CSV-Dateien in ein Format, das kein Quoting benutzt.
+
+Field separator is ";", record separator is newline. The following
+characters in the field contents are escaped: "\" as "\\", newline as "\n",
+";" as "\S".
+
+$ cat "$CSVFILE" | csvfix rmnew -s '{jtfkn1u29uty03w2nqnd32g2g}' | csvfix edit -osep ';' -e 's/\\/\\\\/g' -e 's/\{jtfkn1u29uty03w2nqnd32g2g}/\\n/g' -e 's/;/\\S/g' -e 's/"/\\Q/g' | tr -d '"' | sed 's|\\Q|"|g'
+
+Das setzt voraus, dass das Eingabefile bereits "," als Separator benutzt. Andernfalls weiteren Filter vorschalten:
+
+$ cat "$DSVFILE" | csvfix echo -sep "$INPUT_SEPARATOR" -osep ","

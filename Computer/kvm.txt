@@ -1,0 +1,14 @@
+﻿Testen ob der Computer Hardware-Virtualisierung beherrscht:
+
+$ apt-get install msr-tools
+$ sudo modprobe msr
+$ sudo rdmsr 0x3A
+
+The register should return 5 (or 7) if the extensions are enabled, and return 1 if disabled.
+
+https://askubuntu.com/questions/103965/how-to-determine-if-cpu-vt-extensions-are-enabled-in-bios
+
+CPU-Features bei INTEL für die HW-Virtualisierung: VT-x (CPU-Virtualisierung), VT-d (IOMMU) hat und EPT (irgendwas mit Page Tables). Nur ersteres ist zwingend erforderlich, ansonsten hängt es von der QEMU-Version ab ob er das Feature nutzen kann oder sogar verlangt. Der Treiber für diese Virtualisierungen heißt kvm-intel.
+
+kvm-amd ist das Gegenstück von AMD.
+
