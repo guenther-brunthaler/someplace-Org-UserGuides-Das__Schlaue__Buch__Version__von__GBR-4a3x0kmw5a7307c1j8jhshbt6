@@ -1,0 +1,218 @@
+﻿Buchstabiertafeln
+
+Auch "Buchstabieralphabet", "Telefonalphabet", "Funkalphabet", "Fliegeralphabet" und "Kaufmännisches Alphabet" genannt.
+
+
+Deutschland (seit 1950, derzeit DIN 5009):
+
+A 	Anton 
+Ä 	Ärger 
+B 	Berta 
+C 	Cäsar 
+Ch 	Charlotte 
+D 	Dora 
+E 	Emil 
+F 	Friedrich 
+G 	Gustav 
+H 	Heinrich 
+I 	Ida 
+J 	Julius 
+K 	Kaufmann 
+L 	Ludwig 
+M 	Martha 
+N 	Nordpol 
+O 	Otto 
+Ö 	Ökonom 
+P 	Paula 
+Q 	Quelle 
+R 	Richard 
+S 	Samuel (Siegfried)
+Sch 	Schule 
+ẞ 	Eszett 
+T 	Theodor 
+U 	Ulrich 
+Ü 	Übermut 
+V 	Viktor 
+W 	Wilhelm 
+X 	Xanthippe 
+Y 	Ypsilon 
+Z 	Zacharias (Zeppelin)
+
+Abweichend von der DIN 5009:1996-12 sind die aus der Buchstabiertafel von 1934 stammenden Bezeichnungen Siegfried und Zeppelin gebräuchlich.
+
+Während der NS-Zeit wurden folgende Bezeichnungen abgeschafft, nur das Ypsilon kehrte später zurück: Albert, Bernhard, David, Friedrich, Heinrich, Jacob, Katharina, Nathan, Ökonom, Samuel, Theodor, Überfluß, Ypsilon, Zacharias. Dabei wurden die folgenden älteren Bezeichnungen nicht vom NS-Regime aufgegriffen sondern neue vergeben: Berta, Isidor, Karl, Paula.
+
+
+Österreich (ÖNORM A 1081, bis 2019, ohne Nachfolgenorm):
+
+A 	Anton 
+Ä 	Ärger 
+B 	Berta 
+C 	Cäsar 
+Ch 	Charlotte (Christine)
+D 	Dora 
+E 	Emil 
+F 	Friedrich 
+G 	Gustav 
+H 	Heinrich 
+I 	Ida 
+J 	Julius (Johann) 
+K 	Konrad 
+L 	Ludwig 
+M 	Martha 
+N 	Nordpol (Norbert)
+O 	Otto 
+Ö 	Österreich 
+P 	Paula 
+Q 	Quelle 
+R 	Richard 
+S 	Siegfried 
+Sch 	Schule 
+ẞ 	scharfes S 
+T 	Theodor 
+U 	Ulrich 
+Ü 	Übel 
+V 	Viktor 
+W 	Wilhelm 
+X 	Xaver 
+Y 	Ypsilon 
+Z 	Zürich (Zeppelin)
+
+* Abweichend von der Ö-Norm sind die Bezeichnungen Christine, Johann, Norbert und Zeppelin gebräuchlich.
+
+
+Internationale Buchstabiertafel der ICAO (NATO, ITU):
+
+A 	Alfa 
+Ä 	- 
+B 	Bravo 
+C 	Charlie 
+Ch 	- 
+D 	Delta 
+E 	Echo 
+F 	Foxtrot 
+G 	Golf 
+H 	Hotel 
+I 	India 
+J 	Juliett 
+K 	Kilo 
+L 	Lima 
+M 	Mike 
+N 	November 
+O 	Oscar 
+Ö 	- 
+P 	Papa 
+Q 	Quebec 
+R 	Romeo 
+S 	Sierra 
+Sch 	- 
+ẞ 	- 
+T 	Tango 
+U 	Uniform 
+Ü 	- 
+V 	Victor 
+W 	Whiskey 
+X 	X-Ray 
+Y 	Yankee 
+Z 	Zulu 
+
+
+Internationale Buchstabiertafel.
+
+Sie wird auch als "Internationales Buchstabieralphabet", "ICAO-Buchstabieralphabet", "NATO-Alphabet", "ICAO/NATO/IMO-Alphabet", "The Radiotelephony Spelling Alphabet" oder "Phonetic alphabet and figure code" bezeichnet.
+
+Sie wird insbesondere auch in Luftfahrt und Schifffahrt verwendet.
+
+0	Zero 
+1	One 
+2	Two 
+3	Three 
+4	Four 
+5	Five 
+6	Six 
+7	Seven 
+8	Eight 
+9	Nine 
+0	Hundred 
+0	Thousand 
+A 	Alfa[3] 
+B 	Bravo 
+C 	Charlie 
+D 	Delta 
+E 	Echo 
+F 	Foxtrot 
+G 	Golf 
+H 	Hotel 
+I 	India 
+J 	Juliett 
+K 	Kilo 
+L 	Lima 
+M 	Mike 
+N 	November 
+O 	Oscar 
+P 	Papa 
+Q 	Quebec 
+R 	Romeo 
+S 	Sierra 
+T 	Tango 
+U 	Uniform 
+V 	Victor 
+W 	Whiskey 
+X 	X-ray 
+Y 	Yankee 
+Z 	Zulu 
+
+
+ITU-Abweichungen von ICAO:
+
+0 	Nadazero 	NAH-DAH-SEH-RO
+1 	Unaone 	UH-NAH-WANN
+2 	Bissotwo 	BIS-SO-TUH
+3 	Terrathree 	TER-RA-TRIH
+4 	Kartefour 	KAR-TE-FAUER
+5 	Pantafive 	PANN-TA-FAIF
+6 	Soxisix 	SSOCK-SSI-SSIX
+7 	Setteseven 	SSET-TEH-SSÄWN
+8 	Oktoeight 	OCK-TO-ÄIT
+9 	Novenine 	NO-WEH-NAINER
+1000 	Thousand 	TAUSEND
+
+
+Joint Army/Navy Phonetic Alphabet:
+
+A 	Able
+B 	Baker
+C 	Charlie
+D 	Dog
+E 	Easy
+F 	Fox
+G 	George
+H 	How
+I 	Item
+J 	Jig
+K 	King
+L 	Love
+M 	Mike
+N 	Nutley
+O 	Oboe
+P 	Peter
+Q 	Queen
+R 	Roger
+S 	Sail
+T 	Tare
+U 	Uncle
+V 	Victor
+W 	William
+X 	X-Ray
+Y 	Yoke
+Z 	Zebra
+0 	Zero
+1 	One
+2 	Two
+3 	Three
+4 	Four
+5 	Five
+6 	Six
+7 	Seven
+8 	Eight
+9 	Niner

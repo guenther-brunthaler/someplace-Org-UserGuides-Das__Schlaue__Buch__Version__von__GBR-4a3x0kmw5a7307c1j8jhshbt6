@@ -1,0 +1,198 @@
+﻿EAV-Tables
+==========
+v2022.57
+
+
+EAV steht für "Entity, Attribute, Value".
+
+EAV-Tabellen enthalten diese 3 Spalten und beliebig viele Zeilen.
+
+Ich speichere EAV-Tabellen als CSV-Dateien in der folgenden Art und Weise:
+
+E und A sind immer nichtnegative Ganzzahlen.
+
+E hat normalerweise keine Entsprechung in den eigentlich zu repräsentierenden Daten und wird bei der Erzeugung der EAV-Tabelle automatisch vergeben.
+
+Dasselbe gilt auch für A, wo für jedes neu angetroffenen Attribut eine neue Zahl vergeben wird.
+
+
+Eine Interpretation
+-------------------
+
+In den folgenden Beispielen sind die A-Felder nichts weiter als ein Verweis auf eine Serie von E-Feldern, welche das Attribut beschreiben.
+
+
+Relationale Tabellen
+--------------------
+
+Beispiel: Das Speichern von 2 CSV-Dateien in einer EAV-Tabelle
+
+person.csv:
+....
+person_id,first_name,last_name
+1,john,doe
+2,richard,roe
+3,jane,doe
+....
+
+meeting.csv:
+....
+meeting_id,attendee_id
+1,1
+1,3
+2,1
+2,2
+....
+
+
+Umwandlung in eine EAV-Tabelle
+------------------------------
+
+Schritt 1
+~~~~~~~~~
+
+Einzeltabellen in Tripel wandeln.
+
+person-2.csv:
+....
+1,person_id,1
+1,first_name,john
+1,last_name,doe
+2,person_id,2
+2,first_name,richard
+2,last_name,roe
+3,person_id,3
+3,first_name,jane
+3,last_name,doe
+....
+
+meeting-2.csv:
+....
+1,meeting_id,1
+1,attendee_id,1
+2,meeting_id,1
+2,attendee_id,3
+3,meeting_id,2
+3,attendee_id,1
+4,meeting_id,2
+4,attendee_id,2
+....
+
+
+Schritt 2
+~~~~~~~~~
+
+Tabellen-Namen hinzu fügen, alle Tabellen vereinigen und Entities renummerieren:
+
+eav-0.csv:
+....
+1,table_name,person
+1,person_id,1
+1,first_name,john
+1,last_name,doe
+2,table_name,person
+2,person_id,2
+2,first_name,richard
+2,last_name,roe
+3,table_name,person
+3,person_id,3
+3,first_name,jane
+3,last_name,doe
+4,table_name,meeting
+4,meeting_id,1
+4,attendee_id,1
+5,table_name,meeting
+5,meeting_id,1
+5,attendee_id,3
+6,table_name,meeting
+6,meeting_id,2
+6,attendee_id,1
+7,table_name,meeting
+7,meeting_id,2
+7,attendee_id,2
+....
+
+
+eav.csv:
+....
+0,0,name
+0,1,string
+1,0,data_type
+1,1,string
+2,0,table_name
+2,1,string
+3,0,column
+3,1,string
+4,2,meetings
+4,3,attendee_name
+5,2,meetings
+5,3,meeting_name
+6,2,person
+6,3,first_name
+7,2,person
+7,3,last_name
+8,2,person
+8,3,person_name
+9,8,1
+9,6,john
+9,7,doe
+10,8,2
+10,6,richard
+10,7,roe
+11,8,3
+11,6,jane
+11,7,doe
+12,5,1
+12,4,1
+13,5,1
+13,4,3
+14,5,2
+14,4,1
+15,5,2
+15,4,2
+....
+
+
+Binäres Speicherformat
+----------------------
+
+Eine denkbare binäre Alternative zum CSV-Speicherformat für die E/A/V-Tripel:
+
+<control_byte><e_encoding><a_encoding><v_encoding>
+
+wobei
+
+<control_byte>: 0bEEEAAVVV (3 bit fields)
+
+EEE: Decimal 0-7 specifies octet length of <e_encoding>
+AA: Decimal 0-3 specifies octet length of <a_encoding>
+VVV: Decimal 0-7 specifies octet length of <v_encoding>
+
+If EEE, AA or VVV contain their largest possible value, then the <*_encoding>-fields are prefixed by an octet containing their octet size.
+
+Otherwise, those fields have the octet size of 1 + the bitfield value.
+
+In the case that the size prefix octet ist used, the octet value 255 is reserved for recursive self-exponentation: In this case, the 255-valued octet is followed by the octet size of the actual octet size which follows as that many octets.
+
+If the resulting multi-octet value again represents its largest representable value, then process recurses, providing unrestricted numeric range. Practical implementations will typically refuse to decode values exceeding some maximum value (such as 32- or 64-bit values), however.
+
+All multi-octet values are encoded as radix-256 octet "digits" using little-endian byte order.
+
+Example: Encode
+
+E: 18 a2 8d 93 62 97 45 5d ba bd 5d fd 1b cf f5 (0x0f octets)
+A: 4d e3 (0x02 octets)
+V: "some value" == 73 6f 6d 65 20 76 61 6c 75 65 (0x0a octets)
+
+Control byte: 0xf7 == 0b11110111 == (EEE := 111, AA := 10, VVV := 111)
+
+Encoding == <f7><0f><18 a2 8d 93 62 97 45 5d ba bd 5d fd 1b cf f5><4d e3><0a><73 6f 6d 65 20 76 61 6c 75 65>.
+
+where:
+
+<f7>: control byte
+<0f>: size prefix for <e_encoding>
+<18 a2 8d 93 62 97 45 5d ba bd 5d fd 1b cf f5>: <e_encoding> contents
+<4d e3>: <a_encoding> contents with size taken from control byte
+<0a>: size prefix for <v_encoding>
+<73 6f 6d 65 20 76 61 6c 75 65>: <v_encoding> contents

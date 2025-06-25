@@ -1,0 +1,162 @@
+﻿Mengenangaben in Rezepten
+=========================
+v2021.233
+
+
+Menge/Volumen
+-------------
+
+Deutsch
+~~~~~~~
+
+[options="header,autowidth"]
+|====
+| Rezeptangabe     | ml
+| 1 Tasse (bis zum Rand gefüllt) | 150
+| 1 Becher         | 250
+| 1 Schnapsglas/"Stamperl" | 20
+| 1 Seidel         | 300-350
+| 1 TL (Teelöffel) | 4
+| 1 EL (Esslöffel) | 10
+|====
+
+Ältere Löffel fassen, weil meist größer und insbesondere tiefer, größere Mengen als heutige. Daher findet man in Kochbüchern Angaben von 10 bis 15 ml für den Esslöffel, wobei neuere überwiegend von 10 ml ausgehen. Heute übliche Teelöffel fassen auch deutlich weniger als 5 ml, man sollte von 2 ml ausgehen. Häufig wird eine Relation von 1 EL ≅ 3 TL angenommen.
+
+Außerdem ist bei den Angaben zu Ess- und Teelöffeln zwischen glatt gestrichenen Löffeln und gehäuften Löffeln zu unterscheiden.
+
+
+US
+~~
+
+[options="header,autowidth"]
+|====
+| Rezeptangabe                  | ml  | Kommentar
+| 1 Cup                         | 235 | eine Maßtasse, auch "c." oder "cu."
+| 1/2 Cup                       | 120 |
+| 1/3 Cup                       | 80  |
+| 1/4 Cup                       | 60  |
+| 1/8 Cup                       | 30  |
+| 1 tbsp.                       | 15  | "tablespoon" = Esslöffel
+| 1 tsp.                        | 5   | "teaspoon" = Teelöffel
+| 1/2 tsp.
+|====
+
+
+Konkrete Nahrungsmittel
+-----------------------
+
+Soweit bei den obigen Angaben nichts anderes vermerkt ist, beziehen sich diese Mengen auf flaches bzw. nicht gehäuftes Schüttgut bzw. auf Wasser ohne Wellen.
+
+Allgemein
+~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| Rezeptangabe                  | g   | ml
+| Saft von 1 Limette            | 100-105 | 40-50
+| Saft von 1 Orange             | 230-250 | 800-100
+| Abgeriebene Schale von 1 Orange, frisch | 7 |
+| Abgeriebene Schale von 1 Orange, getrocknet | 5 |
+| Saft von 1 Zitrone            | 130 | 40-50
+| Abgeriebene Schale von 1 Zitrone, frisch | 5 |
+| Abgeriebene Schale von 1 Zitrone, getrocknet | 2,5 |
+| 1 Würfel frische Germ         | 42  |
+| 1 Hand voll gehacker Kräuter  | 22  |
+| 1 Hand voll Salat             | 50  |
+| 1 Bund Schnittlauch           | 30  |
+| 1 Bund Petersilie             | 50-70 |
+| 1 Packung Backpulver          | 16  |
+| 1 Packung Gelatine-Pulver aus 6 Blättern | 9 |
+| 1 Packung Pudding-Pulver zum Anrühren mit 500 ml Flüssigkeit | 37 |
+| 1 Packung Tortengelee zum Anrühren mit 250 ml Flüssigkeit | 12 |
+| 1 Packung Trockengerm/Trockenhefe | 7 |
+| 1 Packung Vanillezucker       | 8   |
+| 1 Briefchen Safran            | 0,1 |
+|====
+
+
+1 Teelöffel
+~~~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| 1 TL von was        | g
+| Backpulver          | 4–5
+| Butter/Margarine    | 8
+| Gewürze, gemahlen   | 4–5
+| Kakaopulver         | 2–3
+| Kräuter frisch, gehackt / Schnittlauchröllchen | 8
+| Kräuter, getrocknet | 1
+| Kristall- / Vanillezucker   | 5–6
+| Kümmel / Anis / Fenchel, ganz | 4
+| Milch               | 4–5
+| Senf / Ketchup / Tomatenmark | 8–9
+| Salz                | 5
+| Speisestärke        | 5
+| Suppenwürze, Pulver | 4
+| Wasser              | 4
+|====
+
+
+1 Esslöffel
+~~~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| 1 EL von was         | g
+| Butter / Margarine / Schmalz | 15–20
+| Crème fraîche / Mayonnaise | 25–30
+| Essig                |9
+| Haferflocken, je nach Stärke | 5–10
+| Honig / Marmelade    | 20
+| Käse, gerieben       | 10
+| Ketchup / Senf / Tomatenmark | 20
+| Kokosraspel          |8
+| Kräuter frisch, gehackt | 8
+| Kräuter, getrocknet  | 2
+| Kürbis- / Sonnenblumen / Pinienkerne | 10
+| Leinsamen / Sesam    | 12
+| Mandelblättchen      | 13–14
+| Mehl                 | 15
+| Milch                | 12
+| Mohn, gemahlen       | 10
+| Nüsse, ganz          | 20
+| Nüsse, gerieben      | 16
+| Obers, ungeschlagen  | 10
+| Öl                   | 10
+| Parmesan, frisch gerieben | 3
+| Puddingpulver        | 12
+| Rosinen              | 15
+| Rum                  | 8
+| Sauerrahm / Joghurt  | 15–20
+| Schokoraspel         | 6
+| Semmelbrösel         | 9–10
+| Sojasauce            | 10 
+| Speisestärke         | 10
+| Staubzucker          | 10
+| Suppenwürze, Pulver  | 10
+| Topfen               | 25
+| Zitronensaft         | 10
+| Kristallzucker       | 16
+| Zwiebel, gehackt     | 15
+| Wasser               | 9–10
+|====
+
+
+Backrohr-Temperaturen
+---------------------
+
+Vom Effekt her äquivalente Temperaturen bei verschiedenen Herdtypen:
+
+[options="header,autowidth"]
+|====
+| Elektroherd | Umluft | Gasherd 
+| 120 °C      | 100 °C | Stufe 1/2–1
+| 150 °C      | 130 °C | Stufe 1
+| 175 °C      | 150 °C | Stufe 2
+| 200 °C      | 180 °C | Stufe 3
+| 225 °C      | 200 °C | Stufe 4
+| 250 °C      | 225 °C | Stufe 5
+| 275 °C      | 250 °C | Stufe 6
+| 300 °C      | 280 °C | Stufe 7
+|====

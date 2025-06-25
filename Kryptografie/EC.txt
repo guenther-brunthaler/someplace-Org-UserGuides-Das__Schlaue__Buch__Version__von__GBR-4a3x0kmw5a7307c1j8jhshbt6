@@ -1,0 +1,25 @@
+﻿Daniel J. Bernstein veröffentlichte 2006 die mittlerweile weit verbreitete Curve25519. Er nahm als Grundlage die Sicherheitsanforderungen und ermittelte jene Parameter, die diese erfüllen und effiziente Berechnungen erlauben. Er kam so auf eine elliptische Kurve mit der Gleichung
+
+y ** 2 = x ** 3 + 486662 * x ** 2 + x
+
+die in modularer Arithmetik mit dem Modulus 2 ** 255 − 19 (einer Primzahl) durchgeführt wird. Der Name der Kurve stammt von der Primzahl.
+
+Curve25519 entspricht einem Sicherheitsniveau (entsprechend einer symmetrischer Verschlüsselung) von 128 Bit.
+
+Curve25519 ist eine sogenannte Montgomery-Kurve und erlaubt im Gegensatz zu den konkurrierenden Weierstrass-Kurven die Verwendung von Algorithmen, die immun gegen Timing-Seitenkanalangriffe sind.
+
+Ursprünglich wurde Curve25519 als Diffie-Hellman-Funktion definiert. Bernstein schlägt seitdem den Namen Curve25519 für die zugrundeliegende Kurve vor, während die Bezeichnung X25519 für die Diffie-Hellman-Funktion verwendet werden sollte.
+
+Curve25519 lässt sich nicht für elliptisches DSA nutzen. Für diesen Zweck wurde Ed25519 entwickelt. Das "Ed" steht dabei aber für "Edwards Curve" (einer weiteren mathematischen Variante von ECs) und nicht etwa für "EDSA". Edwards-Kurven gibt es in 2 Varianten: "Twisted" und "Untwisted" (der Normalfall).
+
+Curve448, auch Curve448-Goldilocks genannt, ist eine auf untwisted Edward-Curves basierende EC des (ansonsten wenig bekannten) Kryptologen Mike Hamburg die für die Benutzung mit ECDH (EC-Version von DH) geeignet ist. Sie bietet 224 Bit Sicherheitsniveau im Vergleich mit symmetrischer Verschlüsselung. Die Formel der Kurve ist
+
+y ** 2 + x ** 2 = 1 − 39081 * x ** 2 * y ** 2
+
+und findet modular in einer Restklasse mit dem Modulus 2 ** 448 - 2 ** 224 - 1 statt. Der Name der Kurve stammt dabei vom "2 ** 448" und der Spitzname vom "2 ** 225" welches angeblich kongruent zum "Golden Ratio" ist. Letzterer Umstand erlaubt angeblich eine schnellere Multiplikation nach der Karatsuba-Methode. Die Konstante −39081 hingegen ist angeblich der kleinste absolute Wert welche die geforderten mathematischen Eigenschaften erfüllt und wäre demzufolge keine willkürliche Wahl.
+
+Auch bei Curve448 wird X448 als Bezeichnung für deren Anwendung in ECDH bezeichnet.
+
+Beide Kurven (Curve25519 und Curve448) sind in RFC 7748 "Elliptic Curves for Security" spezifiziert, und werden mittlerweile auch von NIST für die Verwendung durch die US-Regierung gestattet (historisch gesehen eher ein Grund für Zweifel an einem Verfahren).
+
+Das RFC enhält auch eine Beschreibung der erforderlichen Rechenschritte zur Implementierung von ECDH mit diesen Kurven.

@@ -1,0 +1,21 @@
+﻿Block-Ciphers können nur Blöcke fixer Größe verschlüsseln. Modes of Operation wie EBC und CBC können nur Datenströme mit Längen von Vielfachen einer vorgegebenen Blocklänge verschlüsseln.
+
+Neben anderen Techniken wie Ciphertext Stealing kann man padding verwenden, um einen Originaltext beliebiger Länge auf ein Vielfaches der erforderlichen Blockgröße zu bringen.
+
+Wenn der Originaltext die Größe 0 hatte, kann man sich dieses Auffüllen ersparen und ebenfalls einen Cipherblock der Länge 0 erzeugen.
+
+Andernfalls wird der letzte (oder einzige) Block auf die volle Blockgröße aufgefüllt. War der letzte Block bereits komplett gefüllt, muss ein zusätzlicher kompletter Block aufgefüllt werden.
+
+Im letzten Byte des aufgefüllten letzten Blocks speichert man die Anzahl entweder der noch am Anfang des Blocks genutzten Nutzdatenbytes anzugeben, oder aber die Anzahl der ungenutzten Padding-Bytes am Ende.
+
+Die restlichen Padding-Bytes kann man entweder mit demselben Wert auffüllen, was eine simple Art der Fehlererkennung (z. B. Hinweis auf einen falschen Schlüssel) ermöglicht, falls eines der restlichen Padding-Bytes vom erwarteten Wert abweicht.
+
+Oder man kann sie mit einem laufenden Zähler füllen, wobei der Wert des letzten Bytes den Ausgangspunkt bildet.
+
+Oder man füllt sie mit Zufallsbytes auf. Das liefert einem Angreifer die wenigsten Anhaltspunkte, verzichtet aber auch auf die Fehlererkennung.
+
+Oder man füllt sie mit Pseudozufallsbytes auf, die vom verwendeten Crypto- Schlüssel abgeleitet sind. So liefert man dem Angreifer nahezu keine nützlichen Hinweise, behält aber die simple Fehlererkennung bei.
+
+Ein Nachteil aller Padding-Verfahren ist, dass der Ciphertext um mindestens ein Byte länger sein muss als der Originaltext. Dann man muss auch den Fall dass keinerlei Padding-Bytes benötigt würden im letzten Byte codieren, wodurch das Ciphertext um einen kompletten Block länger wird falls er davor ein exaktes Vielfaches der Blocklänge war.
+
+Die obere Technik funktioniert nur bei Blockgrößen bis 256 Bytes. Bei größeren Blockgrößen kann die Größe der genutzten oder ungenutzten Byte als Mehrbyte-Wert am Ende des Blocks abspeichern und den Rest ebenfalls mit Pseudozufalls-Bytes, Zählern oder Wiederholungen des Mehrbyte-Wertes auffüllen.

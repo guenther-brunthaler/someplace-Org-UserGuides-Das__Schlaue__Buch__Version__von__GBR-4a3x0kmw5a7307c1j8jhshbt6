@@ -1,0 +1,27 @@
+﻿Die römischen Ziffern haben die folgenden Zahlenwerte:
+
+I 1
+V 5
+X 10
+L 50
+C 100
+D 500
+M 1000
+
+Die Zahlenwerte der Ziffern sind dabei immer um einen bestimmten Faktor größer als der Wert der Ziffer davor.
+
+Diese Faktoren beginnen mit 5, und der nächste Faktor ist immer 7 minus der vorhergehende Faktor.
+
+Zum Dekodieren werden eine Gesamtsumme und Teilsumme anfänglich auf Null gesetzt.
+
+Die Zahl wird dann von links nach rechts gelesen.
+
+Dabei wird immer der Wert der Ziffer davor mit dem Wert der aktuellen Ziffer verglichen:
+
+* Ist die aktuelle Ziffer größer, wird die bisherige Teilsumme von der aktuellen Ziffer subtrahiert und ergibt die neue Teilsumme.
+
+* Ist die aktuelle Ziffer kleiner, wird die bisherige Teilsumme zur Gesamtsumme addiert, und die aktuelle Ziffer als neue Teilsumme verwendet.
+
+* Ist die aktuelle Ziffer gleich, wird sie zur aktuellen Teilsumme addiert.
+
+Sobald man die letzte Ziffer bearbeitet hat, wird die Teilsumme zur Gesamtsumme addiert, und diese ist nun das dezimale Gegenstück der römischen Zahl.

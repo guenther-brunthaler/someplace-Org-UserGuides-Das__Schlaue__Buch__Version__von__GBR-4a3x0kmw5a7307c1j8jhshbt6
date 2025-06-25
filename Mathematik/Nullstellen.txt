@@ -1,0 +1,25 @@
+﻿Die Nullstelle einer Funktion f ist das x for welches gilt f(x) == 0.
+
+Die Nullstellen werden auch als "Wurzeln" oder "Lösungen" der Funktion bezeichnet.
+
+Zum Finden einer numerischen Näherung kann man die Householder-Iteration nehmen. Diese liefert für einen Anfangs-Näherungswert x[n] einen besseren Näherung x[n+1].
+
+x[n + 1] == x[n] + d * derivate(1 / f, d - 1, x[n]) / derivate(1 / f, d, x[n])
+
+wobei derivate(g, d, a) die Anwendung des Argumentwertes a auf die d-fache Ableitung (Differenzierung) der Funktion g ist.
+
+d gibt dabei die "Ordnung" der Householder-Funktion ab, und entspricht auch ungefähr der Anzahl der Dezimalziffern um welche die Genauigkeit der Näherung sich mit jedem Iterations-Schritt verbessert.
+
+Praktische Bedeutung haben aber wegen dem ausufernden und nicht in Relation zum Genauigkeitsgewinn stehenden Rechenaufwand bei höheren Ordnungen nur
+
+d == 1: Entspricht der Newton–Raphson Methode mit quadratischer Konvergenz
+
+d == 2: Entspricht der Methode von Halley mit kubischer Konvergenz
+
+Nur in speziellen Fällen ist Halley aber tatsächlich besser als Newton; in den meisten Fällen zahlt sich der zusätzliche Rechenaufwand pro Iterationsschritt nicht aus.
+
+Vereinfacht ist die Newton-Methode daher:
+
+x[n + 1] == x[n] - f(x[n]) / derivate(f, 1, x[n])
+
+Die "Zielwert-Suche" in LibreOffice-Calc kann ebenfalls benutzt werden, um Nullstellen (sowie beliebige andere Zielwerte) in einer Funktion zu finden. Falls es mehrere Lösungen gibt, kommt es dabei auf den Startpunkt an, welche davon gefunden wird.

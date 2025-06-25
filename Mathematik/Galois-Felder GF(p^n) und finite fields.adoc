@@ -1,0 +1,89 @@
+Galois-Felder GF(p^n) und finite fields
+=======================================
+v2025.159
+
+'Finite field arithmetic' ist die Grundlage vieler Fehlerkorrektur- und Verschlüsselungsalgorithmen. Insbesondere AES baut stark drauf auf.
+
+Aber auch die Parity-Berechnungen für RAIDs verwenden solche Arithmetik.
+
+
+Anwendungsfall RAID-6
+---------------------
+
+
+Ein RAID-6 mit 6 Disks berechnet seine beiden Parities wie folgt:
+
+----
+P = 1⁰ * a + 2⁰ * b + 3⁰ * c + 4⁰ * d + 5⁰ * e
+Q = 1¹ * a + 2¹ * b + 3¹ * c + 4¹ * d + 5¹ * e
+
+Allgemein mit beliebig vielen Parities:
+
+----
++parity(k) = sum(i^k^ * disk(i)) with k >= 0+
+
+
+Finite Fields und Galois Fields
+-------------------------------
+
+Laut dem Wikipedia-Artikel über 'Finite field arithmethic' sind 'Finite Fields' und 'Galois Fields' ein- und dasselbe.
+
+Letztere Bezeichnung ehrt einfach nur den Erfinder der "Finite Fields"-Theorie namentlich.
+
+
+Aufbau eines Galois Field
+-------------------------
+
+Jeder GF hat immer eine Anzahl von Elementen `p ^ n`, wobei `p` eine Primzahl sein muss und `n` eine positive Ganzzahl.
+
+* `p` wird "characteristic of the field" genannt
+* `n` wird "dimension of the field over ist prime field" genannt
+
+
+Parameter
+---------
+
+Die Arithmetik in einem `GF(x)` ist eine Arithmetik modulo `x`.
+
+Allerdings erfolgt diese mit Polynomen und nicht einfach mit simplen Ganzzahlen.
+
+Die Schreibweise `GF(p)` ist mehrdeutig: Oft ist damit gemeint, dass es die "characteristic" `p` hat und dass `n` beliebig sein darf oder nicht genannt wird.
+
+In anderen Kontexten ist mit `GF(x)` aber gemeint dass `p ^ n = x`.
+
+Meist erschließt sich das nur aus dem Kontext. Ein `GF(2^8)` wird manchmal auch als `GF(256)` geschrieben, während bei `GF(2)` in der Regel nur gemeint ist dass `p = 2` und das `n` wird lediglich nicht explizit genannt.
+
+
+Darstellung
+-----------
+
+Die Elemente von `GF(p^n)` werden für die Arithmetik als Polynome interpretiert, die einen Grad kleiner als `n` haben müssen.
+
+Wenn `p = 2`, ist es üblich solche Polynome als Dualzahlen in geschweiften Klammern zu repräsentieren, wobei die Dualziffern die Polynom-Koeffizienten sind.
+
+Alternativ können sie auch als Hexzahlen dargestellt werden.
+
+Folgendes Beispiel wird genannt:
+
++x^6^ + x^4^ + x + 1 = {01010011} = {53}+
+
+
+Arithmetik
+----------
+
+Arithmetische Operationen werden allgemein modulo `m(x)` ausgeführt, wobei `m(x)` ein "irreducible polynomial of degree `n` over `GF(p)`" genannt wird.
+
+Addition und Subtraktion solcher Polynome erfolgt hier normal, außer dass die Koeffizienten modulo `p` reduziert werden.
+
+Multiplikation reduziert die Koeffizienten ebenfalls modulo `p`, zusätzlich jedoch noch das ganze Ergebnispolynom modulo `m(x)`.
+
+Ich beschreibe im weiteren nur noch die Arithmetik in einem `GF(2)`, genauer gesagt `GF(2^n)`.
+
+Addition, Subtraktion und XOR sind in `GF(2)` ein- und dasselbe.
+
+Division ist hier die Identity-Function, weil das einzig invertierbare Element in einem GF(2) das Element 1 ist.
+
+
+* Addition und Subtraktion sind XOR
+* Multiplikation x * y = gf_ilog(gf_log(x) + gf_log(y))
+* Division x / y = gf_ilog(gf_log(x) - gf_log(y))

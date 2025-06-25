@@ -1,0 +1,17 @@
+﻿Dies ist mittels des sogenannten "Haidinger-Büschels" möglich, eines Effektes, der innerhalb des Auges entsteht, und daher nicht fotografiert werden kann.
+
+Wenn man in die ungefähre Richtung blickt aus welcher (ganz oder teilweise) polarisiertes Licht einen erreicht, sollte man dazu erst einige Sekunden lang einen beliebigen Punkt auf einer möglichst hellen einfärbige Fläche (also möglichst ohne ablenkende Muster) betrachten, während man den Kopf diagonal auf eine Schulter legt.
+
+Danach kippt man den Kopf rasch um 90 Grad gedreht auf die andere Schulter.
+
+Nun sollte man am anvisierten Punkt das "Haidinger-Büschel" seien, das aus eine länglichen gelben Teil ähnlich einer dünnen Spindel mit einer Einschnürung in der Mitte ist. Um diese Einschnürung herum sind im rechten Winkel dazu zwei kleine blaue Scheiben zu sehen (meist schwerer zu sehen als die gelbe Spindel).
+
+Die (bevorzugte) Polarisationsrichtung des Lichts liegt dann auf der Achse welche die beiden blauen Scheiben verbindet, also senkrecht zur gelben Spindel.
+
+Das Büschel verschwindet nach einigen Sekunden wieder, kann aber durch erneutes Schwenken des Kopfes wiedergeholt werden.
+
+Blickt man danach vom polarisierten Licht weg, erscheint ein negatives Nachbild wo die Farben Gelb und Blau vertauscht sind. Auch das Nachbild verblasst nach kurzer Zeit.
+
+Haidinger-Büschel lassen sich auch an LC-Displays erkennen, wenn man eine weiße Fläche darauf darstellt (wie ein leeres Browserfenster).
+
+Viele LCDs sind übrigens diagonal polarisiert, damit sie sich auch mit Sonnenbrillen betrachten lassen, welche ihrerseits wiederum oft vertikal polarisiert sind.

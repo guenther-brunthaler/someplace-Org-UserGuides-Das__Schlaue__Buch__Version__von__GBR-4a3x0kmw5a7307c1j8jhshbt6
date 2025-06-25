@@ -1,0 +1,35 @@
+﻿Mittels der Kurvendiskussion lassen sich besondere x-Positionen im Funktionsgraph finden:
+
+* Nullstellen - wo der Graph die y-Achse kreuzt bzw. der y-Wert gleich 0 ist
+
+* Minima - wo der Graph einen niedrigeren y-Wert als bei den benachbarten x-Positionen hat
+
+* Maxima - wo der Graph einen höheren y-Wert als bei den benachbarten x-Positionen hat
+
+* Wendestellen - sehen wie ein "S" oder horizontal gespiegeltes "S" aus, mit der Wendestelle genau in der Mitte wo die Richtung der Wölbung umschlägt
+
+Minima und Maxima befinden sich an den Nullstellen der 1. Ableitung der Funktion.
+
+Ob es ein Minimum oder Maximum ist entscheidet dann das Vorzeichen der 2. Ableitung der Funktion wenn man die X-Position in diese einsetzt: negativ ist ein Maximum, positiv ist ein Minimum, 0 ist eine Wendestelle.
+
+Beispiel:
+
+Diskussion der Funktion +f(x):= x^4^ - x^3^ - 150 x^2^ + 5500+
+
+1. Ableitung +f'(x):= 4 x^3^ − 3 x^2^ − 300 x+
+
+2. Ableitung +f"(x):= 12 x^2^ − 6 x − 300+
+
+Reale Nullstellen von +f(x)+:
+
+. +f(7,24674) ≈ 0+
+
+. +f(10,53435) ≈ 0+
+
+Nullstellen von +f'(x)+:
+
+. +f'(0) = 0; f"(0) = −300 -> Maximum+
+
+. +f'(−8,293) ≈ 0; f"(−8,293) ≈ +575,12 -> Minimum+
+
+. +f'(9,043) ≈ 0; f"(9,043) ≈ +627,13 -> Minimum+

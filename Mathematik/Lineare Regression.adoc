@@ -1,0 +1,65 @@
+﻿Lineare Regression
+==================
+v2024.28
+
+
+Orthogonale Regression
+----------------------
+
+Während die lineare Regression sich nur mit den Abweichungen parallel zur y-Achse beschäftigt, versucht die Orthogonale Regression die quadrierten Abstände der Punkte von der Regressionsgeraden zu minimieren.
+
+Der Abstand wird dabei zum dem Datenpunkt am naheliegendsten Punkt auf der Regressionsgeraden berechnet.
+
+Dieser ergibt sich als Schnittpunkt der Geraden mit einer Linie, indem man diese Linie im rechten Winkel von der Geraden durch den Datenpunkt legt.
+
+Die Gleichung der Regressionsgeraden lautet dann:
+
+`estimate(x) = m * x + d`
+
+Und der Korrelationskoeffizient R² ist:
+
+`R² = 1 - sye / syy`
+
+wobei
+
+....
+avg(a) = sum(a[i] for all i) / sum(1 for all i)
+sxx = sum((x[i] - avg(x)) ** 2 for all i)
+syy = sum((y[i] - avg(y)) ** 2 for all i)
+sxy = sum((x[i] - avg(x)) * (y[i] - avg(y)) for all i)
+m = (syy - sxx + sqrt((sxx - syy) ** 2 + 4 * sxy ** 2)) / (2 * sxy)
+d = avg(y) - m * avg(x)
+sye = sum((y[i] - estimate(x[i])) ** 2 for all i)
+....
+
+R² reicht von 0 (ganz schlecht) bis 1 (exakte Übereinstimmung) und zeigt dabei die Güte der Übereinstimmung der Eingangsdatenpunkte mit der Regressionsgeraden an.
+
+Ein hohes R² bedeutet aber nicht dass tatsächlich ein Zusammenhang zwischen x und y bestehen muss. Es gibt Fälle die das Gegenteil beweisen.
+
+Umgekehrt beweist ein keines R² noch lange nicht dass es keinen Zusammenhang gibt. Es gibt nur keinen linearen. Aber es kann sehr wohl nicht-lineare Zusammenhänge geben.
+
+
+(Übliche) Lineare Regression
+----------------------------
+
+Im Gegensatz zur orthogonalen Regression werden hier die nur quadrierten Abweichungen auf der Y-Achse minimiert.
+
+`estimate(x) = m * x + d`
+
+wobei
+
+....
+n = sum(1 for all i)
+sx = sum(x[i] for all i)
+sy = sum(y[i] for all i)
+sxx = sum(x[i] ** 2 for all i)
+syy = sum(y[i] ** 2 for all i)
+sxy = sum(x[i] * y[i] for all i)
+m = (n * sxy - sx * sy) / (n * sxx - sx ** 2)
+d = (sy - m * sx) / n
+r = (n * sxy - sx * sy) / sqrt((n * sxx - sx ** 2) * (n * syy - sy ** 2))
+....
+
+Ein Vorteil ist dass man hier nur ein einziges Mal über die `x[i]` und `y[i]` iterieren muss. Außerdem braucht man sie nach der Iteration nicht mehr weiterhin aufzubewahren, falls man sie nur für die obigen Berechnungen benötigt.
+
+Der Korrelationskoeffizient `r` nach Bravais-Pearson, auch Produkt-Moment-Korrelation, ist ein Maß für den Grad des linearen Zusammenhangs zwischen zwei mindestens intervallskalierten Merkmalen, das nicht von den Maßeinheiten der Messung abhängt und somit dimensionslos ist. Er kann Werte zwischen -1 und +1 annehmen. Bei einem Wert von +1 (bzw. -1) besteht ein vollständig positiver (bzw. negativer) linearer Zusammenhang zwischen den betrachteten Merkmalen. Wenn der Korrelationskoeffizient den Wert 0 aufweist, hängen die beiden Merkmale überhaupt nicht linear voneinander ab. Allerdings können diese ungeachtet dessen in nichtlinearer Weise voneinander abhängen. 

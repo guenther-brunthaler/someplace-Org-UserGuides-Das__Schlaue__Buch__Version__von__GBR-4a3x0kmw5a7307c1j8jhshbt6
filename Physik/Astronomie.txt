@@ -1,0 +1,29 @@
+﻿Ein Parsec (Parallaxensekunde) ist jene Entfernung in welcher sich ein Beobachter befinden muss, um von seiner Position aus die Entfernung zwischen Erde und Sonne (eine Astronomische Einheit) als einen Winkel von einer Bogensekunde (1 / 3600 Grad) zu messen. Das sind rund 3,26 Lichtjahre.
+
+Ein Winkelgrad ist 1/360 des Vollwinkels und hat 60 Bogenminuten und eine Bogenminute hat 60 Bogensekunden. Der Vollwinkel ist keine SI-Einheit aber beschreibt eine komplette Umdrehung (= gedrehtes Objekt wieder wie in der Ausgangsposition).
+
+Die willkürlich erscheinende Entfernung von 1 AE wurde dabei deswegen gewählt, da man von der Erde aus halbjährlich den Winkel zum Stern bestimmen kann und dabei weiß, dass die Erde nun 2 AE von der alten Position entfernt ist; an der jeweils gegenüber liegenden Seite der Sonne.
+
+Unser nächstes Nachbar-Sonnensystem Proxima Centauri ist rund 1,3 Parsec entfernt. Ein Parsec ist also zumindest in unserer Nähe ein typischer Abstand zwischen benachbarten Sonnensystemen.
+
+Wir sind vom Zentrum der Milchstraße rund 8 Kiloparsec (kpc) entfernt.
+
+Ein Megaparsec (mpc), also 3,26 Millionen Lichtjahre, ist die eine typische / häufige Entfernung zwischen einzelnen Galaxien.
+
+Galaxienhaufen sind im Durchschnitt ca. 50 mpc von einander entfernt.
+
+Der Virgohaufen welcher das Zentrum des Virgo-Superhaufens ist zu dem auch wir (unsere lokale Gruppe aus Galaxien) gehören, ist 22 mpc entfernt.
+
+Der Virgo-Superhaufen selbst wird wiederum (wie auch viele andere Galaxien) vom "Großen Attraktor", einem weiteren Superhaufen angezogen, der rund 60 mpc von uns entfernt ist. Den wesentlichsten Masseanteil des "Großen Attraktor" bildet dabei der Norma-Galaxienhaufen welcher 65 mpc von uns entfernt ist.
+
+Die Absolute Helligkeit eines Sterns ist jene Leuchtkraft, die ein Beobachter welcher 10 Parsec von Stern entfernt ist beobachten würde.
+
+Die Absolute Helligkeit eines Planeten sieht ein Beobachter welcher 1 AE vom Planeten entfernt ist und unsere Sonne befindet sich dabei ebenfalls 1 AE entfernt genau auf der anderen Seite des Beobachters um den Planeten zu beleuchten.
+
+Die "Scheinbare Helligkeit", auch "mag", "Magnitude", "Magnitudo", hochgestelltes "m", "Größenklasse" oder schlicht "Größe" genannt, ist hingegen nur ein normiertes Vergleichsmaß auf einer logarithmischen Skala.
+
+Die Grundlage für die Scheinbare Helligkeit ist die Leuchtkraft wie sie hier auf der Erde gemessen wird. Diese wiederum unterscheidet sich von der Absoluten Helligkeit durch die Entfernung und Hindernisse (Nebel, Materie).
+
+*Niedrigere* Werte bedeuten dabei größere scheinbare Helligkeiten.
+
+Es ist definiert dass ein Stern 1. Größe (1 mag) 100 x so hell ist wie ein Stern 6. Größe (6 mag). (Die ursprüngliche Helligkeits-Skala der Babylonier kannte nur 6 Werte und sollte wohl als Basis des Modells integriert werden.) Das bedeutet einen Faktor von rund 2,5 (der 5. Wurzel aus 100) als Größenunterschied von 1 Magnitude.

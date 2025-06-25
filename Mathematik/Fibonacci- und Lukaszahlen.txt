@@ -1,0 +1,19 @@
+Fibonacci- und Lucaszahlen sind die konkreten Elemente der Fibonacci- und Lucas-Folge.
+
+Beide Folgen sind identisch und unterscheiden sich nur durch die beiden Startwerte.
+
+Weitere Elemente bestehen immer aus der Summe der beiden Elemente davor.
+
+Fibonacci-Startwert 1: F0 = 0
+Lucas-Startwert 1: F0 = 2
+
+Der 2. Startwert ist bei beiden Folgen F1 = 1.
+
+Die allgemeine Lucas-Folge ist eine Verallgemeinerung beider Folgen. Sie hat zwei ganzzahlige Parameter P und Q und zwei Varianten:
+
+x[0] = if variant = 1 then 0 else 2
+x[1] = if variant = 1 then 1 else P
+x[n] = P * x[n - 1] - Q * x[n - 2]
+
+Fibonaccizahlen: variant = 1, P = 1, Q = -1.
+Lucaszahlen: variant = 2, P = 1 und Q = -1.

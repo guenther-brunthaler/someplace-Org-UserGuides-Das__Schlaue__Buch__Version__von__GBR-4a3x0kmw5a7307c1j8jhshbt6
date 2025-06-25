@@ -1,0 +1,35 @@
+﻿Ein Bloom-Filter speichert statistische Informationen über das Vorhandensein von Elementen in einer Menge, ohne die Elemente tatsächlich alle zu speichern.
+
+Man kann dem Filter neue Elemente nur hinzufügen, bereits enthaltene jedoch nicht mehr entfernen.
+
+Der Bloom-Filter erlaubt die Abfrage ob ein bestimmtes Element vorhanden ist, und antwortet darauf mit "möglicherweise ja" oder "garantiert nicht".
+
+Der Bloom-Filter kommt zum Einsatz wenn nicht genügend Speicher vorhanden ist alle Elemente zu speichern auf deren Vorhandensein getestet werden soll.
+
+Er dient aber auch zur Vorselektierung, wenn die Tests ob ein Element vorhanden ist zwar möglich aber teuer sind. So kann man sich den Test in all jenen Fällen sparen wo bereits der Bloom-Filter feststellt dass das Element nicht vorhanden sein kann.
+
+Ein Bloom-Filter besteht aus k unterschiedlichen Hash-Funktionen und einem Boolean-Vektor mit m Einträgen und den zwei erlaubten Eintrags-Werten "möglicherweise enthalten" (nennen wir diesen Wert "?") und "garantiert nicht enthalten" (nennen wir diesen Wert "NEIN").
+
+Die Hash-Funktionen bilden den Wert eines hinzu zu fügenden oder abzufragenden Elements auf je einen Index des Boolean-Vektors ab und liefern diesen Index zurück.
+
+Solange noch keine Elemente dem Filter hinzu gefügt wurden, sind alle Elemente im Vektor "NEIN".
+
+Zum Hinzufügen eines Elements zum Filter werden alle k Hash-Funktionen auf das Element angewendet, und jedes Element des Boolean-Vektors das vom Ergebnis einer der Hash-Funktionen adressiert wird auf "?" gesetzt.
+
+Zum Abfragen ob ein Element vorhanden ist werden ebenfalls alle k Hash-Funktionen auf das Element angewendet, jedoch werden die Vektor-Elemente an allen entsprechenden Indizes gelesen anstatt geschrieben. Sind all diese Elemente auf "NEIN" ist auch die Anwort des Filters "nein", andernfalls "möglicherweise".
+
+Die Wahrscheinlichkeit für eine Antwort "?" wenn tatsächlich "NEIN" zutrifft, also für "False Positives", hängt von den Parametern des Filters ab.
+
+Diese Wahrscheinlichkeit ist dann minimal, wenn
+
+k = m / n * ln(2)
+
+wobei n die Anzahl der zum Filter hinzugefügten Elemente ist, und wie oben erwähnt ist k die Anzahl der (höchstwertigen) Hash-Funktionen und m die Anzahl der Elemente im Boolean-Vektor.
+
+Verringert man k oder m gegenüber diesem obigen optimalen Verhältnis, nimmt die Qualität des Filters ab und die Fehlerrate für "False Positives" steigt.
+
+Man kann die optimale Kombination der Parameter k und m aber auch für eine gewünschte Wahrscheinlichkeit p für "False Positives" berechnen:
+
+p = (1 - e ** (-k * n / m)) ** k
+
+Das Problem des Bloom-Filters dass man nur Elemente hinzufügen aber nicht mehr entfernen kann, lässt sich durch den "Counting Filter" vermeiden: Dieser funktioniert grundsätzlich identisch, nur dass er im Array anstatt Boolean-Werten einen Referenz-Zähler für hinzugefügte bzw. entfernte Elemente speichert. Der Wert "0" entspricht dann "NEIN" und jeder andere Wert entspricht "?". Nachteil: Deutlich höherer Speicherbedarf.

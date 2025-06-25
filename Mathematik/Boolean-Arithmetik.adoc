@@ -1,0 +1,112 @@
+﻿Rechnen mit booleschen Ausdrücken
+=================================
+Günther Brunthaler
+v2020.114
+
+
+AND/OR-Relation
+---------------
+
+....
+a and b == not(not(a) or  not(b))
+a or  b == not(not(a) and not(b))
+....
+
+
+Identitäten
+-----------
+
+....
+X or  X == X
+X and X == X
+X and not(X) == false
+X or  not(X) == true
+....
+
+
+Ausdrücke umformen
+------------------
+
+Alle Gleichungen innerhalb der folgenden Blöcke sind immer zugleich wahr:
+
+....
+LHS == RHS
+not(LHS) == not(RHS)
+LHS and true == RHS and true
+LHS or false == RHS or false
+....
+
+
+NAND/NOR
+--------
+
+Man kann jeden booleschen Ausdruck in einen anderen umwandeln, in dem ausschließlich der NOR- oder NAND-Operator
+
+....
+a nor b == not(a or b)
+a nand b == not(a and b)
+....
+
+vorkommt:
+
+....
+not(a) == a nor a
+a or b == (a nor b) nor (a nor b)
+a and b == (a nor a) nor (b nor b)
+
+not(a) == a nand a
+a and b == (a nand b) nand (a nand b)
+a or b == (a nor a) nand (b nor b)
+....
+
+während man mit den beiden Umformungen vom Abschnitt davor alle NAND/NOR-Ausdrücke wieder zurück zur klassische AND/OR/NOT-Ausdrücke transformieren kann.
+
+
+AND/NOT
+-------
+
+Eben so kann man jeden booleschen Ausdruck in einen umformen, der nur aus den beiden Operatoren AND und NOT besteht. Im Gegensatz zu NAND/NOR lassen sich diese leichter vereinfachen.
+
+
+Allgemeine Vereinfachungsregeln
+-------------------------------
+
+Die folgende Liste von Regeln basiert auf den AND, OR und NOT Operatoren.
+
+[cols="^.^,^",options="autowidth"]
+|===
+.2+| The Idempotent Laws   | `a and a = a`
+                           | `a or a = a`
+.2+| The Associative Laws  | `(a and b) and c = a and (b and c)`
+                           | `(a or b) or c = a or (b or c)`
+.2+| The Commutative Laws  | `a and b = b and a`
+                           | `a or b = b or a`
+.2+| The Distributive Laws | `a and (b or c) = (a and b) or (a and c)`
+                           | `a or (b and c) = (a or b) and (a or c)`
+.4+| The Identity Laws     | `a and false = false`
+                           | `a and true = a`
+                           | `a or false = a`
+                           | `a or true = true`
+.4+| The Complement Laws   | `a and not(a) = false`
+                           | `a or not(a) = true`
+			   | `not false = true`
+                           | `not true = false`
+   | The Involution Law    | `not(not a) = a`
+.2+| DeMorgan's Law        | `not(a and b) = not(a) or not(b)`
+                           | `not(a or b) = not(a) and not(b)`
+|===
+
+
+Alternative Schreibweisen
+-------------------------
+
+Die folgenden unterschiedlichen Operator-Zeichen und Schreibweisen sind gebräuchlich:
+
+[cols="^,^,^,^,<",options="header,autowidth"]
+|===
+| Text  | v1   | v2   |  C  ^| Varianten
+| `and` | `&`  |      | `&`  | (Leerstring) wie die Multiplikation (v2)
+| `or`  | `\|` | `+`  | `\|` | wie die Addition (v2)
+| `not` | `~`  | `-`  | `!`  | Ein Strich *über* dem Teilausdruck (v2)
+| `xor` |      |      | `^`  |
+|===

@@ -1,0 +1,11 @@
+﻿$ qalc -t -set 'max_decimals 2' 'sqrt((40000 km / 2 / pi + 1,83 m) ^ 2 − (40000 km / 2 / pi) ^ 2)'
+
+4,83 km
+
+Erklärung: im rechtwinkelingen Dreieck gilt
+
+c ^ 2 = a ^ 2 + b ^ 2
+
+und in diesem Fall ist c der Erdradius plus Betrachterhöhe, a der Erdradius, und b die gesuchte Entfernung.
+
+Der Erdumfang sind 40.000 km, das ist gleich 2 * Erdradius * Pi.

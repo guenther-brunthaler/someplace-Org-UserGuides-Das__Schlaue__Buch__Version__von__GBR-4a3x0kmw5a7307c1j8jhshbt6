@@ -1,0 +1,38 @@
+﻿Affine Transformationen
+=======================
+v2022.341
+
+2D-Koordinaten können durch die eine Matrix-Multiplikation verschoben, skaliert und rotiert werden.
+
+Zur Berechnung der Zielkoordinaten wird ein Vektor `(x, y, 1)` mit der entsprechenden Matrix multipliziert was `(x', y', 1)` als Ergebnis liefert.
+
+Die Matrix hat den folgenden Aufbau
+
+[options="autowidth"]
+|=====
+| sx | rx | 0
+| ry | sy | 0
+| tx | ty | 1
+|=====
+
+* `sx, sy`: Skalierungsfaktoren in x- und y-Richtung (alle anderen Variablen müssen `0` sein)
+
+* `rx, ry`: rotieren mit dem Winkel `a` gegen den Uhrzeigersinn um dem Ursprung, wobei `sx = cos(a)`, `rx = sin(a)`, `ry = -sin(a)` und `sy = cos(a)`.
+
+* `tx, tx`: Verschiebung um diesen Vektor. `sx` und `sy` müssen `1` sein, die restlichen Variablen `0`.
+
+Eine beliebige Aneinander-Reihung solcher Operationen kann durch eine einzelne Matrix ersetzt werden, welche das Produkt aller Einzelmatrizen ist.
+
+Dabei müssen die Matrizen in der umgekehrten Reihenfolge mit einander multipliziert werden wie die Transformationen wirken sollen. Wenn etwa `m1`, `m2` und `m3` drei Matrizen für je eine Teiloperation angeben, können diese durch die einzelne Matrix `((m3 * m2) * m1)` ersetzt werden.
+
+
+Fein-Rotation durch Shearing
+----------------------------
+
+Ein Shear-Operation ist eine Schräg-Verschiebung entlang der X- oder Y-Achse, bei der Pixel nur innerhalb von Spalten- oder Zeilen verschoben werden. Man macht dabei aus einem Rechteck ein Trapez.
+
+Die erste Zeile/Spalte wird dabei um x oder y Pixel verschoben, die letzte gar nicht, und alle dazwischen um linear interpolierte Beträge.
+
+Man kann die Shear-Beträge x und y dabei aus der folgenden Transformationsmatrix für eine Rotation ableiten wenn man zur Anwendung zuerst entlang der Y-Achse und dann erst enlang der X-Achse schrägverschiebt:
+
+(sx:= x * y + 1, rx:= x, ry:= y, sy:= 1)

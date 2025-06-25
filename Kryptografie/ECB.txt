@@ -1,0 +1,6 @@
+Electronic Codebook-Mode (ECB):
+
+C[i]= E(P[i])
+P[i]= D(C[i])
+
+ECB benutzt keinen IV.

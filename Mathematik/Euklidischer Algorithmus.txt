@@ -1,0 +1,59 @@
+﻿Der euklidische Algorithmus dient zum Berechnen des größten gemeinsamen Teilers (GGT) zweier Ganzzahlen.
+
+Beim Original wird so lange die größere Zahl durch die kleinere dividiert und danach durch den Divisionsrecht ersetzt, bis die kleinere Zahl 0 ist. Die andere Zahl ist dann der GGT.
+
+Alternativ kann man dasselbe auch durch Subtraktion erzielen, indem die kleinere Zahl so lange von der größeren subtrahiert wird und danach durch die Differenz ersetzt, bis ebenfalls die kleinere Zahl 0 ist, und die andere der GGT. Diese Methode benötigt deutlich mehr Schritte als die mit Division.
+
+Eine computer-freundlichere Variante ist der Steinsche Algorithmus, auch als "binärer euklidische Algorithmus" bekannt:
+
+ggT(a, b) = 2 * ggT(a / 2, b / 2)  falls a und b gerade
+
+ggT(a, b) = ggT(a / 2, b)  falls a gerade und b ungerade
+
+ggT(a, b) = ggT((a - b) / 2, b)  falls a und b ungerade
+
+Allerdings funktioniert dieser Algorithmus anders als die obigen nur mit vorzeichenlosen Zahlen.
+
+Der *erweiterte* euklidische Algorithmus berechnet neben dem größten gemeinsamen Teiler ggT(a, b) zweier natürlicher Zahlen a und b noch zwei ganze Zahlen s und t, die die folgende Gleichung erfüllen:
+
+ggT(a, b) = s * a + t * b
+
+Das Haupteinsatzgebiet dafür ist die Berechnung der inversen multiplikativen Elemente in ganzzahligen Restklassenringen:
+
+function inverse(a, n)
+	local t, new_t, r, new_r;
+	t := 0; new_t := 1;
+	r := n; new_r := a;
+	while new_r <> 0 do
+        	quotient := floor(r / new_r);
+		(t, new_t) := (new_t, t - quotient * new_t);
+		(r, new_r) := (new_r, r - quotient * new_r);
+	end;
+	if r > 1 then error "a is not invertible";
+	if t < 0 then t := t + n;
+	return t;
+end
+
+Hier noch allgemeine Rechenregeln für den GGT:
+
+ggT(a, b) = ggT(b, a)  Kommutativgesetz
+ggT(±a, ±b) = ggT(a, b)
+ggT(a, a) = abs(a)
+ggT(a, 0) = abs(a)
+ggT(a, 1) = 1
+ggT(a, b mod a) = ggT(a, b)  wenn a > 0
+ggT(a, b + m * a) = ggT(a,b)
+ggT(m * a, m * b) = abs(m) * ggT(a, b)  Distributivgesetz
+ggT(a, b, c) = ggT(a, ggT(b, c)) = ggT(ggT(a, b), c)  Assoziativgesetz
+
+Ist m <> 0 ein gemeinsamer Teiler von a und b, dann gilt:
+
+m teilt ggT(a, b) und ggT(a / m, b / m) = ggT(a, b) / abs(m)
+
+Ist a kongruent zu b modulo m, dann gilt:
+
+ggT(a, m) = ggT(b, m)
+
+Hält man eines der beiden Argumente fest, dann ist ggT eine multiplikative Funktion, denn für teilerfremde Zahlen a und b gilt:
+
+ggT(a * b, m) = ggT(a, m) * ggT(b, m)

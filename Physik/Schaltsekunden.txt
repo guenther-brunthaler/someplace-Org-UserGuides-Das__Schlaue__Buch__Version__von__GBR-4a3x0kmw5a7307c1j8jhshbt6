@@ -1,0 +1,8 @@
+﻿
+Es wird ungefähr alle 1 bis 5 Jahre eine 61. Schaltsekunde eingefügt, und zwar entweder am 30. Juni oder am 31. Dezember des Jahres, jeweils nach der Sekunde 23:59:59 UTC.
+
+Das Jahr 1972 war besonders, indem es zwei Schaltsekunden zugleich - an den beiden oben genannten Terminen - einfügte.
+
+Zugleich war 1972 aber auch das erste Jahr indem überhaupt Schaltsekunden eingefügt wurden. Zu diesem Zeitpunkt war bereits eine Differenz von 10 Sekunden zwischen TAI und UTC angelaufen (eine Differenz bestand auch danach weiterhin).
+
+Bislang wurden immer nur positive Schaltsekunden eingefügt, da die Erde sich immer langsamer dreht. Jedoch sind zukünftig auch negative Schaltsekunden möglich, falls die Erde ihre Drehung beschleunigen sollte (warum???).

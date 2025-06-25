@@ -1,0 +1,36 @@
+﻿dB(A)
+=====
+v2021.336
+
+
+Dezibel - Bewertungskurve A
+---------------------------
+
+dB(A) ist die Maßeinheit des Schalldruckpegels (ugs. https://www.fieberitz.de/beratung/glossar/detail/term/geraeuschpegel/[Geräuschpegel]) nach der international genormten Frequenzbewertungskurve A. Der gemessene Wert ist abhängig von der Entfernung zur Schallquelle.
+
+Als Beispiel einige Schalldruckpegel bekannter Geräusche:
+
+[options="autowidth,header"]
+|===
+|dB(A) | Geräusch
+|   20 | Hörschwelle             
+|   40 | Flüstern                
+|   50 | stilles Haus            
+|   70 | Gespräch                
+|  115 | Rasenmäher              
+|  120 | Düsentriebwerk          
+|  130 | Schmerzgrenze           
+|  160 | Trommelfell-Zerfetzung  
+|===
+
+Eine Zunahme um 10 dB(A) entspricht in der subjektiven menschlichen Wahrnehmung einer Verdoppelung der Lautstärke. Die Grenze für Gesundheitsschäden liegt bei 90 dB(A).
+
+Die beiden Messgrößen "Schalldruckpegel (dB)" und "bewerteter Schalldruckpegel (dB(A))" unterscheiden sich grundlegend:
+
+* Der Schalldruckpegel ist eine technische Größe, die in dB (Dezibel) angegeben wird. Er beschreibt die Stärke eines Schallereignisses. Die vom Menschen wahrgenommene Empfindung der Lautheit (umgangssprachlich als Lautstärke bezeichnet) wird von diesem Messwert nicht erfasst.
+
+* Mit dem bewerteten Schalldruckpegel kann hingegen der psychoakustische Eindruck eines Schallereignisses teilweise dargestellt werden. Bei dieser Messung wird auch das Frequenzspektrum des Schallereignisses mit einbezogen und in Bezug auf die menschliche Wahrnehmung bewertet. Das Ergebnis wird in dB(A) (Dezibel, bewertet mit Frequenzfilter A) angegeben. Für eine Beurteilung des Messergebnisses muss die Entfernung zwischen Schallereignis und Messpunkt angegeben werden.
+
+Sehr häufig werden bewertete Schalldruckpegel (dB(A)) und unbewertete Schalldruckpegel (dB) verwechselt und vermischt. Beide Werte sind jedoch nicht miteinander vergleichbar oder ineinander umrechenbar, weil für den bewerteten Schalldruckpegel bereits bei der Messung das Frequenzspektrum des Schallereignisses berücksichtigt werden muss. Darüber hinaus fehlen bei vielen dB(A)-Werten die Angaben zur Messentfernung, was eine Beurteilung des Schalldruckpegels unmöglich macht.
+
+Da der Schalldruckpegel unter Laborbedingungen ermittelt wird, kann der Messwert nur eingeschränkt auf eine Wohnumgebung übertragen werden. Dort haben die Raumgestaltung und die Bodenbeschaffenheit einen deutlichen Einfluss auf die Wahrnehmung der Lautheit. Bei all diesen Messungen bleibt das von Mensch zu Mensch individuell unterschiedliche Hörempfinden völlig unberücksichtigt.

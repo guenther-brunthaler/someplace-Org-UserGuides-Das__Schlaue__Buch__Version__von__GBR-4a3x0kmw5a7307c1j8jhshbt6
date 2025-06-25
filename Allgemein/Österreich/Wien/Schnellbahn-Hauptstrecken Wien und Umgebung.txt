@@ -1,0 +1,8 @@
+﻿
+Welche S-Linien über welche Knotenpunkte fahren.
+
+S1, S2, S7 sowie was nach Gänserndorf/Mistelbach/Brünn fährt: Über Siemensstraße,
+
+S3, S4 sowie was nach Stockerau/Hollabrunn/Krems fährt: Nur bis Floridsdorf, wo sie dann links abbiegen und nicht mehr die Siemensstraße erreichen.
+
+Zwischen zumindest Floridsdorf und Landstraße verkehren sie alle.

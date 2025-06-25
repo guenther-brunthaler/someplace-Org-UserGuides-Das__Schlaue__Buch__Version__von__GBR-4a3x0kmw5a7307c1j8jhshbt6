@@ -1,0 +1,5 @@
+﻿"Billion" für "billion" anstatt "Milliarde"
+
+"Truppen" für "troups" wenn eine Anzahl von Soldaten genannt ist
+
+"Physiker" als "physician" (Arzt) anstatt "physisist"

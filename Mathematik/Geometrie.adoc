@@ -1,0 +1,42 @@
+﻿Geometrie
+=========
+v2024.234
+
+
+Kreis
+-----
+
+* Gleichung: +x^2^ + y^2^ = r^2^+
+* Fläche: +r^2^ · π+
+* Umfang: +2 · r · π+
+* π: +3,14159265358979323846264338328+
+
+Bei den 'Gleichungen' in diesem Dokument wird davon ausgegangen, dass der Mittelpunkt des Objekts sich im Ursprung des Koordinatensystems befindet.
+
+Archimedes: π liegt zwischen +3 + 10/71+ und +3 + 1/7+.
+
+Die Näherung +22/7 = 3,142857+ für π wird auch heute noch verwendet. (Fläche: +(Durchmesser / 2)^2^ * 22/7+.)
+
+
+Ägypter
+~~~~~~~
+
+* Fläche: +(Durchmesser - Durchmesser / 9)^2^+
+
+Schlechter als mit der `22/7`-Näherung.
+
+
+Babylonier
+~~~~~~~~~~
+
+* Fläche: +(Umfang^2^ / 12)+
+
+Schlechter als die Ägypter.
+
+
+Kugel
+-----
+
+* Gleichung: +x^2^ + y^2^ + z^2^ = r^2^+
+* Volumen: +4 ⋅ r^3^ · π ∕ 3+
+* Oberfläche: +4 ⋅ r^2^ · π+

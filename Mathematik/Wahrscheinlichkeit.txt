@@ -1,0 +1,40 @@
+﻿Wahrscheinlichkeitsrechnung
+===========================
+Günther Brunthaler
+v2021.62
+
+Die Wahrscheinlichkeit für das Eintreffen eines Ereignisses E wird als P(E) bezeichnet.
+
+Sie berechnet sich als die Anzahl der Möglichkeiten für das Eintreffen von E dividiert durch die Gesamtzahl aller Möglichkeiten wie das Experiment enden kann.
+
+In der Statistik ersetzt man "Möglichkeiten" durch "Experimente" bzw. "Tests", aber sinngemäß bleibt es dasselbe.
+
+Jede Wahrscheinlichkeit P(E) ist dabei eine Teilmenge des Wahrscheinlichkeitsraums Omega, der den Rauminhalt 1 hat.
+
+Da es bei der Wahrscheinlichkeit immer nur um den Anteil einer Wahrscheinlichkeit am Gesamtinhalt von Omega ankommt, kann man sich Omega aber genau so auch als ein Blatt Papier mit dem Flächeninhalt 1 vorstellen.
+
+Zwei Ereignisse E1 und E2 sind "disjunkt", wenn es ausgeschlossen ist dass sie gemeinsam eintreten. Man nennt sie dann auch "unabhängig" von einander.
+
+Man kann sie sich dann als zwei Blasen innerhalb von Omega darstellen, die einander nicht überlappen. Der Flächeninhalt der einzelnen Blasen repräsentiert ihre Wahrscheinlichkeit.
+
+In diesem Fall kann man die Wahrscheinlichkeiten von E1 und E2 addieren, um die Wahrscheinlichkeit zu ermitteln dass entweder E1 oder E2 eintritt.
+
+Beispiel: Sei E1 1/2 und E2 1/4. Dann ist die Chance dass eines von beidem eintritt 1/2 + 1/4 = 3/4.
+
+Man bedient sich daher der gewohnten Operationen der Mengenlehre, und wendet sie auf Wahrscheinlichkeiten an, welche man als Teilmengen vom Omega interpretiert.
+
+Wenn ein Ereignis E1 nur unter der Voraussetzung eintreten kann dass auch E2 eintritt, kann man sich E1 als Blase innerhalb von E2 vorstellen, die komplett von E2 umschlossen ist.
+
+Hier kann man zur Vorstellung greifen, dass E2 hier wie ein privates Omega für E1 dient. Während E1 so berechnet ist als würde es sich im "echten" Omega befinden, wird es tatsächlich von der Fläche E2 "skaliert", sprich multipliziert.
+
+Beispiel: E1 sei 1/2 und E2 ist 1/4 unter der Voraussetzung das E1 eintritt. E2 ist dann 1/4 von E1 und somit 1/2 * 1/4 = 1/8.
+
+Zusammenfassung:
+
+Der Wahrscheinlichkeitsraum in dem alle Ereignisse liegen hat stets den Flächen- bzw. Rauminhalt 1.
+
+Wahrscheinlichkeiten für unabhängige Ereignisse die einander ausschließen kann man addieren.
+
+Wahrscheinlichkeiten die einander bedingen (die eine umschließt im Wahrscheinlichkeitsraum die andere) kann man multiplizieren.
+
+Alle weiteren Fälle lassen sich aus diesen Grundlagen herleiten, indem man die Operationen der Mengenlehre (Durchschnitt, Vereinigung, Komplement) anwendet wenn man die vorhandenen Wahrscheinlichkeiten als Teilmengen mit Flächeninhalten interpretiert.

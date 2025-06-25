@@ -1,0 +1,166 @@
+﻿TREYFER
+=======
+v2023.116
+
+(Hinweis: Das oben ist die Dokument-Version, nicht die des Algorithmus.)
+
+TREYFER ist ein 1997 vom Microsoft-Forscher Gideon Yuval entwickelter sehr simpler 8-Bit MAC-Algorithmus für 64 Bit Message-Blöcke. Das ursprüngliche vorgesehene Einsatzgebiet war Heim-Automatisierung.
+
+Der Name "TREYFER" (Originalschreibweise des Autors) ist ein Wortspiel auf "Travois" sowie die Cipher "SAFER", die er auf Geräten ersetzen soll für welche letztere zu viele Ressourcen verschlingt. Ein "Travois" ist eine primitive Schlepptrage von Indianern, die nur aus 2 Stangen besteht mit einem Netz oder dergleichen dazwischen.
+
+
+Algorithmus
+-----------
+
+Verschlüsseln
+~~~~~~~~~~~~~
+
+Originalversion
+^^^^^^^^^^^^^^^
+
+Dies ist der Original-Algorithmus (nur das "#define" sowie Leerzeichen zwecks besserer Lesbarkeit wurden eingefügt):
+
+----
+#define NumRounds 32
+for(r = 0; r < NumRounds; r++) {
+  text[8] = text[0];
+  for(i = 0; i < 8; i++) {
+    text[i + 1] = (text[i + 1] + Sbox[(key[i] + text[i]) % 256]) <<< 1;
+    // rotate 1 left
+  }
+  text[0] = text[8];
+}
+----
+
+
+Optimierte Version
+^^^^^^^^^^^^^^^^^^
+
+Dies ist eine optimierte Version des obigen Original-Algorithmus:
+
+----
+#include <stdint.h>
+
+#define NUMROUNDS 32
+extern uint8_t const sbox[256];
+
+void TREYFER_encrypt(uint8_t text[static 8], uint8_t const key[static 8]) {
+	unsigned i;
+	uint8_t t = text[0];
+	for (i = 0; i < 8 * NUMROUNDS; ++i) {
+		t += key[i % 8];
+		t = sbox[t] + text[(i + 1) % 8];
+		text[(i + 1) % 8] = t = t << 1 | t >> 7; /* ROTL 1 bit */
+	}
+}
+----
+
+
+Entschlüsselung
+~~~~~~~~~~~~~~~
+
+Der Autor hat absichtlich keine Entschlüsselungsfunktion angegeben, weil zur Zeit der Veröffentlichung der Export von vollwertigen Ciphers mit mehr als 40 Bit Stärke verboten war.
+
+Doch andere Leute haben es in der Tat geschafft auch solch eine dafür zu implementieren:
+
+----
+void TREYFER_decrypt(uint8_t text[static 8], uint8_t const key[static 8]) {
+   unsigned i;
+   uint8_t t, b;
+   for (i = 8 * NUMROUNDS; i--; ) {
+      t = text[i & 7] + key[i & 7];
+      t = sbox[t];
+      b = text[i + 1 & 7];
+      b = b >> 1 | b << 7 & 0xff; /* Rotate right 1 bit */
+      text[i + 1 & 7 ]= b - t;
+   }
+}
+----
+
+
+S-Box
+-----
+
+Die `sbox[]` ist nicht definiert.
+
+Man kann die S-Box auch als Personalisierung (und Stärkung) des Algorithmus betrachten. Für späteres Entschlüsseln muss aber dieselbe S-Box wie beim Verschlüsseln verwendet werden.
+
+Eine typische kryptografische S-Box enthält eine Permutation aller erlaubter Werte, braucht nicht notwendiger Weise geheim gehalten zu werden, und kann für eine Implementation auch als Konstanten direkt im Quellcode festgelegt sein.
+
+TREYFER benötigt jedoch *keine* solche typische S-Box. Jede beliebige Sequenz aus Bytewerten funktioniert. Auch Wiederholungen sind kein Problem. Daher kann man auch *irgendwelche* Daten nehmen die im Speicher herum liegen - je zufälliger sie aussehen, desto besser.
+
+Wenn man denn unbedingt eine konkrete Empfehlung haben möchte, definiert der Autor des Algorithmus eine Standard S-Box für den Algorithmus.
+
+Diese Standard S-Box besteht aus den ersten 256 Primzahlen (also beginnend mit 2), alle modulo 256 reduziert. (Nur 121 der 256 möglichen Werte kommen darin vor, die restlichen Werte sind Wiederholungen anderer Werte - bis zu 4 Wiederholungen pro Wert).
+
+
+Schwächen
+---------
+
+TREYFER hat sowohl eine Block- als auch Schlüssellänge von 64 Bit, und ist allein aus diesen Gründen auf sich allein gestellt unsicher.
+
+Überdies kann es mit einem known-plaintext-Angriff auf der Basis eines Slide-Angriffs mit 2^32^ Plaintexts mit einem Aufwand von 2^44^ gebrochen werden, unabhängig von der Anzahl der Runden.
+
+Weiters kann TREYFER mit einem Key-Related Angriff geknackt werden, bei dem das Opfer dazu gebracht werden denselben Plaintext mit mehreren von Angreifer vorgegebenen Schlüsseln zu verschlüsseln und das Ergebnis zu übermitteln. Diesem Angriff kann am besten vorgebeugt werden, indem für jede Verschlüsselung immer ein anderer IV benutzt wird sowie ein "Mode of operation" welcher einen IV benutzt.
+
+Trotz dieser Nachteile ist er aber so winzig, dass man ihn einfachst implementieren kann, und dann zur Verstärkung eines anderen eher schwachen Algorithmus wie etwa ARCFOUR benutzen kann.
+
+Leider ist er aber ca. 8 x so langsam wie ARCFOUR. So gesehen scheint es besser mehrfach mit ARCFOUR und verschiedenen Schlüsseln zu verschlüsseln.
+
+
+Bemerkungen
+-----------
+
+TREYFER wird seltsamer Weise dennoch (auch) als Block-Cipher bezeichnet. Vermutlich ist damit ein Betrieb zusammen mit "Modes of Operation" wie CTR, CFB oder OFB gemeint, die keine Entschlüsselungsfunktion benötigen.
+
+Es stellte sich heraus, dass Entschlüsselung 5 Runden mehr im Vergleich zur Verschlüsselung benötigt, um volle Diffusion zu erlangen. (Allerdings dürfte die vorgeschlagene Anzahl an Runden groß genug für beides sein.) Es dürfte demnach keine gute Idee bei TREYFER sein, die Rollen von Ver- und Entschlüsselungsfunktion mutwillig zu vertauschen (was bei einer Block-Cipher immer grundsätzlich möglich ist).
+
+
+Die Logik zum Merken
+--------------------
+
+1. index = 0
+2. load from data
+3. for 256 times do remaining steps
+4. add from key
+5. substitute
+6. increment index
+7. add from data
+8. rotate left
+9. store to data
+
+Kernschleife, noch kompakter "2-1-2": (key, subst), inc, (data, rot)
+
+
+Verbesserungen
+--------------
+
+Es ist typisch für Slide-Angriffe, dass sie bei einer Blocklänge von `N` Bits mit +2^(N/2)^+ Plaintext-Ciphertext Paaren durchgeführt werden können.
+
+Demzufolge könnte man diesem Angriffe einfach vorbeugen, indem man die Blockgröße verlängert.
+
+Ich sehe keinen besonderen Grund warum Schlüssel und Blockgröße im obigen Algorithmus einen bestimmten Wert haben sollten. Man sollte sie eigentlich beliebig groß wählen können solange die Anzahl der Runden nur dafür sorgt dass sie ausreichend oft verwendet werden.
+
+Man könnte beispielsweise die Block- und Schlüssellänge auf 512 Bit verlängern, und `NUMROUNDS` um demselben Faktor (also 8) erhöhen. An der Geschwindigkeit sollte sich dadurch nichts ändern. Viel Spaß dann beim Sammeln von 2^256^ Plaintexts für den Slide-Angriff!
+
+Als 'mode of operation' würde ich CFB empfehlen, da Bit-Flipping Attacken hier anders als bei CTR zumindest deutlich auffallen, und auch anders als bei OFB vermieden wird dass eventuelle Schwächen der Cipher dadurch offenbar werden dass sie immer nur über dieselben Daten iteriert (etwaige Fixpunkte welche zu Zyklen führen etc).
+
+
+Bessere S-Box
+~~~~~~~~~~~~~
+
+Wenn keine besondere S-Box gebraucht wird (und man auch nicht die vom Autor vorgeschlagene "Standard" S-Box verwenden will), empfehle ich die folgende "Nothing up my sleeve"-sbox: Man nimmt die signifikantesten Bits von Pi als 256 Bytes und vertauscht ausgehend von einer Identity-Permutation der Reihe nach deren Einträge an der aktuellen Stelle sowie an der Stelle welche das aktuelle Byte von Pi nennt.
+
+
+MAC
+---
+
+Es wurde vom Autor nicht näher erklärt wie man TREYFER als allgemeinen Message Authentication Code (MAC) verwenden kann.
+
+Das Original-Einsatzgebiet von TREYFER war eine 2-Byte MAC in einem Kommunikationsprotokoll fixer Blocklänge von 8 Bytes gewesen zu sein. Hierfür benötigte man keine (nach heutigem Stand unsichere) CBC-MAC sondern eine einzelne Blockverschlüsselung des Datenblocks tat es, wobei 2 Bytes aus einer fixen Position des Ergebnisses als MAC entnommen wurden.
+
+Im Grunde kann man das nach wie vor so machen, indem man Block- und Schlüssellänge auf ein solches Vielfaches von 8 Bytes erhöht, dass dies größer oder gleich der Bitlänge der zu authentifizierenden Datenblöcke wird.
+
+Eigentlich müsste man TREYFER auch als Hash verwenden können, indem man einen öffentlich bekannten Schlüssel benutzt.
+
+Ansonsten kann man die Merkle–Damgård Construction mit einer One-way compression function wie Davies–Meyer benutzen um eine auf TREYFER basierende Hash-Funktion zu konstruieren.

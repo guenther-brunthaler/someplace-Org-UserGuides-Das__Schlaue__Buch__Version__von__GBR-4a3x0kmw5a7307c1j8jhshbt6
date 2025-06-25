@@ -1,0 +1,23 @@
+﻿Es werden Mehrwertnummern mit geregelter Tarifobergrenze und frei kalkulierbaren Mehrwertnummern unterschieden. 
+
+Nationale Rufnummern in den Bereichen 0800, 0810, 0820, 0821, 0828 haben eine geregelte Preisobergrenze und sind zumeist Informationsdienste oder Mobile-Payment-Dienste. Rufnummern mit der Vorwahl 0800 sind immer kostenlos. 
+
+Nationale Rufnummern in den Bereichen 0900, 0901, 0930, 0931 und 0939 sind frei kalkulierbare Mehrwertnummern. Rufnummern mit der Vorwahl 0900 und 0901 werden oft für Informations- oder Televoting-Dienste genutzt. Mehrwertnummern mit der Vorwahl 0930, 0931 und 0939 werden für Erotikdienste verwendet. Für Dienste, die über einer Mehrwertnummer angeboten werden, gelten sehr genaue gesetzliche Schutzbestimmungen.
+
+0800 - kostenlos
+
+0810 - maximal 10 Cent pro Minute oder SMS 
+
+0820 - maximal 20 Cent pro Minute oder SMS 
+
+0828 - so viel wie eine SMS laut Kundentarif (nicht in Pauschalen/Paketen enthalten) 
+
+0900 - allgemeine Mehrwertdienste, für Sprachanrufe zeitabhängige Tarifierung, maximal 3,64 Euro pro Minute. Für SMS max. 10 Euro pro SMS 
+
+0901 - allgemeine Mehrwertdienste, Eventtarifierung, d.h. fixes Entgelt maximal 10 Euro pro Anruf oder SMS. 
+
+0930 - Erotikdienste, für Sprachanrufe zeitabhängige Tarifierung, maximal 3,64 Euro pro Minute. Für SMS max. 10 Euro pro SMS 
+
+0931 - Erotikdienste, Eventtarifierung, d.h. fixes Entgelt maximal 10 Euro pro Anruf oder SMS
+
+Genauere Informationen zu diesem Thema finden Sie auf der Homepage der RTR GmbH unter: https://www.rtr.at/de/tk/premiumS

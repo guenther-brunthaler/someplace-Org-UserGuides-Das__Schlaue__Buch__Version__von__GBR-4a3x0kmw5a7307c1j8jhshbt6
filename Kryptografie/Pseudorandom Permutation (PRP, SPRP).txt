@@ -1,0 +1,8 @@
+﻿Pseudorandom Permutation
+========================
+
+Eine Pseudorandom Permutation (PRP) ist eine Permutation, die von Beobachter nicht mit praktikablem Aufwand von einer Zufalls-Permutation unterschieden werden kann.
+
+Letztere ist eine (mit gleicher Wahrscheinlichkeit) zufällig ausgewählte Permutation aus allem möglichen existierenden Permutationen.
+
+Eine PRP muss immer umkehrbar sein.

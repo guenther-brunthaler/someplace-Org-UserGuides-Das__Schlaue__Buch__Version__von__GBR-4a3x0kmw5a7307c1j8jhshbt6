@@ -1,0 +1,103 @@
+﻿Normalformen
+============
+v2021.107
+
+
+Normalformen sind (innerhalb der jeweiligen Methode zur Bildung der Normalform) eindeutige Darstellungen von bestimmten arithmetischen Ausdrücken.
+
+Man kann sie zum Vergleich der Äquivalenz verwenden - zwei verschiedene Ausdrücke welche dieselbe Normalform ergeben, sind unterschiedliche Schreibweisen desselben zugrunde liegenden mathematischen Ausdrucks.
+
+Ebenso kann man Ausdrücke anhand der Strukturen von festgelegten Normalformen sortieren, so dass sie eine zumindest nicht-widersprüchliche (wenn aufgrund von Äquivalenzen schon nicht notwendigerweise eindeutige) Reihenfolge aufweisen.
+
+
+Konjunktive Normalform
+----------------------
+
+Eine konjunktive Normalform ist ein boolescher Ausdruck, der Subausdrücke mittels AND-Operatoren verbindet. Die Subausdrücke bestehen aus Sub-Subausdrücken die mittels OR-Operatoren verbunden sind. Die Sub-Subausdrücke sind boolesche Eingangsvariablen die optional noch den NOT-Operator angewendet haben dürfen.
+
+
+Disjunktive Normalform
+----------------------
+
+Dasselbe wie eine konjunktive, nur dass die erläuterten AND- und OR-Operatoren vertauscht sind. Es handelt sich also um eine OR-Verknüpfung von AND-Ausdrücken aus Variablen auf die zuvor optional der NOT-Operator angewendet wurde.
+
+Merkhilfe: Das "konjunktiv" (= "AND") bzw. "disjunktiv" ("OR") bezieht sich auf den äußersten Verknüpfungsoperator der Ausdrücke.
+
+
+Konstruktion aus Wertetabellen
+------------------------------
+
+Mit den Normalformen kann man anhand von beliebigen gegebenen Wahrheitstabellen einen booleschen Ausdruck ermitteln welche diese Tabellen als Funktionen implementieren.
+
+Eine Wertetabelle hat dabei <i> boolesche Eingangswerte x[i] und einen booleschen Ausgangswert bzw. Ergebniswert (der zunächst noch unbekannten Verknüpfungsfunktion) pro Zeile.
+
+Man kann diese Verknüpfungsfunktion nun als diskunktive Normalform darstellen, welche nur Terme aus jenen Zeilen der Wahrheitstabelle mit OR kombiniert, welche "true" als Ergebniswert enthalten. Jeder Term besteht aus der AND-Vernüpfung aller Eingangvariablen, wobei diejenigen welche in der Tabelle "false" sind invertiert werden müssen.
+
+Beispiel: Die Wahrheitstabelle der XOR-Funktion sei durch solch eine diskunktive Normalform nachzubilden.
+
+XOR x1 x2
+  0  0  0
+  1  0  1
+  1  1  0
+  0  1  1
+
+Die erste Spalte enthält dabei das XOR-Verknüpfungs-Ergebnis von x1 und x2.
+
+Die disjunktive Normalform selektiert dabei nur die beiden folgenden Tabellen-Einträge weil diese "true" bzw. "1" als Ergebnis liefern:
+
+x1 x2
+ 0  1
+ 1  0
+
+Diese werden nun so in AND-Terme umgewandelt, das das Verknüpfungsergebnis jedes Ausdrucks für eine Zeile der Wertetabelle "1" ist:
+
+x1 x2 AND-Ausdruck
+ 0  1 NOT(x1) AND x2
+ 1  0 x1 AND NOT(x2)
+
+Durch die OR-Verknüpfung aller Teilausdrücke erhält man nun die diskunktive Normalform und somit die gesuchte Funktion F:
+
+F(x1, x2):= (NOT(x1) AND x2) OR (x1 AND NOT(x2))
+
+Aufgrund der Rechenregel (durch Komplementierung der Komplementärmengen)
+
+a OR b == NOT(NOT(a) AND NOT(b)) sowie
+a AND b == NOT(NOT(a) OR NOT(b))
+
+kann man F() aber auch als konjunktive Normalform darstellen:
+
+F(x1, x2)
+= (NOT(x1) AND x2) OR (x1 AND NOT(x2))
+= NOT(NOT(NOT(x1) AND x2) AND NOT(x1 AND NOT(x2)))
+= NOT((x1 OR NOT(x2)) AND (NOT(x1) OR x2))
+
+Das äußere NOT bekommt man dabei weg, indem man das Ergebnis in der Wahrheitstabelle invertiert. Was dasselbe ist wie nur jene Zeilen auszuwählen die "0" als Ergebnis haben:
+
+x1 x2 OR-Ausdruck
+ 0  0 NOT(x1) OR NOT(x2)
+ 1  1 x1 OR x2
+
+und zusammen
+
+F(x1, x2):= (NOT(x1) OR NOT(x2)) AND (x1 OR x2)
+
+
+Algebraische Normalform
+-----------------------
+
+Die algebraische Normaform (ANF), auch als "ring sum normal form" (RSNF oder RNF), "Zhegalkin Normalform" und "Reed–Müller expansion", besteht aus Teilausdrücken von AND-verknüpften Eingangsvariablen, diese ihrerseits durch XOR verknüpft sind.
+
+Zusätzlich sind noch die Wert 0 und 1 als konstante Formeln erlaubt.
+
+ANF-Formeln sind auch als Zhegalkin-Polynome oder "Positive Polarity Reed-Muller expressions" bekannt. Zhegalkin (auch als Žegalkin, Gégalkine oder Shegalkin geschrieben) war ein Russe und der ursprünglichste Erfinder dieser Darstellungsform.
+
+In ANF gibt es keine Negation - man muss für jede Variable lediglich vermerken ob sie überhaupt vorkommt oder nicht, bzw. gleichbedeutend ob sie einen Koeffizienten von 0 oder 1 hat.
+
+Mit ANFs kann wie mit normalen Polynomen gerechnet werden, wenn die AND-Operation als Multiplikation interpretiert wird, und die XOR-Operation als Addition modulo 2.
+
+Potenzen und Faktoren größer gleich 1 welche die in den Polynomen vorkommen sind äquivalent zu 1.
+
+NOT(a) == a + 1
+a AND b == a * b
+a XOR b == a + b
+a OR b == 1 + (1 + a) * (1 + b) == a + b + a * b

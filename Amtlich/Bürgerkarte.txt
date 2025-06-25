@@ -1,0 +1,59 @@
+﻿
+e-Card
+
+Die e-Card ist eine von österreichischen Sozialversicherungsorganisationen ausgegebene Krankenversicherungskarte, welche optional auch als kostenlose Bürgerkarte die eine "Infobox" enthält aktiviert werden kann.
+
+Aktuell (Stand: 2017) ist die "e-card G4" (= 4. Generation), welche an der zusätzlichen Braille-Kennung rechts oben von Generationen älter als G3 unterschieden werden kann. Von G3 unterscheidet sich G4 nur durch die Farbgebung: das SVA-Logo in G4 besteht sieht wie ein Blatt aus dunklem Grün aus, in dessen Blatthälften ein kleines "s" und "v" in gleichwertiger normaler Druckschrift als Kleinbuchstaben zu sehen sind. In G3 waren die beiden Buchstaben seltsam verformt und die Farbe des Logos nur mattes Grün. Funktional scheint es zwischen G3 und G4 keine Unterschiede zu geben.
+
+G3- und G4-Karten enthalten ein qualifiziertes ECDSA-Zertifikat (Vermutung: Kommt für die "Qualifizierte Signatur" zum Einsatz) sowie ein nicht-qualifiziertes RSA-Zertikat (Vermutung: Kommt für die "Fortgeschrittene Signatur" zum Einsatz).
+
+
+Infobox
+
+Ein Speicherbereich auf der e-card. Die Personenbindung ist z.B. in einer Infobox gespeichert; ebenso Vollmachten.
+
+Bei Bürgerkarten auf älteren Bankomatkarten ist der Zugriff auf die Infobox durch eine eigene Infobox-PIN gesichert. Standardmäßig ist als Infobox-PIN die Zahlenfolge "0000" voreingestellt.
+
+
+Fortgeschrittene Signatur
+
+Die mittlere der 3 Qualitäten elektronischer Signaturen laut Signaturgesetz. Durch eine 4-stellige PIN geschützt.
+
+Entspricht NICHT der eigenhändischen Unterschrift. Daher nur als Identitätsnachweis geeignet, nicht aber zum verbindlichen Ausdruck einer Zustimmung.
+
+Nahezu niemand war bislang jemals an dieser Signatur interessiert.
+
+
+Qualifizierte Signatur
+
+Die höchste der 3 Qualitäten elektronischer Signaturen laut Signaturgesetz. Durch eine 6-stellige PIN geschützt.
+
+Entspricht eigenhändischer Unterschrift.
+
+Nahezu überall wird immer nur diese Form der Signatur gewünscht.
+
+
+Bürgerkarte
+
+Die Bürgerkarte ist eine Signaturkarte welche zusätzlich eine Personenbindung enthält.
+
+
+Signaturkarte
+
+Eine Chipkarte, die zwar ein Zertifikat enthält, aber keine Personenbindung, und die daher keine Bürgerkarte ist.
+
+
+Personenbindung
+
+Die Personenbindung stellt eine Verbindung zwischen Ihrem qualifizierten Zertifikat und Ihrer Stammzahl her. Da Sie im Zertifikat nur durch Ihren Namen identifiziert sind, wären sonst Verwechslungen zwischen mehreren Personen möglich (bei Namensgleichheit). Technisch gesehen ist die Personenbindung eine von der Stammzahlenregisterbehörde signierte Datei im XML-Format, die während des Aktivierungsprozesses auf dem Chip der Karte und bei der Handy-Signatur in einem Hochsicherheits-Server der A-Trust gespeichert wird.
+
+
+Stammzahl
+
+Eine aus der ZMR-Zahl abgeleitete Nummer (z.B. Qq03dPrgcHsx3G0lKSH6SQ==), die die Basis der Personenbindung bildet. Die Stammzahl wird durch Triple-DES-Verschlüsselung erzeugt; es ist daher nicht möglich, aus der Stammzahl wieder die ZMR-Zahl zu errechnen.
+
+
+ZMR-Zahl (Melderegisterzahl)
+
+Eine vom Zentralen Melderegister (ZMR) vergebene Zahl, die jede in Österreich gemeldete Person eindeutig identifiziert. ZMR-Zahlen sind 12-stellig, also z.B. 000247681888. Sie bestehen aus Zufallszahlen und einer Prüfziffer.
+Ihre ZMR-Zahl können Sie auf Ihrer Meldebestätigung (ersetzt seit 1.3.2002 den alten Meldezettel) sehen.

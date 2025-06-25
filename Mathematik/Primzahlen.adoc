@@ -1,0 +1,175 @@
+﻿Primzahlen
+==========
+v2023.124
+
+
+Natürliche Zahlen welche nur durch sich selbst sowie 1 teilbar sind, nennt man Primzahlen. Die erste Primzahl ist 2.
+
+
+Warum ist 1 keine Primzahl?
+---------------------------
+
+Historisch gab es unterschiedliche Ansichten darüber ob auch 1 eine Primzahl sei. Denn die hier austauschbaren Begriffe "sowie", "und" und "oder" konnen sowohl inklusiv als auch gegenseitig ausschließend interpretiert werden, und erst die Definition ob die erste Primzahl 1 oder 2 sei löst die Mehrdeutigkeit auf.
+
+Dadurch handelt es sich aber um keine mathematische zwingende Definition für das Konzept mehr. Sondern es handelt sich um die rein willkürliche Bevorzugung einer von zwei mathematisch betrachtet gleichwertigen Alternativen.
+
+Der geringe Praxiswert von 1 als Primzahl war dabei wohl der Hauptgrund, warum sich die Entscheidung für die Interpretation von 2 als erster Primzahl mittlerweile durchgesetzt hat. Denn sonst müsste man bei vielen Algorithmen bzw. Formeln die mit Primzahlen arbeiten immer anmerken "außer die 1". Der eigentliche Grund für die Entscheidung ist daher Faulheit.
+
+
+Naiver Primzahltest
+-------------------
+
+Man probiert einfach für jede natürliche Zahl größer 1 und kleiner `n`, ob `n` ohne Rest durch diese teilbar ist. Gibt es keine solche Zahl, ist `n` eine Primzahl.
+
+
+Verbesserung 1
+~~~~~~~~~~~~~~
+
+Mit Ausnahme von 2 brauchen nur ungerade Teiler getestet werden
+
+
+Verbesserung 2
+~~~~~~~~~~~~~~
+
+Man braucht maximal Teiler untersuchen welche nicht größer als die Quadratwurzel von `n` sind.
+
+Denn wenn es einen noch zu findenden größeren Primfaktor gäbe, müsste es auch einen zweiten Primfaktor geben der kleiner als die Wurzel aus `n` ist. Denn andernfalls wäre das Produkt beider Faktoren bereits größer als `n`.
+
+Diese kleineren Teiler wurden jedoch alle bereits erfolglos getestet, so dass ausgeschlossen werden kann dass es solch einen zweiten Faktor gibt.
+
+Daher muss `n` eine Primzahl sein da sie keine anderen Primfaktoren hat.
+
+
+Pi-Funktion
+-----------
+
+`π(x)` ist die 'Primzahlfunktion', die für beliebige reelle Zahlen `x` definiert ist als die Anzahl der Primzahlen, die nicht größer als `x` sind.
+
+
+Primzahlen-Theorem
+------------------
+
+Das Primzahlen-Theorem sagt aus, dass die Anzahl der existierenden Primzahlen welche kleiner als die natürliche Zahl `N` sind in der Größenordnung `N / ln(N)` liegt. (Wobei man das wirklich nur sehr grob nehmen sollte. Die tatsächliche Anzahl kann sich durchaus um einen Faktor 10 unterscheiden - Faktor 8 sah ich schon beim ersten Test - aber typischer Weise vermutlich etwas darunter.)
+
+
+Sieb des Eratosthenes
+---------------------
+
+Man unterhält ein assoziatives Flag-Array, welches durch Zahlen größer `1` indiziert wird.
+
+Alle Flags werden am Anfang gesetzt.
+
+Der Algorithmus beginnt besteht aus einem einzelnen Durchlauf durch das Array, beginnend mit dem numerisch niedrigsten vorhandenen Index.
+
+Jedes gesetzte zum aktuellen Schleifenindex gehörende Flag wird als nächste gefundene Primzahl interpretiert.
+
+Nur in diesem Fall werden in einer Unterschleife alle Flags die zu ganzzahligen Vielfachen dieser Primzahl als Index gehören zurückgesetzt.
+
+Am Ende des Algorithmus repräsentieren die Indizes alle immer noch gesetzten Flags gefundene Primzahlen.
+
+
+Implementation
+~~~~~~~~~~~~~~
+
+Der Algorithmus wird typischer Weise durch ein normales lineares Array implementiert, dessen tatsächliche `0`-basierte Indizes `i` den assoziierten "logischen" Indizes `2 * i + 3` entsprechen.
+
+Die Primzahl `2` kann dann zwar nicht gefunden werden und muss explizit zum Ergebnis hinzu gefügt werden, aber man spart sich dadurch die Hälfte des Speicherplatzes für das Array ein.
+
+
+Optimierungen
+^^^^^^^^^^^^^
+
+* Für Sprachen die Arrays bieten welche automatisch mit `0` initialisiert sind, bietet es sich an die Flag-Logik umzukehren und negierte Flags zu speichern. So spart man sich eine explizite Initialisierung des Arrays.
+
+* Da mindestens ein Primfaktor einer zusammengesetzten Zahl immer kleiner gleich der Wurzel der Zahl sein muss, ist es ausreichend, nur jene Vielfachen in der inneren Schleifen zu markieren, die kleiner oder gleich der Wurzel der höchsten (potenziellen) Primzahl im Suchbereich sind.
+
+* Man kann die Schleife zum Markieren auch erst mit dem Quadrat der aktuellen Primzahl beginnen, da alle kleineren Vielfachen bereits markiert sein müssen.
+
+
+Strong Primes in der Mathematik
+-------------------------------
+
+Folgende Bedingung gilt für sie: Sie sind größer als das arithmetische Mittel der vorherigen und nächsten Primzahl. Das bedeutet, sie sind näher bei der nächsten als der vorherigen Primzahl.
+
+Wenn die Entfernung gleich ist ist es eine Balanced Prime, andernfalls eine Weak Prime.
+
+
+Strong Primes in der Kryptografie
+---------------------------------
+
+Für solch eine Primzahl `p` gibt es dann folgende Bedingungen:
+
+* `p - 1` hat große Primfaktoren. Das bedeutet es existiert eine Ganzzahl `a1` und eine große Primzahl `q1` für welche gilt: `p = a1 * q1 + 1`
+
+* `q1 - 1` hat große Primfaktoren. Das bedeutet es existiert eine Ganzzahl `a2` und eine große Primzahl `q2` für welche gilt: `q1 = a2 * q2 + 1`
+
+* `p + 1` hat große Primfaktoren. Das bedeutet es existiert eine Ganzzahl `a3` und eine große Primzahl `q3` für welche gilt: `p = a3 * q3 - 1`
+
+Wenn ein Modulus `n = p * q` aus zwei Strong Primes gebildet wird, ist die Faktorisierung von `n` mit dem Pollard-Algorithmus nicht praktikabel.
+
+Leider schützt dies jedoch nicht vor der Faktorisierung durch neuere Algorithmen wie 'Lenstra Elliptic Curve Factorization' oder 'Number Field Sieve', und wird für 'RSA' daher angesichts des hohen Rechenaufwands nicht empfohlen.
+
+
+Sophie Germain Prime und Safe Prime
+-----------------------------------
+
+Für eine Sophie Germain Primzahl `p` gilt dass `2 * p + 1` ebenfalls eine Primzahl ist.
+
+Letztere wird dann 'Safe Prime' genannt.
+
+Bei 'Diffie Hellman' wird empfohlen, dass der Modulus solch eine Safe Prime sein soll. Es gilt zudem für die meisten Crypto-Verfahren deren Sicherheit auf diskretem Logarithmus beruht.
+
+Gefundene 'Safe Primes' sind mit hoher Wahrscheinlichkeit auch kryptografische 'Strong Primes'.
+
+`ssh-keygen -G` sucht nach (vermutlichen) Sophie Germain Primzahlen ab einer bestimmten (oder zufälligen) Zahl als Startpunkt sequenzieller Suche.
+
+`ssh-keygen -T` berechnet und filtert aus diesen daraus dann (probabilistisch nahezu-garantiert echte) Safe Primes.
+
+
+Spezialfall Generator == 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Theorie: Wenn `g == 4`, `sg == Sopie_Germain_Prime` und `sp == Safe_Prime (== 2 * sg + 1)`, dann generiert `g ** i mod sp` eine zyklische Gruppe welche exakt `sg` Elemente enthält.
+
+Diese Theorie wurde für alle Safe Primes bis 10 Millionen rechnerisch verifiziert.
+
+Empfehlung für Diffie-Hellman-Gruppen: Immer `Generator == 4` und eine beliebige Safe Prime (die kleinste existierende ist `5`) verwenden.
+
+
+Miller-Rabin Test
+-----------------
+
+Das ist ein in der Grundvariante probabilistischer Test ob eine Zahl tatsächlich eine Primzahl ist. Er wird in Iterationen durchgeführt. Jede Iteration erhöht die Wahrscheinlichkeit dafür dass es eine Primzahl sein könnte um durchschnittlich 75 % oder ermittelt mit Sicherheit, dass es keine ist.
+
+Der Test hat zwei Parameter: Die zu testende potenzielle ungerade Primzahl `n >= 5` und eine beliebige Ganzzahl `a` im Bereich von `2` bis `n - 2` (beides inklusive).
+
+Als erstes berechnet man ganzzahlige `d` und `j` so dass +n - 1 = d * 2^j^+.
+
+Wenn nun +a^d^ ≡ 1 mod n+ oder auch +(a^d * k^) ≡ -1 mod n+ mit +k = 2^r^+ für zumindest ein ganzzahliges `r` im Bereich `0 <= r < j`, dann liefert der Algorithmus das Ergebnis "möglicherweise prim". Andernfalls handelt es sich definitiv um keine Primzahl.
+
+Indem man diesen Test mit zufällig ausgewählten `a` wiederholt solange er "möglicherweise prim" liefert, erhöht sich die Wahrscheinlichkeit dass `n` tatsächlich prim ist mit jeder Iteration um 75 %.
+
+Eine ausreichende Anzahl (`ssh-keygen` benutzt 100 Iterationen per Default; ich wähle immer 400 zur Sicherheit) von Iterationen garantiert daher mit an Sicherheit grenzender Wahrscheinlichkeit, dass eine getestete Zahl tatsächlich eine Primzahl ist.
+
+Nicht-Primzahlen welche diverse Primzahltests bestehen werden verallgemeinernd als "pseudoprimes" bezeichnet. Solche die dem Miller-Rabin Test bestehen ("wahrscheinlich prim") werden als "strong pseudoprime" bezeichnet.
+
+Der Miller-Rabin-Test, ausreichend häufig wiederholt, lässt sich durch solche Pseudo-Primzahlen *nicht* herein legen. Es ist aber wichtig, dass der Angreifer nicht vorhersagen kann welche `a` für den Test ausgewählt werden. Ansonsten kann er eine Fake/Pseudo-Primzahl gezielt so konstruieren, dass sie alle Iterationen des Tests fälschlicher Weise übersteht.
+
+
+Nicht-deterministischer Test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Man kann den Miller-Rabin-Test jedoch auch dazu verwenden, deterministisch (also definitiv) festzustellen ob `n >= 5` eine Primzahl ist, indem alle `a` aus dem Bereich `2` bis +min(n - 1, floor(2 * ln(n)^2^))+ getestet werden.
+
+
+Abgekürzte deterministische Tests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Bis zu bekannten Obergrenzen für `n` kann man diesen Bereich auch durch ausgewählte `a` ersetzen. Dabei dürfen nur solche `n` getestet werden, die größer sind als das jeweils größte angegebene `a`.
+
+* Wenn `n < 2.047`, genügt es, `a = 2` zu testen.
+* Wenn `n < 1.373.653`, genügt es, `a = 2` und `3` zu testen.
+* wenn `n < 9.080.191`, genügt es, `a = 31` und `73` zu testen.
+* wenn `n < 4.759.123.141`, genügt es, `a = 2, 7` und `61` zu testen.
+
+Es gibt noch weitere solche Tests bis zu ca. 80 Bit Größe, aber die wird man selten brauchen weil die zu testenden Zahlen entweder deutlich kleiner oder größer sind.

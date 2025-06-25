@@ -1,0 +1,125 @@
+﻿W-Shingling, Jaccard-Index und Sørensen-Dice Koeffizient
+========================================================
+v2021.62
+
+Diese Methoden berechnen die "Ähnlichkeit" zwischen Dokumenten bzw. Zeichenketten auf eine statistische Weise, im Gegensatz zu Methoden wie der Levenshtein-Distanz welche den Aufwand der Transformation einer Zeichenkette in eine andere bewertet.
+
+Die statistischen Methoden ergeben für natürlichsprachlichen Text üblicherweise befriedigendere Ergebnisse.
+
+
+W-Shingling
+-----------
+
+'W-Shingling' bestimmt die Ähnlichkeit des Inhaltes zwischen zwei Textdokumenten, welche natürlich-sprachlichen Text enthalten.
+
+Dabei wird der Text zunächst in Einzelworte tokenisiert, und ein gleitendes Fenster mit der Länge von `w` Worten über den Text gezogen.
+
+Dabei wird eine Menge aus allen Fensterinhalten gebildet, in welcher alle Wiederholungen desselben Fensterinhalts weggelassen werden.
+
+Diese Menge bildet man nun auf die beschriebene Weise für beide zu vergleichenden Dokumente `A` und `B`. Die Ergebnis-Mengen seien im Folgenden als `S(A)` und `S(B)` bezeichnet.
+
+Die Ähnlichlichkeit r der beiden Dokumente, ausgedrückt als Zahl zwischen 0 (überhaupt keine Übereinstimmung) und 1 (von möglichen Wiederholungen abgesehen völlig identisch) berechnet sich dann als:
+
+....
+r := Anzahl(Durchschnitt(S(A), S(B))) / Anzahl(Vereinigung(S(A), S(B)))
+....
+
+Wobei `Durchschnitt()` und `Vereinigung()` die bekannten Mengenoperationen sind, und `Anzahl()` liefert die Anzahl der Elemente einer Menge.
+
+
+Jaccard-Index
+-------------
+
+Die Berechnung von `r` entspricht exakt dem Jaccard-Index, auch als Jaccard-Ähnlichkeits-Koeffizient bezeichnet (der Namensgeber ist Franzose), der als Maß für die Ähnlichkeit bzw. Diversität von Stichproben-Mengen heran gezogen wird.
+
+
+Jaccard-Distanz
+---------------
+
+Es gibt auch eine Jaccard-Distanz, welche die *Unähnlichkeit* zweier Stichproben-Mengen ausdrückt, und entsprechend Eins minus dem Jacard-Index ist.
+
+Die Spezialität von 'w-Shingling' beruht dabei nur auf der konkreten Methode, wie die beiden zu vergleichenden Mengen gebildet werden. So gibt es beim allgemeinen Jaccard-Index kein Verbot mehrfach vorkommender identischer Elemente in den Mengen.
+
+
+Verallgemeinerungen
+~~~~~~~~~~~~~~~~~~~
+
+Der Jacard-Index kann des weiteren verallgemeinert werden um die Ähnlichkeit zweier Vektoren zu vergleichen:
+
+....
+J(x, y) := Summe(Minimum(x[i], y[i]) / Summe(Maximum(x[i], y[i])
+....
+
+wobei die Summe über alle möglichen Vektor-Komponenten `i` gebildet wird.
+
+Noch allgemeiner kann man die Summenfunktion durch ein Integral ersetzen und die Vektoren durch integrierbare Funktionen, welche einen nicht-negativen Messwert für einen definierten Eingangs-Wertebereich zurück liefern. In diesem Fall beschreibt `J` dann die Ähnlichkeit der beiden Funktionen.
+
+
+Tanimoto-Ähnlichkeit/-Distanz
+-----------------------------
+
+Bestimmte Anwendungsfälle des Jacard-Indexes werden auch als "Tanimoto"-Ähnlichkeit/Distanz bezeichnet. Beispielsweise wenn Bitmaps als Mengen vergleichen werden. In diesem Fall wird bitweises 'UND' als Durchschnitt verwendet, und bitweises 'ODER' als Vereinigung.
+
+
+MinHash
+-------
+
+Der MinHash-Algorithmus kann eine Näherung für den Jaccard-Index wesentlich schneller berechnen als durch das tatsächliche Bilden von Durchschnitt und Vereinigung zweier Mengen. Man hasht dazu jedes Element der Mengen mit einer Hash-Funktion `H()` in einen eindeutigen Ganzzahlwert. Dann ist
+
+....
+J(A, B) := P(H_min(A) = H_min(B))
+....
+
+wobei `H_min(x)` jenes Element `x[i]` der Menge x ist, für das `H(x[i])` das Minimum aller möglichen `x[i]` darstellt, und `P()` die Wahrscheinlichkeit für die Gleichheit der beiden Minima sei. Ein Problem bei MinHash ist wie man die Hash-Funktion so implementiert dass es keine Kollisionen gibt.
+
+
+SimHash
+~~~~~~~
+
+SimHash ist ein ähnlicher Algorithmus, der von Google entwickelt wurde.
+
+SimHash ist für eine Ähnlichkeits-Suche nur eingeschränkt geeignet da die Abweichungen zwischen den Dokumenten nur relativ gering sein dürfen. Für Ähnlichkeits-Suchen ist MinHash deutlich besser geeignet, jedoch auch langsamer und es braucht mehr Speicher als SimHash.
+
+SimHash ist aber gut zum Finden vom "Beinahe-Duplikaten" geeignet. Und zwar ohne die Originale dabei zur Hand haben zu müssen oder viel Speicherplatz aufwänden zu müssen. Man kann damit riesige Datenmengen ohne Probleme hashen.
+
+SimHash hasht jedes Dokument in einen `N`-Bit-Wert, so dass ähnliche Dokumente eine geringere "bitwise" Hamming-Distanz haben als weniger ähnliche.
+
+Die "bitwise" Hamming-Distanz ist die Anzahl der unterschiedlichen Bits an denselben Bit-Positionen zweier Zahlen.
+
+Anders formuliert, die Anzahl der "`1`"-Bits in der 'XOR'-Verknüpfung der SimHash-Werte zweier Dokumente ist für ähnliche Dokumente geringer als für weniger ähnliche.
+
+Auch beim SimHash werden alle Dokumente zunächst in Einzelworte tokenisiert (jedem Wort wird ein über alle Dokumente hinweg eindeutiger Zahlenwert zugeordnet), und ein gleitendes Fenster mit der Länge von `w` Worten über den Text gezogen. Typischer Weise werden die Bytewerte aus denen das Dokument besteht als "Worte" und `w == 4` verwendet.
+
+Der SimHash besteht dann aus den in eine Ganzzahl gerundeten Mittelwerten aller einzelnen Bits der konventionell gehashten Fensterinhalte.
+
+Dazu wird ein `Array[]` mit `N` mal `0` initialisiert. Dann wird ein `N`-Bit Hashwert (64 Bit sind eine beliebte Wahl) aus jedem Fensterinhalt gebildet und alle `N` Bits jedes Hashes untersucht: Jedes "`0`"-Bit # `i` im Hash erniedrigt `Array[i]`, jedes "`1`"-Bit # `i` erhöht `Array[i]`.
+
+SimHash wird am Ende aus den korrespondierenden Werten von `Array[]` gebildet, wobei jedes `Array[i] > 0` zu einem "`1`"-Bit wird und andernfalls zu einem "`0`"-Bit.
+
+Ein Problem das es nun noch zu lösen gilt ist das Hamming-Distanz-Problem: Wie findet man bei einer riesigen Anzahl Dokumenten diejenigen, deren SimHashes nachdem man sie 'XOR'-verknüpft hat die wenigsten `1`-Bits haben?
+
+Wenn man jedes Dokument mit jedem anderen vergleicht ist die Lösung trivial, aber genau das verbietet sich wegen dem quadratischen Aufwand. Google hat ein Verfahren mit permutierten Tabellen entwickelt, welches als Ergebnis aber nur sehr wenige Bits Differenz zwischen zwei SimHashes toleriert bzw. noch findet.
+
+MinHash und SimHash kommen dann zum Einsatz, wenn sehr große Mengen verglichen werden müssen, bei denen das explizite Berechnen von Durchschnitt und Vereinigung zu aufwändig wäre.
+
+Das ist beispielsweise der Fall bei Berechnungen zur Cluster-Bildung anhand des Jaccard-Index, bzw. bei der Ermittlung der Ähnlichkeit zahlreicher Suchergebnisse.
+
+
+Sørensen-Dice Koeffizient
+-------------------------
+
+Dieser Koeffizient hat starke strukturelle Ähnlichkeit mit dem Jaccard-Index ähnlich und bewertet die Ähnlichkeit zweier Stichproben als Wert zwischen 0 und 1.
+
+Er ist auch als "F1 score", "DSC" (Dice similarity coefficient), "Czekanowski's binary (non-quantitative) index" sowie "Zijdenbos similarity index" bekannt.
+
+....
+QS := 2 * Anzahl(Durchschnitt(S(A), S(B))) / (Anzahl(S(A)) + Anzahl(S(B)))
+....
+
+Wenn man hierbei `S()` wie bei 'w-Shingling' mit `w = 2` für Zeichen anstatt Worte implementiert, kann man mit dem DSC auch Zeichenketten auf Ähnlichkeit vergleichen.
+
+Wenn man hingegen die Ähnlichkeit von Test-Reihen bzw. Experimenten anhand deren "True Positives" (TP), "False Positives" (FP) und "False Negatives" (FN) vergleichen will:
+
+....
+DSC := 2 * TP / (2 * TP + FP + FN)
+....

@@ -1,0 +1,224 @@
+﻿Teilbarkeitsregeln
+==================
+v2023.85
+
+
+Teilbarkeit durch `2`:: Das ist keine Überraschung. Eine Zahl ist durch `2` teilbar, wenn sie mit `0`, `2`, `4`, `6` oder `8` endet, man kann auch sagen: wenn die letzte Ziffer gerade ist.
+
+Teilbarkeit durch `3`:: Bilde die Quersumme der Zahl (d.h. addiere alle Ziffern).
++
+--
+Wenn die Quersumme durch `3` teilbar ist, dann ist es die ursprüngliche Zahl auch.
+
+Beispiel: Ist `3` ein Teiler von `2.169.252`?
+
+Ja, denn die Quersumme ist `2+1+6+9+2+5+2 = 27`, und `27` ist durch `3` teilbar.
+
+Sollte die erste Quersumme zu groß sein, als daß du die Teilbarkeit durch `3` schon sehen kannst, dann bilde von der Quersumme nochmal die Quersumme. Das kannst du solange machen, bis du eine einstellige Zahl hast.
+
+Beispiel: `9938993948234086886` ist nicht durch `3` teilbar, denn `9+9+3+8+9+9+3+9+4+8+2+3+4+0+8+6+8+8+6 = 116` und die Quersumme von `116` ist `8`.
+--
+
+Teilbarkeit durch `4`:: Wenn die letzten beiden Ziffern der gegebenen Zahl als Zahl gelesen durch `4` teilbar sind, dann ist die gegebene Zahl durch `4` teilbar.
++
+Beispiel: `56.789.143.764` ist durch `4` teilbar, weil `64` durch `4` teilbar ist. Auch `56.789.000.000` ist durch `4` teilbar, denn `00 = 0` ist durch `4` teilbar (`0/4 = 0`).
+
+Teilbarkeit durch `5`:: Jede Zahl, die mit `0` oder `5` endet ist durch `5` teilbar.
+
+Teilbarkeit durch `6`:: Ein durch `6` teilbare Zahl muß durch `2` und durch `3` teilbar sein.
++
+--
+Ungerade Zahlen sind niemals durch `6` teilbar. Wenn die Zahl aber gerade ist, dann prüfe, ob sie durch `3` teilbar ist. Ist sie es, dann ist sie auch durch `6` teilbar.
+
+Beispiel: `108.273.288` ist gerade. Die Quersumme `39` ist glatt durch `3` teilbar. Darum ist die Zahl durch `6` teilbar.
+--
+
+Teilbarkeit durch `7`:: Multipliziere die letzte Ziffer der Zahl mit `2`. Subtrahiere das Ergebnis von der Zahl ohne die letzte Stelle. Wenn das Ergebnis durch `7` teilbar ist, dann ist es die ursprüngliche Zahl auch.
++
+--
+Beispiel: `364` ist durch `7` teilbar, denn die letzte Ziffer ist `4`, multipliziert mit `2` ergibt `8`. Subtrahiere `36` - 8 = 28. `28` ist durch `7` teilbar.
+
+Auch diesen Test kann man mehrmals nacheinander durchführen, solange bis man bei einer Zahl endet, von der man weiß, daß sie durch `7` teilbar ist.
+Beispiel: `16562` ?
+....
+ 1656 - 2*2 = 1652
+  165 - 2*2 =  161
+   16 - 2*1 =   14
+....
+`14` ist durch `7` teilbar, also auch `16562`.
+--
+
+Teilbarkeit durch `8`:: Wenn die drei letzten Ziffern der gegebenen Zahl als Zahl gelesen durch `8` teilbar sind, dann ist die gegebene Zahl durch `8` teilbar.
++
+--
+Beispiel: `56.789.000.000`? Die letzten drei Ziffern sind `000`, und `000` = 0 ist durch `8` teilbar.
+
+Und `786.565.120` ? Die letzten `3` Ziffern ergeben die Zahl `120`, und `120` ist durch `8` teilbar.
+
+Wer das nicht so leicht sieht, der teilt die Zahl aus den letzten `3` Ziffern dreimal durch `2`. Wenn das Ergebnis ganzzahlig ist, dann ist die gegebene Zahl durch `8` teilbar.
+
+Beispiel: `2956`? Teile `956` durch `2`, ergibt `478`. Teile `478` durch `2`, ergibt `239`. `239` ist nicht glatt durch `2` teilbar. Folglich ist `2956` nicht durch `8` teilbar.
+--
+
+Teilbarkeit durch `9`:: Bilde die Quersumme. Wenn die Quersumme durch `9` teilbar ist, dann ist es auch die ursprünliche Zahl.
++
+Genau wie beim Test für die `3` kann man auch nochmal die Quersumme der Quersumme berechnen.
+
+Teilbarkeit durch `10`:: Ganz einfach. Die Zahl muß mit einer `0` enden.
+
+Teilbarkeit durch `11`:: Die allgemeine Methode geht so:
++
+--
+. Unterstreiche jede zweite Ziffern der Zahl.
+. Addiere alle unterstrichenen Ziffen.
+. Addiere alle nicht unterstrichenen Ziffern.
+. Bilde die Differenz der größeren minus der kleineren Ziffernsumme
+. Ist das Ergebnis durch `11` teilbar, dann auch die ursprüngliche Zahl
+
+Beispiel: `21483` ? Unterstreiche: `21483`.
+
+Die Summe der unterstrichenen Ziffern ist `9`. Die Summe der nicht unterstrichenen Ziffern ist auch `9`. Die Differenz `9` - `9` ist `0`, und `0` ist durch `11` teilbar.
+
+Man nennt das Ergebnis die alternierende Quersumme oder auch Wechselsumme. Dabei bedeutet "alternierend", daß man die Ziffern abwechselnd addiert und subtrahiert.
+
+Weiteres Beispiel: `181907` = `181907`. Die Summe der unterstrichenen Ziffern ist `8+9+7` = `24`. Die Summe der nicht unterstrichenen Ziffern ist `2`. Als Differenz ergibt sich `22`, und `22` ist durch `11` teilbar.
+--
+
+Teilbarkeit durch `12`:: Eine Zahl ist durch `12` teilbar, wenn sie durch `3` und durch `4` teilbar ist.
++
+Teste also die Teilbarbeit durch `12`, indem du mit den oben gegebenen Verfahren prüfst, ob die Zahl durch `3` und durch `4` teilbar ist. Wenn beides stimmt, dann ist die Zahl durch `12` teilbar.
+
+Teilbarkeit durch `13`:: Eine Zahl ist durch `13` teilbar, wenn ihre Wechselsumme dritter Stufe durch `13` teilbar ist.
++
+--
+Man kann also die Idee der Wechselsumme noch verallgemeinern.
+
+* Für die Berechnung der Wechselsumme dritter Stufe teilt man die Zahl von rechts beginnend in Dreigruppen ein und unterstreicht jede zweite Dreiergruppe.
+
+* Wenn die Summe der unterstrichenen Dreiergruppen minus der Summe der nicht unterstrichenen Dreiergruppen durch `13` teilbar ist, dann ist es die ursprüngliche Zahl auch.
+
+Beispiel: `3458900745`?
+
+* Aufteilen in Dreiergruppen `3.458.900.745`
+* Unterstreichen: `3.458.900.745`
+* Summe der unterstrichenen Zahlen: `458` + `745` = `1203`
+* Summe der nicht unterstrichenen Zahlen: `3` + `900` = `903`
+* Differenz: `1203` - `903` = `300`
+
+Die `300` ist nicht durch `13` teilbar.
+--
+
+Teilbarkeit durch `15`:: Eine Zahl ist durch `15` teilbar, wenn sie durch `3` und durch `5` teilbar ist.
++
+--
+Teste also die Teilbarbeit durch `15`, indem du mit den oben gegebenen Verfahren prüfst, ob die Zahl durch `3` und durch `5` teilbar ist. Wenn beides stimmt, dann ist die Zahl durch `15` teilbar.
+
+Man kann auch eine eigene Teilbarkeitsregel formulieren:
+
+Eine Zahl ist durch `15` teilbar, wenn sie durch `3` teilbar ist und mit `0` oder `5` endet.
+--
+
+Teilbarkeit durch `17`:: Multipliziere die letzte Ziffer der Zahl mit `5` und subtrahiere die vorletzte Ziffer.
++
+--
+* Multipliziere die gerade berechnete Summe mit `5` und und addiere die
+vorvorletzte Ziffer.
+
+* Solange es weitere Ziffern gibt, nimm das bisherige Ergebnis mal `5`, und subtrahiere bzw. addiere die (von hinten) nächste Ziffer. Addieren und Subrahieren wechseln sich immer ab.
+
+* Wenn alle Ziffern von hinten nach vorne verarbeitet sind, prüfe, ob das Ergebnis durch `17` teilbar ist. Wenn ja, ist die ursprüngliche Zahl auch durch `17` teilbar, ansonsten nicht.
+
+Beispiel: Ist `39457` durch `17` teilbar?
+....
+7*5-5=30
+30*5+4=154
+154*5-9=761
+761*5+3=3808
+....
+Sollte die berechnet Zahl zu groß sein, als daß man einfach erkennt, ob sie durch `17` teilbar ist, kann man mit dieser Zahl das Verfahren
+wiederholen. Das tun wir nun:
+
+Ist `3808` durch `17` teilbar?
+....
+8*5-0=40
+40*5+8=208
+208*5+3=1037
+....
+
+Ist `1037` durch `17` teilbar?
+....
+7*5-3=32
+32*5+0=160
+160*5+1=799
+....
+
+Ist `799` durch `17` teilbar?
+....
+9*5-9=36
+36*5+7=187
+....
+Das ist nun erkennbar als `11*17`. Weil `187` durch `17` teilbar ist, ist auch `799` durch `17` teilbar, weil `799` durch `17` teilbar ist, ist auch `1037` durch `17` teilbar, usw. rückwärts argumentiert bis zur gefragten Zahl `39457`, von der wir nun wissen, daß sie durch `17` teilbar ist.
+--
+
+Teilbarkeit durch `19`:: Verdoppele die letzte Ziffer der Zahl und addiere die vorletzte Ziffer.
++
+--
+* Verdoppele die gerade berechnete Summe und addiere die vorvorletzte Ziffer.
+
+* Solange es weitere Ziffern gibt, verdoppele das bisherige Ergebnis, und addiere die weitere Ziffer.
+
+* Wenn alle Ziffern von hinten nach vorne verarbeitet sind, prüfe, ob das Ergebnis durch `19` teilbar ist.
+
+* Wenn ja, ist die ursprüngliche Zahl auch durch `19` teilbar, ansonsten nicht.
+
+Beispiel: `87039` ist durch `19` teilbar, denn
+....
+ 9*2+3=21
+21*2+0=42
+42*2+7=91
+91*2+8=190
+....
+Weil `190` durch `19` teilbar ist, ist auch `87039` durch `19` teilbar.
+Sollte die berechnete Zahl zu groß sein, als daß man einfach erkennt, ob sie durch `19` teilbar ist, kann man mit dieser Zahl das Verfahren wiederholen.
+
+Beispiel: Ist `87043389` ist durch `19` teilbar?
+....
+9*2+8=26
+26*2+3=55
+55*2+3=113
+113*2+4=230
+230*2+0=460
+460*2+7=927
+927*2+8=1862
+....
+
+Ist nun aber `1862` durch `19` teilbar?
+....
+2*2+6=10
+10*2+8=28
+28*2+1=57
+....
+Und `57` ist `3*19`.
+
+Weil `57` durch `19` teilbar ist, ist `1862` durch `19` teilbar, und weil `1862` durch `19` teilbar ist, ist `87043389`  durch `19` teilbar.
+--
+
+Teilbarkeit durch `24`:: Wende die Tests für Teilbarkeit durch `3` und durch `8` an. Stimmen beide, dann ist die Zahl durch `24` teilbar.
+
+Teilbarkeit durch `33`:: Wende die Tests für Teilbarkeit durch `3` und durch `11` an. Stimmen beide, dann ist die Zahl durch `24` teilbar.
++
+--
+* Also, bilde die normale Quersumme und prüfe, ob diese durch `3` teilbar ist.
+
+* Wenn ja, dann bilde die alternierende Quersumme, und wenn die durch `11` teilbar ist, dann ist die ursprüngliche Zahl durch `33` teilbar.
+--
+
+Teilbarkeit durch +2^n^+:: Für `16`, `32` und allgemein die Potenzen +2^n^+ gilt: Eine Zahl ist durch +2^n^+ teilbar, wenn die letzten `n` Ziffern der Zahl durch +2^n^+ teilbar sind.
+
+Andere Zahlen:: Weitere Teilbarkeitskriterien, z.B. für `14`, kann man durch Kombination der anderer Kriterien angeben. (`14` = 2 * 7).
++
+--
+Für andere Zahlen, z.B. `17`, geht das nicht so, denn `17` ist eine Primzahl.
+
+Vielleicht gibt es dafür auch einen Test. Ich kenne ihn aber nicht.
+--

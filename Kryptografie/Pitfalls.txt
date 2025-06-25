@@ -1,0 +1,5 @@
+﻿Block-Ciphers mit Blockgrößen von 64 Bit (oder gar kleiner) sind anfällig für Birthday-Attacks.
+
+Daher wird z. B. auch empfohlen, dass mit Blowfish nicht mehr als 4 GiB große Dateien verschlüsselt werden sollen.
+
+Generell sollte man alle Ciphers mit Blockgrößen von weniger als 128 Bit meiden - zumindest wenn sie alleine zur Verschlüsselung genutzt werden.

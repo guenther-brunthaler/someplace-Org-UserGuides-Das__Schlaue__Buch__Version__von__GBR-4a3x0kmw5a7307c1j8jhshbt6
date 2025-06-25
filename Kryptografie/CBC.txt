@@ -1,0 +1,10 @@
+﻿Cipher Block Mode (CBC):
+
+C[0]= E(IV xor P[0])
+C[n]= E(C[n - 1] xor P[n])
+
+Der IV muss nicht geheim sein, aber er sollte mit demselben Schlüssel nicht für andere Nachrichten wiederbenutzt werden. Andernfalls kann man feststellen ob die Nachrichten identisch waren, und ob sie einen gemeinsamen identischen Präfix hatten sowie wie lange dieser ungefähr ist. Soweit dies kein Problem darstellt, kann auch ein konstanter oder mehrfach benutzter IV verwendet werden.
+
+Ein Fehler in einem verschlüsselten Block macht für diesen und den nachfolgenden Block eine das Original ergebende Entschlüsselung unmöglich; auf weitere Blocks hat er keine Auswirkungen mehr.
+
+Konkret verursacht ein Bitfehler im verschlüsselten Text einen komplett zerstörten entschlüsselten Block der dieses Bit enthält, sowie ein (mit 50:50 Chance) zerstörtes Bit im nachfolgenden entschlüsselten Block an derselben Position innerhalb des Blocks wie der ursprüngliche Bitfehler.

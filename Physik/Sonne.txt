@@ -1,0 +1,45 @@
+﻿
+Die Sonne wandelt pro Sekunde 564 Millionen Tonnen Wasserstoff in 560 Millionen Tonnen Helium um; die Differenz entspricht dem Massendefekt.
+
+1 Kilotonne TNT entspricht 10 ^ 12 Kalorien
+
+Die obigen Werte kann man noch genauer berechnen, indem man weiß dass 1367,9 W / m² Sonnenenergie die Erde erreichen (noch bevor sie auf die Atmosphäre trifft).
+
+Die Erde ist dabei 149,57871 Millionen km von der Erde entfernt. Daraus errechnet sich eine Leuchtkraft der Sonne von rund 384,6 YW. Das wiederum entspricht einem Massenverlust der Sonne von rund 4,279 Millionen Tonnen/s durch die oben erwähnte Kernfusion.
+
+https://www.lernhelfer.de/schuelerlexikon/physik/artikel/kernfusion
+
+Die Sonne ist eine riesige Gaskugel, die gegenwärtig zu etwa 73 % aus Wasserstoff und zu etwa 25 % aus Helium besteht. Im Kern herrschen Temperaturen von etwa 15 Millionen Kelvin, ein Druck von etwa 10^16 Pascal und eine Dichte von 160 g/cm³. Das sind die Bedingungen, unter denen Kernfusion vor sich geht [...]
+
+Zwei Wasserstoffkerne verschmelzen zu Deuterium. Dabei wird Energie freigesetzt und es werden Positronen abgestrahlt. Anschließend erfolgt die Verschmelzung zu einem Helium-3-Kern, wobei wieder Energie frei wird. Schließlich verschmelzen zwei Helium-3-Kerne zu Helium-4, wobei zwei Protonen (Wasserstoffkerne) entstehen und wiederum Energie frei wird [...]
+
+https://de.wikipedia.org/wiki/Wasserstoffbrennen
+
+Mit Wasserstoffbrennen wird die Kernfusion von Protonen (d. h. von Atomkernen des häufigsten Isotops 1H des Wasserstoffs) zu Helium im Inneren von Sternen [...] bezeichnet, also mit anderen Worten die stellare Wasserstofffusion. 
+
+Die direkte Fusion [...] ist zur Erklärung der Leuchtkräfte der Sterne zu unwahrscheinlich, das Wasserstoffbrennen läuft stattdessen vor allem in zwei verschiedenen Reaktionsketten ab:
+
+* Proton-Proton-Reaktion. Sie besteht aus einer Startreaktion gefolgt von 3 separaten temperaturanhängigen Ketten, die auf der Sonne im folgenden Anteil stattfinden: Proton-Proton-I-Kette: 83,30 %, Proton-Proton-II-Kette: 16,68 %, Proton-Proton-III-Kette: 0,02 %. Bei Sternen mit Massen bis etwa 1,5 Sonnenmassen spielt die Proton-Proton-Reaktion eine wichtigere Rolle bei der Energieumwandlung als der CNO-Zyklus. Etwa werden durch sie mehr als 98 % der Leuchtkraft der Sonne erzeugt. Die Fusionsrate ist proportional zur 4. Potenz der Temperatur. Die Proton-Proton-Reaktion kann in Sternen mit einer Kerntemperatur von mehr als 3 Millionen Kelvin ablaufen (bei braunen Zwergen sogar mit weniger, aber das sind keine Sterne). Bei diesen Temperaturen sind alle beteiligten Atomkerne vollständig ionisiert, d. h. ohne Elektronenhülle. 
+
+* Der Bethe-Weizsäcker-Zyklus (CNO-Zyklus). Hierzu wird noch einer der folgenden "Katalysatoren" benötigt, die in Summe verlustfrei in einander umgewandelt werden: 15N nach 12C (konsumiert 1H, gibt 4HE ab) nach 13N (konsumiert 1H, gibt Gammaquant ab) nach 13C (gibt Positron und Neutrino ab) nach 14N (konsumiert 1H, gibt Gammaquant ab) nach 15O (konsumiert 1H, gibt Gammaquant ab) und wieder zurück nach 15N (gibt Positron und Neutrino ab). Der Bethe-Weizsäcker-Zyklus läuft erst bei Temperaturen über 14 Millionen Kelvin ab und ist ab 30 Millionen Kelvin vorherrschend. Die Umsatzrate ist proportional zur vorhandenen Menge an 12C.
+
+Teilchen-Legende:
+
+1H: Wasserstoffkern; 1 Proton
+2H: Deuteriumkern; 1 Proton + 1 Neutron
+3He: Helium-3; 2 Protonen + 1 Neutron
+4He: Alpha-Teilchen; 2 Protonen + 2 Neutronen
+v: Neutrino
+ve: Elektron-Neutrino
+e+: Positron
+e-: Elektron
+
+Startreaktion der Proton-Proton-Reaktion: 2 x 1H fusionieren zu 2H + Positron + Elektron-Neutrino + 0,42 MeV. Es dauert in der Sonne 1,4 x 10^10 Jahre bis ein bestimmtes Proton mit einem anderen reagiert.
+
+Proton-Proton-I-Kette: Nach durchschnittlich 10^6 Jahren fusionieren 2 x 3He zu 1 x 4He + 2 x 1H + 12,86 MeV. Sie herrscht bei Temperaturen von 10-14 Millionen K vor. Unterhalb dieser Temperatur wird nur sehr wenig 4He produziert.
+
+Proton-Proton-II-Kette: Zuerst fusionieren 3He + 4He zu 7Be + Gammaquant + 1,59 MeV. Dann werden 7Be + Elektron zu 7Li + Elektron-Neutrino + 0,862 MeV. Schließlich fusionieren 7Li + 1H zu 2 x 4He + 17,35 MeV. Diese Kette läuft vorrangig bei Temperaturen von 14-23 Millionen K ab. 
+
+Proton-Proton-III-Kette: Zuerst fusionieren 3He + 3He zu 7Be + Gammaquant + 1,59 MeV. Dann fusionieren 7Be + 1H zu 8B + Gammaquant + 0,14 MeV. Dann werden 8B zu 8Be + Positron + Elektron-Neutrino + 18 MeV. Schließlich können 8Be zu 2 x 4He umgewandelt werden oder auch in die Gegenrichtung. Diese Kette ist vorherrschend bei Temperaturen über 23 Millionen K.
+
+Positronen-Annihilation: Positron + Elektron werden zu 2 Gammaquanten + 1,022 MeV.

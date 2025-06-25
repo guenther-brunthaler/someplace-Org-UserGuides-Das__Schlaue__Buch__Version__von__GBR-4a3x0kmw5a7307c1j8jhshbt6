@@ -1,0 +1,5 @@
+CORDIC = [Co]ordinate [R]otation [Di]gital [C]omputer
+
+Type Inference (anstatt Type Derivation)
+
+Power Bank (anstatt Battery Pack)

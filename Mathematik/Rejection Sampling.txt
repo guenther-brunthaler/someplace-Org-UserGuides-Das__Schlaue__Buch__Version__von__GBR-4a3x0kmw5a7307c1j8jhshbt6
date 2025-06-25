@@ -1,0 +1,30 @@
+﻿Wenn man mit Hilfe eines gleichverteilten Zufallsgenerators Zufallszahlen erzeugen will die bestimmten Bedingungen genügen, kann es einfacher sein Zufallszahlen zu verwerfen die sich nicht mit einfachen Mitteln in die gewünschten Bereiche bringen lassen, als dies durch eine teure Transformation aller möglicher Zahlen zu erreichen.
+
+Beispiel: Man kann ein Würfelereignis wie folgt implementieren:
+
+unsigned dice_roll(void) {
+	return (unsigned)(rand() * 6uL / (RAND_MAX + 1uL)) + 1u;
+}
+
+Um die teure Division bzw. Multiplikation zu vermeiden, kann man dies auch durch eine simplere Test-Schleife ersetzen:
+
+static unsigned dice_shr;
+
+void dice_init(void) {
+        int mx= RAND_MAX;
+        while (mx >> 1 >= 6) {
+                mx>>= 1;
+                ++dice_shr;
+        }
+}
+
+unsigned dice_roll(void) {
+        for (;;) {
+		unsigned roll;
+                if ((roll= rand() >> dice_shr) < 6) return roll + 1;
+        }
+}
+
+Dies vermeidet zudem "long"-Arithmetik.
+
+Allerdings macht dies natürlich nur Sinn, wenn rand() seinerseits billiger als drei Multiplikationen (eine davon entspricht der Division mit einem Kehrwehrt) ist.

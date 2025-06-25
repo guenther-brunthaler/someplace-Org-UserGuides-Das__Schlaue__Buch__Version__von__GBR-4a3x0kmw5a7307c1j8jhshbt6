@@ -1,0 +1,49 @@
+﻿Um Fließkommazahlen für Ganzzahl-Arithmetik bestmöglich als Brüche zu approximieren, muss man zunächst einmal Kettenbrüche verstehen.
+
+Ein "regelmäßiger", "regulärer", "einfacher" Kettenbruch ("continued fraction") stellt eine Zahl wie folgt dar:
+
+i1 + 1 / (i2 + 1 / (i3 + 1 / ( i4 + 1 / (...))))
+
+Wenn die darzustellende Zahl auf diese Weise exakt dargestellt werden kann endet dieser Ausdruck irgendwann, ansonsten setzt er sich unendlich fort (konkret bei der Approximation von irrationalen Zahlen).
+
+Da nur die "Teilnenner" i im Ausdruck variabel sind, gibt es eine Darstellung von Kettenbrüchen in der Form
+
+[i1; i2, i3, i4, ...]
+
+wobei das Semikolon den ganzzahligen Anteil der Ausgangszahl angibt. Außerdem ist i1 aus der Menge der ganzen Zahlen (die auch negative und 0 enthalten) und die restlichen i alle natürliche Zahlen (ganze Zahlen größer als 0).
+
+Bei "normalen" Kettenbrüchen (nicht "regelmäßig", "regulär", "einfach") können statt den 1 auch beliebige andere natürliche Zahlen stehen. Doch diese normalen Kettenbrüche interessieren uns hier nicht.
+
+Um eine Fließkommazahl in einen Kettenbruch umzuwandeln, wandelt man diese als erstes in einen normalen Bruch um, indem man die Zahl zuerst mit 10 ** n multipliziert so dass alle verfügbaren/gewünschten Nachkommastellen vor dem Komma sind, und diese Ganzzahl dann als Zähler des Bruches verwendet sowie 10 ** n als Nenner.
+
+Dann wandelt man diesen Bruch mit Hilfe des euklidschen Algorithmus in einen Kettenbruch um:
+
+$ cat cfract.awk
+BEGIN {
+        L= ARGV[1]; S= ARGV[2]
+        for (;;) {
+                N= int(L / S)
+                R= L - N * S
+                print N
+                if (S == 1 && R == 0) break
+                L= S; S= R
+        }
+}
+
+Beispiel: Approximierung von
+
+log10(2) = 3,3219280949 = 33219280949 ∕ 10000000000
+= 3 + 1 / (3 + 1 / (9 + 1 / (2 + 1 / (2 + 1 / (4 + 1 / (6 + 1 / (2 + 1 / (1 + 1 / (1 + 1 / (4 + 1 / (...)))))))))))
+
+Mit dem Script:
+
+$ awk -f cfract.awk 33219280949 10000000000 | paste -sd " "
+3 3 9 2 2 4 6 2 1 1 4 14 33 1 4 1 2 1 2 3
+
+Man beginnt nun mit dem vollen Satz aus Teilnennern und berechnet den sich daraus ergebenden Bruch (natürlich mit Kürzen soweit möglich).
+
+Sind Zähler oder Nenner dieses Bruchs zu groß für den Wertebereich der für Berechnungen im Einsatzgebiet zur Verfügung steht (typischer Weise: eines N-Bit Integers), entfernt man den letzten Teilnenner und versucht es erneut.
+
+Irgendwann sind Zähler und Nenner klein genug, denn hat man die beste Approximation für den Wertebereich des Einsatzgebietes gefunden.
+
+Alternativ: Man beginnt links und überprüft immer *bevor* man das nächste 1 / (...) Glied zu berechnen beginnt wie die Zahl bis hierher als gekürzter Bruch aussieht bzw. ob sie noch in den Wertebereich passt. Wenn ja, setzt man fort bis es irgendwann nicht mehr passt. Dann nimmt man den zuletzt erfolgreich geprüften Bruch als Ergebnis.

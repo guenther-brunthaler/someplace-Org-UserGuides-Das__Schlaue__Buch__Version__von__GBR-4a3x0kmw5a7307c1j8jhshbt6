@@ -1,0 +1,31 @@
+﻿Multiplikative Inverse
+======================
+v2024.234
+
+﻿Die modulare multiplikative Inverse von a ist x wenn gilt:
+
+(a * x) mod m = 1
+
+bzw.
+
+x = (1 / a) mod m
+
+Sie existiert nur wenn a und m "teilerfremd" ("coprime") sind, also keine gemeinsamen Faktoren (außer 1) haben. Dann kann x mit Hilfe des erweiterten Euklid'schen Algorithmus ermittelt werden.
+
+Wenn m eine Potenz von 2 ist, existiert daher für keine gerade Zahl eine Inverse.
+
+Wenn der Modulus m hingegen eine Primzahl ist, gilt
+
+x = a ** -1 mod m = a ** (m - 2) mod m
+
+Der allgemein beste Algorithmus zur Berechnung der Inversen scheint die "Montgomery Modular Inversion" zu sein. Leider fand ich davon keine brauchbare Beschreibung.
+
+Für Fließkommazahlen kann die Inverse mittels einer Anwendung der Newton-Methode gefunden werden, welche mit jeder Iteration eine größere Genauigkeit bringt.
+
+Die Methode funktioniert allerdings nur, wenn f(x) = 1 / x - b eine Nullstelle am Punkt x = 1 / b hat.
+
+Um x = 1/a dann zu berechnen, beginnt man mit einem Schätzwert x[0] und berechnet dann
+
+x[i + 1] = x[i] * (2 - a * x[i])
+
+x[0] kann man angeblich finden, indem man b zur nächsten Potenz von 2 rundet und dann irgendwie "mit Bit-Shifts seine Inverse berechnet".

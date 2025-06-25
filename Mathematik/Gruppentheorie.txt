@@ -1,0 +1,32 @@
+﻿Abelsche Gruppe
+---------------
+
+Diese, auch "kommutative Gruppe", ist eine Menge mit einer binären Operation. Sie ist eine Generalisierung von Addition und Multiplikation.
+
+Per Konvention wird normalerweise der Multiplikations-Punkt als Symbol für den Operator verwendet.
+
+* Commutativity: For all a, b in A, a * b = b * a.
+
+* Closure: For all a, b in A, the result of the operation a * b is also in A.
+
+* Associativity: For all a, b and c in A, the equation (a * b) * c = a * (b * c) holds.
+
+* Identity element: There exists an element e in A, such that for all elements a in A, the equation e * a = a * e = a holds.
+
+* Inverse element: For each a in A, there exists an element b in A such that a * b = b * a = e, where e is the identity element.
+
+
+Ring
+----
+
+Ein Ring ist eine abelsche Gruppe, welche um eine zusätzliche binäre Operation erweitert wurde. Diese muss assoziativ und distributiv sein sowie ein neutrales Element haben. (Kommutativität und inverses Element sind für die zusätzliche Operation nicht gefordert.)
+
+Ein Ring generalisiert das Vorhandensein von Addition sowie Multiplikation in einer Gruppe.
+
+Per Konvention wird der Operator der zugrunde liegenden abelschen Gruppe mit einem Pluszeichen und der zusätzliche Operator mit einem Multiplikations-Punkt dargestellt.
+
+∗ Distributive "*" over "+": if it is left- and right-distributive.
+
+∗ Left-distributive "*" over "+": x ∗ ( y + z ) = ( x ∗ y ) + ( x ∗ z )
+
+∗ Right-distributive "*" over "+": ( y + z ) ∗ x = ( y ∗ x ) + ( z ∗ x )

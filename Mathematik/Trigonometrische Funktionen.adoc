@@ -1,0 +1,105 @@
+﻿Winkelfunktionen
+================
+v2025.21
+
+Man braucht nur sqrt, sin (oder cos) und arctan (oder arctan2) wirklich:
+
+[options="autowidth"]
+|===
+| `cos(rad) == sin(rad + pi / 2)`            |
+| `tan(rad) == sin(rad) / cos(rad)`          |
+| `cot(x) == 1 / tan(x)`                     |
+| `arctan2(y, x) == arctan(y / x)`           | größerer Wertebereich als `arctan()`
+| `arctan(x) == arctan2(x, 1)`               |
+| `arcsin(x) == arctan2(x, sqrt(1 - x * x))` |
+| `arccos(x) == arctan2(sqrt(1 - x * x), x)` |
+| `pi == arctan2(0, -1) == 4 * arctan(1)`    |
+| `rad2deg(rad) == rad * 180 / pi`           |
+| `deg2rad(deg) == deg * pi / 180`           |
+|===
+
+
+Weniger bekannte
+----------------
+
+[options="autowidth"]
+|===
+| Secant                       | `sec(x) = 1 / cos(x)`
+| Cosecant                     | `csc(x) = 1 / sin(x)`
+| Cotangent                    | `cot(x) = 1 / tan(x)`
+| Inverse Secant               | `arcsec(x) = atn(x / sqr(x * x - 1)) + sgn(sgn(x) - 1) * pi / 2`
+| Inverse Cosecant             | `arccsc(x) = atn(x / sqr(x * x - 1)) + sgn(x) - 1) * pi / 2`
+| Hyperbolic Sine              | `sinh(x) = (exp(x) - exp(-x)) / 2`
+| Hyperbolic Cosine            | `cosh(x) = (exp(x) + exp(-x)) / 2`
+| Hyperbolic Tangent           | `tanh(x) = exp(x) - exp(-x)) / + (exp(x) + exp(-x))`
+| Hyperbolic Secant            | `sech(x) = 2 / (exp(x) + exp(-x))`
+| Hyperbolic Cosecant          | `csch(x) = 2 / (exp(x) - exp(-x))`
+| Hyperbolic Cotangent         | `coth(x) = exp(-x) / (exp(x) - exp(-x)) * 2 + 1`
+| Inverse Hyperbolic Sine      | `arcsinh(x) = ln(x / sqr(x * x + 1))`
+| Inverse Hyperbolic Cosine    | `arccosh(x) = ln(x + sqr(x * x - 1))`
+| Inverse Hyperbolic Tangent   | `arctanh(x) = ln( (1 + x) / (1 - x)) / 2`
+| Inverse Hyperbolic Cosecant  | `arccsch(x) = ln(sgn(x) * sqr(x * x + 1) + 1) / x`
+| Inverse Hyperbolic Secant    | `arcsech(x) = ln(sqr(-x * x + 1) + 1) / x`
+| Inverse Hyperbolic Cotangent | `arccoth(x) = ln( (x + 1) / (x - 1)) / 2`
+|===
+
+
+Kleine Winkel
+-------------
+
+Für solche gilt:
+
+|===
+| `sin(rad) ≅ tan(rad) ≅ rad`
+| `sin(deg) ≅ tan(deg) ≅ deg2rad(deg)`
+|===
+
+Anzahl der Nachkommastellen an Genauigkeit bei Winkeln (deg) mit Absolutwerten nicht über:
+
+[halign="right",options="autowidth"]
+|===
+| 8 | 0,7
+| 7 | 0,15
+| 6 | 0,72
+| 5 | 1,6
+| 4 | 3,4
+| 3 | 8
+| 2 | 16
+| 1 | 32
+|===
+
+
+Rechtwinkeliges Dreieck
+-----------------------
+
+|===
+| `a ** 2 + b ** 2 = c ** 2`
+|
+| `sin(x) = Gegenkathete / Hypothenuse`
+| `cos(x) = Ankathete / Hypothenuse`
+| `tan(x) = Gegenkathete / Ankathete`
+|===
+
+wobei:
+
+x:: Winkel eines Eckpunkts des Dreiecks
+Ankathete:: vom Eckpunkt wegführende Seite ungleich der Hypothenuse
+Gegenkathete:: dem Eckpunkt gegenüber liegende Seite
+Hypothenuse:: Die längste Seite des Dreiecks
+
+
+Reihenentwicklung
+-----------------
+
+|===
+| `e ^ x = (e ^ (x / 2)) ^ 2` für große x
+| `e ^ x = 1 + x + x ^ 2 / 2! + x ^ 3 / 3! + ...`
+| 
+| `ln(x ^ 2) = 2 * ln(x)` für große x
+| `ln(x) = 2 * (a + a ^ 3 / 3 + a ^ 5 / 5 + ...) mit a = (x - 1) / (x + 1)`
+| 
+| `sin(x) = x - x ^ 3 / 3! + x ^ 5 / 5! - x ^ 7 / 7! + ...`
+| 
+| `arctan(x) = arctan(c) + arctan((x - c) / (1 + xc))` für c über 0,2
+| `arctan(x) = x - x ^ 3 / 3 + x ^ 5 / 5 - x ^ 7 / 7 + ...` für c unter 0,2
+|===

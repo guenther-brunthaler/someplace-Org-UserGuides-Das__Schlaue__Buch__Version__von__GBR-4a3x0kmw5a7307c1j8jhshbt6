@@ -1,0 +1,17 @@
+﻿Der Mittelwert ist die Summe der Beobachtungwerte, dividiert durch ihre Anzahl.
+
+Die Varianz ist der Mittelwert der quadrierten Abweichungen aller Beobachtungswerte von deren Mittelwert wenn man *alle* Werte des Wertebereichs zur Berechnung heran zieht (population variance).
+
+Verwendet man hingegen nur eine Zufalls-Auswahl (Sample) aller grundsätzlich vorhandenen Werte zur Berechnung der Varianz (sample variance), nähert sich diese zwar der Population Variance immer näher an je größer das Sample wird. Dennoch gibt es eine Verfälschung (Bias), die man verringern kann indem an bei der Berechnung die Summe der quadrierten Abweichungen der Sample-Werte vom Sample-Durchschnitt anstatt durch die Anzahl der Samples N durch einen anderen Wert dividiert: Durch (N - 1) um allgemein das Bias zu entfernen, oder durch (N - 1,5) welches im Fall von normalverteilten Daten die Sample Variance noch besser an die Population Variance annähert.
+
+Die Standardabweichung ist die Wurzel der Varianz.
+
+Die Standard-Normalverteilungs-Dichtefunktion (Flächeninhalt unter der Glockenkurve vom Nullpunkt bis zu einer bestimmten x-Koordinate) kann mittels der "Standardfehler-Funktion" berechnet werden:
+
+norm_cdf(x)= (1.0 + erf(x / sqrt(2.0))) / 2.0;
+
+wobei erf() seit ISO C 99 standardisierter Teil der libm ist, und folgendes gilt:
+
+erf(x)= 2 / sqrt(pi) * integral from 0 to x of exp(-t * t) dt;
+
+Nichts in der Dokumentation von erf() verbietet ein negatives Argument. (Doch da die Glockenkurve symmetrisch zum Ursprung ist könnte man auch einfach den Absolutwert als Argument verwenden.)

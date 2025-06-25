@@ -1,0 +1,61 @@
+﻿Kettenbrüche
+============
+
+Man kann durch Kettenbrüche rationale Zahlen exakt darstellen oder approximieren. Indem man beliebige reelle Zahlen (inklusive irrationaler) als Brüche darstellt, kann man auch sie beliebig genau approximieren.
+
+Ein "regulärer" Kettenbruch hat die Form
+
+n / d = a + 1 / (b + 1 / (c + 1 / ( ... )))
+
+und wird in der Form [a; b, c, ...] notiert. Das erste Glied wird speziell notiert da es einen anderen Wertebereich als die anderen Folgenglieder hat, welche stets ganze Zahlen sind.
+
+Soweit es keine exakte Darstellung mit einer begrenzten Anzahl vom Folgengliedern gibt, wird die Approximation immer genauer je mehr Folgenglieder man verwendet.
+
+Es gibt ein geometrisches Verfahren, um die Folgenglieder zu berechnen:
+
+* Man zeichne ein Rechteck mit den Seitenlängen n und d. Anfangs ist der ganze Innenraum des Rechtecks frei.
+
+* Man "schneidet" nun entlang der Seite von n so viele identische Quadrate mit der Seitenlänge d wie möglich vom Rechteck ab bzw. wandelt sie in belegte Bereiche um. Der Verschnittrest nach dem letztem Quadrat stellt nun die verbleibende freie Fläche dar.
+
+* Man zählt die Anzahl der gerade gezeichneten neuen Quadrate und gibt dies als die nächste Zahl der Folge aus.
+
+* Sollte kein Verschnittrest übrig sein, ist man fertig und die Folge stellt eine exakte Repräsentation des ursprünglichen n / d dar.
+
+* Andernfalls vertauscht man n und d und wiederholt das Verfahren mit dem 2. Schritt bis keine freie Fläche mehr übrig ist (exakte Lösung), oder eine definierte Anzahl an Folgengliedern erreicht wurde oder Randbedingungen wie eine erforderliche Genauigkeit überschritten wurden (Approximation).
+
+Das letzte Folgeglied steht immer alleine im Nenner, ohne ein weiteres "+ 1 / ..." rechts daneben.
+
+Man kann die den Kettenbruch auswerten und zu einem normalen Bruch umformen. So kann man z. B. prüfen ob Zähler und Nenner noch in einen vorgegebenen Bereich passen, und das aktuelle und alle weiteren Folgeglieder entfernen sobald dies nicht mehr der Fall ist. Alternativ kann man alle weiteren Folgeglieder entfernen sobald eine gewünschte Genauigkeit erreicht wurde. Damit verbleibt einem die bestmögliche Approximation unter den gegebenen Randbedingungen.
+
+Normale (nicht reguläre) Kettenbrüche können statt der "1" beliebige Zahlen im Zähler haben. Sie werden jedoch selten verwendet. Meist kommen die regulären zum Einsatz.
+
+Ein Beispiel: Die Quadratwurzel aus 2 soll als genauester vorzeichenloser Bruch mit 8-Bit Zähler und -Nenner gebildet werden.
+
+Das geometrische Verfahren liefert folgendes Ergebnis:
+
+[1; 2, 2, 2, 2, ...]
+
+Eine unendliche Folge. Man setzt daher einfach der Reihe nach die Folgenglieder ein und macht den Kettenbruch schrittweise immer größer:
+
+grind(1+1/2);
+3/2
+
+grind(1+1/(2+1/2));
+7/5
+...
+
+grind(1+1/(2+1/(2+1/(2+1/(2+1/(2+1/2))))));
+239/169
+
+grind(1+1/(2+1/(2+1/(2+1/(2+1/(2+1/(2+1/2)))))));
+577/408
+
+Die beste Lösung welche noch in 8 Bit passt ist daher 239/169. Der Fehler beträgt 1,2e-05.
+
+Maxima stellt die cf() Funktion für Kettenbrüche bereit:
+
+grind(block([tval, max, o, r, fpprec], tval: sqrt(2), max: 2 ** 8, fpprec: 200, for i: 1 while true do block(o: r, r: rationalize(cfdisrep(firstn(cf(bfloat(tval)), i))), if num(r) > max or denom(r) > max then return(true)) and return([o, float(entier(log(abs(tval - o)) / log(10) * 10 + 0.5) / 10)])));
+
+[239/169,-4.9]
+
+Dies retourniert die beste rationale Näherung und den log10() des Approximationsfehlers.

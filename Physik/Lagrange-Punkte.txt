@@ -1,0 +1,32 @@
+﻿Lagrange-Punkte
+===============
+
+L1: Zwischen Gestirn und Planet
+
+L2: Wenn man L1 um den Planeten herum auf dessen Hinterseite rotieren würde
+
+L3: Wenn man den Planeten um das Gestirn herum auf dessen Hinterseite rotieren würde, und dort noch ein kleines bisschen weiter außen verschieben
+
+L4: Läuft dem Planeten auf seiner Bahn um 60 Grad voraus
+
+L5: Läuft dem Planeten auf seiner Bahn um 60 Grad hinterher
+
+Bei L4 und L5 wird der Winkel durch die Verbindungslinien vom Gestirn zum Planeten einerseits und zum genannten L-Punkt andererseits gebildet.
+
+Allgemein gibt es Lagrange-Punkte immer für jeden Körper der einen anderen umkreist. So hat auch der Mond Lagrange-Punkte bei seiner Umkreisung der Erde.
+
+Anstatt von "Gestirn" und "Planet" weiter oben müsste man daher eigentlich vielmehr von "Objekt um das gekreist wird" und "kreisendes Objekt" schreiben.
+
+L1 ist im Fall der Erde 1,5e6 km (rund 5 Lichtsekunden) von der Erde Richtung Sonne entfernt.
+
+L2 des Mondes wiederum ist 58e3 km vom Mittelpunkt des Mondes Richtung Erde entfernt. Das ist etwa 1/7 der Entfernung beider Himmelskörper.
+
+L3 liegt noch um ca. 190 km weiter außen als der Schwerpunkt der Erde es auf dieser Stelle der Erdbahn wäre.
+
+L1, L2 und L3 sind nicht stabil. Zwar werden sie stabil auf der Verbindungslinie Gestirn und Planet gehalten, befinden sich dort jedoch wie auf einem Berggipfel und "rollen" entweder in Richtung zum Gestirn hin oder davon weg davon herunter.
+
+L4 und L5 sind stabil. Objekte dort werden an Ort und Stelle gehalten bzw. kreisen in deren Nähe um diese L-Punkte. Sind sie weiter von L4 und L5 entfernt, wandern sie auf einer Hufeisenbahn zwischen diesen beiden L-Punkten hin und her.
+
+Im L4 der Erde befinden sich ein ca. 400 Meter sowie ein 1,2 km durchmessender Asteroid (werden in diesem Fall Trojaner genannt).
+
+Die L-Positionen lassen sich analytisch herleiten, wenn man die drei Massen auf einer rotierenden Linie anordnet und für jede der drei Massen fordert, dass die gravitative Anziehung der beiden anderen Massen sie auf einer Kreisbahn hält. Dies führt jedoch zu Gleichungen fünften Grades.

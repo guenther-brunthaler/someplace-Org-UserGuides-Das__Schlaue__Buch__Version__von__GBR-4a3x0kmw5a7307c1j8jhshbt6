@@ -1,0 +1,26 @@
+﻿Erdbeben
+========
+
+In den meisten Ländern, einschließlich Österreich, wird eine 12 - stufige Intensitätsskala verwendet, die als Europäische Makroseismische Skala 1998 (‚EMS-98’) bezeichnet wird.
+
+Bei der ZAMG wird dies offensichtlich auch "Epizentralintensität (I0)" (mit "0" als Subscript) genannt und in Tabellen wie
+
+https://www.zamg.ac.at/cms/de/geophysik/erdbeben/aktuelle-erdbeben/karten-und-listen/bebenkarte/austria
+
+als "Mag." bezeichnet.
+
+Hier die Kurzversion vom EMS-98:
+
+EMS Intensität (Definition) Beschreibung der maximalen Wirkungen (stark verkürzt) 
+I (nicht fühlbar) Nicht fühlbar. 
+II (kaum bemerkbar) Nur sehr vereinzelt von ruhenden Personen wahrgenommen. 
+III (schwach) Von wenigen Personen in Gebäuden wahrgenommen. Ruhende Personen fühlen ein leichtes Schwingen oder Erschüttern. 
+IV (deutlich) Im Freien vereinzelt, in Gebäuden von vielen Personen wahrgenommen. Einige Schlafende erwachen. Geschirr und Fenster klirren, Türen klappern. 
+V (stark) Im Freien von wenigen, in Gebäuden von den meisten Personen wahrgenommen. Viele Schlafende erwachen. Wenige werden verängstigt. Gebäude werden insgesamt erschüttert. Hängende Gegenstände pendeln stark, kleine Gegenstände werden verschoben. Türen und Fenster schlagen auf oder zu. 
+VI (leichte Gebäudeschäden) Viele Personen erschrecken und flüchten ins Freie. Einige Gegenstände fallen um. An vielen Häusern, vornehmlich in schlechterem Zustand, entstehen leichte Schäden wie feine Mauerrisse und das Abfallen von z. B. kleinen Verputzteilen. 
+VII (Gebäudeschäden) Die meisten Personen erschrecken und flüchten ins Freie. Möbel werden verschoben. Gegenstände fallen in großen Mengen aus Regalen. An vielen Häusern solider Bauart treten mäßige Schäden auf (kleine Mauerrisse, Abfall von Putz, Herabfallen von Schornsteinteilen). Vornehmlich Gebäude in schlechterem Zustand zeigen größere Mauerrisse und Einsturz von Zwischenwänden. 
+VIII (schwere Gebäudeschäden) Viele Personen verlieren das Gleichgewicht. An vielen Gebäuden einfacher Bausubstanz treten schwere Schäden auf; d. h. Giebelteile und Dachsimse stürzen ein. Einige Gebäude sehr einfacher Bauart stürzen ein. 
+IX (zerstörend) Allgemeine Panik unter den Betroffenen. Sogar gut gebaute gewöhnliche Bauten zeigen sehr schwere Schäden und teilweisen Einsturz tragender Bauteile. Viele schwächere Bauten stürzen ein. 
+X (sehr zerstörend) Viele gut gebaute Häuser werden zerstört oder erleiden schwere Beschädigungen. 
+XI (verwüstend) Die meisten Bauwerke, selbst einige mit gutem erdbebengerechtem Konstruktionsentwurf und -ausführung, werden zerstört. 
+XII (vollständig verwüstend) Nahezu alle Konstruktionen werden zerstört. 

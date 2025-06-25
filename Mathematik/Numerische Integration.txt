@@ -1,0 +1,18 @@
+﻿Regel von Simpson
+=================
+
+integral(f(x), var:= x, von:= a, bis:= b) := (b - a) / 6 * (f(a) + 4 * f((a + b) / 2) + f(b))
+
+Die Näherung wird daher durch Funktionswerte an 3 Stellen errechnet: a, b und deren Mitte dazwischen. Mathematisch stellt die Näherung eine Parabel dar, welche exakt durch diese 3 Stellen geht.
+
+Man kann die Genauigkeit beliebig erhöhen, indem man den Bereich a bis b in n Intervalle unterteilt, die Näherung für jedes Teilintervall berechnet, und dies dann summiert.
+
+
+Adaptive Regel
+==============
+
+Anstatt eine fixe Intervallbreite zu verwenden, halbiert man das Intervall so lange bis die Funktionswerte für die linke und rechte Intervallseite um nicht mehr als eine gegebene Genauigkeit Epsilon von einander abweichen.
+
+Linker und rechter Funktionswert jedes Intervalls werden dann durch eine Linie verbunden welche die Fläche als Trapez approximiert.
+
+Die Teilflächen werden summiert und liefern die numerische Näherung des Integrals.

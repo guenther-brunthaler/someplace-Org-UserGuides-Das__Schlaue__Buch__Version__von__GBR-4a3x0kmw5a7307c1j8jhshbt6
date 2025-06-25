@@ -1,0 +1,17 @@
+﻿jitter RNG
+==========
+v2025.37
+
+* Einen Alarm setzen
+* Einen Zähler in einer Schleife hoch zählen bis der Alarm erfolgt
+* Das nächste Oktett eines Ausgabe-Registers mit den niederwertigsten 8 Bit des Zählers XOR-verknüpfen
+* Die obigen Schritte wiederholen bis jedes Oktett des Ausgabe-Registers verändert wurde
+* Das Ausgabe-Register um 2 Bit nach rechts rotieren
+* Die obigen Schritte 3 Mal wiederholen
+* Das Ausgabe-Register enthält die Zufalls-Oktetts.
+
+Wenn N die Anzahl der Oktetts im Ausgabe-Register ist, sind 4 * N Alarme ausgelöst worden während der Algorithmus lief.
+
+Auf UNIX Maschinen hat dieser Ansatz sich angeblich gut bewährt.
+
+Da System-Interrupts korreliert sein können, sollte man die Ausgaben dieses Generators noch nachbehandeln und/oder sie mittels Zufälligkeits-Tests prüfen.

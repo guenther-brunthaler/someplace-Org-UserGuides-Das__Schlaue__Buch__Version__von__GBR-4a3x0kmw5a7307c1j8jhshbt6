@@ -1,0 +1,47 @@
+﻿Ein B-Tree garantiert dass er zumindest zur Hälfte mit Daten gefüllt ist (außer im Spezialfall dass er nur aus einem einzigen Knoten besteht).
+
+Jeder Knoten besteht aus Tupeln (Kindverweis, Schlüssel, Datenwert) gefolgt von einem zusätzlichen Kindverweis.
+
+Der Datenwert ist dem Schlüssel zugeordnet und kann weg gelassen werden wenn der B-Tree nur Schlüssel zu speichern braucht.
+
+Die Schlüssel der Tupel sind innerhalb jedes Knotens sortiert.
+
+Betrachtet man alle Tupel eines Knotens sowie den zusätzlichen Verweis am Ende als eine lineare Abfolge von Kindverweisen und Schlüsseln, repräsentieren alle Kindverweise Unterbäume mit Schlüsseln die sich in die Sortier-Reihenfolge einfügen.
+
+Es wird eine Konstante t festgelegt, die welche die Mindestanzahl von Kindern in allen "inneren" Knoten des Baums (weder Wurzel noch Blättern) angibt.
+
+Alle Knoten (außer der Wurzel und Blättern) haben:
+
+* mindestens 2 und höchstens 2 t Kindverweise
+
+* mindestens 1 und höchstens 2 t − 1 Schlüssel
+
+Für die Wurzel gilt dasselbe wie für alle Knoten, nur dass es keine Mindestanzahl für Schlüssel oder Kinderverweise gibt.
+
+Für Blätter gilt dasselbe wie für alle Knoten, nur dass sie immer 0 Kinderverweise haben.
+
+Ein B-Tree mit dem Parameter t = 2 wird auch als 2-3-4-Baum bezeichnet, da dies allen Möglichkeiten der Kinderzahl eines normalen Knotens entspricht.
+
+Dieser wiederum entspricht logisch einem Red-Black-Tree (auch als "RB-Tree" bezeichnet), wenn man jeden Knoten im 2-3-4-Baum als einen minimalen Binärbaum aus 3 Knoten darstellt: Der Wurzelknoten des Mini-Baums ist schwarz, seine beiden Kinder rot.
+
+Der Unterschied zum echten 2-3-4-Baum ist, dass die einzelnen Schlüssel im RB-Tree als normaler Binärbaum verlinkt sind, anstatt mehrere davon im selben Knoten zu speichern. Außerdem behält ein RB-Tree die logische Zuordnung zum 2-3-4-Tree nicht explizit aufrecht, sondern speichert in jedem Knoten dessen Farbe.
+
+Durch das Vermeiden ungenutzter Schlüssel spart der RB-Baum gegenüber dem 234-Baum Platz für ungenutzte Schlüssel in den Knoten, benötigt dafür aber zusätzliche Zeiger zur Verkettung benötigt.
+
+In einem normalen B-Tree sind alle Knoten identisch aufgebaut; lediglich die Anforderungen bezüglich der erlaubten Anzahl von Kindern unterscheiden sich für Wurzel- und Blattknoten.
+
+Ein "B+"-Tree speichert Daten nur in Blättern, während die zugehörigen Schlüssel wiederum nur in darüber liegenden Knoten enthalten sind.
+
+Durch diese Trennung ist mehr Platz für Daten in den Blättern und mehr Platz für Schlüssel in den Knoten. Daraus resultiert eine größerer Verzweigungsfaktor und geringere Baumtiefe bei ansonsten identischen Parametern im Vergleich zum einem normalen B-Baum.
+
+Der B+-Tree ist eine Weiterentwicklung des B-Trees durch dessen Erfinder. (Diese bezeichneten den B+-Tree historisch statt dessen als B*-Tree, was inzwischen aber nicht mehr dafür genutzt wird.)
+
+Eine wichtige Variante des B+-Baums erlaubt die Verwendung von Schlüsseln und Daten mit variabler Länge. Hierzu muss der Begriff des Füllgrades umdefiniert werden, da größere Schlüssel natürlich mehr Speicherplatz benötigen als kleine Schlüssel. Ziel des Baumes bleibt weiterhin, alle Seiten mindestens zur Hälfte gefüllt zu lassen, und es werden die entsprechenden Balancierungs-Operationen weiterhin durchgeführt. Bei Löschvorgängen kann jedoch der Mindestfüllgrad unterschritten werden, wenn ein zu großer Separator die entsprechende Balancierungs-Operation verhindert. Es kann dann für Verzeichnisseiten nur noch der Mindestfüllgrad ceiling((pageSize − maxKeySize + 1) / 2) ohne komplizierte Restrukturierungsmaßnahmen garantiert werden.
+
+Durch Verwendung einer Varint-Kodierung kann der Verzweigungsgrad eines B+-Baumes, wenn die Implementierung variable Längen erlaubt, meist deutlich gesteigert werden.
+
+Mit Schlüsseln variabler Länge kann ein B+-Baum auch als Trie (Präfix-B+-Baum) eingesetzt werden.
+
+Der "B*"-Tree wurde von D. E. Knuth erfunden und entspricht einem B-Tree mit zusätzlichen Anforderungen bezüglich der Balanzierung, wodurch er garantieren kann zu mindestens 2/3 mit Daten gefüllt zu sein.
+
+Es gibt mehrere Theorien zur Herkunft des "B" in der Bezeichnung: Bayer (hat ihn 1972 zusammen mit McCreigh entwickelt), Binär, Boeing (Arbeitgeber von Bayer), Barbara (Frau von Bayer), Broad, Bush, Banyanbaum. Es gab keine Erklärung des Namens von den Erfindern.

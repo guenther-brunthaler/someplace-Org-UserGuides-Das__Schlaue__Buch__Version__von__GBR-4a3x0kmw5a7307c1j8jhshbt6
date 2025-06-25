@@ -1,0 +1,17 @@
+﻿Blum-Micali CSPRNG
+==================
+v2025.37
+
+Dies ist ein kryptografischer Bitstream-Generator.
+
+Man benötigt eine Primzahl `g`, eine ungerade Primzahl `p` und einen geheimen Schlüssel `k`.
+
+----
+x[0] = k
+x[i + 1] = mod(g ** x[i], p)
+output = 1 if x[i] < (p - 1) / 2 else 0
+----
+
+Die Sicherheit dieses Generators basiert auf der Schwierigkeit des Berechnens diskreter Logarithmen modulo `p`. Quantencomputer gefährden diesen Algorithmus.
+
+Ansonsten ist der Algorithmus sicher, solange `p` nur groß genug gewählt wird.

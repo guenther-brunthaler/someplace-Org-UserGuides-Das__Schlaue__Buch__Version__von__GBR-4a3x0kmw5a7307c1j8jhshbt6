@@ -1,0 +1,22 @@
+﻿Golden Ratio
+============
+v2024.47
+
+Der "Goldene Schnitt" ist das Verhältnis einer größeren zu einer kleineren Zahl, welche dasselbe ist wie das Verhältnis der Summe beider Zahlen zur größeren Zahl.
+
+Es wird im Englischen häufig mit dem griechischen Kleinbuchstaben Phi ("φ") und im Deutschen häufig mit dem griechichen Großbuchastaben Phi ("ϕ") symbolisiert.
+
+Also:
+
+phi = a / b
+phi = (a + b) / a
+
+Setzt man für a oder b einen beliebigen Wert (außer Null) ein (da das Golden Ratio ja für jedes a und b gelten soll das berechnet werden kann), erhält man:
+
+phi = (sqrt(5) + 1) / 2
+
+The golden ratio is also called the golden mean, golden section, extreme ratio, mean ratio, medial section, divine proportion, divine section, golden proportion, golden cut, golden number, goldene Zahl.
+
+Man kann den goldenen Schnitt auch geometrisch anschaulich auf Rechtecksflächen (goldenes Rechteck), Dreiecke (goldenes Dreieck), Fünfeck, Pentagramm, Kreis-Segmente (goldener Winkel) und eine fraktale Schneckenform (goldene Spirale) übertragen.
+
+Ferner ist er besonders schlecht durch Brüche approximierbar. Aus diesem Grund wird er in der Literatur gelegentlich auch als irrationalste Zahl bezeichnet.

@@ -1,0 +1,29 @@
+﻿Gravitation
+===========
+
+
+Newtonsches Gravitationsgesetz
+------------------------------
+
+Kraft F, mit der sich zwei Körper gegenseitig anziehen:
+
++F = g * m~1~ * m~2~ / r^2^+ +
++g = 6,672*10^-11^ Nm^2^/kg^2^+
+
++g+: Gravitationskonstante
+
++F+: Betrag der Anziehungskraft
+
++m~1~+, +m~2~+: Massen der beiden Körper
+
++r+: Abstand der Massenmittelpunkte
+
+
+Keplersche Gesetze
+------------------
+
+1. Die Planeten bewegen sich auf Ellipsen (Kepler-Ellipsen), in deren einem Brennpunkt die Sonne steht.
+
+2. Die von der Sonne zu einem Planeten gezogene Verbindungslinie (Fahrstrahl) überstreicht in gleichen Zeiten gleiche Flächen (Flächensatz).
+
+3. Die Quadrate der Umlaufzeiten der Planeten verhalten sich wie die dritten Potenzen der großen Halbachsen ihrer Bahnellipsen.

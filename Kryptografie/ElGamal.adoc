@@ -1,0 +1,95 @@
+﻿ElGamal
+=======
+v2024.295
+
+ElGamal ist ein asymmetrisches Verfahren das auf einer verzögerten Anwendung des Diffie-Hellman Schlüsseltausch-Algorithmus basiert.
+
+Es kann sowohl für Verschlüsselung als auch digitale Signaturen verwendet werden.
+
+Im Gegensatz zum RSA-Verfahren beruht die Sicherheit des Verfahrens ausschließlich auf dem Problem den Logarithmus in einer Restklasse zu berechnen.
+
+Nachteile gegenüber RSA ist die Verdoppelung der Nachrichtenlänge bei der Verschlüsselung sowie die Verfügbarkeit unvorhersagbarer Zufallszahlen für Verschlüsselung und Signierung. RSA in Reinform benötigt keine weiteren Zufallszahlen mehr nach der Schlüsselgenerierung.
+
+
+Schlüsselgenerierung
+--------------------
+
+Wähle eine Primzahl `m`, einen Generator `g` und eine Zufallszahl `s`.
+
+`m` sollte eine *Safe Prime* größer 1 sein, d. h. es existiert eine zweite Primzahl `sg` für welche gilt: `sg * 2 + 1 = m`. Beispiel: `sg = 491; m = 983`.
+
+`g` kann beliebig sein soweit es größer als `1` und kleiner als `m` ist. `g` sollte jedoch eine kleine Zahl im Vergleich zu `m` sein. Es wird empfohlen, immer `4` als Generator zu verwenden. Dadurch generiert `g ** i` immer eine Subgruppe welche exakt `sg` Elemente enthält. Dadurch wird ein Small Subgroup Attack verhindert.
+
+`s` muss für den Angreifer unvorhersehbar gewählt werden. Es sollte kleiner `m` sein.
+
+Berechne weiters `p = (g ** s) modulo m`.
+
+Der pivate Schlüssel ist dann `s`.
+
+Der öffentliche Schlüssel ist das Tupel `(g, p, m)`.
+
+Sowohl `g` als auch `m` können von mehreren Benutzern gemeinsam in deren öffentlichen Schlüsseln verwendet werden. Man nennt ein Tupel `(g, m)` auch eine "Diffie-Hellman Gruppe".
+
+
+Signatur-Erstellung
+-------------------
+
+Zu signierende Nachrichten müssen als Zahl größer `1` und kleiner `m` codiert werden.
+
+Um eine Nachricht `msg` zu signieren, wählt man eine Zufallszahl `r` so dass gilt: `ggT(r, m - 1) = 1`. Das sollte für jedes `r` größer `0` und kleiner als `m - 1` gelten.
+
+Dann berechnet man
+
+`a = (g ** r) modulo m`
+
+sowie mit Hilfe des erweiterten Euklid'schen Algorithmus den Wert `b` für welchen gilt:
+
+`msg = (s * a + r * b) modulo (m - 1)`
+
+Die Signatur ist dann das Tupel `(a, b)`.
+
+Der Wert `r` muss geheim gehalten und sollte am besten sofort gelöscht werden.
+
+
+Signatur-Prüfung
+~~~~~~~~~~~~~~~~
+
+Um zu prüfen ob die Signatur `(a, b)` für eine Nachricht `msg` gültig ist, prüft man die folgende Gleichung auf Übereinstimmung beider Seiten:
+
+`(p ** a) modulo m = (g ** msg) modulo m`
+
+
+Verschlüsselung
+---------------
+
+Zu verschlüsselnde Nachrichten müssen als Zahl größer `1` und kleiner `m` codiert werden.
+
+Um eine Nachricht `msg` zu verschlüsseln, wählt man eine Zufallszahl `r` so dass gilt: `ggT(r, m - 1) = 1`. Das sollte für jedes `r` größer `0` und kleiner als `m - 1` gelten.
+
+Berechne:
+
+----
+a = (g ** r) modulo m
+b = (p ** r) modulo m
+----
+
+Die verschlüsselte Nachricht ist das Tupel `(a, b)`.
+
+Die Zahl `r` muss geheim gehalten und sollte am besten sofort gelöscht werden.
+
+Man beachte, dass die verschlüsselte Nachricht doppelt so lange wie `msg` ist.
+
+
+Entschlüsselung
+---------------
+
+Um aus der verschlüsselten Nachricht `(a, b)` wieder die Originalnachricht `msg` zu entschlüsseln, berechnet man:
+
+`msg = (b / (a ** x)) modulo m`
+
+oder alternativ
+
+----
+a_pow_x_inv = ((a ** x) modulo m) ** (m - 2)) modulo m
+msg = (b * a_pow_x_inv) modulo m
+----

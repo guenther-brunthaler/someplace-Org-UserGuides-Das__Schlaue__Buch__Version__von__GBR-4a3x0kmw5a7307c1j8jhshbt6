@@ -1,0 +1,3 @@
+﻿master: ace, boss, chief, commander, first, leader, major, primary, prime, principal, senior, server, superior, supervisor
+
+slave: client, deputy, employee, follower, helper, (inferior), junior, (minion), (minor), secondary, subordinate

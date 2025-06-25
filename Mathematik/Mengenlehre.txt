@@ -1,0 +1,13 @@
+
+A partial equivalence relation:
+
+* symmetric: a == b implies b == a.
+
+* transitive: (a == b and b == c) implies a == c.
+
+
+An equivalence relation:
+
+* must also be a partial equivalence relation
+
+* reflexive: a == a is true for every element of the set.

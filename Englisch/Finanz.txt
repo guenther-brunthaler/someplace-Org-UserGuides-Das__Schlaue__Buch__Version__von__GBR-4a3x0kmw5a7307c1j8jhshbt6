@@ -1,0 +1,11 @@
+﻿* Verrechnungskonto: "clearing account", "settlement account"
+
+Clearing is the process of sending out, reconciling and in some cases confirming payment orders or security transfer prior to settlement.
+
+Settlement is the act of transferring ‘securities and final funds’ between two parties.
+
+In simple words, clearing is the process of determining the obligations – who owes what to whom, and settlement is the process of actually fulfilling those obligations.
+
+* Buchungszeile: "posting line", but also just "line" or "entry row" (in an accounting program)
+
+* Gegenkonto: "contra account"

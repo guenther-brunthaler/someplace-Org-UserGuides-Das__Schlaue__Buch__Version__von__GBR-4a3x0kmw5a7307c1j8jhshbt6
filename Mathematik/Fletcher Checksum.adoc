@@ -1,0 +1,53 @@
+﻿Fletcher Checksum
+=================
+v2021.35
+
+
+Fletcher-N
+----------
+
+Fletcher-16, Fletcher-32 und Fletcher-64, verallgemeinert Fletcher-N, verarbeiten die Daten über welche die Prüfsumme gebildet werden sollen als binäre (`N/2`)-Bit Datenworte.
+
+Fletcher selbst spezifiziert keine Byte-Reihenfolge - die Applikation muss selbst entscheiden, wie sie die Datenbits in die erforderlichen `N`-Bit-Einheiten gruppiert.
+
+Der Basis-Algorithmus:
+
+----
+sumL= sumH= 0
+const modulus= 2 ** (N / 2) - 1
+for every word "v" in message:
+	sumL= (sumL + v) modulo modulus
+	sumH= (sumH + sumL) modulo modulus
+end for
+----
+
+Es gibt dann 2 Alternativen wie man das Ergebnis verwenden kann.
+
+* Den Wert des Ausdrucks `(sumH << (N / 2) | sumL)` als Fletcher-N ausgeben.
+
+* Zwei (`N/2`)-Bit Worte `check0` und `check1` in dieser Reihenfolge an die vorhandene Nachricht anhängen, so dass die Fletcher-N Prüfsumme nach der Berechnung über den so erweiterten Block `0` ergeben wird.
+
+Für den 2. Fall:
+
+----
+check0= modulus - ((sumL + sumH) modulo modulus)
+check1= modulus - ((sumL + check0) modulo modulus)
+----
+
+Fletcher-Prüfsummen erkennen alle einzelnen Bitfehler.
+
+Fletcher-16 erkennt darüber hinaus auch alle doppelten Bitfehler, solange die Nachricht nicht länger als 254 Octets ist.
+
+Die Wahrscheinlichkeit dass Fletcher-16 einen Fehler *nicht* erkennt beträgt 0,001538 Prozent.
+
+Fletcher-Prüfsummen können nicht zwischen Datenworten unterscheiden in denen alle Bits denselben Wert haben. Für Fletcher-16 ergeben daher die Datenworte 0x00 und 0xFF exakt dieselbe Prüfsumme, egal wo und wie oft diese in der Nachricht vorkommen.
+
+Fletcher-Prüfsummen sind blind gegenüber jedem Präfix der Eingabedaten welcher nur aus den Bytewerten 0x00 und 0xFF besteht oder auch nur aus einem der beiden Werte. Man kann dies aber auch zum Vorteil nutzen, da dadurch auch redundante führende Füllbits bei Zahlen in 2'er Komplement-Darstellung mit Big-Endian Byte-Reihenfolge ignoriert werden und die Prüfumme nur über die eigentliche Zahl gebildet wird. Allerdings ergeben die Zahlen 0 und -1 dabei dieselbe Prüfsumme.
+
+Ganz allgemein sind Fletcher-Prüfsummen den verbreiteten CRC-Prüfsummen mit derselben Bitlänge bezüglich der Fehlererkennung unterlegen, aber nicht dramatisch.
+
+CRC-Prüfsummen lassen sich zwar einfacher in Hardware implementieren.
+
+Fletcher lässt sich jedoch einfacher in Software implementieren, und kommt auch ohne Tabellen aus welche für effiziente CRC-Berechnungen in Software unerlässlich sind.
+
+Fletcher ist den link:Adler%20Checksum.html[Adler-Prüfsummen] die fast identisch arbeiten aber einen kleineren Modulus-Wert verwenden leicht überlegen, und zwar sowohl in Sachen Geschwindigkeit als auch im Fehlererkennungs-Potenzial. Fletcher ist zudem einfacher zu implementieren wenn bekannt ist dass die Länge der Eingabedaten immer ein Vielfaches von `(N / 2)` Bit sein wird.

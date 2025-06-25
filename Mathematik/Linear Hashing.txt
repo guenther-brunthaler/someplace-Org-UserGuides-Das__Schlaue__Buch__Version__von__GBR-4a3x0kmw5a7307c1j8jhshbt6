@@ -1,0 +1,28 @@
+﻿Linear Hashing
+==============
+
+Der Algorithmus legt 2 Hashtabellen mit den Größen 2 ** L und 2 ** (L + 1) direkt über einander.
+
+Die beiden Hashtabellen können dieselbe oder unterschiedliche Hash-Funktionen benutzen, müssen als Ergebnis jedoch einen Bucket-Index im oben genannten Bereich liefern.
+
+Es gibt zu jedem Zeitpunkt eine Split-Grenze s, die bestimmt zu welcher der beiden Hash-Tabellen ein Schlüsselwert gehört.
+
+Dazu wird zunächst der Hashwert für die kleinere Tabelle aus dem Schlüssel berechnet und dann mit der Split-Grenze verglichen.
+
+Ergibt dieser Vergleich dass der Schlüsselwert noch in der kleineren Tabelle liegt, wird der Hashwert direkt als Bucket-Index verwendet.
+
+Andernfalls ist die größere Tabelle für den Schlüssel zuständig, und er muss noch einmal gehashed werden um den Bucket-Index der größeren Tabelle zu erhalten, welcher dann für den Schlüssel zuständig ist.
+
+Die Split-Grenze kann bei Bedarf (wenn die Tabelle zu voll oder zu leer wird) um jeweils einen Schritt nach vorne oder nach hinten verschoben werden.
+
+Werden dabei Anfang oder Ende der Tabelle überschritten, erhöht oder erniedrigt sich L entsprechend um 1 und die Größen der beiden Tabellen verdoppeln oder halbieren sich entsprechend.
+
+Der Zustand der Hash-Tabelle ist zu jedem Zeitpunkt durch die Werte L und s gegeben.
+
+Es ist kein Problem dass zwei unterschiedliche Hash-Funktionen einen überlappenden Bereich für ihre Buckets benutzen. Eine Kollision muss nicht anders als jede normale Hash-Kollision in einem Bucket behandelt werden.
+
+Allerdings muss beim Bewegen der Split-Grenze immer der Inhalt jenes Buckets welcher dabei in den Zuständigkeitsbereich einer anderen Hash-Funktion gelangt neu gehashed und in die resultierenden neuen Buckets verschoben werden.
+
+Typischer Weise sieht die Implementation so aus, dass s ursprünglich 0 ist und alle Werte größer/gleich s zur kleineren Hash-Tabelle gehören. Sobald die Tabelle wachsen soll wird s schrittweise erhöht, und alle Index-Werte kleiner s gehören dann entsprechend zur größeren Tabelle. Sobald s das Ende der Tabelle erreicht hat, gehören daher alle Werte zur größeren Hash-Tabelle. Daher kann man L erhöhen und die bislang größere Hash-Tabelle zur neuen kleineren erklären, wobei s wieder auf 0 zurück gesetzt wird.
+
+Eben so gut kann man s aber am Maximum beginnen lassen und alle Werte größer s zur größeren Tabelle gehörig erklären.

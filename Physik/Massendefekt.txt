@@ -1,0 +1,13 @@
+﻿Man kann an der Masse die Energie des ruhenden Teilchens ablesen.
+
+Bei einem Atom wird ein Teil der Summe der Massen der Kernbestandteile (Nukleonen) in Bindungsenergie umgewandelt, so dass das Konstrukt eine geringere Masse aufweist als seine Bestandteile.
+
+Nukleonen sind Protonen oder Neutronen.
+
+Allgemein steigt die Bindungsenergie (Einheit Ev) mit der Anzahl der Nukleonen. (Ev basiert nicht exakt auf dem normalen Volt sondern ist aus messtechnischen Gründen geringfügig anders definiert.)
+
+Daher steigt sie auch durch Vorgänge wie Kernfusion wo kleinere zu größeren Bestandteilen mit mehr Nukleonen verschmelzen. Diese höhere Bindungsenergie "finanziert" sich aus einem damit einhergehenden Massendefekt.
+
+Unverstanden: Warum wird die durch den Massendefekt frei werdende Energie offenkundig abgegeben, obwohl sie doch bereits als Bindungsenergie dient? Klar ist nur dass man die abgegebene Energie wieder zuführen müsste um die Fusion rückgängig machen zu können.
+
+Beim Zusammenbau von Nukleonen aus Quarks ist es interessanter Weise genau anders herum als beim Atom: Das Nukleon hat eine höhere Masse als die Massensumme der Quarks. Im Fall eines Protons sogar deutlich höher. Jedoch darf man dies nicht "Massendefekt" nennen, da dieser Begriff aus der klassischen Physik stammt und konkrete Werte bezeichnet, während die Eigenschaften von Quarks nur durch Wahrscheinlichkeiten angegeben werden. Außerdem rechnet die klassische Physik mit bestimmten Teilchenzahlen, während in der Quantenphysik ständig zusätzliche virtuelle Teilchen in unbestimmbarer Anzahl anwesend sind.

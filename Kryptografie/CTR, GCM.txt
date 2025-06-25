@@ -1,0 +1,28 @@
+﻿Counter Mode (CTR):
+
+C[i] = P[i] XOR E(combine(IV, i))
+D[i] = C[i] XOR E(combine(IV, i))
+
+wobei i ein 0-basierter Zähler ist der nicht größer als die Blockgröße der Blockchiffre sein sollte.
+
+combine() ist eine umkehrbare Funktion (also kein Hash) welche den IV mit dem Zähler kombiniert (etwa eine Addition) und daraus einen Bitblock mit der Blocklänge der Blockchiffre ergibt. combine() hat somit auch die Verantwortung das Ergebnis soweit erforderlich mit Nullen aufzufüllen und in irgend eine definierte Byte-Reihenfolge zu bringen.
+
+Der IV muss ein "Nonce" (bezogen auf einen bestimmten Schlüssel) sein aber nicht notwendiger Weise geheim gehalten werden.
+
+
+Galois/Counter Mode (GCM):
+
+Der viel gepriesene GCM ist ein stinknormaler CTR Mode der lediglich zusätzliche Authentikations-Daten zur Verfügung stellt (er stellt eine AEAD-Cipher dar):
+
+C[i] = P[i] XOR E(combine(IV, i + 1))
+D[i] = C[i] XOR E(combine(IV, i + 1))
+
+wobei i ein 0-basierter 128-Bit Zähler ist und auch die Blockgröße der Blockchiffre exakt 128 Bit sein muss.
+
+Der Wert i == 0 kommt für die Verschlüsselung nicht zum Einsatz, sehr wohl aber für die Berechnung des Authentifizierungs-Werts.
+
+Genau wie beim normalen CTR-Mode ist GCM effektiv eine Strom-Chiffre, und es wäre daher eine Katastrophe, wenn der selbe IV zum Verschlüsseln verschiedener Nachrichten mit demselben Schlüssel verwendet wird.
+
+Die Art der Berechnung des Authentifizierungs-Werts (eine Polynom-Multiplikation im Galois-Feld modulo 2 ** 128) ergibt bestimmte Werte mit höherer Wahrscheinlichkeit als andere, so dass GCM nur sicher ist wenn der Authentifizierungs-Wert lange genug ist oder die verschlüsselten Daten (pro Authentifizierungs-Wert) nicht zu lange.
+
+Oder anders gesagt, GCM ist weniger sicher als eine HMAC - allerdings deutlich schneller zu berechnen, vor allem wenn dazu CPU-Spezialinstruktionen zur Verfügung stehen was bei vielen modernen Befehlssatz-Erweiterungen der Fall zu sein scheint.

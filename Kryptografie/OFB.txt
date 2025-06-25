@@ -1,0 +1,25 @@
+﻿Output Feedback Mode (OFB):
+
+OFB arbeitet wie CTR, nur dass es dessen Kombination eines Zähler mit dem IV durch rekursive Verschlüsselung mit dem IV als Ausgangswert ersetzt.
+
+X[0]= E(IV)
+X[n]= E(X[n - 1])
+C[n]= P[n] xor X[n]
+
+IV darf ein beliebiges Nonce sein welches nicht geheim sein muss.
+
+Ein Datenfehler in einem Block hat keine Auswirkungen auf andere Blöcke.
+
+OFB lässt sich nicht parallelisieren und erzwingt sequenzielle Verarbeitung.
+
+Nur E() wird benötigt, kein D(). Genau so gut kann man aber auch nur D() an der Stelle von E() verwenden. (Etwa wenn dies schneller ist.)
+
+Verschlüsselung und Entschlüsselung sind dieselbe Operation. Verschlüsselt man den verschlüsselten Text mit demselben Schlüssel erneut, erhält man wieder den entschlüsselten Text.
+
+OFB unterstützt (wie jeder Streaming-Mode) beliebige Nachrichten beliebiger Bitlänge und benötigt kein Padding.
+
+OFB ist (genau wie bei CTR) komplett anfällig für Bit-Flipping-Attacken. Solch eine Attacke ist immer erfolgreich und hat keinerlei Auswirkungen auf andere Blöcke oder andere Bits im selben Block.
+
+OFB wäre theoretisch unsicher falls E() Fixpunkte kennen könnte. Aber das ist nicht möglich weil E() sonst nicht mehr als D() umkehrbar wäre. Statt dessen wird X() alle möglichen Blockinhalte durchlaufen und sich erst danach wiederholen.
+
+Andererseits ist es leicht möglich durch Wissen oder Erraten von P[n] auch X[n] zu rekonstruieren. Sollte einem dies bei zwei auf einander folgenden X[n] gelingen, kann man ein Gleichungs-System aufstellen aus dem sich unter Umständen der Schlüssel als einzige Unbekannte errechnen lässt, falls die Cipher nicht dagegen gehärtet ist (was allerdings jede gute sein sollte).

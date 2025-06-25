@@ -1,0 +1,30 @@
+﻿
+DIN A0 = 1 m²
+w : h = 1 : √2
+
+w * h = 10000
+h = w * √2
+
+w * w * 2 ^ (1 / 2) = 10000
+w * 2 ^ (1 / 4) = 100
+w = 100 * 2 ^ (-1 / 4)
+h = 100 * 2 ^ (-1 / 4) * 2 ^ (2 / 4)
+h = 100 * 2 ^ (1 / 4)
+
+$ awk 'BEGIN { w= 100 * 2 ^ (-1 / 4); h= 100 * 2 ^ (1 / 4); print ""; for (a= 0; w >= 0.5; ++a) {printf "DIN A%d: %.2f cm x %.2f cm\n", a, w, h; t= h; h= w; w= t / 2; } }' | tr . "`locale decimal_point`"
+
+DIN A0: 84,09 cm x 118,92 cm
+DIN A1: 59,46 cm x 84,09 cm
+DIN A2: 42,04 cm x 59,46 cm
+DIN A3: 29,73 cm x 42,04 cm
+DIN A4: 21,02 cm x 29,73 cm
+DIN A5: 14,87 cm x 21,02 cm
+DIN A6: 10,51 cm x 14,87 cm
+DIN A7: 7,43 cm x 10,51 cm
+DIN A8: 5,26 cm x 7,43 cm
+DIN A9: 3,72 cm x 5,26 cm
+DIN A10: 2,63 cm x 3,72 cm
+DIN A11: 1,86 cm x 2,63 cm
+DIN A12: 1,31 cm x 1,86 cm
+DIN A13: 0,93 cm x 1,31 cm
+DIN A14: 0,66 cm x 0,93 cm

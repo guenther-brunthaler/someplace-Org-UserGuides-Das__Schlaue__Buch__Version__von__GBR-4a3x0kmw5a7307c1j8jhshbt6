@@ -1,0 +1,65 @@
+﻿Adler Checksum
+==============
+v2023.117
+
+
+Adler-N
+-------
+
+Adler-16, Adler-32 und Adler-64, verallgemeinert Adler-N, errechnen zunächst binäre (`N/2`)-Bit Teilsummen:
+
+----
+sumL= 1
+sumH= 0
+const modulus= largest_prime_number_less_than(2 ** (N / 2))
+for every octet "v" in message:
+	sumL= (sumL + v) mod modulus
+	sumH= (sumH + sumL) mod modulus
+end for
+----
+
+Ab einer gewissen Mindestlänge der Eingabedaten ist es schneller die Modulo-Reduktion aus der Schleife zu entfernen und die Werte erst dahinter zu reduzieren was zum selben Ergebnis führt. Allerdings muss die Anzahl der Schleifendurchläufe dabei beschränkt werden, so dass kein arithmetischer Überlauf auftreten kann. Die Eingabedaten werden dann intern in Blocks dieser Maximalgröße zerlegt.
+
+....
+largest_prime_number_less_than(2 ** 4) = 13
+largest_prime_number_less_than(2 ** 8) = 251
+largest_prime_number_less_than(2 ** 16) = 65.521
+largest_prime_number_less_than(2 ** 32) = 4.294.967.291
+....
+
+Es gibt dann 2 Alternativen wie man das Ergebnis verwenden kann.
+
+* Den Wert des Ausdrucks `((sumH << (N / 2)) | sumL)` als Adler-N ausgeben.
+
+* Zwei (`N/2`)-Bit Worte `check0` und `check1` in dieser Reihenfolge an die vorhandene Nachricht anhängen, so dass die Adler-N Prüfsumme nach der Berechnung über den so erweiterten Block `0` ergeben wird.
+
+Für den 2. Fall:
+
+----
+check0= modulus - ((sumL + sumH) modulo modulus)
+check1= modulus - ((sumL + check0) modulo modulus)
+----
+
+
+Vergleich mit Fletcher-N
+------------------------
+
+Adler-N ist link:Fletcher%20Checksum.html[Fletcher]-N sehr ähnlich, hat gegenüber jenem Verfahren aber die folgenden Vor- und Nachteile:
+
+* Es verwendet einen anderen Startwert. Dadurch beeinflussen bei Adler anders als Fletcher auch Eingangsdaten-Präfixe aus binären Null-Bytes und/oder 0xFF-Bytes das Ergebnis.
+
+* Bei Fletcher (außer Fletcher-16) muss man eine Eingabe in `(N / 2)`-Bit Datenworte zerlegen und für diese daher eine Byte-Reihenfolge festlegen sowie überlegen was man tut wenn die Eingangsdaten nicht ein exaktes Vielfaches dieser Wortlänge darstellen. Da Adler immer nur Bytes als Eingangsdaten verwendet erübrigen sich alle solchen Überlegungen.
+
+* Da Ader nur einzelne Octets aufsummiert, werden die Summen bei kurzen Nachrichten nicht groß und nutzen die verfügbaren Bits der Prüfsumme daher nur unbefriedigend aus. Fletcher vermeidet dieses Problem.
+
+* Adler kann zwischen Eingangsdatenworten unterscheiden bei denen alle Bits denselben Wert haben.
+
+* Fletcher hat allerdings ein geringfügig höheres Fehlererkennungs-Potenzial als Adler und ist ab einer sehr großen Menge an Eingabedaten auch sehr geringfügig schneller zu berechnen.
+
+
+Vergleich mit CRC
+------------------
+
+* CRC-Prüfsummen lassen sich zwar einfacher in Hardware implementieren.
+
+* FLETCHER lässt sich jedoch einfacher in Software implementieren, und kommt auch ohne Tabellen aus welche für effiziente CRC-Berechnungen in Software unerlässlich sind.

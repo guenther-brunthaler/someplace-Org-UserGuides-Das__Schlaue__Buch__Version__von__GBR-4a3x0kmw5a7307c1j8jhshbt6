@@ -1,0 +1,8 @@
+﻿
+Addieren:
+
+Um 2 HHMM-Zeiten zu addieren, diese dezimal addieren und den neuen MM-Anteil betrachten. Ist dieser kleiner als einer der beiden einzelnen alten MM-Anteile, oder ist er größer/gleich 60, so entstand ein Überlauf und man muß 40 (-100 + 60) zum neuen HHMM addieren, um dies zu kompensieren.
+
+Subtrahieren:
+
+Um 2 HHMM-Zeiten zu subtrahieren, zunächst feststellen ob die Minuten der subtrahierenden Zeit größer als die der ersten sind. In diesem Fall 40 subtrahieren (entspricht einer Addition von -100 + 60). In jedem Fall danach die Subtraktion dezimal durchführen.

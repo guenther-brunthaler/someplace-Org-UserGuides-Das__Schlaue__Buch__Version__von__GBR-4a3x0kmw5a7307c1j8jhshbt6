@@ -1,0 +1,45 @@
+﻿Grußformeln in Schreiben
+========================
+
+Am Beginn
+---------
+
+.If the name of the intended recipient is unknown
+[width="100%",cols="1,4"]
+|=====
+| Dear Sir or Madam   .2+| If the gender of the reader is unknown
+| Sir/Madam
+| To Whom It May Concern | If the writer wishes to exclude the gender of the reader from the salutation and/or to convey that the reader should forward the copy to one more suited to receive or respond appropriately
+| Dear Sir               | If the reader is male
+| Dear Madam             | If the reader is female
+|=====
+
+https://en.wikipedia.org/wiki/Salutation#English
+
+
+Am Ende
+-------
+
+.Business usage
+[options="autowidth"]
+|=====
+| Yours truly,         | "formal closing" (Barron's); "no personal connection between writer and recipient" (AMACOM)
+| Very truly yours,    | "no personal connection between writer and recipient" (AMACOM)
+| Respectfully yours,  | "formal closing" (Barron's); to person of acknowledged authority or "great formality" (AMACOM)
+| Sincerely,        .2+| "less formal closing" (Barron's); personal and business relationship (AMACOM)
+| Sincerely yours
+| Cordially,           | "less formal closing" (Barron's)
+| Cordially yours,     | often used, but it is "incorrect" (AMACOM)
+| Regards,          .3+| "personal closing" (Barron's) 
+| Personal regards,
+| Kindest regards,
+|=====
+
+.British English
+[width="100%",cols="1,6"]
+|=====
+| Yours sincerely  | recipient is addressed by name (e.g. "Dear John") and is known to the sender to some degree
+| Yours faithfully | recipient is not addressed by name (i.e. the recipient is addressed by a phrase such as "Dear Sir/Madam") or when the recipient is not known personally by the sender
+|=====
+
+https://en.wikipedia.org/wiki/Valediction#Business_usage

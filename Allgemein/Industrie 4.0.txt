@@ -1,0 +1,27 @@
+﻿Die erste industrielle Revolution bestand in der Mechanisierung mit Wasser- und Dampfkraft.
+
+Darauf folgte die zweite industrielle Revolution: Massenfertigung mit Hilfe von Fließbändern und elektrischer Energie.
+
+Daran anschließend die dritte industrielle Revolution oder digitale Revolution mit Einsatz von Elektronik und IT (vor allem die speicherprogrammierbare Steuerung) zur Automatisierung der Produktion.
+
+Die Begriffe Erste, Zweite und Dritte industrielle Revolution wurden historisch im Nachhinein gebildet.
+
+Industrie 4.0 soll einen Bezug zu den Vorgänger-Revolutionen herstellen und es soll zum Ausdruck kommen, dass die Veränderung eine gleiche Bedeutung hätte.
+
+[...] kritisiert den selbstreklamierten Anspruch der vierten industriellen Revolution als "sicher vermessen und unseriös" [...] "Bemerkenswert ist die Tatsache, dass erstmals eine industrielle Revolution ausgerufen wird, noch bevor sie stattgefunden hat" [...] Da die technologische Grundlage die Mikroelektronik ist und somit gegenüber der Dritten industriellen Revolution unverändert ist, spricht der Industrieforscher [...] von einer "zweiten Phase der Digitalisierung".
+
+Industrie 4.0 lässt sich im Kern mit dem Begriff "Smart Factory" gleichsetzen, reicht aber bei bestimmten Details noch über diesen hinaus.
+
+Szenarien für Industrie 4.0:
+
+* Vernetzung: Maschinen, Geräte, Sensoren und Menschen können sich miteinander vernetzen und können über das Internet der Dinge oder das Internet der Menschen kommunizieren.
+
+* Informationstransparenz: Sensordaten erweitern Informationssysteme digitaler Fabrikmodelle, um so ein virtuelles Abbild der realen Welt zu erstellen.
+
+* Technische Assistenz: Assistenzsysteme unterstützen den Menschen mit Hilfe von aggregierten, visualisierten und verständlichen Informationen. So können fundierte Entscheidungen getroffen und auftretende Probleme schneller gelöst werden. Außerdem werden Menschen bei anstrengenden, unangenehmen oder gefährlichen Arbeiten physisch unterstützt.
+
+* Dezentrale Entscheidungen: Cyberphysische Systeme sind in der Lage, eigenständige Entscheidungen zu treffen und Aufgaben möglichst autonom zu erledigen. Nur in Ausnahmefällen, zum Beispiel bei Störungen oder Zielkonflikten, überträgt es die Aufgaben an eine höhere Instanz.
+
+* Losgröße 1: Maßfertigung direkt in der Fabrik durch automatische Bereitstellung der erforderlichen Daten.
+
+Der Begriff "Industrie 4.0" ist eine deutsche Wortschöpfung, so gibt es beispielsweise das Wort "industry 4.0" als englische Entsprechung nicht. Ähnliche Initiativen gibt es allerdings in vielen Ländern. In den USA besteht sie unter der Bezeichnung "Industrial Internet Consortium", kurz IIC. In Japan unter dem Namen "Industrial Value-Chain Initiative", kurz IVI. In Frankreich unter dem Namen: "Industrie du futur". Auch in China und Südkorea gibt es ähnliche Bestrebungen.

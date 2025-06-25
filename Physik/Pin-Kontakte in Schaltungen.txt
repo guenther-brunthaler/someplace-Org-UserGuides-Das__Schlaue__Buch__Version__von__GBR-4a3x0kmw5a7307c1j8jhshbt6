@@ -1,0 +1,6 @@
+﻿
+Die Pins werden bei Chips fast immer nach dem gleichen Schema nummeriert, wobei Pin 1 irgendwie speziell markiert wird, und dann wird gegen den Uhrzeigersinn gezählt.
+
+Häufig ist Pin 1 links unten neben einer Kerbe, einem Dreieck, oder dergleichen.
+
+Andernfalls ist Pin 1 meist links oben, falls eine vorhandene Beschriftung des Chips eine Orientierung nahelegt.

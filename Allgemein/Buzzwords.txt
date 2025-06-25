@@ -1,0 +1,13 @@
+﻿* Capex - Investitionsausgaben ("Capital expenditure").
+
+* Choreographie -Im Gegensatz zur "Orchestrierung" beschreibt Choreographie mittels Sprachen wie WS-CDL, wie die einzelnen Prozesse untereinander agieren.
+
+* DevOps - Kunstwort aus "Development" (Entwicklung) und "IT Operations" (IT-Betrieb). Es gibt buzzword-typisch mehrere Definitionen davon. Eine "Philosophie", um eine um eine bessere Zusammenarbeit von Entwicklern, IT-Betrieb und Qualitätssicherung (QS) zu erreichen. Kann aber auch als eine bereichsübergreifende, unternehmensweite Kollaboration der Manager, Entwickler, Tester und Administratoren unter Einbeziehung der Kunden verstanden werden. Das Wort kommt meist in Begleitung des Buzz-Words "Agilität" daher und bewegt in einem Umfeld von virtuellen Maschinen.
+
+* Kubernetes - auch als "K8s" oder "K8" bezeichnet - ist ein Open-Source-System zur Automatisierung der Bereitstellung, Skalierung und Verwaltung von Container-Anwendungen. Es will eine „Plattform für das automatisierte Bespielen, Skalieren und Warten von Anwendungscontainern auf verteilten Hosts“ (typischerweise in Clustern) sein. Es unterstützt eine Reihe von Container-Tools, einschließlich Docker. Die "Orchestrierung" mittels Kubernetes wird Cloud-Plattformen wie Microsofts Azure, IBMs Bluemix, Red Hats OpenShift und Amazons AWS unterstützt.
+
+* Opex - Aufwendungen für den operativen Geschäftsbetrieb ("Operational expenditure").
+
+* Orchestrierung - enthält eine Beschreibung der Services, ihre Bedingungen zum Aufruf sowie Abhängigkeiten und Alternativen, etwa mittels WS-BPEL. Der Zweck der Orchestrierung ist das flexible Kombinieren mehrerer (auch unternehmensübergreifender) Services zu einer "Komposition" (ausführbarer Geschäftsprozess). Der Prozessfluss wird durch einen Teilnehmer gesteuert. Jeder Dienst hat dabei einen eingeschränkten Sichtbereich (englisch scope). 
+
+* Totex - Capex und Opex zusammen (Total expenditures).

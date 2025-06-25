@@ -1,0 +1,25 @@
+﻿Um die Fläche eines von geraden Kanten begrenzten geometrischen Objekts (wie etwa eines allgemeinen Dreiecks) ohne spezielle Formeln zu berechnen, kann man folgenden allgemeinen Ansatz benutzen:
+
+* Zunächst zerlegt man das Objekt in rechtwinkelige Dreiecke, von denen eine Seite parallel zur x-Achse und eine weitere Seite parallel zur y-Achse ist.
+
+* Die Fläche jedes solchen Teildreiecks entspricht der halben Fläche eines Rechtecks mit derselben Ausdehnung entlang der x- und y-Achse.
+
+* Beim Zerlegen können Teilflächen sowohl addiert als auch subtrahiert werden, etwa um "Löcher" abzubilden.
+
+* Wenn man während des Aufsummierens mit der doppelten Fläche arbeitet und erst die Summe halbiert, vermeidet man alle Rundungsfehler beim Flächeninhalt der einzelnen Teildreiecke.
+
+Für Objekte welche nicht von geraden Kanten begrenzt sind:
+
+* Als erstes zerlegt man diese Objekte in in Teilobjekte deren Fläche komplett oberhalb oder unterhalb einer Geraden liegen, welche parallel zur x-Achse verläuft.
+
+* Danach unterteilt man diese Objekte weiter entlang der x-Achse in Teilabschnitte deren Begrenzungskurve (als Ersatz einer geraden Kante) durch eine einzelne mathematische Funktion ausgedrückt werden kann.
+
+* Die Teilflächen dieser Abschnitte errechnet man nun, indem man das bestimmte Integral für die mathematische Funktion des Abschnitts und somit der Fläche zwischen der Kurve und der Geraden berechnet.
+
+Heron'sche Formel für die Fläche eines Dreiecks bei gegebenen Seitenlängen:
+
+sqrt(s * (s - a) * (s - b) * (s - c)) where s = (a + b + c) / 2
+
+Variante:
+
+sqrt((a + b + c) * ((-a) + b + c) * (a + (-b) + c) * (a + b + (-c))) / 4

@@ -1,0 +1,23 @@
+﻿Der Cipher-Feedback (CFB) Mode ist ähnlich dem Counter-Mode (CTR), da er aus einer Block-Cipher effektiv eine Stream-Cipher macht.
+
+Doch während CTR einen aufsteigenden Zähler verschlüsselt um seinen Pseudorandom-Stream zu erzeugen, erreicht CFB dies indem für den ersten Block der IV verschlüsselt wird, und für alle weiteren Blocks der verschlüsselte Vorgänger-Block.
+
+C[0] := P[0] xor E(IV)
+C[i] := P[i] xor E(C[i - 1])
+
+P[0] := C[0] xor E(IV)
+P[i] := C[i] xor E(C[i - 1])
+
+CFB ist eine Modifikation von CBC bei der die Reihenfolge von Blockverschlüsselung und XOR-Operation vertauscht wurden.
+
+Vorteile:
+
+* Nur E() wird benötigt, kein D(). Genau so gut kann man aber auch nur D() an der Stelle von E() verwenden. (Etwa wenn dies schneller ist.)
+
+* Unterstützt (wie jeder Streaming-Mode) beliebige Nachrichten beliebiger Bitlänge und benötigt kein Padding.
+
+* Anders als beim ansonsten ähnlichen OFB (jedoch ähnlich wie bei CBC) führen Bit-Flipping Attacken hier zur kompletten Zerstörung des Inhalts des nächsten entschlüsselten Blocks. Die Attacke im aktuellen Block wird hingegen erfolgreich sein.
+
+Nachteile:
+
+* Der IV muss für jede Nachricht (mit demselben Schlüssel) verschieden sein. Wird dies nicht beherzigt, kann man den Plaintext mit hoher Wahrscheinlichkeit zumindest teilweise rekonstruieren.

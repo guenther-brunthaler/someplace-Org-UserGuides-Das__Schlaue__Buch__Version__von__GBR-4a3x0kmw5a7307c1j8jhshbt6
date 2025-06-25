@@ -1,0 +1,20 @@
+﻿Service-Codeeingaben verschiedener Geräte
+=========================================
+Günther Brunthaler
+
+(Angeblich) Allgemein gültig:
+
+*31#Rufnummer - Start a call with suppressed Caller-ID information
+**04*<old>*<new>*<new># - change <old> PIN into <new> PIN
+*#06# – Shows IMEI number.
+
+Samsung Phones, erfolgreich getestet mit M3510:
+*#0206*8376263# – Shows version numbers, H/W and RFCalDate.
+*#7465625# – (runs WindowsPersonalize.exe %LOCK_STATUS_INFO) Shows status of the Network, Service Provider, SIM or Corporation lock.
+*#92782# – (runs Windowsuamgr.exe) Shows the samsung omnia menu UA profile settings.
+*#232337# – (runs Windowsbthrftest.exe) Shows the Bluetooth RF tester and the device address.
+*#1234# – (runs WindowsKSReset.exe #Version) Shows the PDA and the Phone version number.
+*#0673# – (runs WindowsPlaySound.exe) Shows Audio sound tests.
+*#0842# – Shows tests for the Vibration, the Back Light and the Alert LED (Power buttton LED).
+*#2222# – (GSM test) Shows the FTA hardware version.
+*#1111# – (GSM test) Shows the FTA software version.

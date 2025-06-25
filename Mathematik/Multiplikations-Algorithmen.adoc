@@ -1,0 +1,105 @@
+﻿Multiplikations-Algorithmen
+===========================
+v2022.94
+
+Karatsuba
+---------
+
+Die erste gefundene Methode, die schneller als die Schulbuch-Methoden mit annähernd quadatischem Aufwand war. Allerdings ist sie wegen des Zusatzaufwands erst für Zahlen ab `320` bis `640` Bit tatsächlich schneller.
+
+Sie multipliziert zwei Zahlen `x` und `y` mittels dreier Multiplikationen kleinerer Zahlen, jede davon ungefähr halb so lang wie `x` oder `y`, wobei noch ein paar Additionen und Shift-Operationen hinzu kommen.
+
+Es ist eine parametrisierte Version von Toom-Cook mit `k=2` welche früher als letzterer Algorithmus entdeckt wurde und `4` Multiplikationen auf `3` reduziert.
+
+Maximaler Aufwand für die Multiplikation von 2 `n`-stelligen Zahlen ist `n^1,6` bzw. genauer `n^log2(3)`.
+
+
+Algorithmus
+~~~~~~~~~~~
+
+Wenn `x0` und `y0` die niederwertigeren Hälften zweier Zahlen `x` und `y` sind sowie `x1` und `y1` die höherwertigen Worthälften
+
+----
+asl(v, e) = v * radix ** e
+x = asl(x1, n) + x0
+y = asl(y1, n) + y0
+----
+
+wobei `0 <= x * y < asl(1, 2 * n)` sowie `0 <= (x0, y0) < asl(1, n)`, dann berechnet sich das Produkt `x * y` wie folgt:
+
+----
+p0 = x0 * y0
+p1 = x1 * y1
+p2 = (x1 - x0) * (y1 - y0)
+x * y = asl(p1, 2 * n) + asl(p1 - p2 + p0, n) + p0
+----
+
+
+Optimiert
+~~~~~~~~~
+
+Als Einzeloperationen in "Maxima"-Syntax mit minimierter Lebensdauer der Hilfsvariablen:
+
+----
+remvalue(all);
+asl(v, e):= v * radix ** e;
+x: asl(x1, n); /* s1 */
+x: x + x0; /* a1 */
+y: asl(y1, n); /* s2 */
+y: y + y0; /* a2 */
+p2: x1 - x0; /* a3 */
+t1: y1 - y0; /* a4 */
+p2: p2 * t1; /* m1 */
+remvalue(t1);
+p1: x1 * y1; /* m2 */
+remvalue(x1, y1);
+xy: asl(p1, 2 * n); /* s3 */
+t2: p1 - p2; /* a5 */
+remvalue(p1, p2);
+p0: x0 * y0; /* m3 */
+remvalue(x0, y0);
+t2: t2 + p0; /* a6 */
+t2: asl(t2, n); /* s4 */
+remvalue(asl, n);
+xy: xy + t2; /* a7 */
+remvalue(t2);
+xy: xy + p0; /* a8 */
+remvalue(p0);
+expand(x * y - xy); /* Should be 0. */
+----
+
+Das sind somit 3 Multiplikationen, 4 Shifts und 8 Additionen/Subtraktionen.
+
+
+Spezialisierung auf das Dualsystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Wenn man `radix=2` voraussetzt und weiters dass `n` die Wortbreite des breitesten effizienten Maschinenworts sei, lässt sich der Algorithmus noch weiter optimieren.
+
+Zum einen werden als allen `asl(v, n)` dann Shifts des Binärwerts `v` um `n` Bit nach links.
+
+Da jedoch im obigen Algorithmus zudem immer nur um `n` oder `2*n` Bits geschoben wird, kann man diese Shifts auch durch Zugriffe auf höherwertige oder niederwertigere Teilworte ersetzen aus denen sich das Ergebis zusammen setzt.
+
+
+Toom-3
+------
+
+Eine parametrisierte Version von Toom-Cook mit k=3, welche 9 Multiplikationen auf 5 reduziert und einen maximalen Aufwand von n^1.5 bzw. genauer n^(log(3)/log(2)) hat. Wegen der leidigen Entscheidungen welche man bei jeder Implementierung von Toom-Cook treffen muss, gibt es keine eindeutige Beschreibung des Algorithmus (gleichwohl es einige von verschiedenen Autoren empfohlene Methoden gibt), und man fragt sich ständig was wohl die "beste" Variante wäre. Da der Laufzeitunterschied zwischen Karatsuba und Toom-3 erst bei besonders großen Zahlen spürbar wird, wird Karatsuba wegen seiner simpleren Implementation oft bevorzugt.
+
+
+Toom-Cook
+---------
+
+Eine verbesserte und generalisierte Version von Karatsuba. Um a und b mit einander zu multiplizieren, teilt der Algorithmus a und b in k kleinere Zahlen der Länge L auf und operiert nur mit diesen Teilzahlen. Dadurch dass die Teilzahlen nach derselben Methode erneut unterteilt werden können, lädt dieser Algorithmus zu einer rekursiven Lösung des Gesamtproblems ein. Der Name wird oft als Synonym zu Toom-3 benutzt, auch wenn letzterer nur eine besonders populäre Parameter-Wahl für den Algorithmus repräsentiert. Nicht nur Karatsuba und Toom-3 sind parametrisierte Versionen von Toom-Cook, auch die Schulmethode kann als solche mit k=1 aufgefasst werden. Leider ist Toom-Cook weniger ein einzelner Algorithmus als viel mehr eine ganze Familie von Algorithmen, welche durch die Wahl unterschiedlicher Parameter unterschiedliche Sub-Algorithmen zur Implementierung nahe legen. Entsprechend entscheidet sich dann auch das endgültige Laufzeitverhalten, und man steht bei der Wahl der Parameter und besten Implementations-Methoden vor der Qual der Wahl.
+
+
+Schönhage–Strassen
+------------------
+
+Je nach Einzelfall ab Zahlen im Bereich zwischen 2^(2^15) bis 2^(2^17) schneller als Toom–Cook. Beruht auf der FFT-Methode zur Integer-Multiplikation.
+
+
+Fürer
+-----
+
+Für Zahlen ab 2^(2^64) am schnellsten. Keine praktische Relevanz wegen der astromomischen Größenordnung der Zahlen, ab welcher der Vorteil schlagend wird.

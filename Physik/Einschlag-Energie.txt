@@ -1,0 +1,37 @@
+﻿Einschlag-Energie
+=================
+
+E = 1/2 * m * v²
+
+
+Zusätzliche hilfreiche Formeln
+------------------------------
+
+1 Kilotonne TNT Äquivalent = 10^12 Kalorien
+
+1 Kalorie = 4,1868 Joule
+
+
+Eigenschaften
+-------------
+
+Dichte von Eisen: 7874 kg ∕ m³
+Dichte von Nickel: 8912 kg ∕ m³
+
+Typische Geschwindigkeit von Asterioden: 15000 - 30000 km/h, meist 20000 km/h
+
+
+Vergleichs-Energien
+-------------------
+
+* US MOAB: 11 tTNT
+* RU Aerosolbombe: 44 tTNT
+* Little Boy (Hiroshima, Uran 235): 13 ktTNT
+* Fat Man (Nagasaki, Plutonium 239): 21 ktTNT
+* Tunguska-Ereignis: 15 MtTNT (strittig)
+* Zar-Bombe: 50 MtTNT
+* Krakatau (1883), je nach Quelle: 130 oder 200-2000 MtTNT
+* Tambora (1815): 30 GtTNT
+* Laki-Spalte auf Island (1783–1784): 120 GtTNT
+
+Holz hat die vierfache Energiedichte von TNT.

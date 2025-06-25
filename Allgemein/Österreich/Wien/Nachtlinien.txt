@@ -1,0 +1,35 @@
+﻿
+Nachtbusse
+----------
+
+Den Ring in Kreis fahren: N xx:
+25, 26, 36, 38
+66, 67, 58, 60
+
+Schottentor: 
+25, 26, 36, 38, 41, 43, 66, 67, 58, 60
+
+Oper:
+25, 26, 36, 38, 46, 49, 50, 62, 66, 67, 58, 60, 71, 75, 360
+
+Schwedenplatz:
+25, 26, 29, 31, 36, 38, 66, 67, 58, 60
+
+Floridsdorf:
+20, 29, 31
+
+Kagraner Platz:
+20, 25
+
+Quellenplatz:
+6, 66, 67, 68
+
+
+Nightline
+---------
+
+Die Wiener NightLine ist ein täglich etwa zwischen 0:30 und 5:00 Uhr betriebenes Nachtverkehrsnetz in Wien.
+ 
+In den Nächten vor Samstag, Sonntag und Feiertagen verkehren alle fünf U-Bahn-Linien im 15-Minuten-Intervall, 17 Nachtbuslinien der Wiener Linien im 30-Minuten-Takt, 7 ASTAX-Linien (Anrufsammeltaxis) bei Bedarf sowie einige Kurse der „Casinobuslinie“ 360 nach Baden.
+
+In den übrigen Nächten sind 18 Nachtbuslinien (von denen vier den Ring umrunden) im 30-Minuten-Takt, 10 ASTAX-Linien sowie die Linie 360 nach Baden unterwegs. 

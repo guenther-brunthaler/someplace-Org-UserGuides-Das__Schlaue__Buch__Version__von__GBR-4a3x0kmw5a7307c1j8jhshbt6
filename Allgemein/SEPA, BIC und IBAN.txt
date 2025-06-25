@@ -1,0 +1,11 @@
+﻿
+Der BIC (Business Identifier Code) ersetzt die Bankleitzahl.
+Für die easybank lautet der BIC. EASYATW1
+
+Ihre IBAN setzt sich folgendermaßen zusammen:
+Stelle 1–2: Ländercode
+Stelle 3–4: Prüfziffern
+Stelle 5–9: BLZ
+ab Stelle 10: Kontonummer
+
+Mit SEPA gibt es statt dem bisherigen Verwendungszweck nur noch alternativ ein Feld für die "Zahlungsreferenz" (Kundendaten oder Text bis zu 35 Zeichen) bzw. ein Feld für den "Verwendungszweck" (Text bis zu 114 Zeichen).
