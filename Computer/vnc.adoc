@@ -1,6 +1,6 @@
 ﻿VNC
 ===
-v2025.98
+v2025.177
 
 
 Dedizierter VNC-Server und -Client
@@ -129,3 +129,51 @@ Wenn die gleichnamige Android-App verwendet werden, gelten die folgenden Überse
 * `[Esc]` - Button mit Dreieck-Symbol
 
 Wenn im VNC Viewer der Android-Bildschirm höher angezeigt wird als er tatsächlich ist, kann die "`-ycrop`"-Option vieler VNC-Viewer benutzt werden, um die Höhe zu beschränken.
+
+Hier eine beispielhafte Sitzung für ein Android-Phone namens "andro" mit einer Display-Auflösung von 720 x 1612 (hochkant), wo ein droidVNC-NG Server auf Port 17011 läuft und SSH Connection-Sharing für diese Verbindung konfigurier wurde:
+
+$ ssh -O forward -L 127.0.0.1:17011:127.0.0.1:17011 andro
+$ ssvncviewer -ycrop 1612 127.0.0.1::17011
+$ #ssvncviewer -ycrop 720 127.0.0.1::17011
+$ ssh -O cancel -L 127.0.0.1:17011:127.0.0.1:17011 andro
+
+Der auskommentierte Befehl wäre der richtige wenn das Gerät statt dessen quer ausgerichtet (und automatisches Rotieren aktiv) ist.
+
+Zum Starten des droidVNC-NG Servers wäre anzumerken, dass es im Zusammenhang mit diesem 4 Berechtigungen gibt, welche man erteilen kann:
+
+1. Bildschirmaufnahme
+2. Eingabe
+3. Benachrichtigungen
+4. Start bei Gerätestart
+
+Die ersten drei Berechtigungen sind erforderlich, die letzte optional (und nicht von mir empfohlen).
+
+Die Berechtigung 3 wird normalerweise nur erstmals gefragt und beleibt der App dann dauerhaft.
+
+Die Berechtigungen 1 und 2 werden hingegen bei jedem erstmaligen des Servers seit dem Start der App neu gefragt. Die Berechtigung 1 ist dabei unproblematisch.
+
+Aber die Berechtigung 2 scheint nicht zu funktionieren wenn man sie erteilt. Man muss dies tun:
+
+* Sobald man danach gefragt wird in den Systemeinstellungen von Android in den Punkt "Bedienungshilfen" gehen.
+
+* Dort "droidVNC-NG" antippen damit man in dessen Untermenü kommt.
+
+* Beide Schaltflächen "droidVNC-NG verwenden" und "Verknüpfung für droidVNC-NG" abschalten (falls nicht bereits der fall).
+
+* Danach nur die Schaltfläche Schaltflächen "droidVNC-NG verwenden" wieder einschalten. Die andere Schaltfläche ausgeschaltet lassen. Sie ist nicht erforderlich.
+
+* Im Menü zurück gehen bis man wieder in der "droidVNC-NG"-App ist.
+
+* Dort den Server stoppen und erneut starten. Diesmal sollte er das "Eingabe"-Recht wieder besitzen. Der VNC-Server funktioniert nun wieder uneingeschränkt.
+
+Anzumerken wäre allerdings, dass eine Apps wie insbesondere "KeePassDX" Maßnahmen dagegen treffen via VNC "ferngesteuert" zu werden:
+
+* Man sieht dann im VNC-Viewer nur einen schwarzen Bildschirm, während die App am physischen Display ganz normal zu sehen ist.
+
+* Man kann auch keine Tastatur-Eingaben in solche Apps via VNC durchführen, während physische Eingaben in der App problemlos funktionieren.
+
+Dies ist ein Sicherheitskompromiss den man auf einem nicht-gerooteten Android-Gerät eingehen muss. Wäre es anders, könnte auch Malware dieselben Möglichkeiten nutzen um and die Passworte im KeePass zu kommen.
+
+Daher ist es zwar ärgerlich, aber vermutlich im Hinblick auf die Sicherheit unvermeidbar, dass der VNC-Benutzung unter Android Grenzen gesetzt werden.
+
+Immerhin haben die meisten Apps keine solchen Sicherheitsansprüche, und lassen sich daher problemlos via VNC fernsteuern.

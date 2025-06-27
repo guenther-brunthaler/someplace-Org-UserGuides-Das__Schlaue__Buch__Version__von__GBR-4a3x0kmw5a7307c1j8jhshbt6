@@ -1,7 +1,7 @@
 ﻿2FA
 ===
 Guenther Brunthaler
-v2023.174
+v2025.177
 
 How to set up time- or event-based 2-factor authentication in Linux.
 
@@ -646,3 +646,20 @@ Der Issuer ist der Rechner für den der Code zum Einloggen gedacht ist. Default 
 Das Label hingegen ist das was in der FreeOTP-App als Eintragstitel angezeigt wird. Default ist user@hostname wobei "user" natürlich der aufrufende User ist und "hostname" der Name des eigenen Rechners. Unter der Annahme dass man ein Login für diesen Rechner erzeugen will, passt das normalerweise auch.
 
 Aber wenn du mehr als einen Dienst hast, kannst du mit -l unterschiedliche Namen für die Einträge erzeugen.
+
+
+Secret ersetzen
+---------------
+
+Der Google Authenticator codiert das binäre Secret als Base-32 mit dem folgenden Alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 ("A"-"Z", "2"-"9"). Dieses Alphabet ist in RFC 4648 definiert und auch das "coreutils"-utility "base32" verwendet es.
+
+Das TOTP/HOTP Secret sind 128 Zufallsbits die als 26 Base-32 Zeichen dargestellt werden; ich vermute die ungenutzten letzten beiden Bit sind immer 0.
+
+Das bedeutet, dass man sich eigene hochwertigere Base-32 Secrets mit folgendem Befehl erzeugen kann:
+
+----
+$ keygen-octets-by-harvesting-entropy 16 | base32 | tr -d =
+----
+
+Der Verification Code ist 6-stellig, als Hash kommt SHA-1 zum Einsatz.
+
