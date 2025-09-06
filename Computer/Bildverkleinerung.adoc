@@ -40,6 +40,54 @@ $ true "Bilddateien im JPEG- oder PNG-Format deren" \
   && convert -resize '1920x1080>' -quality 15 "$f" "$TF" \
   && avifenc -- "$TF" "${f%.*}.avif"; done)
 
+$ true "Bilddateien in beliebigen Formaten deren" \
+  && : "Pfadnamen sich in der Zwischenablage befinden in" \
+  && : "PNG-Dateien umwandeln. Das ist sinnvoll wenn die" \
+  && : "Dateien danach noch transformiert werden sollen," \
+  && : "etwa rotieren oder Farben anpassen. Da PNG ein" \
+  && : "verlustloses Bildformat ist, verschlechtern diese" \
+  && : "Transformationen dann nicht die Bildqualität" \
+  && : "durch verlustbehaftete Kompression bei jedem" \
+  && : "Speichern eines Bildes als Zwischenergebnis." \
+  && : "Version dieses Befehls: v2025.218" \
+  && for u in xclip convert; do
+  command -v $u > /dev/null || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" && convert "$f" "${f%.*}.png"; done
+
+$ true "Bilddateien in beliebigen Formaten deren" \
+  && : "Pfadnamen sich in der Zwischenablage befinden in" \
+  && : "PNG-Dateien umwandeln und den Bildinhalt dabei" \
+  && : "um 90 Grad im Uhrzeigersinn rotieren." \
+  && : "Version dieses Befehls: v2025.218" \
+  && for u in xclip convert; do
+  command -v $u > /dev/null || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" \
+  && convert "$f" -rotate -90 "${f%.*}.png.tmp" \
+  && mv -- "${f%.*}.png.tmp" "${f%.*}.png"; done
+
+$ true "Bilddateien in beliebigen Formaten deren" \
+  && : "Pfadnamen sich in der Zwischenablage befinden in" \
+  && : "PNG-Dateien umwandeln und den Bildinhalt dabei" \
+  && : "um 90 Grad gegen den Uhrzeigersinn rotieren." \
+  && : "Version dieses Befehls: v2025.218" \
+  && for u in xclip convert; do
+  command -v $u > /dev/null || { zenity --error --text \
+  "Benötigtes Hilfsprogramm '$u' ist nicht installiert!"; \
+  false || break; }; done \
+  && { xclip -selection clipboard -o; echo; } \
+  | while IFS= read -r f; do test -z "$f" && continue \
+  || test -f "$f" \
+  && convert "$f" -rotate 90 "${f%.*}.png.tmp" \
+  && mv -- "${f%.*}.png.tmp" "${f%.*}.png"; done
+
 $ true "AVIF-Bilddateien deren Pfadnamen sich in der" \
   && : "Zwischenablage befinden verlustfrei in" \
   && : "PNG-Dateien umwandeln und nichts an der" \

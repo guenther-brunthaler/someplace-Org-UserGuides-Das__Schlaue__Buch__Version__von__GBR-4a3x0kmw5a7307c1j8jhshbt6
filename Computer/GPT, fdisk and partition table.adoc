@@ -1,6 +1,6 @@
 ﻿GPT (GUID Partition Table)
 ==========================
-v2025.14
+v2025.234
 
 
 Partition-Typen
@@ -38,6 +38,61 @@ Am Ende der Disk wird ebenfalls ein solcher Sektor fürs GPT-Backup eingerichtet
 Hinweis: Das GPT-Backup ist nur 7 Stück 512-Byte-Sektoren groß, da der Boot Sektor nicht eigentlicher Bestandteil der GPT ist, und daher auch nicht gebackupt wird. Der letzte 512-Byte Sektor im partionierbaren Bereich beginnt daher zwar an einer 4096-Byte Grenze, ist jedoch nur 512 Bytes groß. Man sollte diesen Sektor daher am besten unbenutzt lassen. Oder man richtet eine Mini-Partition dort ein, welche ein (manuelle erstelltes) Backup des Boot-Sektors aufnehmen soll.
 
 
+GPT Header
+---------
+
+Der GPT Header beginnt auf LBA # 1. Er folgt dem Protective MBR auf LBA # 0 nach.
+
+Interessante Felder (unvollständige Auflistung) sind:
+
+[options="header,autowidth"]
+|===
+| Offset | Länge | Bedeutung
+|   0x00 |  0x08 | Signature ("EFI PART")
+|   0x28 |  0x08 | First usable LBA (first PT LBA + 1)
+|   0x30 |  0x08 | Last usable LBA (second PT LBA - 1)
+|   0x38 |  0x10 | Disk GUID
+|   0x48 |  0x08 | Starting LBA of array of partition entries (usually 2) 
+|   0x50 |  0x04 | Number of partition entries in array
+|   0x54 |  0x04 | Size of a single partition entry (usually 80h or 128) 
+|===
+
+Alle Werte verwenden Little Endian Byte Order.
+
+
+GPT Entry
+---------
+
+Jeder GPT Eintrat ist 128 Bytes lang. Der erste Eintrag der GPT beginnt auf LBA # 2.
+
+[options="header,autowidth"]
+|===
+| Offset | Länge | Bedeutung
+| 0x00   | 0x10  | Type GUID
+| 0x10   | 0x10  | GUID
+| 0x20   | 0x08  | First LBA
+| 0x28   | 0x08  | Last LBA
+| 0x30   | 0x08  | Attribute flags
+| 0x38   | 0x48  | Name (36 Zeichen)
+|===
+
+Alle Werte verwenden Little Endian Byte Order. Die Zeichen im Namensfeld sind als UTF-16LE codiert.
+
+
+GPT-Attribute Flags
+-------------------
+
+[options="header,autowidth"]
+|===
+|     Bit | Name | Bedeutung
+|       0 | Required Partition   | Für die Plattform erforderlich, z. B. OEM Partition
+|       1 | No Block IO Protocol | EFI soll diese Partition komplett ignorieren und nicht einmal lesen/proben
+|       2 | Legacy BIOS bootable | MBR soll auf dieser Partition weiter booten
+|  3 - 47 | Reserviert
+| 48 - 63 | Bedeutung vom Partition-Typ abhängig
+|===
+
+
 Bootloader
 ----------
 
@@ -45,13 +100,36 @@ Bootloader
 GRUB2
 ~~~~~
 
-GRUB2 installiert seine Stage 1.5 normalerweise in die ESP (auf UEFI-Systemen) oder in die "BIOS Boot" Partition (non-UEFI Systeme).
+GRUB2 installiert seine Stage 1.5 normalerweise automatisch in die ESP (auf UEFI-Systemen) oder in die "BIOS Boot" Partition (non-UEFI Systeme). Sie wird anhand ihrer Typ-UUID als solche erkannt.
 
-Seinen Stage-1 Loader installiert er normalerweise in den GPT Boot Sector.
+Angeblich ignoriert `grub-install` diese "BIOS Boot" Partition jedoch wenn die GRUB2 Stage 1 bereits in den MBR installiert wurde. (Möglicherweise kann `grub-install --recheck` hier helfen. Außerdem gibt es neuerdings ein `grub-bios-setup` utility von GRUB2.)
+
+Seinen Stage-1 Loader installiert er normalerweise in den GPT Boot Sector. Jedoch kann dieser auch in den Bootsektor einer anderen Partition installiert werden (etwa auf /boot wenn dies eine normale Partition ist). In diesem Fall muss die Partition wo die Stage-1 installiert wurde entweder mit dem `LegacyBIOSBootable` Flag markiert sein (im Falle einer GPT), oder als "aktiv" markiert sein (im Falle einr MBR-PT). In allen Fällen außer dem ersten muss im GPT Boot Sector dann ein generischer Bootsektor-Code (wie +<<extlinux,gptmbr.bin>>+) installiert werden, welche dem MBR-Bootvorgang von dort auf den Stage-1 Loader weiterleitet.
 
 Sein Stage-2 Loader kann dann die restlichen GRUB2-Module bereits aus einem regulären Dateisystem loaden.
 
+Es sei darauf hingewiesen, dass das Markieren als "aktiv" bzw. `LegacyBIOSBootable` nicht erforderlich ist wenn die Stage-1 im MBR oder GPT-Bootsektor installiert wurde.
 
+Es ist auch nicht möglich, die Stage-1 zusammen mit der Stage 1.5 in die BIOS Boot Partition (oder in die Lücke zwischen MBR und 1. Partition) zu installieren. Nur die Stage 1.5 kann dort hin installiert werden. Die Stage-1 muss wo anders hin installiert werden.
+
+Am Raspberry Pi ist das "aktiv"-Markieren ebenfalls unnötig. Dieser bootet *immer* von der ersten MBR-Partition. Wenn man einen anderen PT-Eintrag als den 1. booten möchte, muss man manuell die Einträge in der MBR-PT vertauschen so dass die gewünschte Boot-Partition im 1. der 4 PT-Slots zu liegen kommt.
+
+
+"BIOS Boot" Partition
+~~~~~~~~~~~~~~~~~~~~~
+
+Diese Partition in einer GPT wird nur dann verwendet wenn vom MBR anstatt via ESP gebootet wird. Sie ersetzt für GPT-Disks jenen Speicherbereich welcher bei MBR-Disks von der "Lücke" zwischen MBR und 1. Partition gebildet wird.
+
+Angeblich kann man diese BIOS Boot Partition auf 3 Arten als solche kennzeichnen:
+
+* fdisk: `BIOS boot` als Partition-Typ festlegen.
+* gisk: Code `ef02` als Partition-Typ festlegen.
+* parted: Das Flag `bios_grub` für die Partition setzen/aktivieren.
+
+Dieses angebliche `bios_grub`-Flag ist jedoch eine reine Erfindung von `parted`. Es gibt kein GPT Entry Attribute Flag dafür. Statt dessen setzt `parted` dabei einfach die Typ GUID auf `{21686148-6449-6E6F-744E-656564454649}`.
+
+
+[[extlinux]]
 Extlinux
 ~~~~~~~~
 
@@ -59,7 +137,7 @@ Hier gibt man als Installationsziel ein Verzeichnis an, welches beim Booten als 
 
 Extlinux installiert seinen Stage-1 Loader allerdings nicht direkt in den GPT Boot Sector, sondern auf den ersten Sektor der Partition in der sich das Installations-Zielverzeichnis befindet.
 
-In diesem Fall muss man den von extlinux mitgelieferten Boot-Code gptmbr.bin an den Anfang der Disk schreiben, und danach mit fdisk die Partition auf welche extlinux installiert wurde editieren um dort die Markierung "LegacyBIOSBootable" zu setzen.
+In diesem Fall muss man den von extlinux mitgelieferten Boot-Code `gptmbr.bin` an den Anfang der Disk schreiben, und danach mit fdisk die Partition auf welche extlinux installiert wurde editieren um dort die Markierung "LegacyBIOSBootable" zu setzen.
 
 Anhand dieser Markierung erkennt der Code aus gptmbr.bin auf welcher Partition der eigentliche Boot-Code liegt, und lädt diesen dann sowie springt ihn danach an.
 
@@ -67,24 +145,98 @@ Anhand dieser Markierung erkennt der Code aus gptmbr.bin auf welcher Partition d
 Empfohlenes Disk-Layout
 -----------------------
 
+
+Allgemein
+~~~~~~~~~
+
 . Anti-Forensic Information splitter (AFIS) area for master key storage, around 9 MiB in size.
-. All the remaining data partitions.
+. LVM2 Volume Group (includes /boot, Swap, Main System)
 . EFI System Partition (optional)
-. `/boot` partition (optional), Typ "linux extended boot", Attribut `LegacyBIOSBootable`
-. BIOS boot Partition (optional)
+. BIOS boot Partition (optional), 1 MiB, Partition-UUID gemäß diesem Typ, Attribut `LegacyBIOSBootable`
 . Backup of AFIS area, around same size as original.
 
-Anmerkungen:
 
-* Die anti-forensischen Partitionen kann man sich ersparen, wenn man das alte LUKS-1 Format anstatt dem neuen LUKS-2 Format verwendet. LUKS-1 hatte noch einen Ant anti-forensischen Information Splitter eingebaut.
+Für GPT-Disks
+~~~~~~~~~~~~~
+
+. GPT Boot Sector: GRUB2 Stage 1
+. Anti-Forensic Information Splitter (optional)
+. `vg_n0myhost` (includes `/boot`)
+. EFI System (ESP)
+. BIOS boot (1 MiB, GRUB2 Stage 1.5), Attribut `LegacyBIOSBootable`
+. Backup AFI Splitter (optional)
+
+Im 'Protective MBR' bzw. GPT Boot Sector sollte der GRUB2 installiert werden. Das installiert seine Stage 1 dorthin. Die Stage 1.5 wird automatisch in die BIOS Boot Partition installiert.
+
+Die BIOS Boot Partition sollte die zugehörige Typ-UUID gesetzt haben. Das Attribut `LegacyBIOSBootable` sollte hingegen *nicht* gesetzt sein.
+
+
+Für MBR-Disks
+~~~~~~~~~~~~~
+
+. MBR Sector: GRUB2 Stage 1
+. Gap between MBR and first partition: GRUB2 Stage 1.5, Minimum 1000 MiB
+. Anti-Forensic Information Splitter (optional)
+. `vg_n0myhost` (includes `/boot`)
+. Backup AFI Splitter (optional)
+
+
+Spezialfall Raspberry Pi
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+. Anti-Forensic Information Splitter (optional)
+. `vg_n0myhost` (LVM2 PV + VG, MBR Partition Type ID `0x8e`)
+. `/boot/firmware` (MBR Partition Type ID `0x0e`, marked "active")
+. Backup AFI Splitter (optional)
+
+"`vg_n0myhost`" enthält auch ein LV namens "`swap-enc`" mit 8 oder 16 GiB Größe am Ende.
+
+"`/boot/firmware`" ist als VFAT mit einer 16-Bit FAT formatiert.
+
+"`/boot`" ist Teil von "`/`" und kein separates LV.
+
+"`/`" existiert typischerweise als LV in einer verschachtelten VG "`vg_myhost`" in einem verschlüsselten PV "`/dev/mapper/pv-myhost-level0-dec`" welches innerhalb von "`vg_n0myhost`" als LV "`pv_e0myhost-enc`" enthalten ist.
+
+Nach dem Partitionieren mit
+
+----
+$ d=/dev/disk/by-id/... # SD/SDXC Card to be partitioned.
+$ fdisk -u "${d:?}"
+----
+
+muss die Partition Table manuell im Hex-Editor bearbeitet werden
+
+----
+$ hexedit -s "${d:?}"
+----
+
+und die Einträge der 1. und 2. Partition müssen vertauscht werden. (Es gibt 4 Einträge, jeder ist 0x10 Bytes lang, der letzte Eintrag endet genau vor den letzten beiden Bytes im Sektor welche 0x55 und 0xAA sein müssen. `hexedit` hat zwar keinen Befehl zum Vertauschen von Bereichen. Aber man kann mit dem Kopieren in einen ungenutzten Bereich des Sektors welcher nur Nullen enthält eine Temporärkopie eines Bereichs anlegen und den Rest durch Kopieren erledigen. Die Temporärkopie kann danach wieder mit Nullen gefüllt werden. Fürs Überschreiben eines Bereichs mit einem Bytewert besitzt der `hexedit` einen Befehl.)
+
+Denn der ROM-Bootloader das RPi erfordert dass die Firmware Boot Partition die 1. Partition sein muss. Nach dem obigen Layout wäre es allerdings die 2. Partition. Durch das Vertauschen der Partition-Table Einträge wird dies behoben. Nach dem Speichern der Änderungen muss
+
+----
+$ blockdev --rereadpt "${d:?}"
+----
+
+aufgerufen werden, 
+
+Sollte die Partition Table später jemals wieder mit `fdisk` editiert werden, gibt es in den "Expert Commands" eine Option um die Reihenfolge der Partition Table wieder der Reihenfolge am Blockgerät anzupassen, bevor die eigentlichen Bearbeitungen durchgeführt werden. Nach dem Speichern dieser Änderungen müssen dann erneut die zuvor beschriebenen Schritte durchgeführt werden, um sicher zu stellen dass die "`/boot/firmware`" Partition den ersten Eintrag der Partition-Table darstellt.
+
+
+Anmerkungen
+~~~~~~~~~~~
+
+* Die anti-forensischen Partitionen kann man sich ersparen, wenn man das alte LUKS-1 Format anstatt dem neuen LUKS-2 Format verwendet. LUKS-1 hatte noch einen Anti-forensischen Information Splitter eingebaut.
 
 * Alle Strukturen (LBA Sektornummern) zumindest an 8 KiB Grenzen ausrichten. Ausgenommen davon ist eine Partition deren Ende exakt an das GPT Backup grenzt. Deren Ende (nicht aber deren Anfang) kann beliebig ausgerichtet sein. Oder man lässt eine ungenutzte Lücke minimaler Größe für den Bereich dessen Ende nicht exakt ausgerichtet werden kann.
 
 * Performance-kritische strukturen (LBA Sektornummern) am 1 MiB Grenzen ausrichten.
 
-* Die AFIS Area und ihr Backup sind normale Linux Dateisysteme. Empfohlen ist ext4 ohne Journal und mit einer 4 KiB block size (`mkfs.ext4 -b 4k`).
+* Die AFIS Area und ihr Backup sind normale Linux Dateisysteme. Empfohlen ist ext4 ohne Journal und mit einer 4 KiB block size (`mkfs.ext4 -O '^has_journal' -b 4k`).
 
-Beispiel:
+
+Beispiel
+~~~~~~~~
 
 ----
 $ fdisk -lo Device,Start,Size,Attrs,Name /dev/sda
@@ -103,6 +255,8 @@ Die `vg_n0myhost`-Partition im obigen Beispiel dient als LVM2 physical volume. D
 Der "eigentliche Inhalt" kann entweder ein unverschlüsseltes LVM PV sein (`vg_n1myhost`).
 
 Oder es ist ein "dmintegrity"-Layer (typischer LV-Name "integrity") mit unverschlüsseltem LVM PV (`vg_n1myhost`) darin.
+
+IMPORTANT: "dmintegrity" unterstützt kein SATA TRIM bzw "discard". Es ist daher ungünstig auf SSDs und sollte nur bei Festplatten verwendet werden.
 
 In beiden Fällen gibt ist das unverschlüsselte `vg_n1myhost` eine VG für die verschiedenen verschlüsselten (FDE-Äquivalent) oder unverschlüsselten Bereiche der Festplatte (etwa für Recovery Images und dergleichen).
 

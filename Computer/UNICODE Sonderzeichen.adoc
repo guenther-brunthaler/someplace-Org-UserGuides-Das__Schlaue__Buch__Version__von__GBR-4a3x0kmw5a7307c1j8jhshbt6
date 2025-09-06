@@ -1,12 +1,24 @@
 ﻿UNICODE Sonderzeichen
 =====================
-v2024.150
+v2025.203
 
 
 Dateinamen-Ersatzzeichen
 ------------------------
 
-* "∕" Divisions-Zeichen ersetzt reguläres ASCII "/"
+Reguläres ASCII "/" kann ersetzt werden durch (bestes zuerst):
+
+* U+2215 "∕" Division Slash (beste Wahl, klebt jedoch in Proportionalfonts zusammen)
+* U+2044 "⁄" Fraction Slash (überlappt sich häufig)
+* U+29F8 "⧸" Big Solidus (hat scheinbaren Leerraum zu seiner rechten; nicht in allen Fonts vorhanden)
+* U+FF0F "╱" Fullwidth Solidus
+* U+2571 "╱" Box Drawings Light Diagonal Upper Right to Lower Left
+
+Man kann diese Kombinationen unter Linux in GUI-Programmen (allerdings weder im `xterm` noch in einer virtuellen Konsole) direkt als 4 Hexziffern eintippen wenn man davor [Strg]+[Umschalt]+[u] drückt.
+
+Gute Alternativen für andere problematische ASCII-Zeichen können die Zeichen U+FF01 bis U+FF5E aus dem "FULLWIDTH" Unicode-Block sein:
+
+？！＊＄：．… ＞＜—
 
 
 Hoch- und tiefgestellte Zeichen

@@ -1,6 +1,6 @@
 ﻿LUKS - Linux Unified Key Setup
 ==============================
-v2025.100
+v2025.234
 
 LUKS ist ein Standard zur Einrichtung von `dmcrypt`-targets des Linux Device Mappers, mit dem das Kernel Blockgeräte verschlüsseln kann.
 
@@ -54,7 +54,7 @@ $ MASTER_KEY_FILE=/path/to/master-key.bin
 $ CRYPT_DEV=`readlink -f /dev/disk/by-id/...`
 $ # Next line: MAPPING *must* end with "-dec".
 $ MAPPING=myhost-level0-dec
-$ unset UUID # Dont't enforce a particular LUKS UUID.
+$ unset UUID # Don't enforce a particular LUKS UUID.
 
 $ if command -v keygen-octets-by-harvesting-entropy
 then
@@ -129,6 +129,8 @@ $ : ${MAPPING:?} && MPFX=${MAPPING%-dec} && if test "$MAPPING" != "$MPFX"; then 
     --key-slot=0 --label="$MPFX-enc" `test "$UUID" && echo --uuid $UUID` \
     "${CRYPT_DEV:?}"; else echo "ERROR: '$MAPPING' must end with '-dec'."; fi && unset MPFX
 ----
+
+Note: In older versions of `cryptsetup`, option `--volume-key-file` is called `--master-key-file` instead.
 
 * LUKS-2 (ohne Anti-Forensischem Information Splitter):
 +

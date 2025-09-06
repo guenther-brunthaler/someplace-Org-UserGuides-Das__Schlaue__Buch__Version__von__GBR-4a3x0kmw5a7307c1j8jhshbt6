@@ -1,6 +1,6 @@
 ﻿QEMU
 ====
-v2025.17
+v2025.233
 
 
 How to control the mouse/keyboard grab
@@ -63,6 +63,56 @@ The guest has missed the last toggling operation as it has been invisible to it;
 --------------------
 
 This is normal with "-net user" (which is also the default network option). The reason is that `ping` cannot be performed without special privileges. The `ping`-executable on the host has such privileges. The `qemu` executable doesn`t.
+
+
+Online-resize an existing disk image
+------------------------------------
+
+It is possible to resize an existing disk image file while the VM is using it.
+
+As an example, let's say we have a raw disk image "disk2.img" which has a current size of 50 GiB and contains a LUKS-encrypted ext4 filesystem where downloads are running.
+
+But the available space for the downloads ist too small and we would like to resize the disk to 100 GiB.
+
+This could be achieved as follows:
+
+.QEMU Monitor Console for the VM
+----
+(qemu) info block
+...
+vhdd1 (#block394): /.../disk2.img (raw)
+    Attached to:      /machine/peripheral-anon/device[2]/virtio-backend
+    Cache mode:       writeback
+(qemu) block_resize vhdd1 100G
+----
+
+.SSH root shell within the VM
+----
+$ dmesg | grep 'capacity change' | tail -n 1
+[426012.199253] vdb: detected capacity change from 104857600 to 209715200
+
+$ blockdev --getsize /dev/vdb
+209715200
+
+$ dmsetup status downloads-dec
+0 104855552 crypt
+
+$ cryptsetup resize downloads-dec
+Geben Sie die Passphrase für »/dev/vdb« ein:
+
+$ dmsetup status downloads-dec
+0 209713152 crypt
+
+$ resize2fs /dev/mapper/downloads-dec 
+...
+Filesystem at /dev/mapper/downloads-dec is mounted on /home/mnt/downloads; on-line resizing required
+...
+The filesystem on /dev/mapper/downloads-dec is now 26214144 (4k) blocks long.
+
+$ df --si /home/mnt/downloads
+Dateisystem               Größe Benutzt Verf. Verw% Eingehängt auf
+/dev/mapper/downloads-dec  106G     49G   57G   47% /home/mnt/downloads
+----
 
 
 Adding a temporary drive without restarting the VM

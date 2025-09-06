@@ -1,0 +1,7 @@
+Schwarzschild-Radius
+====================
+v2025.206
+
+Für jede Masse ab der Planckmasse (2,176 · 10^−8^ kg) gibt es einen Schwarzschild-Radius. Wenn ein Objekt auf ein Kugelvolumen mit einem kleineren Radius als seinem Schwarzschild-Radius komprimiert wird, so wird es ein Schwarzes Loch. Masseärmere Objekte haben eine zu große Ortsunschärfe und können deshalb nicht ausreichend komprimiert werden.
+
+Form und Größe des Ereignishorizontes hängen nur von der Masse, dem Drehimpuls und der Ladung des Schwarzen Lochs in seinem Innern ab. Bei statischen Schwarzen Löchern ist der Ereignishorizont eine kugelsymmetrische Fläche, deren Radius Schwarzschild-Radius genannt wird. Bei allen anderen Schwarzen Löchern ist die Raumzeit nur rotationssymmetrisch. 

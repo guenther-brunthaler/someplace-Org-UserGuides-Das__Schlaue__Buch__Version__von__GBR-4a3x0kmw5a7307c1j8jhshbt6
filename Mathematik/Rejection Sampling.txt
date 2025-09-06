@@ -2,18 +2,24 @@
 
 Beispiel: Man kann ein Würfelereignis wie folgt implementieren:
 
-unsigned dice_roll(void) {
-	return (unsigned)(rand() * 6uL / (RAND_MAX + 1uL)) + 1u;
+int dice_roll(void) {
+	return (int)(rand() / ((RAND_MAX + 1u) / 6)) + 1;
 }
 
-Um die teure Division bzw. Multiplikation zu vermeiden, kann man dies auch durch eine simplere Test-Schleife ersetzen:
+Man beachte, dass alle Ansätze welche rand() mit irgend einer Integer-Zahl multiplizieren zum Scheitern verurteilt sind da sie einen Integer-Overflow bewirken werden wenn RAND_MAX einen ähnlichen Wert wie MAX_INT hat.
+
+Auch das Casten des Multiplikationsergebnisses nach "unsigned long" wird vermutlich nur auf 64-Bit Plattformen das Problem "lösen", denn auf 32-Bit Plattformen kann sizeof(unsigned long) == sizeof(int) sein.
+
+Die obige Variante funktioniert hingegen auch wenn "unsigned" dasselbe ist wie "unsigned long": Denn durch die Umwandlung von "signed" nach "unsigned" vergrößert sich der erlaubte Wertebereich, so dass die Addition von RAND_MAX plus 1 danach ohne Overflow möglich selbst falls RAND_MAX == INT_MAX ist.
+
+Um die möglicherweise teure Division zu vermeiden, kann man dies auch durch eine simplere Test-Schleife ersetzen:
 
 static unsigned dice_shr;
 
 void dice_init(void) {
-        int mx= RAND_MAX;
+        int mx = RAND_MAX;
         while (mx >> 1 >= 6) {
-                mx>>= 1;
+                mx >>= 1;
                 ++dice_shr;
         }
 }
@@ -21,10 +27,10 @@ void dice_init(void) {
 unsigned dice_roll(void) {
         for (;;) {
 		unsigned roll;
-                if ((roll= rand() >> dice_shr) < 6) return roll + 1;
+                if ((roll = rand() >> dice_shr) < 6) return roll + 1;
         }
 }
 
 Dies vermeidet zudem "long"-Arithmetik.
 
-Allerdings macht dies natürlich nur Sinn, wenn rand() seinerseits billiger als drei Multiplikationen (eine davon entspricht der Division mit einem Kehrwehrt) ist.
+Allerdings macht dies natürlich nur Sinn, wenn rand() seinerseits billiger als eine Division oder Multiplikation (falls der Compiler optimiert) ist. Im obigen Fall dürfte das kaum der Fall sein. Aber wenn die Datentypen deutlich breiter als ein "int" sind, etwa bei mehrfach-genauer Arithmetik, dann vielleicht schon.
