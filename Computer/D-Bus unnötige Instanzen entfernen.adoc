@@ -1,7 +1,8 @@
 ﻿D-BUS Cleanup
 =============
+v2025.264
 
-Wegen der dämlichen Art und Weise wie D-BUS über Umgebungsvariablen seine Adresse bekannt gibt, bekommtn Prozesse dies oft nicht mit und starten dann einen weiteren D-BUS-Prozess. So sammeln sich im Laufe der Zeit immer mehr davon ab. Benötigt wird aber nur einer davon tatsächlich.
+Wegen der dämlichen Art und Weise wie D-BUS über Umgebungsvariablen seine Adresse bekannt gibt, bekommen Prozesse dies oft nicht mit und starten dann einen weiteren D-BUS-Prozess. So sammeln sich im Laufe der Zeit immer mehr davon ab. Benötigt wird aber nur einer davon tatsächlich.
 
 Diese Anleitung soll helfen, die überflüssigen Kopien des Prozesses wieder los zu werden.
 
