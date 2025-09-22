@@ -1,6 +1,6 @@
 ﻿QEMU
 ====
-v2025.233
+v2025.265
 
 
 How to control the mouse/keyboard grab
@@ -606,4 +606,3 @@ name "cxl-rp", bus PCI, desc "CXL Root Port"
 Der `help` Befehl gab hier unter anderen dem Befehl `device_add` aus. Mit dem `help`-Befehl konnte man zwar eine Kurzanleitung zur Benutzung bekommen, wusste jedoch noch nicht was man als konkrete Werte angeben konnte.
 
 Der Aufruf des Befehls mit `?` als Argument lieferte dann eine lange Liste möglicher Devices.
-----

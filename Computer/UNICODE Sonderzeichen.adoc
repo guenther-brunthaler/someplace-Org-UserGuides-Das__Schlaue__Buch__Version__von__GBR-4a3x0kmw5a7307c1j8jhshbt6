@@ -1,6 +1,6 @@
 ﻿UNICODE Sonderzeichen
 =====================
-v2025.203
+v2025.265
 
 
 Dateinamen-Ersatzzeichen
@@ -95,7 +95,7 @@ Arrows:
 ⏺ record
 ....
 
-﻿
+
 Mathematische Symbole
 ---------------------
 
