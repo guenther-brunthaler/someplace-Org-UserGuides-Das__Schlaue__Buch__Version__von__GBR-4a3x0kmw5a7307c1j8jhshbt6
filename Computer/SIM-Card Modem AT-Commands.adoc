@@ -1,7 +1,7 @@
 ﻿SIM-Karten Kommandos
 ====================
 Guenther Brunthaler
-v2024.242
+v2025.280
 
 
 Kommando-Modus
@@ -18,6 +18,16 @@ $ busybox microcom /dev/gsmmodem
 bzw. ein anderes Modem-Gerät unter `/dev/serial/by-id/*` wählen, falls mehrere Modems angeschlossen sind.
 
 Der Kommandomodus wird durch das Drücken von `[Strg]+[x]` beendet.
+
+
+Lästige Status-Meldungen abschalten
+-----------------------------------
+
+Einige Modems senden alle paar Sekunden Status-Reports welche dann die Ausgabe der AT-Kommandos unterbrechen und die Anzeige sehr unüblich machen. Zumindest bei HUAWEI-Modems kann man diese 'unsolicited reports' mit dem folgenden Befehl ausschalten:
+
+----
+AT +CURC=0
+----
 
 
 SIM-Karte prüfen

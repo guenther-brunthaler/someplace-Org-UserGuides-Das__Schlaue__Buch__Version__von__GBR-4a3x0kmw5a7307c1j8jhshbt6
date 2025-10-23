@@ -2,3 +2,27 @@
 =======================================
 
 Mit `fatlabel` aus dem Paket `dosfstools` kann man die Datenträgerbezeichnung ("Volume Label") eines logischen Datenträgers ("Volume"), der mit einem Microsoft Windows/MS-DOS VFAT- oder FAT-Dateisystem formatiert ist, anzeigen und auch ändern.
+
+
+Prüfen und Reparieren von USB-Sticks
+------------------------------------
+
+Als erstes die Shell-Variable `device` auf den Gerätepfad zum Datenträger setzen. Z. B.
+
+----
+$ device=/dev/disk/by-id/usb-Generic-_SD_MMC_058F63776479-0:1-part1
+----
+
+Dann den folgenden Befehl ausführen:
+
+----
+$ : Reparieren eines USB-Sticks oder einer Speicherkarte
+  : Version dieses Befehls: v2025.272
+  sudo udisksctl unmount -b "${device:?}" 2> /dev/null || : \
+  && case `sudo blkid -o value -s TYPE "$device"` in
+     vfat) sudo fsck.vfat -v "$device";;
+     exfat) sudo fsck.exfat -v "$device";;
+     ext4) fsck.ext4 -vf "${device}";;
+     *) echo 'Nicht unterstütztes Dateisystem!'
+  esac
+----

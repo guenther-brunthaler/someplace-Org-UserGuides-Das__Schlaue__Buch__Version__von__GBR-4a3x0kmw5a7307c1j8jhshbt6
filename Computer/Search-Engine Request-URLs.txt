@@ -27,6 +27,10 @@ Liste
 Hier ist die Liste der Einträge:
 
 ....
+ddg
+DuckDuckGo (customized, no JS)
+https://html.duckduckgo.com/html?kp=-1&kl=at-de&kp=-2&kc=-1&k5=-1&k1=-1&kg=g&q=%s
+
 gg
 Google (customized)
 http://www.google.at/search?safe=off&tbo=1&hl=de-AT&gbv=1&prmd=ivns&source=lnt&tbs=li:1&sa=X&q=%s
