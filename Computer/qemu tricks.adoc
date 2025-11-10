@@ -1,6 +1,6 @@
 ﻿QEMU
 ====
-v2025.265
+v2025.296
 
 
 How to control the mouse/keyboard grab
@@ -489,6 +489,26 @@ The units are MiB of memory. Note that it took the balloon device in the guest s
 The ballooned memory will then be returned to the hypervisor host.
 
 Note that the amount specified in the QEMU monitor "balloon" command is the amount of memory which should be available to the guest, not the amount which shall be "ballooned away".
+
+
+Offlining and Onlining CPUs
+---------------------------
+
+Say you have configured 8 CPUs for your VM, but the current load is low and you want to put all CPUs offline except the first one:
+
+----
+$ for c in $(seq 1 7); do echo 0 > /sys/devices/system/cpu/cpu$c/online; done
+
+$ grep . /sys/devices/system/cpu/{online,offline}
+/sys/devices/system/cpu/online:0
+/sys/devices/system/cpu/offline:1-7
+----
+
+By writing a 0 or 1 to `/sys/devices/system/cpu/cpu3/online` you can take the 4th CPU offline or online, respectively.
+
+`/sys/devices/system/cpu/online` shows a read-only overview of the CPUs currently online.
+
+`/sys/devices/system/cpu/offline` does the same for the CPUs currently offline.
 
 
 Discovering available devices
