@@ -1,0 +1,38 @@
+Operating System Editions - Strengths And Weaknesses
+====================================================
+
+linuxmint-debian-201101-gnome-dvd-i386.iso:
+
+Die Debian-Edition von Linux Mint als "Rolling Distribution".
+
+Macht einen pfuschhaften Eindruck. Im Installationsdialog gibt es leere Textfelder wo eigentlich die Zieldatenträger aufgelistet sein sollten. Fortschritt ist ohne eine entsprechende Auswahl aber nicht möglich da ausgegraut.
+
+Filesysteme wie ReiserFS sind scheinbar nicht einmal vorinstalliert.
+
+Die Dinge funktionieren vorn und hinten nicht.
+
+Nice Try - aber so wird das nichts. Bis dahin bleibe ich bei Mint.
+
+---
+
+linuxmint-10-gnome-dvd-i386.iso:
+
+Dies ist Linux Mint 10 Julia. Macht einen sehr guten und abgerundeten Eindruck. Komfortabel. Alles funktioniert.
+
+---
+
+linuxmint-11-gnome-dvd-32bit.iso:
+
+Linux Mint 11. Nicht mehr ganz so gut wie Mint 10; einige Dinge wie etwa die Online-Hilfe funktionieren schlecht ode gar nicht. Allerdings keine wesentlichen Mängel - alles was wichtig ist funktioniert nach wie vor. Immer noch um Welten besser als die Debian-Edition von Mint.
+
+---
+
+Slackware 14.12:
+
+Kommentare von [ http://www.heise.de/open/meldung/Slackware-14-2-neue-Version-des-Linux-Urgesteins-nach-zwei-Jahren-3194608.html ], Stand 2016-07:
+
+Slackware ist die älteste aktive Linux-Distribution und die erste, die weite Verbreitung gefunden hat [...] Slackware-Nutzer sind an einen etwa einjährigen Releasezyklus gewöhnt.
+
+Wann ein Upgrade erscheint entscheidet allein Patrick Volkerding, der "Wohlwollende Diktator auf Lebenszeit" [...] Longterm-Kernel [...] KDE [...] Xfce [...] Fvwm [...] Fluxbox. Der Gnome-Desktop ist bereits seit Version 10.2 aus Slackware verschwunden, wofür Volkerding als einen von vielen Gründen angab, dass er PAM nicht in Slackware integrieren möchte [...] Software-Pakete [...] das lediglich aus einem tar-Archiv besteht, das ins Wurzelverzeichnis des Betriebssystems enpackt wird [...] Auflösung von Abhängigkeiten wird [...] verzichtet. Fehlende Abhängigkeiten lösen beim Start von Programmen entsprechende Fehlermeldungen aus, aus denen hervorgeht, welche Pakete eventuell nachträglich installiert werden müssen [...] dass es keine Entwicklungspakete gibt, stattdessen werden die Header mit jedem Paket mitinstalliert [...] Besonders einfach ist die Installation aller verfügbaren Pakete ("full"), auch dabei braucht das gesamte System nur neun GByte Festplattenspeicher. Eine besonders große Auswahl an Programmen kann man deshalb nicht erwarten [...] was zum Kompilieren von Software oder Programmieren nötig ist, wird standardmäßig installiert, ebenso wie der Apache-Web-Server, verschiedene Browser, Mediaplayer und Gimp [...] Für alles andere gibt es [...] eine Sammlung von Installations-Skripten für Software, die im Quellcode vorliegt [...] der Systemstart ist bei Slackware auf besondere Weise geregelt. Es sind einige Startskripte vorhanden, die sich sehr an BSD orientieren und leicht an die eigenen Bedürfnisse anpassen lassen [...] mit Kommentaren gespickt und sinnvoll vorkonfiguriert.
+
+---

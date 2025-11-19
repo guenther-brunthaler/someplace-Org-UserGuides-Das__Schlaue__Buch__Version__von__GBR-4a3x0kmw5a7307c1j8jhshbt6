@@ -1,0 +1,298 @@
+Coda:
+* RPC2-component is not yet 64 bit clean
+* Only transfers whole files, not parts of files
+* Not all the normal UNIX filesystem semantics are maintained, especially regarding locking and updating.
+* Not suited for database-style file access
+* Some problems with timeouts, idle handles and stale files
+* Pollutes global filesystem namespace with several non-standard top-level directories
+* Uses several server daemons to operate and is thus not too easy to be set up and configure
+* Deadlocks are possible when the system goes swap-thrashing
+
+Plan 9 / INFERNO Distributed File System (9P protocol, STYX)
+* Allows union mounts
+* In the 2000 edition, file names were restricted to a size of 28 bytes (UTF-8 encoded). This quite severe restriction was lifted in the 2002 edition.
+* Due to the frequent use of pseudo files in INFERNO, caching in 9P is a dangerous operation. 9P clients therefore do no cache by default. And if they do cache, it usually only works for read-only mounts.
+
+Ceph:
+* Ist ein Cluster-Dateisystem für "commodity hardware", das "Selbst-Heilend" und sich angeblich selbst managed.
+* Extrem beschissene Website (2013-04-22) deren Seiten ewig laden und nur durch das Drücken der "Stop"-Taste im Browser erscheinen sie dann doch. Dies geschieht unabhängig davon ob man JavaScript ein- oder ausschaltet. Aber vielleicht mag die Website auch nur den Firefox nicht, ist vielleicht nur "optimiert" für den Internet Explorer 6.
+* Ceph bietet Fault-Tolerance durch Striping und Redundancy vergleichbar mit höheren RAID-Leveln.
+* 1 Gbit Ethernet wird als Minumum empfohlen, 10 Gbit wäre aber besser. Offensichtlich eher nicht für eine GSM-Mobilverbindung geeignet.
+* Braucht 3 verschiedene Arten von Servern zum Betrieb. Unklar in wie weit eine einzelne Maschine alle Rollen übernehmen kann. Es werden für ein Minimal-Setup aber zumindest 2 Maschinen "empfohlen", da es sonst zu Deadlocks und Abstürzen kommen "kann". Angeblich ist diese Chance bei neueren Kerneln aber wesentlich geringer als bei älteren.
+* Die "bescheidenen" Ansprüche: Der Metadata-Server (MDS) sollte zumindest 1 GB RAM und eine QuadCore CPU haben, Object Storage Daemons (OSDs) zumindest 500 MB und eine DualCore CPU. Nur Monitor Nodes haben angeblich keine gehobenen Ansprüche. Gleichwohl wird auch für diese seltsamer Weise mindestens 1 GB RAM empfohlen.
+* Was die Hard-Disk Platzanforderungen betrifft, beginnen diese je nach Servertyp bei 1 oder 10 GB.
+* Die OSDs brauchen mehr RAM je mehr Disk-Space sie verwalten. 1 GB RAM pro TB Disk Space wird empfohlen.
+* Bietet derzeit (2013-04-22) aber noch keine Quotas.
+* Neuere (2013-04) KVM/QEMU-Versionen können Ceph direkt ansteuern (zur Verwendung als Disk-Images nehme ich an).
+* Früher war ein FUSE-Treiber verbreitet, doch seit Linux 2.6.34 ist ein Ceph-Treiber im offiziellen Kernel enthalten.
+* Im Gegensatz zu vielen anderen Network-Dateisystemen erfüllt Ceph die Anforderungen von POSIX an Dateisysteme.
+* Benutzt ein anderes Dateisystem auf den Servern zum eigentlichen Abspeichern der Daten.
+* Ceph kann grundsätzlich zwar fast jedes Dateisystem als darunter liegendes verwenden, empfiehlt aber derzeit XFS und erwartet dass in der Zukunft btrfs das empfohlene Dateisystem werden wird. Zwei Dateisysteme also, die sich bisher nicht gerade mit Ruhm bekleckert haben was Datenverluste angeht. Eine gute USV und ja keine absturzfreudige Hardware ist bei XFS jedenfalls Grundvoraussetzung, und btrfs strotzt nach wie vor nur so vor Bugs die immer wieder aufs neue gefunden werden.
+* Ceph verwended die Extended Attributes des darunterliegenden Dateisystems um diverse Metadaten zu speichern. Hier gibt es das Problem dass Ceph offenbar relativ große Attribute schreiben will, denn XFS unterstützt EAs bis 64 KiB was "meist" genug sei. ext3/ext4 erlauben bei weitem weniger, und sind daher nur für "kleine" Ceph-Installationen geeignet. btfs wäre den Leuten am liebsten weil EAs dort scheinbar überhaupt Größen-unlimitiert sind. Ob eine solch extensive Nutzung von EAs sehr intelligent ist, sei dahin gestellt.
+* Ceph scheint sich auf Journaling-Features der darunter liegenden Dateisysteme zu verlassen, um seine Konsistenz-Versprechen einzuhalten. Das hat natürlich auch Konsequenzen für die Performance. Auch das reduziert die "freie Auswahl" der darunter liegenden Dateisysteme. Explizit erwähnt werden überhaupt nur ext4, XFS und btrfs.
+* Ceph erlaubt "thin provisioning", "copy on write", Snapshots, Replikation usw. Normalerweise werden alle Daten mindestens auf 2 OSDs verteilt.
+* Folgerung: Obwohl immer die billige "Commodity Hardware" betont wird und die geringen Ansprüche von Ceph, ist es in der Praxis doch ein fettes System mit mächtigen Ansprüchen das nur für fette Server geeignet ist. Dafür hat es aber tolle "Cloud"-Unterstützung und kann offenbar direkt auf Amazon Clound laufen.
+
+GlusterFS:
+* Combines underlying local file systems (such as ext3) on multiple machines into a single distributed filesystem. Therefore GlusterFS is frequently referred to as "meta filesystem".
+* FUSE-implementation, which means no trouble with Kernel updates.
+* Stackable architecture - for each single feature such as replication or mirroring, a "Translator" is implemented and those translators are then stacked upon each other to achieve the desired overall functionality.
+* The architecture es based on "storage bricks".
+* The GlusterFS User Guide suggests that you use Gluster’s patched FUSE implementation to improve performance.
+* If you want better small file performance, you can install Berkeley DB (it uses a distributed Berkeley DB backend).
+* Red Hat became the primary author and maintainer of the GlusterFS open-source project after acquiring the Gluster company in October 2011 [...] Red Hat Gluster Storage is in the retirement phase of its lifecycle with a end of support life date of December 31, 2024.
+* Since then, GlusterFS development has effectively ended. Close replacement candidates are Lustre (Cluster-FS für riesige Datacenter) and Ceph (benötigt mindestens 3 Nodes).
+
+Tahoe-LAFS:
+* "LAFS" stands for "Least Authority File Store" (originally "File System").
+* Tahoe-LAFS, is a decentralized encrypted, reliable and fault-tolerant storage system targetted at cloud storage with provider-independent security.
+* URL: https://tahoe-lafs.org/trac/tahoe-lafs
+* Evaluated on: 2013-04-22
+* It consists of a gateway component that acts as a middleware between clients and storage servers. It is assumed that the gateway and clients run under the user's control, but that the storage provider is not trustworthy. The gateway talks to the clients via a REST web-API over FTP, SFTP (SSH-based), HTTP or HTTPS connections.
+* Clients can use the gateway API directly, or via a FUSE layer (sshfs, pyfilesystem or dokan in Windows) which automates this.
+* Performance over FUSE can be very bad, but it depends on the kind of operation and involved file sizes. Tahoe should be considered similar to Bittorrent, except that files can also be modified.
+* There is a distinction between mutable and immutable files. The latter have some technical benefits, but obviosly some files need to be able to be modified.
+* Currently, obviously not even the developers themselves use LAFS via the FUSE interface, but rather use modified applications which access LAFS via its API. For instance, duplicity is a well-known backup program with a plugin that allows it to directly communicate with the LAFS gateway.
+* The gateway itself encrypts any outgoing data before storing it into the cloud, and decrypts it as it is read back from the cloud. The gateway also adds integrity checking information before storing data into the cloud, and verifies that information after reading the data back to ensure no-one has tempered with it. As a side effect this will also detect data corruption due to storage hardware or transmission failures. LAFS also adds redundancy information to the cloud data in such a way that a certain number of storage providers can fail without affecting the availability of the complete data stored by the clients. The amount of redundancy is adjustable. LAFS is therefore basically locally encrypted cloud RAID storage, with the added functionality that a single local server can handle the cloud encryption for the whole LAN. It also eliminates the requirements to store the encryption keys on the various clients, as only the gateway needs them because it handles all encryption and decryption.
+* Using the SSL tunnels it is still possible to isolate the clients from each other, avoiding the possibility that one client sniffs the other client's data as it is exchanged with the gateway. It is also possible for each user to run her own personal gateway on the local machine - this is what the unencrypted transport options are useful for. LAFS is written in Python, which might be a problem for upscaling the system for high throughput. Client-software is available for Linux (FUSE-based sshfs or pyfilesystem), Mac OS X and Microsoft Windows (via dokan, a FUSE-like software for Windows). The uploader of a file owns it and decides the access granted to other clients. Links between files are also supported, and read-only links can be created as well as read-write links. As of this date, LAFS does not support random-access file updates to isolated sections of a file, like in a database. It is planned though to support updates in granularity of 128 KiB (most likely adjustable) chunks. LAFS supports the concept of "immutable files" for de-duplication. Only one instance of such a file will actually be stored, even if uploaded by different clients. Whether a file shall be mutable or not needs to be decided by the uploader. Deletion implementation is based on garbage collection, which uses lease renewal every month to verify that at least one of the owners of a file still exists. If the lease is not renewed within that period by any of the owners, the owning machine is assumed to be dead permanently, and its files will be deleted.
+* Files do not have "owners", so deletion is a problem. Tahoe solves this by garbage collection with "leases" keeping the files alive. By default, a share which file not get its lease renewed at least one a month by someone will get deletes. Normally, all clients should renew the leases of all their file once a week (for instance, by a cron job). Renewing the lease of a single file takes approximately one second. So obviously Tahoes is not the best filesystem for storing lots of very small files. There is also a problem if clients are offline for extended periods of time. Of course, the lease timeouts can be configured.
+
+Gfarm
+* Ein Cluster-Dateisystem, das für schwache/billige PCs als Knoten gedacht ist. Angeblich ist jeder Knoten zugleich auch ein Client.
+* Andererseits gibt es aber neben "Client Nodes" sehr wohl "Metadata Nodes" und "Filesystem Nodes". Vermutlich bezieht sich die vorige Behauptung auf den Umstand, dass all diese Server auch am selben Rechner laufen können/dürfen; man somit auch nur einen einzigen Rechner als "Cluster" aufsetzen kann.
+* "Client Nodes" greifen auf die Gfarm zu. Das geschieht entweder durch Commandline-Befehle oder ein spezielles API (das kaum eine Anwendung auf der Welt unterstützen dürfte - obwohl es gibt ein Plugin für SAMBA, Hadoop und GridFTP), oder - wohl häufiger - transparent durch das FUSE-Dateisystem "gfarm2fs".
+* "Metadata Nodes" speichern die Verwaltungsdaten des Dateisystems selbst. Dazu muss ein "gfmd"-Daemon laufen, und dieser benötigt wiederum ein Storage-Backend. Zumindest PostgreSQL und der LDAP-Server "slapd" werden exemplarisch erwähnt; es ist unklar ob es noch weitere Backends gibt.
+* "Filesystem Nodes" stellen den eigentlichen Speicherplatz zur Verfügung. Dazu muss ein "gfsd"-Daemon auf solchen Nodes laufen.
+* Es gibt 3 verschiedene Betriebsmodi wie die Sicherheit und Authentifizierung ablaufen soll. Der simpelste benötigt nur Passworte, scheint die Daten aber unverschlüsselt zu übertragen und ist daher genau so wertlos wie NFS. Dann gibt es einen sicheren Modus wo die Anmeldung über öffentliche Schlüssel geschieht, und auch die Daten verschlüsselt werden. Dann gibt es einen Hybridmodus wo nur die Anmeldung verschlüsselt ist, danach aber wieder unverschlüsselte Daten übertragen werden.
+* Die Verschlüsselung und Authentifizierung dürfte rein auf den von TLS gebotenen Möglichkeiten basieren. Zumindest scheinen relativ klar X.509-Zertifikate zum Einsatz zu kommen.
+* Übermäßige Sicherheit der Verschlüsselung sollte man sich daher wohl eher nicht erwarten. Es sei dann, es wird ohnehin alles durch ein sicheres VPN getunnelt. Und für Nutzer im eigenen VPN sollte TLS sicher genug sein, da sie nicht dieselben Möglichkeiten wie gewisse neugierige Organisationen haben.
+* Die Gfarm-Anleitung bezieht sich mehrfach auf AFS, offensichtlich wollten die Autoren so eine Art verbessertes/praxistaugliches AFS schaffen.
+* Die Anleitung listet nicht weniger als 9 Kombinationen von IP, Port und Protokoll auf, die man auf einer Firewall freischalten muss damit Gfarm "durchkommt". Als Transportprotokolle werden sowohl UDP als auch TCP benutzt. In der Realität des heutigen Internets wird man daher wohl kaum um eine VPN-Lösung herum kommen, um dies durch TCP tunneln zu können.
+* Normalerweise werden Metadata- und Filesystem-Nodes von Administratoren betrieben, weshalb standardmäßig entsprechende Dateien nach /etc installiert werden. Die bereits fertig installierbaren Pakete der diversen Distributionen setzen dies normalerweise voraus. Kann die Server auch als normaler User betreiben, wenn man den Quelltext selbst kompiliert und dabei andere Pfade als Build-Optionen angibt. Client-Nodes sind davon nicht betroffen - deren Betrieb erfordert grundsätzlich keine Adminstrator-Rechte.
+* Der Metadatenserver scheint einiges an RAM für den Betrieb zu benötigen. Leider verschweigt die Anleitung ob dies nur für die beste Performance so ist, oder ob er bei Bedarf auch mit weniger RAM zufrieden ist. Denkbar wäre es, da ihm ja Datenbanken als Storage-Backends zur Seite stehen.
+* Auch bei anderen Ressourcen wie Anzahl der Dateideskriptoren braucht der Metadatenserver größere Werte als für normale Applikationen üblich; entsprechend muss man Laufzeit-Parameter des Kernels entsprechend anpassen sobald es zu Engpässen kommt.
+* Gfarm unterstützt Replikation zum Zwecke der Redundanz, aber dies muss extra aktiviert werden und ist nicht automatisch der Fall.
+* Alle Operationen scheinen bei Gfarm nur mit Datei-Granularität zu geschehen. Sprich es düften immer ganze Dateien durch die Gegend kopiert werden. Selbst wenn die Datei riesig ist und nur ein einziges Byte in ihr geändert wurde. Ganz sicher ist das aber nicht. Doch in der Anleitung ist immer nur von "Dateien" die Rede, nie von geänderten Bestandteilen einer Datei.
+* Gfarm unterstützt userseitige Disk Quotas auf das Basis von Directory-Gruppen, welche zu diesem Zweck definiert werden können.
+
+Cedar File System:
+* Seems to have been available for Microsoft platforms several years in the past. Does not seem to be in use any more.
+* It in seemed to have integrated local files with files from a network file system transparently.
+* Although I do not know further details, CedarFS seemed to have provided something like a unionfs mounted over a local file system and a true network filesystem.
+* It is unclear whether local copies of files were cached, or whether disconnected operation was supported. I assume this was rather not the case.
+
+unico:
+* A distributed filesystem based on Git.
+* FUSE-based.
+* Uses an optimistic replication model, which assumed offline-operation to be rare, leading to only short-lived conflicts as a consequece.
+* Unico's conflict resolution model does not seem to scale well for extended offline operation, even though offline operation is supported.
+* Allows nodes to only store subsets of the whole data corpus.
+* There seem not to exist actual implementations, only a master's thesis which describes it.
+* Even if there should be implementations, they are most likely just prototypes lacking reliability.
+* Temporarily records filesystem changes in an exception list, obviously some sort of a "redo"-log, rather then creating Git commits immediately. However, actual Git commits are created for synchronisation and, presumably, in certain intervals even without synchronization.
+* The system is designed to fetch only those parts of the filesystem tree from remote servers which is actually accessed. The filesystem view therefore can show items which are not actually available.
+* Uses rule-based pre-fetching of filesystem content which should always be available locally. The rules consist of "glob"-patterns for pathnames and the rule list must be manually managed.
+* No support for ownership, hard-links or locking of file system objects.
+* Permissions for the user who has currently mounted the filesystem, symlinks and file times seem to be supported, though.
+* Instead of using Git as a storage backend, OriFS can also be used for that purpose. This exceeds OriFS's native capabilities by no longer requiring that all nodes store the contents of all the files.
+* Even though unico uses other systems like Git or OriFS as storage backends, it uses its own TCP-based network protocol for synchronization.
+* Unicos' replication protocol is normally secured via TLS, although this seems to be optional.
+* Unico can use UPnP to allow peer-nodes behind firewalls without a requirement to manually adjust the firewall configuration. However, UPnP is considered a security risk by many network administrators and will thus not be available everywhere.
+* Unico extracts certain EXIF-tags from the original files and replicates it as part of the filesystem metadata in the form of extended attributes. This allows to access the values of those tags even without actually accessing (and therefore fetching) the file's contents, but requires the manual use of Linux' "fgetattr" command for accessing such metadata. In my opionion, such metadata is worthless in the majority of cases and will only increase the metadata size.
+
+Cascade File System:
+* Provides views into Perforce and Subversion version control repositories. It allows to work with the contents of versioned files without actually checking them out.
+* It is unknown whether the view is writable, and how conflict-resolution would work in this case.
+* Commercial.
+
+cvsFS:
+* A virtual file system providing a view into a CVS repository.
+* It is unknown whether the view is writable, and how conflict-resolution would work in this case.
+
+Pastwatch:
+* Distributed network file system based on a distributed hash table (DHT).
+* There is no central server. It is a P2P system.
+* Default operation model is direct online-access, but offline operation is also possible (including write access).
+* Every node has the full version history and a copy of all data.
+* File system states are "checked out" or being "committed" using explicit commands. The same applies to synchronization and conflict resolution.
+* I cannot really tell the difference between Pastwatch and a distributed version control system.
+* To me, Pastwatch seems to be a DHT-based DVCS rather than a file system.
+* At least a reference implementation described in the design paper uses BerkeleyDB as a storage backend, and SHA-1 for deriving object identifiers.
+* Delta information in the reference implementation is generated by GNU "diff", which would suggest Pastwatch's delta storage is only efficient for plain text files.
+* Redundancy/availability of the distributed data is generated using Michael Rabin's "IDA" Information Dispersal Algorithm [ http://search.cpan.org/~dmalone/Crypt-IDA-0.01/lib/Crypt/IDA.pm ], which in this case generates 5 fragments of every data item, two of which are necessary to reconstruct the item. Each of the 5 fragments ist stored onto a different DHT node.
+
+DiGit:
+* Most likely not an actual file system in the sense that it can be mounted, but rather just a system for storing files.
+* Short for "Distributed Git". A moronic name, considering Git is already a distributed system. But perhaps DiGit does not required all nodes to store the complete version history.
+* A distributed filesystem using the Git DVCS as a storage backend.
+* It is described in some conference papers.
+* There does not seem to exist any implementation, and not even a project website.
+
+GRAND:
+* Short for "Git Revisions As Named Data".
+* I assume this is system which stores every Git object id as a separate file in a content-centric network somehow.
+* It remains unclear what the difference between GRAND and any "fully unpacked" Git repository is. Perhaps the difference is ownership tracking, using reference counts or similar mechanism to determine when objects are no longer needed and can be removed.
+* GRAND seems only to be an alternative network transport mechanism for Git. It does not change its data model or local repository representation in any way.
+* So it is most likely not an actual file system in the sense that it can be mounted, but rather an alternative remote storage backend for git.
+
+PlatinVC:
+* Most likely not an actual file system in the sense that it can be mounted, but rather just a system for storing files.
+* A P2P-based fully de-centralized version control system.
+* Although the author announced in 2013 the later release an open source implementation, it obviously never came to that.
+* Stores a copy of the whole version history on all nodes.
+
+OriFS:
+* Older version used the Git DVCS directly as a storage backend. Newer versions do not longer depend on Git, but are likely to use similar on-disk data structures.
+* FUSE-based. Command line interfaces are also available for specific operations such as managing remote synchronization or filesystem snapshots.
+* Does not support hardlinks. Symlinks are supported, though. However, because oriFS uses a content-addressed storage model internally, identical file contents are always stored only once.
+* Most nodes contain a full copy of all files and their full history.
+* Alternatively, nodes can be set up to only fetch data on demand. However, this requires network access to nodes with full copies of all data, and is therefore not compatible with offline operation.
+* Access to all files of a peer node is available immediately, even if the background synchronization is still in progress. Obviously, offline access is only possible after synchronization has finished.
+* Background-synchronization is done with the "orisync" command, which is normally started automatically when mounting a remote oriFS but can be disabled.
+* The "push" and "pull" subcommands of the "ori" CLI are available for manual synchronization. However, "pull" just fetches new commits from another oriFS replica but does not make the changes accessible. For this, either a "checkout" or "merge" command must be used. The checkout command resets the filesystem state to that of some snapshot, whether pulled from a replica of a local one. Uncommitted changes will be lost and oriFS will refuse a checkout in such a case unless an option is used to enforce it. This operation can never create conflicts. The "merge" command combines the contents of a snapshot with the current state of the local filesystem, possibly creating conflicts which may need to be resolved manually.
+* A feature called "grafts" allows to share subtrees of the filesystem between otherwise different OriFS instances. Grafts carry their own version history with them, allowing efficient updates of older revisions of the same graft. Grafts do not need to be prepared or declared before being used; any subdirectory within an OriFS can be used for grafting at any time.
+* Grafts are created between two unrelated mounted oriFS filesystems, or within the same mounted filesystem. The grafted directory trees can be located at different locations in both filesystems (or within the same filesystem). After initial creation, grafts can be updated and differences between earlier revisions of the graft can be displayed.
+* Grafts are used for file-sharing. In contrary to non-grafted parts of an oriFS, grafts do not take part in the automatic background synchronization. Grafts can be shared between many oriFS instances, not just between a single source and a related destination.
+* By default, using a graft from another oriFS requires full filesystem access to the source oriFS. This can be limited by explicitly declaring grafts in a way simular to NFS exports.
+* Access control for exported grafts has mount-point granularity. Individual oriFS filesystem permissions cannot prevent access by other users sharing the graft. The only way to restrict access based by user is to use different grafts for users with different permission requirements.
+* Implementations exist (at least) for Linux, Mac OS X and FreeBSD.
+* Object IDs are derived via SHA-256.
+* Distributed fetching allows to use multiple peers for synchronization at the same time. The peers do not need to host the same filesystem, because the lookup is based on object IDs rather than filesystem paths. Therefore, completely unrelated peers can serve as caches, assuming they share some of the actual file contents.
+* Distributed fetching can use mDNS/zeroconf or statically defined oriFS locations in order to find accessible nearby oriFS instances it may use as caches.
+* More generally, remote oriFS instances will be accessed via SSH or HTTP. Amazon S3 can also be used as remote storage. Local oriFS instances can be accessed directly as replicas, distributed fetching caches or as graft sources.
+* Remote oriFS connections can be established with automatic background replication enabled, which is the default. The background replication can be disabled, downloading data missing locally only on demand. Finally, local caching can be disabled, throwing away any data received on-demand from the remote host as soon as they have been processed locally. This makes oriFS work mostly like a traditional network filesystem, although any remote data which has already been cached locally before will still be used.
+* Automatic background fetching can use a set of alternative source replicas on different hosts. It will detect which replicas are currently accessible and which are not, and will fall back to fully disconnected operation as long as none of them are available.
+* 3-way merges are used for conflict resolution. This obviously requires revision history to be available for all revisions of all files.
+* Named snapshots of the file system tree are created manually and the snapshotted trees are directly available as named subdirectories of a special hidden subdirectory of the mounted file system's top-level directory. There is no need to mount them separately.
+* Automatic, unnamed snapshots are also created at regular intervals, but only if something has actually changed within the filesystem.
+* Snapshots have a user associated with them, and optionally also a name and decription.
+* Snapshots also represent the granularity for sharing and synchronization.
+* Automatically created snapshots are also automatically discarded later based on a policy, such as after a certain time since their creation. Garbage collection will eventually free the disk space currently allocated for otherwise unreferenced data associated with a previously discarded snapshot.
+* However, the metadata of all snapshots, whether automatic or not, will become part of the permanent version history of the oriFS. Which means this version history will always grow and grow over time, even though it does not contain actual filesystem contents which are only stored in snapshots.
+* It is possible to roll-back the current filesystem state to that of a snapshot, discarding all changes and all version history new than the snapshot.
+* Actual oriFS data is stored on the underlying normal filesystems as packfiles which are log-structured and append-only. Items within packfiles are reference-counted. File deletions are also appended as metadata, and will therefore not reclaim free space.
+* A garbage-collection can be invoked manually to re-write packfiles, reclaiming the space for previously deleted items which are no longer referenced by any snapshot.
+* Without manual garbage collection or specific tuning, oriFS uses up all the space available on the underlying filesystem. Then it automatically "thins out" the available snapshots, depending on how old they are. The older the snapshots, the more they will be thinned out as a result. The granularities considered for thinning out are days, weeks, months, quarters of years, and full years. It is not clear from the oriFS description whether automatic garbage collection will also be performed as part of this process, but it could be expected considering the whole purpose of the thinning is to make more storage space available.
+* oriFS distinguishes between normal BLOBs and LargeBLOBs based on a threshold value which is a configuration parameter (1 MiB by default).
+* Normal BLOBs are always stored as contiguous units in the packfiles.
+* LargeBLOBs are stored as lists of variable-sized chunks, storing the chunks themselves as content-adressed items identified their content hash. The chunk size is between 2 and 8 KiB with an average size of 4 KiB, using Rabin-Karp fingerprinting (mostly borrowed from LBFS) in order to determine the actual chunk boundaries as a function of the surrounding blob data. This allows to share identical chunks of LargeBLOBs even if they occur at different unaligned offsets within the files. This means LargeBLOBs will employ sub-file deduplication automatically. The disadvantage of LargeBLOBs is the overhead for storing the blob lists and worse seek behaviour on the underlying filesystem. Also, sub-file deduplication is only done when creating a snapshot, not during normal continuous operation.
+* When new file data for LargeBLOBs is appended to the log-structured packfiles, only BLOBs that do not already exist will be written, leaving out the others. After that the BLOB list will be written. Vectored I/O will be used for access, allowing the OS to maximize re-ordering and possible coalescing reads/writes on the block device of the underlying file system, thus minimizing disk seeks to the extent that the deduplicated nature of LargeBLOBs allows this.
+* Directory trees (including contents) are represented by Merkle Hash trees internally.
+* Tamper resistance is (optionally) provided by digitally signing the Merkle hashes of the replicated snapshots.
+* Reference counts are part of the local metadata of an oriFS and are not shared with remote replicas. Reference counts are only incremented for the roots of shared subtrees, not for all objects within the tree.
+* As long as data is only read from an oriFS, the FUSE driver will read the data directly from the pack file, avoiding cached internal copies of files.
+* Changed data is kept in temporary files as a "staging area" until the next snapshot is created, which appends and them to the packfiles (de-duplicating them if possible) and removes the temporary files. No deduplication or copy-on-write occurs within the staging area before the next snapshot is created. This means, that all modified files will be copied to the staging area with their full sizes, even if just a single byte will be changed. This obviously makes oriFS extremely inefficient for large databases, even though the snapshots will still be storage-efficient due to deduplication.
+* The oriFS garbage collector is assumed to be rune infrequently. Any usage pattern which requires the garbage collector to be run too often, such as a nearly full backing filesystem (not considering the automatic snapshots which will be discarded as necessary to create free space), should be avoided.
+* Link counts are not stored in oriFS directories, but are rather calculated on-demand. This adds overhead for the stat() system call but saves a little storage space and also makes it impossible for the link counts to become inconsistent.
+* Internally, all temporary files in oriFS's "staging area" are stored in a single directory of the underlying backing filesystem. This makes it important that this filesystem can handle a potentially large number of files within a single directory without dramatic performance loss. This encourages the use of backing filesystems which use index structures (such as B-trees or H-trees) for speeding up directory entrie access. Filesystems which use "dumb" linear metadata files as directories such as ext2 or VFAT will therefore be suboptimal in situation where many files are modified between two oriFS snapshots. On the other hand, if only a few hundred files are modified, it should not matter in either case.
+* oriFS passes fsync through to the underlying individual temporary files in the backing file system and ignores them on the oriFS layer (i. e. fsync will *not* enforce the creation of a snapshot). But if oriFS or the computer should crash after the fsync, restarting it should continue using the existing files in the staging area (I hope!), so no data is lost.
+* As an alternative for using the FUSE driver, oriFS can also be used as a simple version control system which "checks out" a copy of a snapshot as real files in a "working tree" somewhere. This mode of operation can avoid many of the temporary files in the "staging area", because the contents of the working tree can be used instead of temporary files. In this mode, tests have shown oriFS to be up to 70 % faster than Git.
+* Git's delta compression is normally much more effective for small changes than oriFS's sub-file deduplication, so Git repositories occupy less disk space than those of oriFS. Differences up to 100 % or even more can be expected, but this is not normally the case. Usually, oriFS repositories are 10-20 % larger than those of Git (after performing a garbage collection). The differences are less notable for large changes. However, Git runs automatic garbage collection much more frequently than oriFS, which essentially only does that if there is no more free space in the backing filesystem. It might therefore be a good idea to use a backing filesystem with per-directory-tree quotas when using oriFS as a version control system. Or a filesystem within a fixed-size container could be used, such as another FUSE filesystem like exFAT.
+* As of 2017, the documentation is very thin and many of the commands described above do not yet work es described in the thesis paper. The project still seems to be in its early stages and it seems unwise to trust it managing production data already. Nevertheless, it is a very interesting and promising project which should be revisited later.
+* As of 2019, the project seems to be dead. Since development started in 2013, the last commit which changed code is still from 2014. Even though there are some commits from 2019, they only update documentation.
+
+Cimbiosys:
+* This is actually a replication system for file system contents rather than a file system itself.
+* It allows to define subsets for replication to particular nodes based on filtering rules.
+* Subset filtering is only applied to file contents, however. Each node stores the metadata of the full tree for synchronzation purposes.
+* There seems to be no implementation, at least not as an independent piece of software. Maybe it used internally in some cloud service implementations.
+
+BitTorrentSync:
+* Another P2P-based distributed replication system.
+* Assumes a node is connected to the network most of the time.
+* All nodes store all the files and revision history.
+
+ecryptfs:
+* This is "stacked" Linux filesystem. This means it uses another filesystem to actually store the encrypted data; it only provides the virtual "view" into the decrypted data.
+* Contrary to EncFS which does pretty much the same, ecryptfs is a kernel filesystem and uses the Linux kernel's cryptographic modules.
+* As of 2017, the README file states "This software is currently undergoing development. Make sure to maintain a backup copy of any data you write into eCryptfs".
+* Upgrading to newer versions of the filesystem requires copying the old contents to a non-encrypted (or at least not encrypted by ecryptfs) filesystem, then upgrading, then copying back.
+* If the beforementioned disadvantages did not convince you to better not use ecryptfs, this still might: Availability of Linux kernel crypto modules varies widely between Linux distributions. Unless you want to compile missing crypto modules yourself, better restrict yourself to AES and 3DES encryption, which will be available nearly everywhere (most likely because IPsec dictates it). On the other hand, the same applies to LUKS and dmsetup "crypt" targets.
+* It is *literally* a stacked filesystem in that it uses the same kernel stack as the underlying filesystem and adds its own stack usage on top of that. As kernel threads have very small stack sizes (typically 8 kB), it can happen that the additional stack usage can crash the combined filesystem, perhaps even resulting in a kernel panic. Especially XFS seems to push the size of its own stack close to the limits. It is therefore recommended to test whether ecryptfs can actually work with your data. Stacking multiple ecryptFS over one another seems therefore to be a bad idea or at least dangerous. I also found a kernel patch which hard-limits the number of stacked filesystems to 2. I assume this means 2 filesystem layers in addition to an underlying filesystem.
+* However, it seems that ecryptfs does not allow stacking multiple instances of its own at all, so this might not be an issue anyway.
+* Sparse files are not supported. This is primarily done because of security concerns, because the observable presence of holes in the encrypted files of the underlying filesystem might give clues to the attacker what the encrypted files might be used for. However, this also means you cannot store sparse disk image files within an encfs-encrypted directory tree.
+* The underlying filesystem must support extended attributes, or encfs won't be able to provide them either. I assume the same is true for ACLs, as those are typically implemented to be stored in extended attributes.
+* Actually, ecryptfs itself does care about file permissions at all. It seems to leave the encforcement of access restrictions completely to the underlying filesystem, and only adds its encryption capabilities on top of that.
+* It uses the kernel's keyrings for storing key material. While this might be a good place to store key material in general, it is also the first place where every attacker will try to steal from once he managed to access /dev/kmem or load a custom kernel module for that purpose.
+* There are indications that ecryptfs might have problems to handle "no more space"-error messages from the underlying file system. This has to be examined further.
+* Some reviewer mentions a 2 % space overhead imposed by ecryptfs compared to the unencrypted data. Actually, it seems all encrypted files have a constant overhead by adding fixed-size header to all files internally. Obviously, this will have a larger noticable effect on very small files.
+* The design of ecryptfs also leads to massive processing overhead when many files are being examined (such as when using "du" on the encrypted tree), because all inode information has to be decrypted individually.
+* ecryptfs is supposedly not designed for cloud storage. It remains unclear whether this is attributed to the fact that cloud filesystems rarely qualify as underlying filesystems for ecryptfs, or whether there are cryptographic problems similar to those of EncFS.
+* ecryptfs encrypts all files individually. Every file has its own content encryption key which is stored as part of its (encryptes) metadata; there do not seem to be any mount-wide additional metadata files which could get lost or become corrupted.
+* There have been security audits of encryptfs. They found minor issues but no big problems, except perhaps that there may be weaknesses in the filename encryption. In particular, ECB seems to be used for filename encryption. One other thing the auditors did complain about was that there is little documentation about ecryptfs's crypto design. In fact, the only reliable source of details of ecryptfs' implementation seem to be its implementation source files within the Linux kernel. This is not too different from LUKS's and dmsetup "crypt" target's cipher suites, however.
+* ecryptfs seems to a joined effort of only three developers. One of them worked for Microsoft's Bitlocker team (but later at Google). Documenting their work does not seem to be one of their favourite tasks.
+* The documentation is embarassingly scarce. There are a lot of man pages, but several of them do not convey more than a vague idea about what one of the many programs in the suite is good for. A high-level explanation how things work together is usually missing, forcing the user to attempt an trial-and-error approach.
+* Especially when it comes to making use of ecryptfs by non-prileged users, there are many hard-coded directory paths relative to the user's home directory where things need to be stored. Generally, ecryptfs seems to lack flexibility to freely determine where configuration information needs to be stored.
+* ecryptfs seems to be able to use different encryption keys for filename encryption and file contents encryption, even though normally both seem to use the same key. It is also possible to disable filename encryption entirely.
+* On the basic mount-point level, ecryptfs only seems to use a "master key" which cannot be changed because every single file is encrypted with it. There are utilities provided for "wrapping" the master key using user-provided pass-phrases and storing the encrypted master key as a key file. Other utilities allow to "re-wrap" the master key, using a different pass phrase.
+* The wrapped master key files cannot (or rather should not) be stored in the same directory tree where the encrypted files are also stored, because this tree is supposed to only be manipulated by ecryptfs itself. The user therefore needs to find a different place where to store the encrypted master keys. This separates the master key from the encrypted file it belongs to, increasing the danger that the master key gets lost or damaged while the actual encrypted files are still sound. But they cannot be decrypted without the master key, so they are lost as well (unless you have a backup of the master key, of course).
+
+EncFS:
+* This is a FUSE filesystem which provides a writable "view" of decrypted files which are actually stored as encrypted files in a different filesystem subtree.
+* The actual encrypted files can be stored anywhere in some directory tree. EncFS passes file attributes (permission bits etc.) through unaltered to the decrypted view.
+* EncFs has very low filesystem metadata overhead. If per-file initialization vectors are disabled, the storage overhead can even become zero.
+* As of 2023, EncFS typically supports three encryption algorithms: AES, CAMELLIA and BLOWFISH. However, EncFS uses OpenSSL to actually provide all the encryption. Currently (2023), OpenSSL only supports AES and CAMELLIA out of the box. However, a manual change in /etc/ssl/openssl.cnf still allows to re-enable BLOWFISH which would otherwise be no longer supported due to deprecation.
+* EncFS has many security problems, which suggests it should not used as the only encryption algorithm. It is especially vulnerable against malicious modification of the encrypted data. But usage within an already-encrypted outer volume is still reasonably safe.
+* A security audit from 2014 [ https://defuse.ca/audits/encfs.htm ] notes that the same key is used for encryption as for authentication. This is generally considered to be bad cryptographic practice.
+* The same audit notes that EncFs uses a stream cipher to encrypt the last block of files rather than using a more clever method like CTS. The option to add random bytes to the file has been added in an attempt to fix weaknesses introduced by this method, but this has turned out not to be able to fix the problem. So the random bytes which can optionally be added to the end of the file are probably a worthless feature which only costs space.
+* Per-block IVs are created by just XORing the file-relative block number with the per-file IV. Combined with the way the stream-encryption of the last file block has been implemented, this could then possibly result in block-IV-reuse which can then be exploited in various ways. This happens if the XOR-operation cancels out the IV-increment by 1 used by the last-block stream encryption algorithm.
+* MACs are only 64 bit. This is too short for today's cryptographic standards.
+* MACs can be disabled completely by editing the configuration file. So an attacker can silently disable MACs first and then modify the encrypted files without anyone noticing (unless the user checks the configuration setting before every mount).
+* MACs are not compared in constant time. This allows timing attacks on the MAC performed by an attacker which can monitor the ongoing filesystem operation.
+* File holes are not protected/authenticated by the MAC. In fact, all blocks of zero-bytes are ignored by the MAC calculation. This allows an attacker to insert or remove blocks only containing zero bytes into the file (including appending blocks at the end of the file) without the MAC noticing that.
+* EncFS should also be avoided in situations where the attacker can make a snapshot of files at different times when they change. Combined with some knowledge of the possible file contents, this could enable the attacker to completely recover the contents of later revisions of the same file.
+* This means EncFS must not be used for cloud storage, at least not when used as the outermost encryption layer. Because cloud providers can potentially make snapshots of your files at any time without you letting know.
+* It is possible to nest as many EncFS instance as desired. However, it is not possible to use encrypted folders as mount points. What works, though, is creating the mount points elsewhere, and use symlinks within the encrypted filesystem to refer to those mount points. This has pretty much the same effect as if the mount points for nested instances were inside the encrypted tree.
+
+FsCrypt:
+* FsCrypt is a Linux kernel feature for directory-based encryption supported by a few filesystem drivers. As of 2019-02, only the following file systems are supported: ext4, f2fs and ubifs.
+* FsCrypt allows encrypted and unencrypted contents to exist on the same filesystem, sharing the same available space. There is no need to reserve a portion of the filesystem's storage space for use by the encrypted data.
+* FsCrypt is not a separate filesystem, but rather an encryption extension implemented directly as part of the filesystem drivers.
+* FsCrypt is very similar to ecryptfs, but as it is just an (extended) part of a filesystem's normal implementation, it is not a stacked filesystem. It therefore avoids the stack-size related problems of ecryptfs. It can also be expected to integrate perfectly into the normal operation of the filesystem, because it is part of the driver's source code rather than a plug-in of some sort.
+* FsCrypt also does not suffer from the cryptographic weaknesses of EncFS. However, FsCrypt only provides AES encryption at the moment. So it might not be a good option to protect against the NSA who might know algorithmic backdoors built into AES. EncFs provides a wider range of algorithms for selection.
+* FsCrypt *does* provide different encryption algorithms, but they are all based on AES. The default selection is already the crytographically strongest option and uses AES-256-CBC-CTS for filename encryption and AES-256-XTS for encryption of file contents.
+* The restriction regarding the available encryption algorithms seems to be due to the fact that they are hard-coded in the "fscryptctl" source code. It seems likely that all the other encryption algorithms provided by the Linux kernel could also be used by patching the "fscryptctl" utility accordingly. However, this assumption is wrong. The available encryption algorithms are explicitly made available for use by FsCrypt in the Linux source code file fs/crypto/keyinfo.c, and this code does not just read the names from some table which can easily be patched. Heavy patching of actual program logic seems to be necessary instead. In any case, an unpatched standard kernel does not provide any algorithms other than AES for FsCrypt. In other words, for the time being, better forget about other encryption algorithms for FsCrypt.
+* Like ecryptfs, and unlike EncFS, FsCrypt is (part of) regular Linux filesystems. It can therefore be used for multiuser access like any normal filesystem and is not impaired by the restrictions and inefficiencies of FUSE filesystems.
+* In order to make use of FsCrypt, its functionality must have been enabled when compiling the kernel. However, this is usually the case - at least on Debian-based system. In addition, a flag in the superblock of the filesystem must have been set (with tune2fs) before mounting it. Also, the "fscryptctl" and "keyctl" utilities need to be installed. On Debian systems, the latter one can be installed regularly as package "keyutils", but the first one needs to be built from source. Fortunately, building is easy as the source is available via git and the utility is written just in C using a standard Makefile.
+* Directories (and their contents) are encrypted by first creating an empty directory, assigning an encryption key to it, then loading then encryption key, and finally populating that directory. The contents and subdirectory will then be encrypted transparently with the assigned key.
+* Only one key can be assigned per directory. This means that in order to share usage of such an encrypted directory, both users need to have access to the same key.
+* For enabling the encryption on a directory, a special extended attribute for it is set by the "fscryptctl" utility, which contains the choice of encryption algorithm as well as a "key descriptor" for the key (which seems to be some sort of hash over the key's contents). Special privileges are required for setting this attribute, so normally only "root" can set it. However, the root user does not need the actual key for this, only the key descriptor value needs to be known.
+* Before using the encrypted directory, the actual key need to be loaded by the "fscryptctl" utility. This "unlocks" the directory, making it available for transparent encryption. Unlocking does not require special privileges; any user who has access to the key can do it.
+* The encryption key consists of 512-bit (64-byte) binary data. It is fed into the "fscryptctl" from standard input. It can therefore come from an unencrypted key file, or be the result of decryption by some other utility (such as openssl) which writes the decrypted data to standard output.
+* Locking an encrypted directory consists of unloading the encryption key and flushing the filesystem caches. The latter usually requires administrative privileges, but "sudo" can be configured to allow this without knowing the "root" password. Unloading the key is done with the "keyctl" utility, because the keys are stored in the regular keyrings provided by the Linux kernel.
+* To be more specific, the encryption will look into the user's session keyring first, and then into the user's global (session independent) keyring. The key is always loaded into the session keyring first, but after this "keyctl" can be used to move the key from there to the user's global keyring.
+* As an alternative to the beforementioned "fscryptctl" utility, a much larger framework written in the Go programming languages is also available for managing FsCrypt. However, those executables are huge (because of nearly-static linking) and may be harder to compile because a "Go"-toolchain needs to be installed first. Also I see little benefit from using the larger framework, except that password-encryption of key files will probably be provided as part of the framework, which needs to be done manually (or with a script) when using the lightweight "fscryptctl" utility.
+* Although only users with access to the key can unlock a FsCrypt directory, the "root" user seems still to be able to access its contents. It remains unclear whether this is just a side effect of filesystem caching, or whether the "root" user can generally use the keys from other user's keyrings.
+* Not all metadata of the encrypted files are hidden from attackers. File content sizes, filename sizes and file permissions are observable. However, depending on the encryption algorithm and its mode of operation chosen for filename and file contents encryption, the sizes of the encrypted subjects might have been rounded up to the next multiple of the encryption block size.
+* FsCrypt uses the same source as /dev/urandom for all random numbers. Therefore there is no guarantee that they are really random. However, hopefully random numbers are only required for nonces, where it is less important how random the are, as long as they do not repeat. The actual encryption key is provided by the user, which is fine.
+
+IPFS (Interplanetary Filesystem)
+* A worldwide, distributed filesystem
+* True P2P with no "special" nodes
+* Nodes are identified by hashes of their public keys
+* Built on top of ideas borrowed from DHT/Kademlia, Git, Bittorrent and LBFS
+* Also supports storing very large file, such as videos.
+* IP2 implementations make use of several techniques for
+* Files are broken into smaller-sized chunks on variable boundaries; different strategies for chunking such as rabin fingerprints or the rsync algorithm are available.
+* Files are organized in directory trees specified by a commit.
+* Object contents can directly be addressed by a hash; path resolution maps names to contents.
+* Contents are always stored in local storage provided by each node. Typically, Key/Value-Databases like leveldb are used for this.
+* Requested contents from remote nodes is transferred to the local storage before being accessed locally from there.
+* All contents are immutable. New contents eventually replaces older contents based on some caching strategy. Once a particular object has been removed from all local caches because of long-term non-usage, the object is gone.
+* But files/directories can be "pinned" locally in order to ensure they will never go away and will stay reachable in the network as long as the host with the pinned copies stays connected to the global IPFS.
+* IPFS itself supports arbitrary transports and hashing/encryption algorithms, but implementations will be restricted to algorithms actually supported by them.
+* Most currently active implementations (2023) seem to be based in Go. Some special-purpose implementations use Java, JavaScript or Rust. All of them can therefore be expected to be rather fat and resource-hungry.
+* There is no indication that the available clients support LAN-restricted operation for acting as an internal file server rather than sharing worldwide files. On the other hand, contents can be encrypted.
+* The paper is unclear how encryption works and what algorithms are actually available. In any case, encryption is optional.
+
+Lustre:
+* Is a cluster file system like Ceph.
+* Has been used in large datacenters in the past.
+* The name is a portmanteau of "Linux" and "Cluster".
+* Consists of one more metadata server (MDS) nodes, which have one or more metadata target (MTD) devices available per Lustre filesystem. MTDs store "namespace metadata", that is filenames, directories, permissions etc. The MTD data is stored on regular local filesystems connected to the MDS. Besides the MDS, one or more object storage servers (OSS) are required which store file data in one or more object storage target (OST) devices. An OSS typically serves 2 to 8 OSTs, where each OST manages a single local filesystem. OSTs are to their OSS the same as the MTDs to their MDS. Finally, the last component are clients which access the MDS and OSS in order to access the Lustre filesystem. Therefore, the minimum Lustre System consists of a single MDS with a single MTD and a single OSS with a single OST.
+* Lustre presents all clients with a unified namespace for all of the files and data in the filesystem, using standard POSIX semantics, and allows concurrent and coherent read and write access to the files in the filesystem.
+* The MDT, OST, and client may be on the same node (usually for testing purposes), but in typical production installations these devices are on separate nodes communicating over a network. Each MDT and OST may be part of only a single filesystem, though it is possible to have multiple MDTs or OSTs on a single node that are part of different filesystems.
+* MDTs amd OSTs use an "enhances" version of ext4 (called "lsdiskfs") or zfs as local filesystems. It is unclear whether this is just the usual way to use Lustre, or whether it is actually necessary.
+* It seems that special filesystem features like compression or data checksum are handled by the local filesystems rather than by Lustre. Lustre only combines the locally stored file data and metadata into a single filesystem.
+* There used to be a regular kernel filesystem driver for Lustre, but it has been removed since Linux 4.18 from the mainline kernel. An out of tree driver is still available, but it needs to be built/updated manually. Alternatively, there is a userspace library, so applications can directly access Lustre rather than via a mounted filesystem.
+* Lustre is frequently supported by large hardware vendors for their products as well as by cloud storage providers.

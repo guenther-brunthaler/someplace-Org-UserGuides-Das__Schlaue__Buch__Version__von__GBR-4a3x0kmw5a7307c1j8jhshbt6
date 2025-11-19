@@ -1,0 +1,112 @@
+Gesundheits-Wissen
+==================
+v2021.116
+
+Diese Datei enthält eine Liste von gesundheitsrelevanten Informationen, die zu speziell oder tiefgehend sind als dass man sie ständig am Handy mit sich herumschleppen müsste oder bräuchte.
+
+Zähne
+-----
+
+Zahnfleischtaschen, Parodontose, Parodontitis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ich habe mich nun ein wenig über Zahnfleischtaschen schlau gemacht und das hier unter https://www.dentolo.de/ratgeber/zahnfleischtaschen/ gefunden:
+
+[quote]
+--
+Der Zahnhalteapparat besteht aus dem Zahnfleisch, dem Kieferknochen, der Wurzeloberfläche der Zähne und sehr feinen Fasern, die Zahn und Knochen verbinden. Die Zähne sind also nicht fest im Knochen verwachsen, sondern über die dünnen Fasern im Kieferknochen aufgehängt.
+
+Bei der Parodontitis greifen Bakterien diese Fasern an. Der Körper bekämpft die Keime. Er sendet Immunzellen in den Zahnhalteapparat. Es entsteht eine Entzündung. Diese äußert sich häufig zunächst durch eine Zahnfleischentzündung (Gingivitis). Entzündetes Zahnfleisch fängt bei Irritationen an zu bluten.
+
+Ohne Behandlung kann sich die Zahnfleischentzündung ausbreiten. Die bakterielle Infektion greift die Fasern und den Kieferknochen an. Der Körper baut das entzündete Gewebe ab. Es entstehen Zahnfleischtaschen zwischen Zahn und Zahnfleisch.
+
+Je tiefer diese Zahnfleischtaschen werden, desto schwieriger sind sie zu reinigen. Sobald der gesamte Zahnhalteapparat von der Infektion betroffen ist, spricht man von einer Parodontitis.
+
+[...] Die chronische Entzündung des Zahnhalteapparates verläuft meistens schmerzlos. Deshalb wird sie oft erst spät entdeckt. Frühe Symptome sind Zahnfleischbluten und wiederkehrende Zahnfleischentzündungen. Bei Rauchern bleiben diese Symptome häufig aus, da Nikotin die Durchblutung des Zahnfleisches vermindert.
+
+Weitere Symptome können empfindliche Zähne sein. Sie entstehen, wenn das Zahnfleisch zurückgeht und die empfindlichen Zahnhälse freiliegen. Eine fortgeschrittene Parodontitis kann zu Mundgeruch und eitrigem Geschmack, Zahnlockerung und -verlust führen.
+
+[...] Neben den entzündlichen Prozessen im Mund hat die Parodontitis auch allgemeine gesundheitliche Risiken. Die Bakterien können sich auf den gesamten Körper ausbreiten. Dort können sie schwerwiegende Folgen haben. So steht die Parodontitis im Zusammenhang mit folgenden Krankheiten:
+
+* Diabetes mellitus
+* Herz-Kreislauf-Erkrankungen: Herzinfarkte, Schlaganfall
+* Niereninsuffizienz durch Arteriosklerose
+* Tumorerkrankungen
+* Erektionsstörungen
+* Frühgeburten
+
+[...] Was hilft gegen Zahnfleischtaschen?
+
+Die Behandlung einer chronischen Zahnfleischentzündung ist vereinfacht die Reinigung der Zahnfleischtaschen.
+
+Zahnfleischentzündungen vorbeugen
+
+Wenn Sie selbst einer Zahnfleischentzündung vorbeugen möchten, sollten Sie auf eine gute Mundhygiene achten. Eine gründliche Mundhygiene ist ein Muss, um Plaque zu entfernen.
+
+Im Zahnbelag leben Bakterien, die Zahnfleischentzündungen und Karies auslösen. Zusätzlich sollten Sie auch Ihr Zahnfleisch säubern. Zähneputzen allein reicht nicht aus.
+
+Um das Zahnfleisch in den Zahnzwischenräumen zu reinigen, sollten Sie täglich Zahnseide oder Interdental-Bürstchen benutzen. Eine professionelle Zahnreinigung ein- bis zweimal im Jahr schützt Sie zusätzlich.
+
+Ist die Parodontitis ausgebrochen, kann sie nicht mehr geheilt werden. Nur Ihr Fortschreiten kann verhindert werden.
+--
+
+sowie https://flexikon.doccheck.com/de/Zahnfleischtasche
+
+[quote]
+Eine Zahnfleischtasche ist ein pathologischer Spaltraum zwischen der Zahnwurzel und dem umliegenden Gewebe (Gingiva, Alveolarknochen), der vor allem im Rahmen einer Parodontitis auftritt. 
+
+und https://www.zahnersatzsparen.de/wissenswertes/was-ist-eine-zahnfleischtasche/
+
+[quote]
+--
+Zwischen Zahnhals und Zahnfleisch ist jedoch eine Furche vorhanden, die bei einem gesunden Menschen etwa einen halben Millimeter tief ist. Durch das dichte Gewebe um die Zahnfleischfurche, das wie ein Verschluss wirkt, sind dort nur wenige Bakterien zu finden. Bei einer Gingivitis (Zahnfleischentzündung) oder einer Parodontitis (Zahnbettentzündung) verändert sich jedoch das Gewebe. Es wird durchlässiger und verliert nach und nach seine Haftung an der Zahnoberfläche. Hierdurch können sich Bakterien leichter auf der Oberfläche ansiedeln und vermehren. Das führt zu einer Entzündungsreaktion des Immunsystems, die von den Betroffenen oft als schmerzendes oder blutendes Zahnfleisch wahrgenommen wird.
+
+Wenn die Entzündung fortschreitet, verändert sich in der Folge zunehmend das Zahnfleisch. Es löst sich mehr und mehr von der Zahnoberfläche ab und bildet dann eine Zahnfleischtasche aus. Das ist deswegen besonders kritisch, weil sich in einer solchen Zahnfleischtasche Bakterien sehr gut ansiedeln können. Sie mit der Zahnbürste oder Zahnseide von dort wieder zu entfernen, ist dagegen kaum noch möglich. Daher empfehlen Zahnärzte, bereits bei den ersten Anzeichen für eine Gingivitis das Zahnfleisch untersuchen zu lassen. Denn je tiefer die Taschen, desto stärker sind auch die Auswirkungen auf das umliegende Knochengewebe, das zunehmend geschädigt und abgebaut wird.
+
+[...] Die beste und wirkungsvollste Vorbeugung ist die tägliche gründliche Mund- und Zahnpflege. Mit einer Zahnbürste kann der zähe Biofilm auf den Zähnen und am Zahnfleischsaum mechanisch entfernt werden, vorausgesetzt, die Zahnbürste wird ohne Druck und immer vom Zahn zum Zahnfleisch geführt. Harte Borsten oder ein zu starker Anpressdruck können das Zahnfleisch verletzen und auf Dauer schädigen. Auch sollte die Zahnbürste regelmäßig, spätestens alle drei Monate, ausgetauscht werden, damit nicht die Borsten selbst zu einem Nährboden für schädliche Bakterien werden, die bei jedem Zähneputzen erneut in den Mund gelangen und das Risiko für eine Entzündung erhöhen. 
+
+Um die Zahnzwischenräume zu reinigen, sollte regelmäßig zu Zahnseide oder Interdentalbürstchen gegriffen werden. Damit lassen sich auch die Stellen erreichen, die für die Zahnbürste zu eng sind. Wichtig ist, dass beim Reinigen der Zahnzwischenräume das Zahnfleisch nicht verletzt wird.
+
+[...] Sind bereits tiefere Zahnfleischtaschen vorhanden, lohnt es sich dennoch, die notwendige Behandlung konsequent durchzuhalten. Zwar heilen die Taschen ab einer bestimmten Taschentiefe nicht mehr vollständig aus, doch kann die Parodontitisbehandlung verhindern, dass die Erkrankung weiter fortschreitet. Unbehandelt würde sich außer dem Zahnfleisch auch der Kieferknochen zunehmend abbauen, wodurch der darin verwurzelte Zahn immer mehr an Halt verliert. In der Folge können so selbst gesunde Zähne ausfallen, weil sie keinen Halt mehr im Knochen finden. 
+--
+
+Weiters https://www.zahnarzt-drseidel.de/parodontose/zahnfleischtaschen/
+
+[quote]
+--
+Berlin - alarmierende Zahlen: Jeder Zweite über 50 Jahren leidet an Parodontose. Bei jüngeren Semestern ist es bereits jeder Dritte. Die kassenzahnärztliche Vereinigung Berlin hält Parodontitis für eine "Volkskrankheit". 
+
+[...] Parodontitis, im umgangssprachlichen Gebrauch als Parodontose bezeichnet, ist eine entzündliche Erkrankung des Zahnhalteapparates(Parodont), von dessen (bakteriell bedingter) fortschreitender Zerstörung sowohl das Zahnbett als auch Binde- und Knochengewebe betroffen sind. Infolge der Zahnfleischentzündung entstehen die oben beschriebenen Zahnfleischtaschen, kleine Nischen, welche Bakterien ein geschütztes Umfeld für weiteres Wachstum bieten. Die freiliegenden Zahnhälse können beim Einsatz der zahnärztlichen Instrumente während der Reinigung der Zahnfleischtaschen erhebliche Zahnschmerzen verursachen.
+--
+
+und https://www.deutsche-familienversicherung.de/zahnversicherungen/zahnzusatzversicherung/ratgeber/artikel/zahnfleischtaschen-ursachen-behandlung/
+
+[quote]
+--
+Wichtig für präventive Zahnhygiene:
+
+* Regelmäßiges und gründliches Putzen der Zähne.
+* Zur Reinigung der Zahnzwischenräume ein Interdentalbürstchen verwenden.
+* Mit fluoridhaltiger Zahnpasta putzen.
+* Regelmäßig Zahnseide anwenden. Bei vorhandenen Zahnfleischtaschen den Zahnarzt zur richtigen Handhabung befragen.
+* Mit chlorhexidhaltigen Lösungen aus Drogerie oder Apotheke den Mund spülen.
+* Zungenreiniger wie Zungenschaber oder Zungenbürstchen anwenden, um bakterielle Beläge sanft zu entfernen.
+* Auf eine gesunde und zahnfreundliche Ernährung achten. So sollten unter anderem Vollkornprodukte, Gemüse, Rohkost und Obst gegenüber stark verarbeiteten Lebensmitteln bevorzugt werden.
+* Regelmäßige Vorsorgeuntersuchungen beim Zahnarzt wahrnehmen.
+
+[...] Die Kosten für eine Zahnfleischtaschenbehandlung liegen pro Zahn zwischen zehn und 25 Euro. Das muss ein Patient nur dann selbst bezahlen, wenn es sich um einen – laut Richtlinie der gesetzlichen Krankenkasse – „nicht erhaltenswürdigen Zahn“ handelt. Nimmt jemand zusätzlich zur jährlichen Zahnsteinentfernung, die die gesetzliche Krankenkasse finanziert, eine professionelle Zahnreinigung in Anspruch, muss er diese Kosten meist selber tragen.
+
+Die Kosten für die allgemeine Kontrolluntersuchung beim Zahnarzt übernehmen die gesetzlichen Krankenkassen halbjährlich. Ebenso tragen sie die Kosten für eine Zahnsteinentfernung pro Jahr. Außerdem ist der Parodontale Screening Index (PSI) als Untersuchung zur Früherkennung alle zwei Jahre Kassenleistung.
+
+[...] Eine durch Parodontitis entstandene Zahnfleischtasche ist nicht heilbar. Auch nach einer erfolgreichen Behandlung besteht die Tasche weiter. Der Verlauf kann also lediglich aufgehalten werden. 
+
+[...] Die Reinigung von Zahnfleischtaschen kann nur der Zahnarzt erfolgreich vornehmen. Es gibt zwar Spülungen, die man selbst anwenden kann, damit erreicht man aber nicht den optimalen Reinigungseffekt. Nach der professionellen Zahnreinigung durch den Arzt, folgt die Reinigung mit einem sogenannten Scaler.
+--
+
+Das mit dem empfindlichen Zähnen trifft bei mir definitiv jedenfalls schon seit Jahren zu! Daher trinke ich kaltes Wasser auch schon lange nur noch durch einen Strohhalm, um den direkten Kontakt zu den Zähnen zu minimieren welcher Schmerzen verursacht.
+
+Laut https://de.wikipedia.org/wiki/Parodontitis wird eine Zahnfleischtasche als "Bolsa" bezeichnet und stellt einen Spalt um den Zahn herum dar wo dieser im Zahnfleisch verschwindet.
+
+Erreichen kann man diesen eigentlich nur indirekt durch das übliche Bürsten mit den "kleinen Flaschenbürsten" (Interdentalbürstchen).
+
+Sprich, die mir aufgetragene Reinigung ist dieselbe wie allgemein zwischen den Zahnzwischenräumen mit solchen Bürsten, lediglich auf die Problemregion fokussiert während an anderen Stellen Zahnseide verwendet werden sollte.

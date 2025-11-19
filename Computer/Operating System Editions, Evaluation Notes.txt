@@ -1,0 +1,957 @@
+Operating System Editions
+=========================
+
+Evaluation Notes.
+
+1st-level headlines specify the distribution, OS or embedded platform.
+
+2nd-level headlines specify the particular version tested / reviewed. If the version is not known, an approximate year number or date of the version release will also do. If that cannot be determined either, the initial review date may be used as the last resort. If both the version number and release date are known, both may be specified in the 2nd-level headline.
+
+The sections should be sorted by 1-level headlines (lexicographically, case-insensitive) first, then 2nd-level headlines (in ascending release timeline order).
+
+
+Arch Linux
+----------
+
+2015
+~~~~
+
+Nach dem Start der Live-CD mittels KVM erschien ein Bootmanager-Menü, wo ich die "Boot Arch Linux (i686)" auswählte.
+
+Danach scrollten einige systemd-Meldungen über den Bildschirm, das letzte was man sah "Mounting DebugFS".
+
+Dann - nichts mehr. Blinkender Cursor - nichts tut sich.
+
+Nach einiger Wartezeit: INFO task kworker [...] blocked for 120 seconds [...] Tainted [...]
+
+Das war's. Ende des Spaßes!
+
+Darauf hin resettete ich die VM über die Monitor-Console.
+
+Ich tat genau dasselbe wie zuvor, doch nun fuhr alles hoch wie es offenbar sein sollte, und ich landete sofort in einer Root-Shell.
+
+Keine einzige Frage gestellt, keine einzige Option auszuwählen. Sweet. Das gefällt mir.
+
+So ist das eben mit systemd: Einmal geht's, ein anderes mal nicht. Niemand weiß, warum. Wenn's nicht klappt, halt noch einmal booten. Bis es irgendwann eben doch klappt. So sieht professionelles Vorgehen bei systemd aus.
+
+Aber egal, weiter geht's.
+
+Im aktuellen Verzeichniss finde ich eine Datei install.txt mit Instruktionen zur weiteren Installation. Sehr löblich. Auch das gefällt mir sehr. Keine depperten Wizards oder anderer Schrott, wie man ihn auf jeder anderen Install-CD vor den Latz gerotzt bekommt!
+
+Einer der ersten Hinweise in dieser Datei ist, dass man mit "man archlinux" eine Übersicht über die wichtigsten Konfigurationsmechanismen bekommt.
+
+Und in der Tat, dort werden in kurzen Absätzen für ein Thema die wichtigsten Einstellungen abgehandelt, wie Bootloader, Zeiteinstellungen, Locale, initramfs, Hostname usw. Und dies ausreichend knapp ohne dass man sich zu Tode scrollen muss, da es ja nur eine Übersicht ist. Gefällt mir auch. Am Ende findet man Verweise zu weiteren man-Pages. 
+
+Einziger Nachteil der ganzen vorbildlichen Einfachheit: Man hat weder deutsche Tastatur noch korrekte Zeitzone, geschweige denn angepasste Netzwerkeinstellungen. Außerdem wird man noch mit der zsh gequält, der ich persönlich nichts abgewinnen kann,
+
+Doch anhand der Instruktionen aus der install.txt kann man die entsprechenden Einstellungen leicht vornehmen.
+
+Basiswissen um die normalen Kommandozeilen-Tools wird dabei vorausgesetzt: Ohne Befehle wie "ls", "cat" oder "less" zu kennen, findet man weder die install.txt noch kann sie anzeigen.
+
+Arch Linux ist daher offensichtlich nicht für Dummie-User gedacht, die nur Mausklicken können. Zumal alles brav im Textmodus stattfindet, kein dämliches überflüssiges GUI.
+
+Nach näherer Betrachtung entpuppt sich auch die install.txt-Datei als wesentlich kürzer als zunächst vermutet. Auch sie ist nur eine Auflistung der typischen Setup-Konfigurations-Schritte mit je einem Absatz pro Schritt.
+
+In jedem Absatz werden nur die wichtigsten Befehle oder Konfigurationsdateien zur Anpassung des Schrittes genannt, für Details werden die Namen von Arch-Linux-spezifischen man-Pages genannt, wo man genaueres Nachlesen kann. Auch sehr benutzungsfreundlich.
+
+Doch leider bereits bei so unverschämten Wünschen wie dem Einstellen einer statischen IP-Adresse wird man gezwungen, sich mit irgend einem dämlichen systemd-Tool aus einander zu setzen, das natürlich ganz super-toll ist, doch 100 x komplizierter ist als eine /etc/network/interfaces zu editieren. So muss man hier erst großartig salbungsvolle "Profile" erstellen, und natürlich verrät einem niemand wie das geht. Aber dafür sind unzählige Kommandos dokumentiert, wie man Profile sichern, umbenennen, aktivieren etc. könnte, wenn man denn nur eines hätte.
+
+Endlich finde ich eine Dokumentation für das Format von Profil-Dateien, und erfahre dass diese sich in /etc/netctl befinden. In einem Unterverzeichnis dort finde ich sogar eine Example-Datei, die ich für meinen Wunsch einer statischen IP-Adresse kopieren und anpassen kann.
+
+Letztendlich steht am Ende in dieser Datei auch nicht mehr an Information drin als früher in /etc/network/interfaces, aber Hauptsache es ist anders. Die übliche Extrawurst für systemd eben.
+
+Als nächstes will ich nun einen SSH-Server zum Laufen zu bekommen, damit ich das Ding nicht mehr über den VNC-Viewer bedienen muss wie momentan.
+
+Gottlob genügt es dazu die /etc/ssh/sshd_config entsprechend zu konfigurieren, und - mit der Hand - die erforderlichen Server-Keys zu generieren. Unter sysvinit ging das immer automatisch, aber was soll's. Mir war das ohnehin nie sicher genug gewesen, so dass ich sie früher trotzdem mit der Hand erzeugt hatte.
+
+Wenigstens lässt sich das Ding danach sogar starten, ohne dass ich den sshd-Service für systemd noch zusätzlich anpassen müsste. Eigentlich will ich ihn ja via inetd starten, aber alles der Reihe nach. Man muss schon heilfroh sein wenn unter systemd *irgendwas* halbwegs funktioniert!
+
+Nun kann man das System schon komfortabler via SSH benutzen.
+
+Erstes Entsetzen lähmt mich kurzfristig, als ich sehe dass /lib, /sbin und /bin alle Symlinks nach /usr/... sind. Ein sauber getrenntes / und /usr kann man hier offensichtlich vergessen. Aber wo systemd drin ist, partitioniert man seine Festplatte am besten nicht sondern knallt alles in ein einziges großes Filesystem. Wenn das kaputt geht, Pech gehabt. Eigentlich ist es ein Wunder, dass sie überhaupt noch Unterverzeichnisse verwenden, und nicht alle Dateien einfach ins root-Verzeichnis werfen. Das wäre schließlich noch viel mehr von jener Einfachheit, derer sich systemd so rühmt.
+
+Und da in der LiveCD alles im RAM läuft, hat journald natürlich in /run/log/journal/*/system.journal sein beliebtes binäres Logfile angelegt, das bereits auf 8 MB Größe angewachsen ist obwohl ich so gut wie noch nichts gemacht habe und bis auf sshd und systemd keine Dienste laufen. Aber das Loggen von Belanglosigkeiten ist bekanntlichermaßen journald's größte Wonne, also darf einen dies nicht wundern. Und wozu ist RAM da, außer ihn mit sinnlosen Log-Einträgen vollzumüllen?
+
+
+Circuit Python
+--------------
+
+Dies ist eine "bare-metal" embedded-Applikation für zahlreiche populäre Microcontroler, die ohne OS auskommt und zugleich as OS-Ersatz dient.
+
+Es kann Python-Scripte mit eingeschränktem Sprachstandard und eingeschränkten Standardbibliotheken ausführen. Dafür bietet es etliche zusätzliche eigene Bibliotheken, primär für das Ansteuern der Hardware, aber auch zum Ausgleich von Funktionen fehlender Standardbibliotheken.
+
+Das Zielpublikum ist dasselbe wie für typische Microcontroller der Arduino-Modellreihen, welches in erster Linie die Hardware eines Geräts ohne den Ballast eines "richtigen" OS ansteuern möchte.
+
+Im folgenden wurde eine Portierung für den Raspberry Pi evaluiert. Es werden dabei (2022) nur solche Modelle unterstützt die zu USB OTG fähig sind.
+
+
+7.3.0 (2022)
+~~~~~~~~~~~~
+
+Ich lud insgesamt 14 MB (komprimiert) an Dateien für "Circuit Python" herunter, einer "Bare Metal" Mini-Python-Installation für den Raspberry Pi der im folgenden Artikel erwähnt wurde:
+
+https://www.heise.de/news/Raspberry-Pi-Bare-Metal-Circuit-Python-7124036.html
+
+Dabei handelt es sich um eine abgehalfterte Python-Version, die von irgendwelchen Arduino-Projekten geforkt und auf den Raspberry Pi portiert wurde.
+
+Das besondere dabei: Es läuft wie der Name schon vermuten lässt am "Bare Metal" des RPi, sprich ohne ein Betriebssystem. Also kein Linux. Sondern das Python steuert intern direkt die Hardware des RPi an.
+
+Im Artikel wurde ein Download der neuesten Versionen von
+
+https://adafruit-circuit-python.s3.amazonaws.com/index.html?prefix=bin/raspberrypi_zero_w/
+
+empfohlen, doch dort fand ich nur tote Links für die Pakete an denen ich interessiert war. Daher lud ich statt dessen die letzten stabilen Versionen direkt von der Homepage des Projekts herunter, und zwar
+
+https://downloads.circuitpython.org/bin/raspberrypi_zero_w/en_US/adafruit-circuitpython-raspberrypi_zero_w-en_US-7.3.0.disk.img.zip
+
+https://downloads.circuitpython.org/bin/raspberrypi_zero_w/en_US/adafruit-circuitpython-raspberrypi_zero_w-en_US-7.3.0.kernel.img
+
+Davon brauchte ich aber tatsächlich nur den ersten der Downloads der ca. 13 MB groß war und entpackt eine 256 MB große Abbild-Datei für eine SDXC-Karte darstellte.
+
+Den 2. Download der rund 2 MB groß war, brauchte ich hingegen gar nicht. Meine Vermutung: Es handelt sich bei dem kleineren Download nur um Updates welche jene Leute einspielen sollen, welche die Abbild-Datei bereits früher herunter geladen auf eine SDXC-Karte kopiert hatten.
+
+Wie der Dateiname der Image-Dateien bereits vermuten lässt, hatte ich mir die Version für den RPi Zero W herunter geladen.
+
+Es hätte alternativ auch noch Versionen für den RPi Zero2 W gegeben sowie für den RPi4: Also nur für solche RPi-Modelle, die USB On-The-Go Fähig sind und sich selbst als USB-Geräte ausgeben können.
+
+Ich kopierte das 256 MB-Image daher auf eine 32 GB SDXC-Karte die ich noch als einziges ungenutzt hatte. Dann steckte den unüblichen mittelformatigen HDMI-Stecker für den RPi0 an diesen an und verband ihn mit dem Monitor.
+
+Schließlich verband die USB-Buchse des RPi0 (jene für Daten, nicht etwa die für die Stromversorgung) mittels eines normalen Micro-USB-Kabels mit einem der USB-Ports des Desktop PCs.
+
+Dann schaltete ich den Monitor auf den HDMI-Ausgang des RPi0 und wartete ab was passiert.
+
+Zunächst kam das übliche Farbige Quadrat das RPis beim Einschalten immer anzeigen.
+
+Dann tat sich relativ lange nichts - vielleicht 30 Sekunden lang oder so.
+
+Ich füchtete schon der RPi0 hätte sich einfach aufgehängt.
+
+Aber dann kam doch noch etwas - und zwar eine Einschaltmeldung in äußerst pixeliger Schrift, vermutlch 320 x 200 Auflösung oder so, und eines Heimcomputers der 80er wahrlich würdig.
+
+Der Text nutzte dabei nicht die volle Breite des Bildschirms, sondern ließ zumindest links und rechts einen Gutteil ungenutzt. Vermutlich auch oben und unten, aber das ließ sich schwer sagen da nur wenig Text am Bildschirm angezeigt wurde und der Hintergrund sowohl des Textes als auch des vermuteten ungenutzten Rahmens herum gleichermaßen schwarz waren.
+
+Ein Fehler war augenfällig - das rechteste Pixel des letzten Zeichens im Ausgaberahmen fehlte bzw. war abgeschnitten.
+
+Dafür war - vermutlich oberhalb des Rahmens und an dessen linken Seite - sogar die Grafik einer Schlange eingeblendet - allerdings ebenfalls so erbärmlich als würde das Bild aus den 80er stammen. Mehr als 4 Farben hatte die Grafik vermutlich nicht.
+
+Der Begrüßungstext forderte einen auf doch eine Taste zu drücken - uklig wenn man bedenkt dass dieses Bare Metal Python noch gar keine funktionierende Unterstützung für USB-Tastaturen hat (laut Artikel).
+
+Weiters stand ein Hinweis am Bildschirm, dass man einfach Python-Programme auf das USB-Laufwerk speichern könne, und diese würden dann automatisch ausgeführt.
+
+Aber erst einmal wollte ich natürlich eine Verbindung zur Python-Eingabeaufforderung (REPL - "Read-Eval-Print-Loop") des RPi aufbauen.
+
+Da der RPi sich als serielles USB-Gerät ausgibt, reichte dazu das folgende Kommando:
+
+$ busybox-pbyqxzl1ktqlk3fjm3arlrclg microcom /dev/serial/by-id/usb-Raspberry_Pi_Zero_W_00000000XXXXXXXX-if00
+
+Die "X" waren dabei tatsächlich Hex-Ziffern, vermutlich eine Seriennummer meines Geräts und daher hier ausgeblendet.
+
+Ich verwendete hier einen Custom-Build der Busybox, daher der seltsame Name. Aber man hätte selbstverständlich statt dessen auch "minicom", "screen" oder jedes andere geeignete Terminalprogramm für die Verbindung verwenden können.
+
+Nach dem Aufbau der Verbindung wurde ich von folgendem Text begrüßt:
+
+Adafruit CircuitPython 7.3.0 on 2022-05-23; Raspberry Pi Zero W with bcm2835
+>>> 
+
+Wobei die spitzen Klammern die Eingabeaufforderung waren, den danach wartet der Cursor darauf dass man etwas eingab. Ich probierte daher:
+
+>>> 1+1
+2
+
+Ja! Es funktioniert! Toll.
+
+Dann versuchte ich "help()" das ich schon von "großen" Python her kannte - und das funktionierte auch hier. Man erfährt was es für Module gibt über die man wieder weitere Hilfe anfordern kann - so kann man sich Schritt für Schritt alles anschauen was dieses "Circuit Python" einem zur Verfügung stellt, ohne ein Handbuch zu benötigen.
+
+Nett!
+
+Auch readline-Support ist offensichtlich eingebaut, denn man kann wie man es aus der Shell gewöhnt ist mit den Cursortasten die Historie der zuletzt eingegebenen Befehle durchgehen.
+
+Als nächstes sah ich mich nach dem erwähnten USB-Laufwerk um auf welches man Python-Scripte speichern kann die automatisch ausgeführt werden, und fand dabei "/dev/disk/by-id/usb-Raspberr_Zero_W_00000000XXXXXXXX-0:0-part1".
+
+Laut blkid/blockdev ein 28 GB großes VFAT-Volume - offensichtlich der ungenutzte Rest von der SDXC-Karte. Vielleicht war das auch der Grund warum das Booten so relativ lange gebraucht hatte: Der RPi0 hatte das 256 MB große Image beim ersten Start vielleicht vergrößert, so dass es danach die ganze SDXC-Karte einnahm.
+
+Ich rief als erstes fsck.vfat auf um mehr über das Volume zu erfahren, doch das meldete Fehler die ich mich nicht zu reparieren getraute da das Python ja bereits auf derselben Karte lief. Nicht dass ich dabei etwas ruiniere. Also mounte ich es einfach auf gut Glück nach /mnt.
+
+Das funktionierte auch, und ein "df" verriet mir dass dieses VFAT-Volume tatsächlich die ganze SDXC-Karte einnahm. Viel war nicht drauf:
+
+$ ls -ogAR
+.:
+insgesamt 128
+-rw-rw---- 1   107  1. Sep 2016  boot_out.txt
+-rw-rw---- 1    22  1. Sep 2016  code.py
+drwxrwx--- 2 32768  1. Sep 2016  .fseventsd
+drwxrwx--- 2 32768  1. Sep 2016  lib
+-rw-rw---- 1     0  1. Sep 2016  .metadata_never_index
+-rw-rw---- 1     0  1. Sep 2016  .Trashes
+
+./.fseventsd:
+insgesamt 0
+-rw-rw---- 1 0  1. Sep 2016  no_log
+
+./lib:
+insgesamt 0
+
+Was wohl darauf hinweist, dass sich das eigentliche Python außerhalb dieser Partition irgendwo anders versteckt.
+
+Ich sah dass die Datei "boot_out.txt" den Begrüßungstext enthält den man nach dem Einloggen bzw. Neustart angezeigt bekommt. Und das "code.py" enthält einen "Hello world"-Einzeiler, offensichtlich ein Testprogramm.
+
+Erst nach späterem Lesen der Website erfuhr ich, dass "code.py" tatsächlich jenes Benutzer-Python-Script ist welches nach einem Neustart automatisch ausgeführt wird, während "boot_out.txt" die Ausgabe dieses Programms ist da (oder: wenn?) zu diesem Zeitpunkt noch keine andere Ausgabemethode verfügbar ist. Offensichtlich enthält diese Datei aber nicht nur die Ausgabe von "code.py" selbst, sondern auch die davor wohl ausgegebene Begrüßungs-Meldung des Systems.
+
+Weiters las ich, dass vor dem Ausführen von code.py noch eine Datei boot*py ausgeführt wird, doch von der sah ich nichts. Entweder ist sie nur optional, oder wird versteckt genau wie auch die anderen Boot-Dateien (siehe weiter unten).
+
+Übrigens handelt es sich um ein Python 3, man muss also Klammern um die Argumente von "print" herum machen wenn man etwas auf die Konsole ausdrucken möchte.
+
+Was mir weiters auffiel, ist dass es während dem Mounten und ersten Zugriff auf das VFAT-Volume komische Geräusche gab, die wohl vom HDMI-Monitor gekommen sein müssen da der RPi0 ja keinen Lautsprecher besitzt.
+
+Seltsam ist nur dass während dessen das HDMI-Signal von meinem Desktop-PC kam und nicht von RPi0. Wie der es daher geschafft hat trotzdem ein Signal auszugeben das man hören kann, wäre interessant zu erfahren.
+
+Tja, das war's einmal fürs erste.
+
+Für weitere Informationen wie man mit dem Ding umgehen kann wird man wohl doch noch etwas mehr Hintergrund-Info von der Webseite benötigen.
+
+Aber auf jeden Fall funktioniert es, und bringt tatsächlich einen schönen Hauch nostalgisches "Heimcomputer"-Feeling der 80er Jahre mit.
+
+Außerdem demonstriert es den "USB-Gadget"-Modus des RPi0, wo sich dieser als in diesem Fall gleich 2 verschiedene USB-Geräte ausgibt: Als serielle Schnittstelle und als VFAT-Datenträger.
+
+Soweit also meine ersten Erkenntnisse mit "Circuit Python".
+
+Eine Untersuchung der downgeloadeten Paket ergab schließlich: Das *.kernel.img* ist im *.disk.img* enthalten. Und zwar als Datei "kernel.img" des RPi VFAT-Boot-Volumes.
+
+Dieses kernel.img enthält offensichtlich das ganze circuitpython-System - der Rest der Dateien im *.disk.img* sind nur die üblichen Devicetree-, Firmware- und Bootloader-Dateien, wie sie auf jeder normalen Raspbian-Installation ebenso enthalten sind.
+
+Die config.txt ist natürlich angepasst, aber kernel.img ist das einzig spezifische das man aktualisieren muss wenn eine neue Version des circuitpython-System heraus kommt. Dazu dienen dann die *.kernel.img*-Downloads, damit man das *disk.img* nur ein einziges Mal für die Erstinstallation herunterladen muss.
+
+Interessant war, dass man im gebooteten circuitpython-System nichts mehr von den Raspberry-Firmware-Dateien sah, obwohl sich die tatsächlich sehr wohl am VFAT-Volume befinden.
+
+Offensichtlich gaukelt das circuitpython sobald es läuft einem ein virtuelles VFAT-Volume vor, das gar nicht wirklich existiert. Und zwar auch über USB.
+
+Das erklärt auch wie es funktionieren kann, dass man dieses VFAT-Volume gleichzeitig vom PC aus mounten kann, während das circuitpython offensichtlich ebenfalls darauf zugreift. Weil es eben kein echtes sondern nur ein virtuelles Dateisystem ist.
+
+Vermutlich funktioniert das ähnlich wie das QEMU-Feature, der VM ein virtuelles VFAT-Dateisystem einer Diskette vorzugaukeln, dass mit Dateien aus dem echten Dateisystem des Hypervisor-Hosts befüllt ist. Dieses Disk-Image gibt es dann ja auch nicht wirkllich sondern nur virtuell. Trotzdem eine ziemlich ausgefuchste Sache!
+
+Ein interessantes Detail das mir noch auffiel: In der config.txt wird gpu_mem=16 gesetzt. Aber man sieht trotzdem noch ein Videobild!
+
+Zwar in erbärmlicher Auflösung, aber doch. Auf jeden Fall stimmt demnach die Behauptung nicht, dass man unbedingt zumindest gpu_mem=32 verwenden müsste wenn man ein Videobild haben will.
+
+Allerdings mag es sein dass dies stimmt wenn man ein Videobild in Full-HD Auflösung will. Weil davon ist die circuitpython Auflösung weit entfernt, die eher an einen Commodore 64 oder bestenfalls VGA-Auflösung erinnert, und überdies offensichtlich nicht den ganzen Framebuffer nutzen ließ sondern einen durchaus üppigen Rahmen an den Rändern ungenutzt ließ.
+
+Dabei muss man jedoch bedenken, dass eine HDMI-Ausgabe ein unerhörter Luxus für solch eine Embedded-Applikation ist, die sich normalerweise nur über serielle Terminals bedienen lassen und maximal irgendwelche niedrig auflösenden LCD-Displays unterstützen.
+
+
+antiX
+-----
+
+Eine "Puppy Linux"-ähnliche Live-Distribution mit Persistenz-Unterstützung mit geringem Ressourcenverbrauch, die auch alte Rechner unterstützt.
+
+Im Unterschied zu Puppy benutzt es einen "Debian"-Unterbau.
+
+
+antiX-21
+~~~~~~~~
+
+Ich kopierte antiX-21_386-full.iso (1.333.788.672 Bytes) auf einen 2 GB USB-Stick.
+
+Im Gegensatz zu MX Linux bootete dieser Stick anstandslos auch auf einem alten 32-Bit x86 Notebook mit 1 GiB RAM und ohne PAE.
+
+Man merkte aber bereits anhand der Bildschirmmaske des Bootloaders eine enge Verwandtschaft mit MX Linux - auf den ersten Blick war sogar überhaupt kein Unterschied zu erkennen.
+
+Auch hier konnte man daher bereits im Bootloader eine Sprache für das Tastatur-Layout und die Zeitzone auswählen - darunter auch Deutsch - was zudem zu einer sofortigen Anpassung der Texte an diese Sprache bereits in den Bootloader-Menüs bewirkte.
+
+Dabei ist anzumerken, dass der Bootloader im Grafikmodus läuft und nicht etwa im Textmodus.
+
+Man kann auch wählen ob man eine grafische Oberfläche oder lieber den Textmodus hätte, sowie zahlreiche Optionen für Persistenz und Boot-Verhalten oder welche Kombination aus Dateimanager und Fenstermanager man wünscht.
+
+Dabei stehen an Fenstermanagern zur Verfügung: IceWM (DefaultA), jwm, fluxbox und herbstluftwm. Sowie an Dateimanagern: Rox Filer sowie zzz. zzz scheibt scheint ein Fork von SpaceFM zu sein und erlaubt wie dieser das Fenster in bis zu 2 x 2 Panels zu splitten. Die Basisfunktionalität von zzz ist dabei ähnlich der von PcManFM. Außerdem kann man auch noch die Fontgröße für den Desktop vorab im Bootloader wählen.
+
+Die ausgewählte Kombination aus WM und Dateimanager kann man dabei (mit Ausnahme von herbstluftwm) auch nach dem Booten jederzeit "on the fly" über ein Menü wechseln.
+
+Ein gewisser Nachteil scheint auf den ersten Blick zu sein, dass dieser Bootloader *zu* viele Optionen anbietet, bei denen man von den meisten keine Ahnung oder nur einen Verdacht hat was sie tun.
+
+Jedoch nur so lange bis man entdeckt, dass man mit F1 ein aufwändig erscheinendes Hilfe-System aufrufen kann, das alle verfügbaren Optionen ausreichend detailliert erklärt.
+
+Das ist allerdings auch bitter notwendig, weil allein die Unzahl an verfügbaren Persistenz-Alternativen würde einen Uninformierten ansonsten völlig verzweifeln lassen.
+
+Unter anderem gibt es auch eine "toram"-Option welche das System vom USB-Stick in eine RAM-Disk kopiert, was die Geschwindigkeit enorm erhöht wenn man genug RAM für so etwas erübrigen kann.
+
+Weiters gibt es eine "frugal"-Option, welche den Inhalt des USB-Sticks auf eine bestehende Hard-Disk-Partition kopiert und dann von dort benutzt. Das hat einen ähnlichen Effekt wie "toram" verbraucht jedoch viel weniger RAM.
+
+Trotz der überwältigenden Fülle an Optionen und Alternativen ist der Bootloader (syslinux-basiert übrigens, kein GRUB) dennoch ein Meilenstein unter seinesgleichen.
+
+Nach dem Booten findet man sich per Default in einem IceWM-Desktop mit Rox-Dateimanager wieder, der aber mit antiX-Tools aufgepeppt wurde.
+
+Ich konnte natürlich nicht widerstehen und bootete gleich erneut um den mysteriösen herbstluftwm auszuprobieren.
+
+Dabei stellte sich heraus, dass dies ein Tiling WM in der Tradition vom ratpoison ist, der ausschließlich über die Tastatur bedient wird und für normale Benutzer ungefähr ähnlich empfehlenswert ist wie ein vi für einen iPhone-Benutzer.
+
+Wenn man sich allerdings auf die Bedienung einlassen möchte, hat herbstluftwm den Vorteil dass nur minimaler Platz für Fensterdekorationen drauf geht da es solche im wesentlichen gar nicht gibt. Außerdem braucht man keine Maus - zumindest nicht für den Umgang mit Fensterrahmen.
+
+Dennoch wechselte ich schnell zurück zur Fluxbox und zzz, da ich erstere gut kenne und ebenso den SpaceFM, dem zzz sehr ähnlich ist.
+
+So gibt es graphische Tools bzw. Wizards für die Netzwerkkonfiguration inklusive Wi-Fi und Bluetooth, auch Modem-Einwahl mittels PPP wurde nicht vergessen.
+
+Conky läuft im Desktop-Hintergrund und zeigt diverse Auslastungs-Charts an; zusätzlich zu den Performance-Indikatoren die IcweM bereits direkt eingebaut hat. Außerdem inkludiert die Uhr in IceWM-Pane Panel eine Sekundenanzeige. Kurzum, diese Default-Konfiguration würde bei längerer Uptime viel Rechenzeit allein für das ständige Aktualisieren des Displays für diese ganzen Charts verschwenden.
+
+Viel RAM verbraucht das ganze allerdings nicht - ca. 110 MB RAM-Verbrauch werden nach dem Booten angezeigt.
+
+Das möge man einmal mit einem systemd-basierten System vergleichen... während hier noch der gute alte klassische System V init läuft.
+
+Außerdem kann man Conky durch einen Menüeintrag jederzeit ein- und ausschalten. Überdies gibt es bei den auswählbaren Desktop-Kombinationen auch welche mit "min", welche Conky und ähnliche Spielereien gleich gar nicht erst starten.
+
+Ähnlich wie auch bei MX holt antiX sich beim Start automatisch eine IP-Adresse von einem erreichbaren DHCP-Server, und startet ohne eine Erlaubnis einzuholen automatisch einen NTP Client was problematisch werden kann wenn man z. B. via Roaming zu horrenden Gebühren für Datenvolumen längere Zeit mit dem Internet verbunden ist.
+
+Allerdings sah ich - erst nach dem Booten in der Anleitung - dass es eine Boot-Option "mean" gibt, die jeden Default-Zugiff aufs Internet verhindert. Das hätte ich vielleicht vorher lesen sollen...
+
+Weiters fiel mir auf, dass der DHCP-Client so konfiguriert ist, dass er auch den Hostnamen vom DHCP Server übernimmt, falls dieser einen mitsendet. Das ist nützlich wenn man den DHCP-Server so konfiguriert, dass er definierten Clients anhand ihrer MAC-Adresse einen Hostnamen zuweist. Dann hat antiX bereits beim Start des Live-Systems den üblichen Hostnamen für das Gerät, ohne dass man dies manuell setzen müsste.
+
+Laut Konfigurationseinstellungen es werden viele Netzwerkdienste per Default automatisch gestartet, darunter auch SSH mit Passwort-Login, wobei antiX fixe Standard-Passwörter (User "demo" mit Passwort "demo", User "root" mit Passwort "root") verwendet.
+
+Zunächst sollte man denken dass eine solche Konfiguration nicht sehr sicher sein kann.
+
+Allerdings zeigte ein Port-Scan mit nmap, dass kein einziger Port von außen erreichbar ist. Einzig auf "ping" reagierte der Rechner.
+
+Nähere Untersuchung enthüllte darauf hin, dass zwar alle möglichen Netzwerkdienste zum automatischen Starten eingestellt sind, doch kein einziger wurde tatsächlich gestartet!
+
+Diese Einstellungen wirken daher offensichtlich erst bei späteren Starts wenn man Persistenz aktiviert hat. Beim ersten Start bzw. einem Live-System ohne Persistenz braucht man sich hingegen keine Sorgen zu machen.
+
+Als erstes wollte ich das System via SSH erreichbar machen, damit ich die weitere Evaluation von meinem Arbeitsplatz aus durchführen kann ohne immer zum Standort des Notenbooks (gigantische zwei Meter entfernt, ein höchst zwingender Grund für Fernwartung) latschen zu müssen.
+
+Nach dem Einrichten des SSH-Servers loggte ich mich daher ein und sah als erstes, dass es kein "screen" gibt. Allerdings dafür ein "tmux". Nicht ganz so optimal, aber ausreichend.
+
+Als nächstes suchte ich nach x11vnc - leider Fehlanzeige. Man kann es nur nachinstallieren. Also tat ich das - was insgesamt die Installation von 5 Paketen erforderte (x11vnc, libvncclient1, tk, libvncserver1, tk8.6) welche ich zum Glück von meinem Desktop-Rechner nehmen und nicht erneut herunterladen musste.
+
+Denn antiX 21 basierte auf dem zum Zeitpunkt dieser Evaluation aktuellen Debian "Bullseye" 11. Im Hinblick auf das erforderliche Download-Volumen für zusätzliche Pakete für antiX war dies sehr vorteilhaft, da ich nahezu alles bereits auf Debian vorhandene dort recyclen können würde.
+
+Nach der Installation von x11vnc wollte ich den Deckel des Notebooks zuklappen damit das Display nicht sinnlos leuchtet während ich das Gerät fernwarte.
+
+Doch das Zuklappen des Deckels versetzte es statt dessen in den Schlafmodus. Ich musste HandleLidSwitchExternalPower=ignore zur /etc/elogind/logind.conf hinzu fügen um dies zu verhindern. Sicherheitshalber fügte ich auch noch "action=<drop>" zur /etc/acpi/events/lidbtn hinzu obgleich ich nicht sicher war ob das auch notwendig ist.
+
+Doch damit war nur das halbe Problem gelöst. Denn das Touchpad produzierte bei zugeklappten Deckel nun lauter sinnlose Eingabe-Events, welche die CPU belasteten und den Lüfter aufheulen ließen.
+
+Ich wollte das Touchpad daher deaktivieren. Nicht nur das xinput fehlte um es abschalten zu können. Sondern es fehlte auch ein Tool um die Emulation des linken Touchpad-Knopfs durch kurzes tappen auf das Touchpad abschalten zu können - eine Funktion die mich immer in den Wahnsinn treibt und zu jeder Menge ungewollter "Mausklicks" führt.
+
+Für die allgemeine Mauskonfiguration (die auch das Touchpad betrifft) gibt es zwar einen Einstellungs-Dialog. Nicht aber für Touchpad-spezifischen Einstellungen wie die genannte. Über die Kommandozeile könnte man solche Einstellungen mittels xinput setzen... aber das fehlt ja ebenso. Der einzige Behelf mit Bordmitteln ist es daher die xorg.conf zu editieren und den X-Server neu zu starten. Den Namen des Touchpad-Geräts und der Optionen muss man dazu in der Xorg-Logdatei finden.
+
+Weiters fiel mir auf, dass dieses Deaktivieren von Eingabegeräten nach einem Versetzen in den Schlafmodus und nachfolgendem Aufwachen wieder rückgängig gemacht wurde, d. h. man muss das Touchpad danach erneut deaktivieren um unerwünschte Eingabe-Events bei geschlossenem Deckel zu vermeiden.
+
+Die "connman"-Applikation und -Dienst managen alle Netzwerkverbindungen. Alle 4,5 Minuten sendet der Dienst einen HTTP-Request "nach Hause", um festzustellen ob die Internet-Verbindung noch aktiv ist.
+
+Wenn man diesen periodischen Datenverbrauch nicht möchte, oder "zuhause" nicht permanent informieren will ob man online ist, kann man in der Datei /etc/connman/main.conf die folgende Option setzen:
+
+EnableOnlineCheck=false
+
+Was die Software-Ausstattung angeht:
+
+* man-Pages für installierte Utilities und Anwendungsprogramme sind vorhanden, allerdings nicht jene für Software-Entwicklung.
+
+* gcc und make sind erstaunlicher Weise vorhanden, jedoch kann man nicht einmal ein "hello world" damit kompilieren weil nicht einmal die Header-Files der C Standardbibliothek installiert sind.
+
+* Scriptsprachen: Python 3.9, Perl 5.32
+
+* Festplattenpartitionierung (grafisch): gparted
+
+* E-Mail Client: Claws Mail
+
+* Web-Browser: Ein echter Firefox ESR als Web-Browser, keine abgespeckten Scherze wie Palemoon. Dillo und Links 2 sind als zusätzliche Browser vorhanden.
+
+* Dateimanager: Midnight Commander, zzzFM, Rox-Filer
+
+* DOSBox: Emulator für alte MS-DOS Software
+
+* Simple Scan: zur einfachen Verwendung von Flachbettscannern
+
+* Drucksystem: CUPS
+
+* Bildbetrachter: Feh, Mirage
+
+* Office: LibreOffice (außer LibreOffice Base), Galculator, qpdfview, mupdf, CalCurse (Textmode-GUI-Kalender)
+
+* Downloader: Streamlight (Video Download), gFTP, Grsync (rsync Front-End), Transmission (Bittorrent Client)
+
+* IRC-Client: hexchat
+
+* Texteditoren: Geany, leafpad, vim, nano, mcedit
+
+* Media-Player: mpv, Poor Man's Radio Player, SMTube, Streamtuner2, GUVCView (Video-Aufnahme/Betrachtung), WinFF (ffmpeg GUI), XMMS, Youtube Video Player
+
+* Optische Medien: Brennprogramm "xfburn", Audio-CD Ripper "Asunder"
+
+* Grafikprogramme: mtpaint
+
+* On-Screen-Keyboard
+
+* Backup-Programme: luckyBackup, partimage
+
+* Paketverwaltung: Syntaptic, apt, dpkg (kein aptitude)
+
+* Netzwerk: DHCP und avahi (Zeroconf) laufen standardmäßig, sshd und "Droopy" (Web-Server für Austausch von Dateien im LAN) können gestartet werden
+
+* Taskmanager: htop, lxtask
+
+* Terminal-Emulatoren: Roxterm, rxvt, tmux
+
+* NVIDIA Treiber-Installer
+
+* Sicherheit: Firejail (Security-Sandbox für Programme, ein Framwork für Linux Namespaces und Linux Security Compartments via BPF), GnuPG (Verschlüsselung), UFW (Firewall)
+
+Zusätzlich gibt es noch jede Menge antiX-spezifischer GUI-Front-Ends zur Konfiguration vieler Einstellungen, insbesondere für den Desktop und das Netzwerk. Diese sind intern häufig als Shell-Scripte implementiert welche von "yad" (Fork von zenity) Gebrauch machen um GUI-Dialoge implementieren zu können.
+
+Weiters hervor zu heben ist dass essenzielle Bedienungsanleitungen zum Benutzen des Systems bereits lokal vorhanden sind; man kann sie daher auch ohne Internet-Verbindung lesen.
+
+Das oben genannte ist alles in dem 1,3 GB großen Live-Medium enthalten. Darüber hinaus kann alles aus den offiziellen Debian Repositories zusätzlich installiert werden.
+
+Es gibt einen Installer um sich antiX als "normales System" direkt auf eine Festplatte zu installieren.
+
+Jedoch kann man es mit vielen Persistenz-Optionen auch weiterhin als Live-System verwenden, indem vom Benutzer veränderte Dateien trotz des Nur-Lesen-Charakters des eigentlichen Live-"CDROM" in einer Persistenz-Datei dauerhaft gespeichert werden können um sie auch nach dem Herunterfahren des Systems zukünftig dennoch weiter verwenden zu können.
+
+Die Persistenz-Alternativen gliedern sich dabei in folgende Hauptgruppen:
+
+* off - keine Persistenz. Beim Herunterfahren gehen alle Änderungen verloren
+
+* Persist ("Dynamic Root Persistence") - die Änderungen des Benutzers gegenüber dem zugrundeliegenden Nur-Lesbaren Live-Dateisystem werden zunächst nur im RAM gehalten und später in einer Persistenz-Datei gespeichert. Dies geschieht spätestens beim Herunterfahren. Man kann aber auch zwischendurch manuell den aktuellen Zustand speichern lassen ("persist-saved" oder über das Menü), damit im Falle eines Absturzes weniger verloren geht.
+
+* P_static ("Static Root Persistence") - Benutzt die Persist-Datei direkt, ohne ihren Inhalt ins RAM zu kopieren oder wieder von dort zurück. Hat den Vorteil dass kein RAM für das Speichern der geänderten Datei aufgewendet werden muss. Hat jedoch den Nachteil dass die Persistenz-Dateien die ganze Zeit über gemountet bleiben müssen. Man kann also die ganze Zeit über unmöglich den Datenträger entfernen auf dem die Persistenzdateien liegen.
+
+* Frugal - das Nur-Lesen-Dateisystem wird vom USB-Stick auf eine existierende Festplatten- (bzw. SSD-) Partition kopiert. In der Regel schneller als von USB-Stick zu laufen. Streng genommen ist dies nur dann eine Form von "Persistence" wenn man früher einmal das Nur-Lesen-Dateisystem remastered hat (siehe unten) so dass es auch benutzerspezifische Daten enthält die zuvor in einer Persistenz-Datei gespeichert waren.
+
+* toram - das Nur-Lesen-Dateisystem wird von USB-Stick in eine RAM-Disk kopiert. Noch schneller als "Frugal", belegt aber viel RAM zusätzlich.
+
+Die "Persist"- und "P_static"-Varianten werden weiter on "root" und "home" unterteilt:
+
+* "root" speichert alle Änderungen im Dateisystem in der Persist-Datei
+
+* "home" nur solche die sich unterhalb von /home anspielen. Man kann so verhindern dass Änderungen an der Systemkonfiguration dauerhafte Auswirkungen haben, während alle Benutzerdaten sehr wohl dauerhaft gespeichert werden.
+
+Wenn man längere Zeit mit "Persist" arbeitet, wird die Datenmenge an Änderungen immer größer die permanent im RAM gehalten werden muss.
+
+Daher gibt es auch eine Möglichkeit, das CDROM-Abbild neu zu "remastern", so dass es neben dem bisherigen Inhalt auch die Änderungen aus der Persistenz-Datei enthält. Letztere kann man danach wieder ausleeren, da die bisherigen Änderungen nun keine mehr sind sondern zu einem fixen Bestandteil des Nur-Lesen-Systems wurden.
+
+Das Remastern hat weiters den vorteil, dass gelöschte und deinstallierte Pakete ebenfalls komplett aus dem CDROM-Abbild entfernt werden, während löschende Änderungen lediglich unsichtbar aber am Datenträger immer noch vorhanden sind.
+
+Mit anderen Worten, Remastern kann die Abbild-Datei kleiner machen indem in der Persistenz-Datei als "gelöscht" gekennzeichnete Dateien nun tatsächlich entfernt werden.
+
+Die Persistenz-Dateien als auch das Nur-Lese-CDROM-Abbild können auf dem selben oder auf verschiedenen Datenträgern abgelegt werden. Besonders interessant ist dabei natürlich die Variante, alles am selben USB-Stick abzulegen.
+
+Dazu ist es allerdings erforderlich den USB-Stick zu repartitionieren damit eine neue Partition für die Persistenz-Dateien entsteht.
+
+Standardmäßig enthält ein frisch mit einem downgeloadeten antiX-Abbild beschriebener USB-Stick nur zwei Partitions: Ein CDROM-Dateisystem mit dem eigentlichen Nur-Lesen-Dateisystem, sowie eine 4 MB große EFI-Partition für den Bootloader. Der Rest des USB-Sticks ist unpartitioniert.
+
+Der offizielle Weg Platz für eine Persistenz-Partition zu schaffen besteht darin den antiX USB-Installer "Live USB Maker" zu verwenden. Dieser kopiert die Nur-Lesen-Dateien und den Bootloader auf einen zweiten USB-Stick, und schafft dort auch Platz für die Persistenz-Dateien. Allerdings braucht man dazu insgesamt zwei USB-Sticks, wenn auch nur vorübergehend.
+
+Man kann statt dessen einfach mit fdisk den Live-USB-Stick bearbeiten und im umbenutzten Platz am Ende eine neue Partition für die Persistenz-Dateien hinzu fügen. Mit gparted funktioniert diese Methode nicht - dieser erkennt die vorhandenen Paritions nicht korrekt.
+
+Dies liegt daran, dass "eigentlich" der ganze USB-Stick ein einziges CDROM-Dateisystem darstellt. Allerdings wurde eine MBR-Partition-Tabelle in den ersten Sektor dieses Dateisystems aufgenommen.
+
+Fdisk warnt, dass die Signatur des ISO-Dateisystems beim Speichern der Änderungen überschrieben würde. Dies ist harmlos und man kann es bestätigen. Der USB-Stick bleibt trotzdem bootfähig.
+
+Nach dem Partitionieren muss man die neue Partiton auch noch formatieren - ich verwendete dazu ein ext4.
+
+Nun kann man mit dem "Dauerhaftigkeit Einstellen" antiX-Hilfsprogramm die Persistenzdateien erzeugen.
+
+Eine gewisse Verwirrung war auch das "Installation"-Icon: Dieses dient nur zur Durchführung einer "vollen" Installation, also kein Live-System. Dabei werden alle Dateien des SquashFS gepackt und direkt auf den Datenträger gespeichert. Man sollte daher sicherheitshalber zumindest den 4-fachen Platzbedarf wie für die Größe der SquashFS-Datei rechnen - und zusätzlich noch das was der Benutzer braucht.
+
+Während das Programm zum Durchführen einer "frugal"-Installation der "Live USB Maker" ist.
+
+Ebenfalls hochgradig verwirrend ist, wie man die Persist-Datei anlegt wenn es noch keine gibt. Das Script "persist-save" jammert jedenfalls immer dass die Root Persistence "noch nicht freigeschaltet" wäre, obgleich ich zuvor bereits die Persist-Datei mit dem GUI-Utility angelegt hatte und dem System auch der Pfad zur Datei sowie das Laufwerk auf dem sie liegt in seinen Einstellungen vermerkt hat.
+
+Ich dachte mir darauf hin, vielleicht fragt das System ja erst beim Herunterfahren ob ich die Änderungen speichern will. Doch dem war nicht so - es machte einen Neustart ohne irgend etwas zu sichern.
+
+Das Aktivieren der Root Persistence bereits im Bootloader wiederum scheiterte daran, dass er die Persistence-Datei nicht fand obwohl es eine gab. Mein Verdacht: Es wird ein bestimmtes Dateisystem-Volume-Label gesucht. Doch woher soll man das wissen wenn man die Partition mit der Hand anlegt?
+
+Vorläufige Erkenntnis: Offensichtlich ist es bei antiX letztendlich genau so wie bei MX Linux, wo ich es genau so wenig schaffte die Persistenz zu aktivieren: Man kann das herungergeladene ISO-Image nicht einfach auf einen USB-Stick kopieren und darauf dann Persistenz einrichten.
+
+Statt dessen muss man offenbar sinnloser weise 2 USB-Sticks nutzen: Einer um das ISO-Image zu booten, und den zweiten um diesen mit dem "Live USB Maker" als Persistenz- und bootfähigen USB-Stick einzurichten.
+
+Warum man nicht gleich ein Persistenz-fähiges USB-Abbild anbietet um einem diesen sinnlosen Umweg zu ersparen erscheint unbegreiflich.
+
+Ich vermute Faulheit der Distro-Maintainer: So kann man mit einer einzigen Abbild-Datei sowohl eine CD-ROM brennen als auch ohne Persistenz von USB booten, und dann in einem 2. Schritt einen persistenz-fähigen USB-Stick herzustellen.
+
+Allerdings wird das nicht so erklärt. Statt dessen wird so getan als könnte das System "von Haus aus", egal wie es gebootet würde, Persistenz. Doch das ist entweder falsch oder ist ist mir jedenfalls nicht gelungen heraus zu finden wie es funktioniert.
+
+Immerhin gibt es die Möglichkeit diesen Bedarf an physischen 2 USB-Sticks zu vermeiden, indem man das Erzeugen des USB-Sticks in einer VM durchführt. Allerdings braucht man dann entsprechend viel freien Speicherplatz für das Abbild des emulierten USB-Sticks in der VM. Und das Einrichten und Konfigurieren einer neuen VM ist immer zusätzliche Arbeit. Ärgerlich bleibt es allemal.
+
+
+CachyOS
+-------
+
+`cachyos-desktop-linux-250828.iso`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Based on Arch Linux, but optimized for gaming experience.
+* Can only start via Ventoy with GRUB2 method.
+* Booting takes 1.5 minutes using a USB-2 stick.
+* Always boots into RAM, loads a disk image nearly 3 GB in size.
+* After booting, "dmsetup remove ventoy" is necessary to release USB boot stick.
+* Only minimalistic KDE.
+* No LibreOffice or any other fancy stuff except for Firefox.
+* Only basic themes.
+* No locales available without network access.
+* But at least a German keyboard layout can be loaded.
+* No "man" command available (but several man pages are installed).
+* Not even gtroff available for formatting the man pages manually. Need to view them in TROFF source form.
+* No C/C++ compiler, but Qt Assistant and Qt Designer are installed for some reason.
+* "kate" and "kwrite" seem to be the only GUI plain text editors to be available.
+* Not even a graphical front end for the package manager (pacman).
+* "vim" and "micro" seem to be the only console text editors to be available.
+* "micro" is a 13 MB executable using JSON configuration files. At least the documentation seems to be built-in. It has only basic dependencies. Probably most of it has been statically linked. Written primarily in Go and some Lua.
+* At least GNU "screen" is available.
+* "fish" command line shell also available.
+* Barely usable except perhaps for repairing broken filesystems.
+* Its main use seems to be initiating a web-based installation of CacheOS. No
+* local packages available for installation.
+
+
+Debian
+------
+
+`debian-live-13.0.0-amd64-cinnamon.iso`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Ventoy supported in normal mode.
+* "toram" GRUB2 argument allows booting into RAM, "dmsetup remove ventoy" releases boot USB stick after boot.
+* No GNU "screen" or "tmux", but Gnome Terminal with Tabs.
+* "libreoffice", Games and lots of utilities.
+* "firefox", "thunderbird", "transmission", "hexchat" - a fully blown live system.
+* Debian installer, "synaptic" package manager.
+* "man" pages.
+* Some python development tools.
+* GCC (c, c++), "make" - enough to bootstrap some build chain.
+* "vim.tiny" and "nano" as console-based text editors.
+* No "aptitude".
+* Localizations and even spell-checking for a lot of languages are installed.
+
+
+GRML
+----
+
+2017
+~~~~
+
+Auf ihrer Homepage verteidigen die GRML-Autoren ihren Umstieg auf systemd:
+
+"systemd's vision of stateless systems is something which helps building live systems like Grml.
+
+While we don't claim that systemd is perfect and doesn't have its issues and drawbacks (like any software), we're happy about its existence and more than happy about development and support by Debian's systemd folks."
+
+
+2021.01
+~~~~~~~
+
+Ich kopierte die Abbilddatei auf einen USB-Stick und bootete davon.
+
+Gleich als erstes versuchte ich die "grml2ram" Bootoption - und erlebte bereits die erste Enttäuschung: Hängte sich mit einem Fehler wegen irgendwelcher falsch in eine Daten eingetragener Datenamen auf. Offensichtlich ein nie getestetes Feature.
+
+Als nächstes versuchte ich das normale GRML - das funktionierte. Wie üblich musste ich als erstes die zsh ausschalten die einem überall aufgedrängt wird - die GRML-Macher sind ja zsh-Fans. Mich treibt sie hinwegen in den Wahnsinn, vor allem da die Tab-Completion irgendwie ganz anders funktioniert.
+
+Sobald das gemeistert war, startete ich als erstes den Terminalserver - auch weil es im GUI mit einem eigenen Menüpunkt so schön angeboten wurde. Ich übernahm dabei alle Default-Optionen, nur ein SSH-Paswort setzte ich zusätzlich.
+
+Seltsam war auch dass er einen ganz anderen IP-Bereich angab als die Maschine davor bereits via DHCP selbst zugewiesen bekommen hatte. Sicherheitshalber loggte ich mich in diese ein und kommentierte die Zeile "dhcp-boot=" in der dnsmasq Konfiguration aus bevor ich diesen Dienst neu startete. Das schien auch zu reichen, denn danach konnte ich mein DELL Notebook über PXE booten!
+
+Nun, zumindest halb: Der Bootloader funktionierte, das Hochfahren zunächst auch. Aber dann kam der Punkt "User Login Management" und danach tat sich nichts mehr weiter. Systemd vermutlich. [Alt]+[S-Abf] reagierte zwar noch, doch die interessantesten der Funktionen waren nicht freigeschaltet. SAK funktionierte war, tat aber nichts. Desselben Reboot. [Strg]+[Alt]+[Entf] tat überhaupt nichts. Schließlich schaltete ich den Rechner aus und wieder ein und versuchte es erneut. Diesmal mit "debug" Option. Da lief es allerdings noch schlechter: Zwar viele Debug-Ausgaben, dafür endete es jedoch in einer Kernel Panic. Meine Vermutung: Meine CPU wird nicht mehr unterstützt. Das ist ja schon ein deutlich älterer INTEL der viele Befehlssatzerweiterungen seiner Nachfolger noch nicht besitzt.
+
+Dennoch kam es definitiv weiter als die 2017er Version. Daher ersetzte ich die - nie bootfähigen - GRML-Versionen auf meinem PXE-Server gegen die neue. Belegt dort zwar 400 MB mehr als zuvor - aber was soll's.
+
+Nachdem mir neulich die C/C++ Toolchain in KNOPPIX positiv aufgefallen war, prüfte ich auch unter GRML.2021 ob so etwas vorhanden wäre - leider nein. Python, Perl, Ruby - aber kein C, C++ oder gar Rust.
+
+Git ist aber immerhin vorhanden. Weiters vorhanden an wichtigen Tools: rsync, partimage (nur dieses kann auch Blocklistenbasierte Bootloader korrekt mitsichern), fsarchiver, partclone (scheint etwas ähnliches wie fsarchiver zu sein), busybox, cryptsetup, exfat-fuse, fai-client/server, gddrescue, graphicsmagick, htop, ipmitool, kexec-tools, mc, mercurial, openvpn, qemu-x86, qrencode, samba, socat, sshfs, subversion, syslinux, tk8.6, tmux, screen, usb-modeswitch, vim, w3m, wget, wdiff, wpasupplicant, x11vnc, xterm, apt, aptitude, cabextract.
+
+Weiters stellte ich fest dass es mir nicht gelang von GRML aus heraus zu finden was für eine GRML-Version überhaupt läuft. Intuitiv versuchte ich zuerst "grml-version", doch so etwas gab es nicht. Dann fragte ich in "grml-tips" nach "version", und erhielt als Antwort dass ich dafür doch bitte einfach "grml-version" aufrufen möge...
+
+In /run/live/medium/boot/isolinux/grml??_full_default.cfg entdeckte ich die gesuchte Information dann zwar doch noch, aber simpel ist anders!
+
+Jedenfalls, meine Begeisterung über GRML hat sehr abgenommen seit den seligen Zeiten von GRML 2011.12 "Knecht Rootrecht". Damals war es noch toll, nun nur noch stark verbuggter Durchschnitt. Aber das folgt wohl zwangsläufig wenn man sich mit systemd einlässt. Das strahlt Unzuverlässigkeit und Verbuggtheit aus, und dies verbreitet sich in alle damit verbundenen Anwendungen weiter wie ein Krebsgeschwür. Ich werde daher davon Abstand nehmen es auf den schönen 16 GB Stick zu kopieren, und statt dessen nur den alten Knecht Rootrecht-Stick damit überspielen. Der war zwar nett, aber davon kann man sich nichts mehr kaufen da die Kerneltreiber vollkommen veraltet sind und nicht einmal ein modernes ext4 mehr so ohne weiteres mounten können. Außerdem ist einer der wenigen verbleibenden Vorteile von GRML dass es nach wie vor kein udisks2 nutzt, oder aber dieses so konfiguriert hat dass es nicht selbstherrlich und ungefragt ständig alle Dateisysteme mountet die es nur finden kann. (Was immer eine besondere Freude ist, wenn man dann versucht sie selbst - mit der Hand - ein 2. Mal zu mounten...)
+
+
+Kali
+----
+
+Ist eine "Hacker Distro", die alle möglichen Security-, Hacking- und Cracking-Tools mitbringt. Es verwendet GNOME3 als GUI.
+
+
+2019
+~~~~
+
+Im Gegensatz zu einigen minimalistischen Distros hat Kali wenigstens ein OpenSSH an Bord, und zumindest auch einen C/C++-Compiler (gcc7). Autotools, cmake oder gar meson gibt es jedoch nicht. Immerhin aber ein normales make und m4. Ein openjdk-8 ist installiert, aber weder ant noch maven oder gar gradle. Aber zumindest die Basics sind vorhanden, mit denen man den Rest zur Not selber aus Quelltexten bauen kann.
+
+Dafür gibt es allerdings jede Menge Debugger - nicht nur gdb, sondern auch diverse andere von denen ich bisher noch nie etwas hörte. Sicherlich nur für Hacker gedacht, aber immerhin. Valgrind fehlt allerdings leider.
+
+Ich hatte beim Booten von Kali die Option "USB-Persistenz mit Verschlüsselung" (oder so ähnlich; sinngemäß) ausgewählt, und hätte daher eigentlich erwartet nach einem Passwort gefragt zu werden. Das war aber nicht der Fall, und ich sehe auch nicht dass irgend eine Partition am USB-Stick angelegt worden wäre.
+
+Allerdings befindet sich ein leeres LVM PV dort, das den zuvor ungenutzten Rest des USB-Sticks füllt. Eigentlich ist es noch gar kein PV, sondern nur die Partition hat einen entsprechenden Typ. Ob dort vielleicht irgend etwas erst beim Heruntergefahren angelegt wird? Ich bin jedoch skeptisch. Vermutlich eher systemd-typische großartige Versprechen die dann schlicht nicht eingehalten werden.
+
+Nachdem ich alle GNOME-Einstellungen die ich finden konnte auf auf vernünftige Settings umgestellt hatte, wagte ich es und steckte einen anderen USB-Stick an. Und, oh Wunder: Er wurde zwar im Dateimanager sofort angezeigt, nicht jedoch automatisch gemountet! Sehr gut.
+
+Später wollte mich daran machen extlinux oder grub auf einen USB-Stick zu installieren. Doch beides war unter Kali nicht verfügbar! Was für ein lächerliches "Hacker OS" ist das denn bitte, mit dem man nicht einmal eine bootfähige Disk einrichten kann???
+
+
+KNOPPIX
+-------
+
+Eine deutsche Live-Distro von Klaus Knopper. Berüchtigt für die Verwendung von 'cloop' anstatt 'squashfs' sowie noch von früheren Zeiten her berühmt für eine sehr reichhaltige Software-Ausstattung.
+
+KNOPPIX 8.6
+~~~~~~~~~~~
+
+Mir fiel auf, dass die 32-Bit Version von KNOPPIX sich grundsätzlich beim Starten aufzuhängen scheint. Nur die 64-Bit Version funktioniert, welche man (auf einem 64-Bit-Rechner) jedoch manuell auswählen muss.
+
+Darauf hin testete ich KNOPPIX weiter und sah, dass es mehrere Desktops und Fenstermanager zur Auswahl stellt. Default ist offensichtlich LXDE mit Compiz, was von Haus aus nette 3D Effekte zeigt.
+
+Ich versuchte darauf hin auch GNOME3, um vielleicht doch ein paar Vorteile dieses tollen Machwerks zu finden. Ich fand keine... je länger ich es mir ansah, desto schlechter fand ich es.
+
+Danach versuchte ich KDE zu starten. Das kam nicht einmal hoch... oder brauchte länger als rund 10 Minuten dafür, wonach ich es aufgab.
+
+Schließlich wollte ich openbox testen - doch KNOPPIX ignorierte meine ~/.xsession offensichtlich und startete immer nur Compiz. Alles in allem auch nicht so toll. Allerdings gelang es mir schließlich doch noch, ~/.xsession zur Verwendung zu bringen: Dazu musste man zuerst mit "telinit 2" auf den Textmodus wechseln, und dann als User "KNOPPIX" das Kommando "startx" ausführen. Die openbox machte dabei eine ganz gute Figur, nur die 32 MB RAM missfallen mir welche sie beim Laufen benötigt. Ob man das noch irgendwie reduzieren kann? Sie ist daher aber bereits mit den Defaults ganz gut bedienbar, und ein Panel braucht man eigentlich nicht wirklich.
+
+Danach wollte ich die weiteren im KNOPPIX "cheat sheet" angeführten WMs wie larswm, evilwm oder icewm testen. Doch die waren alle gar nicht wirklich installiert, wie sich herausstellte! Nicht einmal twm oder jwm war installiert.
+
+Überhaupt fiel mir auf, dass KNOPPIX zwar tonnenweise Programme mitbringt, aber nur ein kleiner Teil davon ist tatsächlich nützlich für die tägliche Arbeit. Zugute halten muss man ihm, dass es zumindest eine C/C++ Autotools-Toolchain mitliefert - sogar Eclipse ist an Bord. Dafür fehlt aber bereits cmake. (Nicht dass mich das viel stören würde.) Außerdem ist gut dass es die man-Pages dabei nicht ausspart sondern mitliefert. Auch qmake ist verfügbar sowie alles was man zum Bauen eines Kernels benötigt. Es ist auch das JDK samt ant und maven verfügbar. Zumindest als Startpunkt für Software-Entwicklung ist KNOPPIX daher von Haus aus brauchbar.
+
+Und noch ein paar weitere Ding fielen mir auf:
+
+* Das Mini-BSD von von "Knecht Rootrecht" ist nicht mehr dabei. Schade. Allerdings auch verschmerzbar.
+
+* Dafür gibt es nun - zusätzlich zu "iPXE" - neu auch ein "Netboot.xzy" zur Auswahl. Es scheint von einem Server https://boot.netboot.xyz/ booten zu wollen. Vermutlich so etwas wie PXE übers Internet. Scheint mir eine wahnwitzige Idee. Davon abgesehen: Wenn man bereits diesen Loader Booten kann, hätte man eben so gut auch gleich von der USB bzw. dem CD-ROM weiter booten können, als diesen sinnfrei scheinenden Umweg übers Internet zu machen. Na ja. Man könnte so vermutlich auch etwas ganz anderes oder eine neuere Version booten.
+
+* KNOPPIX stürzt beim Start mit einem beschreibbaren Benutzer-Overlay gar nicht ab wie ich es früher wähnte, sondern ist nur so unglaublich schweinelangsam dass man glaubt es wäre so. Wartet man aber lange genug, mehrere Minuten, geht tatsächlich etwas weiter und schließlich startet es sogar! Starte man dasselbe KNOPPIX ohne jenes Benutzer-Overlay, ist hingegen alles normal schnell.
+
+* Es verwendet dmcrypt mit aes-cbc-plain (nicht "plain64") für die Verschlüsselung. cryptoloop-aes ist nur eine nicht genutzte Option dabei. Offensichtlich ist diese Methode nur für Volume-Größen bis maximal 4 GiB sicher. (Abgesehen von den allgemein bekannten Gefahren von CBC ohne MAC.) Es handelt sich dabei um die "plain" Verschlüsselung von dmcrypt welche den Schlüssel direkt aus der Pass-Phrase hashed und keinen zusätzlichen Salt oder PBKDF verwendet. Man kann den Schlüssel daher nur durch Neuverschlüsselung ändern, und schwache Passworte werden nicht kaschiert. Will man es, etwa zur Reparatur, selbst mounten, findet man in /init in der Funktion mountaes() die richtigen Befehle.
+
+* Die vermeintlich "abgestürzte" Tastatur kann auch wieder "zum Leben" erweckt werden. Denn während sich bei KNOPPIX wegen dessen oben erwähnter Langsamkeit mit Benutzer-Overlays in einigen Phasen nichts tat, reagierte die Tastatur genau so wenig wie in den Fällen wo sie - scheinbar - tatsächlich abgestürzt war. Nachdem KNOPPIX dann schließlich aber doch hoch gekommen war, funktionierte die Tastatur dann plötzlich wieder als wäre nichts gewesen! Der "Disk Sleep" kann also offensichtlich auch zu einer scheintoten Tastatur führen, ohne dass dies aber tatsächlich der Fall ist.
+
+* Ich verwendete in meinem Benutzer-Overlay ohnehin bereits die erwähnte "openbox" die ich eigentlich hatte ausprobieren wollen! Offensichtlich erschien sie mir daher bereits damals als brauchbare WM-Alternative zum sinnlos überhypedten 3D-Compiz.
+
+Nachdem ich festgestellt hatte dass in meinem Benutzer-Overlay nur rund 130 MB von 3 GB überhaupt bereits genutzt wurden, überlegte ich mir eine andere Methode mit dem Overlay-Umgang. Anstatt dieses durch KNOPPIX als R/W-Overlay mounten zu lassen, mountete ich es manuell irgendwohin in /tmp (welches nicht Teil des Overlays ist).
+
+Weiter sah ich das offensichtlich /ramdisk jenes AUFS-Overlay darstellt in das geschrieben wird.
+
+Daher kopierte ich einfach mit "rsync -PxaHXS -delete-after" den Inhalt des manuell gemounteten Overlay-FS in jenes Verzeichnis! Allerdings stellte sich heraus dass das Overlay auch einige sinnlos bzw. offenkundig fehlerhaft große Cache-Dateien enthielt. Ich löschte dieser daher vor dem Kopiervorgang. Konkret alle aber ab 10 MB Größe.
+
+Danach wechselte ich dann mit "telinit 2" in den Textmodus und mit "telinit 5" wieder zurück zum grafischen Modus - und nun startete LXDE mit openbox als WM, genau wie gewünscht! Und es kroch auch nicht mehr so erbärmlich wie zuvor.
+
+PERFEKT!
+
+Glaubte ich zumindest voreilig. Denn da das Overlay-reiserfs beschädigt war und ich es reparieren hatte müssen, waren darin einige Dateien beschädigt worden. Darunter auch solche die zentral für die Paketverwaltung waren. Beim Versuch das zu reparieren flippte AUFS dann leider aus und nichts mehr funktionierte, so dass ich neu starten musste.
+
+Ich kopierte daher manuell was mir sinnvoll erschien aus dem Overlay ins Live-System, formatierte das Overlay dann neu, und rsyncte die Daten aus dem Live-Overlay zurück. Das neue Overlay verschlüsselte ich dann gleich direkt mit LUKS und nicht als "plain". Außerdem mit SERPENT anstatt AES. Eigentlich wollte ich gleich eine AEAD-Cipher nutzen, doch es gelang mir nicht eine korrekte zu erraten. Und Dokumentation dazu gibt es "natürlich" nicht sondern nur irgendwo im Internet während ich aber Offline war. Daher diesmal noch normal. Aber ich kann das Volume ja jederzeit neu formatieren, und dann auch mit AEAD.
+
+Das Starten danach war allerdings schwierig, da KNOPPIX das nun nicht mehr "plain"-verschlüsseltes Overlay ständig crypto-mounten wollte. Ich versuchte es mit "knoppix64 live S" im Bootloader und dann konnte man nach 3-facher Ablehnung zumindest booten.
+
+Doch nach dem Zurückkopieren nach /ramdisk gab es dann leider zahlreiche Fehler wie diesen: "aufs au_cpup_single:848:dpkg[4212]: I/O Error, hi41(i18) exists on b0 but plink is disabled"
+
+So ein elender Dreck!
+
+Oder anders gesagt: Das mit dem manuellen syncen des Overlays funktioniert nicht so einfach wie ich mir das vorstellte. Vielleicht später irgendwann mit etwas mehr AUFS-Wissen.
+
+Das in dieser KNOPPIX-Version enthaltene extlinux ist kaputt. Es ruiniert die Dateien in dem Volume wohin es den Bootloader installieren solle. Andere extlinux-Installationen zeigen dieses Verhalten nicht.
+
+Man bemerkt den Effekt wenn man nach der Installation das Volume unmounted und ein fsck macht. Das meldet dann plötzlich Fehler wo früher alles in Ordnung gewesen war.
+
+Ich beschäftigte mich mich auch ein wenig näher mit dem standardmäßig aktiven Compiz. Dabei fand ich das sich die Bedienung sehr verbesserte, wenn man unter "Wackelige Fenster" sowohl "Zittern" als auch "Einrasten invertieren" aktiviert. Zwar snappen die Fenster dann anstatt dess es einen Kantenwiderstand gibt - da wäre zwar auch möglich aber dazu müsste man "wackelige Fenster" ausschalten welches der beste Effekt ist - aber dafür scheinen die Fenster dann an Bildschirmrändern oder anderen Fenstern festzukleben und ziehen sich beim Versuch sie zu lösen zuerst widerwillig in die Länge. Irgendwie lustig!
+
+Der [Alt]+[Tab]-Effekt ist auch lustig: Die Fenster verkleinern sich dazu temporär, und beschreiben eine 3-dimensionale Kreisbewegung beim Wechsel. Sinnlos, aber hübsch anzusehen.
+
+
+KNOPPIX 9.1
+~~~~~~~~~~~
+
+Ich versuchte, mit Knoppix in den Suspend-to-RAM-Modus zu gehen. Das funktionierte. Das Aufwachen hingegen nicht. Allerdings hatte ich während des Schlafes den USB-Stick abgezogen und wieder angesteckt. Vielleicht hätte ich das besser unterlassen sollen... Passiert ist jedoch nichts, da ich vor dem Suspend sicherheitshalber alle persistenten Dateisysteme als Read-Only re-mounted hatte.
+
+Bei Knoppix sind im wesentlichen nur 2 "brauchbare" Developer-Editoren dabei: geany und mcedit. vi und emacs sind zwar auch dabei, aber die sind ja so mühsam für nicht-Eingeweihte zu bedienen dass man keine längeren Quelltexte damit editieren will, schon gar nicht mehrere davon gleichzeitig offen. Neu an Geany fiel mir dabei positiv auf, dass seine [Strg]+[Leertaste] Wortergänzung Worte aus allen offenen Dateien vorschlägt, und nicht nur aus der aktuellen wie beim "joe". Sehr praktisch wenn man z. B. eine Header-Datei zusätzlich öffnet - schon hat man Ergänzungs-Zugriff auf alles dort definierte.
+
+Der frühere openbox-Fenstermanager von Knoppix 8.6 ist nun nicht mehr dabei. Nur compiz, mutter, metacity und kwin. Sehr nervig ist der Umstand dass [Alt]+[Tabulator] per Default deaktiviert ist. Man muss erst im Compiz-Einstellungsmanager auf "Fensterverwaltung" gehen und dort "Anwendungs-Umschalter" ankreuzen. Unverständlich warum das kein Default ist! Außerdem sollte man bei den "Allgemein"-Settings des erwähnten Umschalters noch den "Size Multiplier" auf 0,5 stellen, da man sonst mit einer zu lästigen Animation behelligt wird.
+
+Weiters sind Chromium, Firefox, links und Konqueror als Webbrowser installiert.
+
+Das Mailprogramm ist Thunderbird.
+
+Dateimanager: pcmanfm, dolphin (man muss erst selber im Toolbar die Funktion einrichten um zum Elternverzeichnis zu kommen), thunar, mc, Gnome Dateien (wie kommt man hier zum übergeordneten Verzeichnis? Dasselbe Problem wie bei dolphin, nur dass es hier nichts zum Konfigurieren gibt.)
+
+Weiters: LibreOffice, Blender, Inkscape, Okular, Scribus, XSane, FreeCAD, GwenView, xfig, Mumble, Pidgin, TOR-Browser, Bitcoin Walllet, PuTTY, KeePassX 2.0.3, WINE.
+
+Ich testete Knoppix auch erfolgreich auf meinem alten DELL-Notebook, welches ich mit dem neuen Knoppix 9.1 vom USB-Stick gebootet hatte. Diese lief erstaunlich gut, obwohl es[B nur 1 GiB RAM hat. Sogar Compiz mit den 3D-Effekten inklusive drehender Zahnräder im 3D-Würfel lief anstandslos, wenn auch mit keiner berauschenden FPS-Rate. Die zram-Komprimierung des Swap bringt offensichtlich wirklich etwas.
+
+Was mich etwas zu ärgern begann ist der Umstand dass Knoppix Wechselmedien nicht mit ihrem Volume-Namen nach /media mountet, sondern mit ihren Device-Namen. Ein /dev/sdc1 wird also z. B. nach /media/scd1 gemountet. Etwas idiotisch, zumal bereits jede Menge weiterer solcher Namen in /media existieren obwohl noch nichts dort gemountet ist.
+
+Außerdem fiel mir auf, dass zwar dpkg-source installiert ist, nicht jedoch "debuild". Somit kann man nicht mit Bordmitteln *.deb-Pakete aus debsrc-Dateien automatisch bauen lassen. Zumindest das Entpacken und Patchen kann man aber wenigstens dpkg-source überlassen. Zum Glück ließ sich par2 aber davon abgesehen problemlos bauen, welches ich später verwenden wollte.
+
+
+MX Linux
+--------
+
+
+Raspbian Edition
+~~~~~~~~~~~~~~~~
+
+Ich habe 2022-06-04 eine inoffizielle Version von MX Linux für den Raspberry Pi getestet.
+
+Es werden nur Modelle am dem RPi 3 unterstützt, also solche die 64-Bit-fähig sind.
+
+Erste Erkenntnis: Das ist anders als die x86-Version *kein* Live-System, sondern ein angepasstes Off-The-Shelf Raspbian. Noch dazu ein altes, da es noch auf Debian "Buster" 10 basiert.
+
+Es gibt keine Verschlüsselung. Alles wird normal und völlig ungeschützt auf die SDXC-Karte gespeichert, wo jeder Dieb es finden und einsehen kann.
+
+Unbrauchbar als ernsthaftes Arbeits-System daher für jeden außer jene welche "nichts zu verbergen haben" und vermutlich auch ihr ganzes Leben auf Facebook ausbreiten.
+
+Vertrauliche Daten sollte man mit diesem System jedenfalls besser nicht speichern oder verarbeiten, wenn sie vertraulich bleiben sollen.
+
+Laufende Prozesse nach der initialen Systemeinrichtung (Locale, Zeitzone, Tastatur etc.):
+
+  RSS CMD
+ 8292 /sbin/init
+ 7744   /lib/systemd/systemd-journald
+ 3924   /lib/systemd/systemd-udevd
+10264   /usr/bin/touchegg --daemon
+ 4388   /usr/sbin/alsactl -E HOME=/run/alsa -s -n 19 -c rdaemon
+10568   /usr/lib/udisks2/udisksd
+ 2800   /usr/sbin/rsyslogd -n -iNONE
+ 7804   /usr/sbin/ModemManager --filter-policy=strict
+ 2124   /usr/sbin/thd --triggers /etc/triggerhappy/triggers.d/ --socket /run/thd.socket --user nobody --deviceglob /dev/input/event*
+   80   /usr/sbin/rngd -r /dev/hwrng
+ 7852   /usr/sbin/cupsd -l
+ 2212   /usr/sbin/cron -f
+ 2456   avahi-daemon: running [raspberrypi.local]
+  252     avahi-daemon: chroot helper
+ 5892   /lib/systemd/systemd-logind
+ 3944   /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 7056   /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+15332   /usr/sbin/NetworkManager --no-daemon
+ 4904     /sbin/dhclient -d -q -sf /usr/lib/NetworkManager/nm-dhcp-helper -pf /run/dhclient-eth0.pid -lf /var/lib/NetworkManager/dhclient-*-eth0.lease -cf /var/lib/NetworkManager/dhclient-eth0.conf eth0
+ 8552   /usr/lib/policykit-1/polkitd --no-debug
+ 8792   /usr/sbin/cups-browsed
+12180   /usr/lib/colord/colord
+17272   /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+ 7252   /usr/sbin/lightdm
+56516     /usr/lib/xorg/Xorg -dpi $DPI :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+ 7524     lightdm --session-child 14 17
+12096       fluxbox
+  288         /usr/bin/ssh-agent /usr/bin/startfluxbox
+12640         lxpolkit
+62120         nm-applet
+76480         /usr/bin/python3 /usr/bin/blueman-applet
+55616         xfce4-clipman
+55208         mx-usb-unmounter
+35592         volumeicon -c volumeicon-fluxbox
+ 8300         dunst
+ 7440   /lib/systemd/systemd --user
+ 1788     (sd-pam)
+ 3700     /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+ 6224     /usr/lib/gvfs/gvfsd
+ 6456     /usr/lib/gvfs/gvfsd-fuse /run/user/1000/gvfs -f -o big_writes
+ 7492     /usr/lib/at-spi2-core/at-spi-bus-launcher
+ 3316       /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+ 9224     /usr/bin/pulseaudio --daemonize=no
+ 5136     /usr/lib/at-spi2-core/at-spi2-registryd --use-gnome-session
+12272     /usr/libexec/xdg-desktop-portal
+ 5436     /usr/libexec/xdg-document-portal
+ 4416     /usr/libexec/xdg-permission-store
+15696     /usr/libexec/xdg-desktop-portal-gtk
+ 4672     /usr/lib/arm-linux-gnueabihf/xfce4/xfconf/xfconfd
+ 5968     /usr/lib/bluetooth/obexd
+ 4576     /usr/lib/dconf/dconf-service
+ 9188   /usr/sbin/nmbd --foreground --no-process-group
+ 2556   /bin/login -f
+ 3708     -bash
+13468   /usr/sbin/ntpd -p /run/ntpd.pid -c /etc/ntpsec/ntp.conf -g -N -u ntpsec:ntpsec
+16584   /usr/sbin/smbd --foreground --no-process-group
+ 5264     /usr/sbin/smbd --foreground --no-process-group
+ 4032     /usr/sbin/smbd --foreground --no-process-group
+ 7796     /usr/sbin/smbd --foreground --no-process-group
+  128   /usr/bin/hciattach /dev/serial1 bcm43xx 3000000 flow -
+ 4292   /usr/lib/bluetooth/bluetoothd
+30348   tint2 -c /home/pi/.config/tint2/tint2rc
+  400     sh -c xfce4-appfinder
+40052       xfce4-appfinder
+ 3408         sudo -AE rp-prefapps
+35012           rp-prefapps
+10780   wmalauncher --command mxfb-help --icon /usr/share/icons/Moka/48x48/apps/wine-help.png --background-color black --border-color black --window-size 48 --tooltip-text Manual --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+16604   wmalauncher --desktop-file mx-tools.desktop --background-color black --border-color black --window-size 48 --tooltip-text MX Tools --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+18664   idesk
+16404   wmalauncher --desktop-file featherpad.desktop --background-color black --border-color black --window-size 48 --tooltip-text Text editor --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+10700   wmalauncher --desktop-file rc_gui.desktop --background-color black --border-color black --window-size 48 --tooltip-text Raspberry Pi Config --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+10680   wmalauncher --desktop-file lxtask.desktop --background-color black --border-color black --window-size 48 --tooltip-text Tasks --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+16564   wmalauncher --desktop-file libreoffice-startcenter.desktop --background-color black --border-color black --window-size 48 --tooltip-text Office suite --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+16964   wmalauncher --desktop-file deadbeef.desktop --background-color black --border-color black --window-size 48 --tooltip-text Music --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+10976   wmalauncher --desktop-file vlc.desktop --background-color black --border-color black --window-size 48 --tooltip-text Multimedia --tooltip-show-delay 250 --tooltip-text-padding 3 --tooltip-border-size 3 --tooltip-foreground-color black --tooltip-background-color #d3d3d3
+ 2200   /usr/lib/rtkit/rtkit-daemon
+81956   /usr/bin/python /usr/bin/apt-notifier.py
+10872   conky -c /home/pi/.conky/MX-Cowon/MX-Cowon_more_sys_small
+
+Ethernet, Wi-Fi und sogar Bluetooth liefen "out of the box" und waren per Default auch aktiv. Wenigstens war Bluetooth dabei nicht auf "sichtbar" eingestellt.
+
+Samba und avahi laufen ebenso. Auch Pulseaudio, Networkmanager, Modemmanager, ntpd, cupsd und sogar colord.
+
+Auch udisks2, logind, rtkit, at-spi-bus-launcher und consolekit laufen.
+
+Kurzum, es gibt kaum einen fetten Dienst der nicht laufen würde, einzig systemd glänzt - zum Glück - durch Abwesenheit.
+
+Schlank ist anders! Aber... Hauptsache kein systemd. Außerdem hat der RPi4 zumindest genug RAM für solche Späße. Auf dem RPi3 würde es aber bereits eine ungeliebte Verschwendung darstellen. 
+rsyslogd loggt fröhlich die SDXC-Karte zu einem frühen Tode. Die MX-Maintainer haben offensichtlich keine Lehren aus dem Tesla-Vorfall mit den zu Tode geschriebenen Flash-Speichern wegen exzessivem Logging gezogen.
+
+Die Anpassung der Locale funktioniert zwar im Großen und Ganzen, ein augenfällige Mangel ist aber ausgerechnet die Uhrzeit die einem natürlich stark ins Auge sticht: Sie zeigt immer nur das 12-Stunden-Format an. Das ist sehr irritierend in einer deutschen Locale. Zwar nur eine Kleinigkeit die sich sicher manuell reparieren lässt, aber ein deutlicher Makel in den ansonsten recht vorbildlichen Systemeinstellungs-Dialogen.
+
+Die grafische Oberfläche startete sofort. Es handelt sich um ein den Openbox WM mit tint2 als Panel, das ein "Material Design" Icon-Theme verwendet. Sprich, langweilige aus fetten einfärbigen Linien zusammengesetzte Symbole die wie ein Dreck aussehen, verglichen mit "herkömmlichen" bunten Designs wie denen von KDE oder Tango. Damit es nicht zu hübsch wird, wurde dabei hellgraue Linienfarbe auf dünkler grauem Hintergrund verwendet. Dieselben Farben werden auch für die Schrift verwendet. Optisch hat das Ganze daher ungefähr den Charme eines Aschenbechers, den man über verdrecktem Asphalt ausgeleert hat.
+
+Ich bildete mir zwar ein gelesen zu haben dass MX auf Xfce aufsetzen soll, aber ehrlich gesagt ist mir diese Kombination ohnehin wesentlich lieber. Tint2 frisst weniger Ressourcen als die Panels von Xfce. Und Openbox unterstützt das Verschieben von Fenstern mit Kantenwiderstand, was ansonsten nur der Mate, Compiz und PekWM beherrschen (zumindest kenne ich keine weiteren). Das empfinde ich als grundsätzlich dem ansonsten üblichen "Snapping" überlegen, wenn man Fenster anordnen will.
+
+Leider hat die MX-Anpassung den Punkt "Größe ändern" aus dem Kontextmenü der Openbox entfernt, den ich auch immer sehr komfortabel gefunden habe. Aber sie kann es - sicherlich kann man diese Anpassung irgendwie rückgängig machen.
+
+Einer der Nachteile von Tint2 gegenüber den Xfce-Panels sind normalerweise die umfangreicheren GUI-unterstützten Anpassungsmöglichkeiten von Xfce, während man Tint2 nur mit Konfigurationsdateien editieren kann.
+
+Hier haben die MX Maintainer aber ganze Arbeit geleistet, und einen grafischen Editor "MX Dockmaker" zum Editieren von Tint2-Panels implementiert. So hübsch wie das GUI von Xfce zu diesem Zweck ist er zwar nicht, aber hübsch genug und man spart sich das Auseinandersetzen mit Konfigurationsdateien.
+
+Wenn man allerdings tiefer in die Menus hinein geht, endet dies teilweise nur damit dass eine Konfigurationsdatei in einem Texteditor automatisch geöffnet wird. Auf diese Weise gelang es mir schließlich auch, die Anzeige der Uhrzeit auf das 24-Stunden-Format umzustellen.
+
+Da tint2 kein eigenes Startmenü besitzt, haben die MX-Maintainer hier den xfce4-appfinder aufgerufen, ein im Grunde recht komfortables Programm für diesen Zweck. Man kann die üblichen Kategorien auswählen, oder auch alle Anwendungen gemeinsam, die dann in einer Liste (mit Scrollbalken wo erforderlich) angezeigt werden. Ebenso gibt es ein Textfeld um die Ansicht auf solche Einträge zu beschränken in denen dieser Text vorkommt. Allerdings ist der Appfinder kein Menü, sondern ein normales Fenster, Er verhält sich daher anders als man das von einem "richtigen" Startmenü gewohnt ist. Allerdings ist der Unterschied nicht drastisch, und der appfinder bietet dafür zusätzliche Möglichkeiten wie das Anlegen von Bookmarks (Verknüpfungen zu häufig genutzten Menüeinträgen) sowie die Möglichkeit die Einträge zu bearbeiten.
+
+Neben der Openbox als WM kommt aber auch die Fluxbox zum Einsatz. Das wird teilweise automatisch umgeschaltet wenn man andere Themes wählt - oder zumindest sah ich nach einigem Herumkonfigurieren plötzlich erstaunt dass nun die Fluxbox läuft, und nicht mehr die Openbox. Jedenfalls stehen beide zur Verfügung.
+
+Was mir schon nach kurzer Zeit auf den Senkel ging, waren die zahlreichen Tastenkombinationen die für irgendwelche Spezialfunktionen des Desktops bzw. von speziellen MX-Einstellungs-Dialogen beschlagnahmt worden waren. Funktionstaten im mc waren deshalb unmöglich zu benutzen, da statt dessen ständig irgendwelche Einstellungs-Dialoge vom MX aufpoppten. Zum Glück kann man den mc auch mit der Maus steuern.
+
+Aber auch beim normalen Tippen im Terminalfenster kamen mir ständig solche reservierten Tastenkombinationen in die Quere. Kann man zwar sichlich alles irgendwie ausschalten. Aber fürs Erste nervte es jedenfalls gehörig.
+
+Nach dem Booten stellte ich des weiteren fest, dass ich einen SCHWEREN FEHLER gemacht hatte, indem ich das Internet-Gateway nicht deaktiviert hatte.
+
+Denn MX holte sich nicht etwa nur die Zeit aus dem Internet, sondern aktualisierte auch gleich ungefragt "mit apt-get update" die Paketlisten! Wie ich weiß, kostet einen das ja mindestens 13 MB Download-Volumen - zumindest bei Debian 11. Allerdings auch dann nur, wenn man die dpkg-src Zeilen in der sources.list auskommentiert. Sonst kostet es einen das doppelte.
+
+Und a pro pos Debian: Die getestete Version verwendet noch Debian "Buster" 10. Zwar stammt das Image welches ich verwendet habe aus den Vorjahr, aber ich glaube da war Debian "Bullseye" 11 auch schon aktuell.
+
+Ein "apt-get upgrade" machte MX auch gleich automatisch, aber zum Glück führte es dies nicht einfach durch sondern fragte vorher um meine Erlaubnis, so dass ich abbrechen konnte. Denn da hätte es gleich weitere 197 MB runtergeladen.
+
+Als ich dann auch noch sah dass "unattended-upgrades" ebenfalls lief, loggte ich mich hurtig ins Gateway ein um die Gateway-Funktion abzudrehen, bevor "unattended-upgrades" noch auf die Idee kommen würde mir vielleicht einen neuen Bootloader und Kernel runterladen zu wollen, was mich weitere 80 MB kosten würde.
+
+Ich bin nicht sicher was mir die Eigenmächtigkeiten von MX tatsächlich an Download-Volumen gekostet haben, aber immerhin kann ich sagen dass es nicht mehr als 50 MB gewesen sein können, da dies mein Gesamtverbrach seit gestern früh war.
+
+Zur Software-Ausstattung:
+
+* Kein screen, kein tmux, nur xterm.
+* LibreOffice
+* htop, lxtask
+* qpdfview
+* gcc
+* man-Pages, auch für APIs, aber keine speziell für POSIX
+* Thunar ist der Dateimanager
+
+Ungewöhnlich: Eine 20-seitige Anleitung im PDF-Format lag bei, die mit zahlreichen Screenshots und Fotos ausgestattet ist und die wichtigsten Grundlagen vor allem der grafischen Oberfläche erklärt. Das würde man sich auch von anderen Distros wünschen!
+
+Die meisten MX-Einstellungsdialoge sind mit einem Programm namens "yad" implementiert. Wie ich erfuhr, handelt es sich dabei um einen Fork von "zenity", und wird daher wohl vergleichbare Funktionalität bieten.
+
+Die grafische Oberfläche basiert ansonsten auf 3 Säulen:
+
+* Panels die durch tint2-Instanzen implementiert werden
+
+* Desktop-Icons mittels idesk
+
+* Panel-Apps mittels wmalauncher
+
+Jedes Icon in eimem Panel wird dabei durch eine Instanz von wmalauncher implementiert, die 10 MB RAM verbraucht. Wenn man daher 20 Icons auf verschiedenen Panels verteilt, kostet einen das bereits 200 MB RAM. Zum Glück kann man diese Panels aber auch sämtlich abschalten.
+
+Als ich rsyslog während meiner Evaluation stoppen wollte damit er meine SDXC-Karte nicht sinnlos zu Tode schreibt, bekam ich einen Schock als ich eine typische systemd-Meldung zu sehen bekam!
+
+Übles schwanend versuchte ich dann "systemctl" aufzurufen - und es gelang! Von wegen "kein systemd"!
+
+Das gilt dann wohl nur für die Haupt-Edition von MX Linux - der
+Raspbian-Form davon ist ja kein offizielles Projekt.
+
+Ich war erschüttert.
+
+Damit ist MX für den RPi für mich gestorben - weil es ja offensichtlich nichts weiter als ein durch zusätzliche Scripte aufgepepptes Raspbian ist, inklusive dessen systemd.
+
+Ich beendet damit diese Evaluation und werde die Image-Dateien sofort löschen, damit systemd nicht weiterhin meine SDXC-Karte *beschmutzen* kann!
+
+Aber immerhin habe ich einige Einblicke in das GUI von MX gewonnen, das unter dem "echten" MX vermutlich nicht viel anders sein wird.
+
+Dennoch... eine Frechheit!
+
+Zumal MX ja groß damit wirbt kein systemd zu verwenden. Aber... das kommt eben davon, wenn man inoffizielle Forks benutzt. Selber schuld.
+
+Grrr.
+
+
+MX-21.1, x86-Version
+~~~~~~~~~~~~~~~~~~~~
+
+Nach meinem Debakel mit der Raspi-Version testete ich die x86 Version. Ich hatte mir dabei jene Variante mit Fluxbox anstatt Xfce heruntergeladen, welche 32-bit-fähig ist. Konkret: MX-21.1_fluxbox_386.iso
+
+Beim Versuch dies auf meinem alten Notenbook zu booten verweigerte es sofort den Dienst: Man benötigt nicht nur ein 32-Bit-System, sondern es muss auch noch PAE-fähig sein. Wäre nett gewesen, wenn sie das gleich im Dateinamen dazu geschrieben hätten.
+
+Für ältere Systeme wird empfohlen statt dessen antiX zu benutzen - was einen sehr freut wenn man gerade MX sinnlos herunter geladen hat.
+
+Der Bootvorgang und das Persistenz-System von MX ist mehr oder weniger identisch zu antiX. Die beiden Distros kooperieren auch eng mit einander.
+
+Beide Distros basieren auf Debian und verwenden dessen offizielle Repositories für ihre Pakete, fügen diesen jedoch zusätzliche Repositories für MX- bzw. antiX-spezifische Zusatzpakete hinzu.
+
+Der große Unterschied sind die unterschiedlichen Kernels und somit die Unterstützung auch älterer Systeme, sowie die Auswahl der vorinstallierten Debian-Pakete auf dem Live-CDROM bzw. Live-USB-Stick.
+
+Da der Boot- und Persistenzmodus von MX nahezu identisch zu dem von antiX ist, will ich hier nicht alles wiederholen was ich diesbezüglich bereits im Review von antiX geschrieben habe - bei Bedarf dort nachsehen.
+
+Statt dessen will ich hier nur auf die weiteren Unterschiede von MX gegenüber antiX eingehen, sobald sie mir aufgefallen sind. Auf den ersten Blick erkennt man keine, bis auf den Namen und das Artwork der optischen Aufmachung natürlich.
+
+
+Puppy Linux
+-----------
+
+Precise Puppy 5.7
+~~~~~~~~~~~~~~~~~
+
+Bootet nicht. Der Stick zeigte zwar ein CD-ROM-Dateisystem an, doch offenbar nicht bootfähig. Ich versuchte "isobybrid"... nutzte hier jedoch auch nichts. Da muss man wohl ein wenig mehr Arbeit investieren und selbst Hand anlegen.
+
+
+fossapup64
+~~~~~~~~~~
+
+Dann kopierte ich das neue fossapup64 über den USB-Stick.
+
+Doch es bootete nicht. Zwar schon in den GRUB. Aber dem fehlten offensichtlich die erforderlichen Treiber zum Zugriff auf den USB-Stick, so dass er nur andere Laufwerke sah wo das Puppy nicht drauf war. Da werde ich wohl erneut versuchen müssen, selber einen Bootloader zu installieren.
+
+
+SliTaz
+------
+
+2022
+~~~~
+
+Ich kopierte das Image "slitaz-rolling-core-5in1.iso" mit der geradezu lächerlichen Größe von nur 66 MB auf einen USB-Stick.
+
+Doch trotz der geringen Größe bootete es einwandfrei. Man kann bereits im Bootloader die Spracheinstellungen auswählen, so dass man dann nach dem Hochfahren nicht in dem Einstellungs-Menüs herumkriechen muss. Überhaupt kann man mehrere Settings über die Menüs des Bootloaders scheinbar stufenweise dazu schalten - keine Ahnung wie sie das implementiert haben. Es ist jedenfalls ein ungewöhnliches, aber sehr praktisches Feature, von dem es schade ist dass andere Live-Distros es nicht ebenfalls unterstützen.
+
+Es sieht genau so untadelig aus wie die deutlich ältere Version die ich neulich testete. Allerdings ist sein Kernel 3.16 trotzdem immer noch nicht gerade der modernste Schrei...
+
+Es kopierte sich beim Starten auch ohne zusätzliche Aufforderung komplett in den RAM - ich hätte noch ein alternatives "loram"-ISO herunter geladen für den Fall dass man das nicht will da es ein ganz uralter Rechner ist der nicht einmal diese 67 MB RAM opfern will.
+
+Die Oberfläche ist wie gehabt auf Openbox basierend, mit Kantenwiderstand anstatt Snapping wie ich erneut wohlwollend feststellte.
+
+Bei der Ausstattung musste natürlich sehr gespart werden angesichts der geringen Größe. Dennoch ist erstaunlich viel nützliches dabei, wobei natürlich immer Abstriche gemacht werden.
+
+So hat es z. B. nur dem Midori als einzigen Browser - nicht einmal einen Lynx. Aber der ist mit 2 MB installiert dennoch sehr schlank und kann offensichtlich auch genug JavaScript damit das tazpanel damit funktioniert. Außerdem ist er anders als Lynx & Co einfach zu bedienen und auch für Anfänger geeignet.
+
+Das tazpanel dient nach wie vor als Hauptbestandteil der Systemkonfiguration und sieht immer noch sehr hübsch aus, ohne sinnlos überzüchtet zu sein.
+
+Besonders beeindruckend finde ich den Punkt zur Paketverwaltung, wo man nicht nur alle bereits installierten Pakete ansehen kann (sogar nach Kategorien gefiltert wenn man will). Zwar gibt es für jedes Paket nur eine einzeilige Beschreibung, während Debian-Pakete eine beliebig lange Beschreibung erlauben. Dafür punktet das tazpanel aber damit dass es auch alle Abhängigkeiten schön anzeigt - zum Anklicken so dass man gleich zum entsprechenden Paketeintrag springt. Außerdem zeigt es standardmäßig eine Liste aller Dateien an welche dieses Paket installiert hat - diese Funktion fehlt aptitude bis zum heutigen Tag. Doch besser noch, mit einem weiteren Mauklickt kann man das "Rezept" ansehen, ein kleines Script welches das Paket gebaut hat! Und neben den normalen Abhängigkeiten werden auch die Bauabhängigkeiten angzeigt. Die Frage ist nun ob man beim Download zwischen Binär- und Quelltextpaketen wählen kann. Sollte das der Fall sein, wäre das echt beeindruckend, sozusagen Gentoo Light! Aber auch so: Sehr nett.
+
+Auch ein Taskmanager und Anzeige der Mount Points sowie Platzbelegung aller Dateisysteme sind natürlich im Panel enthalten. Sogar ein Terminal! Allerdings ist das schwach, vor allem da es eine fixe höhe hat während alle anderen Ansichten des tanzpanels sich an die Größe des Broweserfensters anpassen.
+
+A pro pos Terminal - es gibt weder ein "screen" noch ein "tmux". Aber dafür gibt es das "Sakura Terminal", eine auf der libvte aufbauende (angeblich) sehr schlanke Terminal-Implementierung. Anders als das - ebenfalls vorhandene - xterm bietet es aber Tabs. Somit kann man diese als Ersatz für einen Terminal-Multiplexer verwenden, obgleich nur unvollständig da sie sich anders als screen- und tmux-Instanzen nicht schachteln lassen, was ich ständig verwende. Aber man kann sicherlich noch entprechende Pakete nachinstallieren, also kein grundsätzliches Problem.
+
+Der Großteil der mitgebrachten restlichen Software basiert auf Busybox oder LXDE. So wird das LXDE Panel zusätzlich zur Openbox verwendet, was zumindest den Vorteil hat dass man ein automatisch aktualisiertes Startmenü hat und nicht ständig irgendwelche Scripte zum Aktualisieren des Menüs aufrufen muss wenn man zusätzliche Programme installiert (oder welche entfernt). Außerdem ist das lxpanel relativ mächtig und bietet deutlich mehr als die Fluxbox mit der ich nun schon einige Jahre lebe.
+
+Etwas entsetzt war ich hingegen als ich sah dass auch udisks2 läuft! Allerdings wurde dieses *vernünftig* konfiguriert, so dass es nichts ungefragt einfach mountet. Damit kann man leben. Als Dateimanager dient natürlich PcManFM, und wegen udisk sowie gvfs-Daemonen kann es auch problemlos Laufwerke und USB-Sticks mounten oder unmounten. Allerdings sah ich später, dass das wohl nur für lokale Festplatten gilt. Wechseldatenträger hingegen werden per Default sehr wohl sofort gemountet. Allerdings kann man dies im PCManFM konfigurieren, und dort auch deaktivieren. Also immer noch OK.
+
+A pro pos GVFS: Von dieser Daemonenbrut laufen nur sparsame 3 Prozesse, nicht dutzende wie sonst üblich. Sie wurden offensichtlich auf das Nötigste reduziert so dass der PCManFM immer noch alles tun kann was er anbietet - aber nicht mehr. Einer der Daemonen dient dazu der Veraltung des Papierkorbs - ich hoffe den kann man noch irgendwie abstellen. Als ich im PCManFM die Verwendung des Papierkorbs abstellte, terminierte der Daemon deswegen aber noch nicht. Na ja, vermutlich erst beim Neustart. Falls ich es irgendwie schaffe meine Änderungen permanent zu machen!
+
+Ansonsten läuft von den "unnötigen" Daemonen nur noch polkit - aber auch das wohl nur damit udisks2 funktionieren kann. Also soll es. Sonst laufen nur sinnvolle Daemonen.
+
+Als display manager fungiert "slim". Den hatte ich früher auch schon mal im Einsatz, dann aber wieder entfernt weil der gute alte xdm es ebenso tat und noch weniger RAM verbraucht. Aber relativ schlank ist slim auch.
+
+Weiters fiel mir auf, dass nur relativ wenige Kernel-Module geladen wurde. Werden auch im tazpanel angezeigt. Trotzdem funktioniert offensichtlich alles wichtige. Offensichtlich lädt slitaz nicht auf Verdacht hin alles mögliche was man brauchen könnte, sondern wirklich nur das tatsächlich benötigte. Das ist erfreulich. Im übrigen interessant wie sich die ganzen Kernel-Module in diesem keinen ISO-Image ausgehen: Meine eigene Datei mit den Kernel-Modulen allein sind schon über 40 MB groß - und das obwohl sie symbol-gestrippt wurden, und danach noch das Archiv xz-komprimiert! Hmmm... wahrscheinlich waren di Module in Kernel 3.16 noch deutlich kleiner.
+
+Trotzdem seltsam dass sie ein so altes Kernel verwenden. Ob da wirklich schon alle Security-Lecks geschlossen wurden? Aber das Copyright behauptet: Die Version sei aus 2022. Kann daher nicht wirklich so alt sein. Nun ja, es ist ja auch ein "rolling core". Vielleicht bekomme ich ein neueres Kernel sobald ich Update.
+
+Trotz aller Schönheit hatte slitaz jedoch ein böses Problem: Es war nur der dropbear ssh client + server installiert. Was dazu führte dass der SSH-Client sich nicht einmal bei xrpi2 einloggen konnte, da er keinen gemeinsamen Key-Exchange Algorithmus unterstützt.
+
+Konkret kann man bei dropbear sowohl MAC- als auch Cipher-Algorithmen auswählen - jedoch keinen Kex-Algorithmus. Es ist also einer fest eingebaut, und offensichtlich keiner dem ich traue denn sonst würde mein SSH-Server es akzeptieren. Blöde Sache. Natürlich, man kann sich sicherlich OpenSSH nachinstallieren. Aber derzeit ist es jedenfalls - unverändert in seinem Originalzustand - für mich leider unbrauchbar.
+
+Später versuchte ich SliTaz in einer VM zu booten und auf eine virtuelle Disk zu installieren. Das war so langsam dass ich es schließlich entnervt aufgab. Denn KVM ließ sich nicht benutzen da slitaz offenbar irgendwelche Befehlssatzerweiterungen benutzte, die meine CPU nicht unterstützt. Daher musste ich die Software-Emulation von QEMU nutzen, die natürlich sehr langsam ist. Warum ich slitaz zuvor nativ auf derselben CPU hatte booten können, bleibt natürlich eine interessante Frage.
+
+Es war aber nicht nur die Geschwindigkeit welche das Problem war: Sondern der Installations-Assistent für Harddisk-Installation ging ab einem bestimmten Punkt einfach nicht mehr weiter. Es war ein Button vorhanden um weiter zu gehen und man konnte ihn drücken. Doch nichts ereignete sich.
+
+Weiters fiel mir auf, dass slitaz QEMU/KVM offensichtlich nicht nativ unterstützt: Es liefert keine paravirtualisierten Treiber dafür mit. Man muss daher die Treiber für echte Hardware benutzen, deren Emulation natürlich deutlich langsamer ist. Freilich mag auch das nur eine Folge der geringen Größe des Live-Images sein, schließlich sind paravirtualisierte Treiber nicht zwingend zur Funktion erforderlich. Aber sie hätten bei der Installation sehr geholfen.
+

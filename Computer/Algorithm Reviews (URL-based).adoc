@@ -1,0 +1,24 @@
+http://example.org/
+## Format, Keywords
+2021-11-07
+Format of THIS file: URL, keywords, date of review/update.
+
+Multiple Keywords (actually: phrases) can be used, comma-separated, ordered by decreasing relevance.
+
+The "##"-Line is optional, as well as the date-line.
+
+https://www.heise.de/hintergrund/Taproot-kommt-Erstes-grosses-Bitcoin-Update-seit-2017-6251737.html?seite=2
+## Schnorr signature, ECDSA
+2021-11-07
+Schnorr-Signaturen bieten einige Vorteile gegenüber ECDSA:
+
+* Diese sind nach dem Random-Oracle-Modell beweisbar sicher, wenn eine hinreichend zufällige Hash-Funktion verwendet wird und das in der Signatur verwendete Problem des diskreten Logarithmus elliptischer Kurven hinreichend schwer ist. Für ECDSA gibt es solchen einen Beweis nicht.
+
+* Schnorr-Signaturen sind nicht formbar (Non-Malleability). Einfach ausgedrückt bedeutet die Formbarkeit von Signaturen, dass es technisch möglich ist, die Signatur einer Transaktion zu ändern, bevor sie bestätigt wird.
+
+* Signaturen werden in Zukunft nur noch 64 Byte statt bisher bis zu 72 Byte groß sein.
+
+* Schnorr codierte Public-Keys sind nur noch 32 Byte statt 33 Byte groß.
+
+Besonders spannend ist die Linearitätseigenschaft von Schnorr-Signaturen. Diese ermöglicht das Konzept von Multisignaturen mit "Key-Aggregation". Im Wesentlichen können dadurch mehrere Unterzeichner einer Transaktion mit mehreren Unterschriften ihre öffentlichen Schlüssel zu einem aggregierten öffentlichen Schlüssel kombinieren. Dies war mit ECDSA nur über Umwege durch P2SH/P2WSH möglich. Dieser kombinierte öffentliche Schlüssel lässt sich von außen dann nicht mehr von einem herkömmlichen Schlüssel (Single-Sig) unterscheiden.
+

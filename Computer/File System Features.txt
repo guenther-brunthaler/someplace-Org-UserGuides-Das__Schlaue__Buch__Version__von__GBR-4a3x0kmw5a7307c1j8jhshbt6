@@ -1,0 +1,173 @@
+Supports quotas?
+ext3: x
+JFS: ?
+ReiserFS3: -
+XFS: x (user and group)
+NILFS2: -
+
+What is logged/journaled?
+ext3: metadata and optionally file data
+JFS: metadata only
+ReiserFS3: metadata and optionally file data
+XFS: metadata only
+NILFS2: everything
+
+Supports ACLs?
+ext3: x
+JFS: x
+ReiserFS3: x
+XFS: x
+NILFS2: -
+
+Commitment by active developers:
+ext3: excellent
+JFS: x
+ReiserFS3: Frozen. Only bugfixing.
+XFS: x
+
+Storage allocation quantum:
+ext3: block-based, no suballocation
+JFS: 512 to 4096 byte blocks, no suballocation
+ReiserFS3: can pack multiple small files into a single block
+XFS: Fixed (?) 512 to <MMU-pagesize> byte blocks, no suballocation
+NILFS2: typically 8 MB allocation units, but may contain data from many files. Generally NILFS2 only incurs neglectable storage overhead for small files.
+
+Storage allocation method:
+ext3: multi-level i-nodes
+JFS: extent-based
+ReiserFS3: fixed-sized blocks with suballocation for small files and file tails
+XFS: extent-based
+NILFS2: All writes are lumped together into allocation units as they occur, leading to potentially heavy fragmentaton. The storage media is written to only as a circular log.
+
+Significant i-node overhead?
+ext3: x
+JFS: Dynamically allocated, but cannot be reduced once allocated
+ReiserFS3: -
+XFS: ?
+NILFS2: -
+
+Larger Reserved areas of raw partition space?
+ext3: x (5 % reserved for root by default, FS gets slow when less than 10 % are free)
+JFS: ?
+ReiserFS3: -
+XFS: ?
+NILFS2: Current creation tools do not allow the reserved percentage to be zero, but it can be as low as 1 %.
+
+Can grow (without requiring a backup/restore for this)?
+ext3: x (even while mounted)
+JFS: x
+ReiserFS3: x
+XFS: x
+NILFS2: x (only when mounted; in fact offline resizing is not supported)
+
+Can shrink (without requiring a backup/restore for this)?
+ext3: x (even while mounted)
+JFS: -
+ReiserFS3: x
+XFS: -
+NILFS2: x (only when mounted; in fact offline resizing is not supported) However, shrinking may be slow and likely requires re-writing every allocated data are in the filesystem.
+
+Ease of repair?
+ext3: x
+JFS: ?
+ReiserFS3: - (can get badly corrupted)
+XFS: - (problems reported for power faulure).
+NILFS2: - (there is no fsck-utility available yet. However, as NILFS2 is log-structured, most corruptions can be fixed automatically when it is mounted the next time)
+
++++
+http://www.debian-administration.org/articles/388
+2006-11-15,
+I personally lost half of my homedir to XFS because it does only metadata journaling. Sure, all my files were there because of the journaling, but they were filled with binary zeroes. Oh and yes, the XFS FAQ says that this may happen (well at least it did when I was searching for an explanation of that behaviour back then).
++
+Times of over two months to 'fsck' a filesystem have been reported for 'ext3' and XFS sometimes requires more than 4GB of memory to run 'fsck' (it is possible to create and use an XFS filesystem on a system with a 32 bit that can only be 'fsck'ed on a 64 bit CPU, and at least one case has actually happened).
++
+If I start my music player, download some large video and get my mail and I suddenly have a power outage then all those files should be intact when I switch my computer back on. With XFS my playlist might be 0000..., my download might be 0000... and my mails are 0000... and no longer on the server. With ReiserFS my playlist will be part of the video, parts of my mails might be in the video and the mails could have some other garbage in them. This all assumes that you don't use data=journal for reiser and don't use sync mode with a decent harddrive for XFS but still, some time ago there was no data=journal and maybe you just don't have a decent harddrive because your boss wants to spend less money.
++
+Also, the reason why JFS etc. leave more free space after formatting than 'ext3' is obvious, but is not explained (dynamic inode allocation), and so is why some like JFS have a little more used space after all files are deleted (the table containing the dynamically allocated inodes can only grow but not shrink).
++
+I've tried XFS, and I honestly think it's pretty slow. I used it on a similar machine as mine, and un-tarring the Linux source tree took much longer on the XFS FS than on my ReiserFS (v3.6) partition. Also, XFS caches a lot of data in RAM, so there's high risk of data loss upon improper shutdowns.
++
+This seems a reasonable conclusion from several tests I have seen: XFS has relatively high overheads but scales better than others, so it is less suitable for small scale filesystems.
++++
+http://de.wikipedia.org/wiki/XFS_(Dateisystem)
+2006-11-15,
+Das von XFS geführte Journal wird seriell abgelegt (es erfolgt keine Ablage in komplexen Datenstrukturen wie Bäume oder Heaps). Dabei kann das Journal sowohl in dafür reservierten Bereichen auf dem entsprechenden Datenträger abgelegt oder auch auf externen Speichermedien geführt werden. XFS fügt Transaktionen auf dem Dateisystem jedoch asynchron (der Dateisystem-Treiber arbeitet blockierungsfrei) zum Journal hinzu. Dadurch können Operationen schneller durchgeführt werden als auf vergleichbaren Systemen, im Falle einer Störung (Stromausfall) können aber einige Eintragungen im Journal fehlen.
+
+Eine an einen Fehlerfall anschließende Überprüfung des Dateisystems wird jedoch zumindest eine Konsistenz wiederherstellen und Datenbereiche, die nicht geschrieben werden konnten, durch Nullen auffüllen. Dadurch sind mögliche Fehler durch "Datenreste" ausgeschlossen.
++
+XFS benutzt im Gegensatz zu anderen Dateisystemen keine Blöcke fester Größe sondern Blöcke variabler Größe. Informationen über freie Speicherbereiche werden in B+-Bäumen abgelegt, wodurch es möglich ist, passende Speicherbereiche zu finden und so eine Fragmentierung größtenteils zu vermeiden.
+
+Ein weiterer Vorteil dieser variablen Blockgröße ist, dass sowohl kleine als auch große Dateien relativ gut verwaltet werden können.
++
+Neben der größenbasierten Allokation bietet XFS auch noch eine weitere Verringerung möglicher Fragmentierung durch verzögerte Allokation. Dabei werden Dateien möglichst lange im Speicher gehalten, bevor sie auf den Datenträger geschrieben werden. Dadurch erhöht sich die Wahrscheinlichkeit, dass der XFS-Treiber einen passenden Speicherbereich finden und so auf Fragmentierung verzichten kann. Allerdings ist dadurch die Gefahr eines Datenverlustes, beispielsweise durch Stromausfälle, größer.
++++
+http://www.heise.de/open/news/foren/S-Re-ZFs-verlaesslich-wie-erkennt-ZFS-welcher-Teil-des-Mirrors-OK-ist/forum-252699/msg-23338600/read/
+ZFS speichert Daten in größeren Blöcken als andere Filesysteme (z.B. 128kb bei ZFS statt z.B. 4kb bei DOS -- beides jedoch konfigurierbar). Jeder Block hat eine Checksumme.
++++
+http://www.heise.de/open/news/foren/S-ZFs-verlaesslich-wie-erkennt-ZFS-welcher-Teil-des-Mirrors-OK-ist/forum-252699/msg-23337835/read/
+Ich habe mich vor einiger Zeit mal mit ZFS gespielt - bin dabei aber eher auf die Schnauze gefallen:
+
+Ich hatte einen Mirror angelegt - eine Platte im Rechner verbaut, eine per eSATA angeschlossen. Ich hätte erwartet, dass ZFS automatisch erkennt, wenn die externe Platte angeschlossen ist und anfängt die externe Platte zu synchronisieren. Das hat auch sehr oft funktioniert - aber irgendwie nicht immer.
+
+Immer wieder hat ZFS behauptet, dass beide Versionen einer gespiegelten Datei zerschossen sind - und die Datei entsprechend nicht mehr wiederhergestellt werden kann. (Anmerkung: Ich habe die externe Platten *nicht* im laufenden Betrieb abgezogen/angesteckt - sondern nur wenn das ZFS Laufwerk unmonuted war) Entsprechend - Datenverlust!
+
+Funktioniert sowas generell nicht? Woran erkennt ZFS geschossene Dateien? In meinem Fall wären eigentlich beide Kopien OK gewesen (zumindest was der Mirror "OK" bevor ich die externe Platte abgeschaltet hatte)
++
+Nimm doch einfach statt Linux mal Solaris - da ist ZFS komplett implementiert.
+
+Linux soll ja schon Probleme damit haben, wenn nach einem Reboot mehrere über USB angeschlossene Platten plötzlich mit anderer ID erscheinen.
++++
+http://www.heise.de/open/news/foren/S-und-was-ist-mit-dem-vmalloc-problem/forum-252699/msg-23358022/read/
+5. April 2013,
+und was ist mit dem vmalloc problem ??? [...] als ich meinen neuen server installiert habe, zfs einmal ausprobiert und das ganze endete sehr schnell mit einem absturz, weil  vmalloc zu klein war [...] für den x-server meiner grafikkarte mußte ich den parameter vmalloc=256M benutzen [...] aber jeder versuch den speicher auf 512MB oder mehr zu erhöhren hatte einen serverabsturz zur folge, mit 1 GB ist er dann erst gar nicht mehr hochgefahren! solange zfs also einen größeren vmalloc-bereich benötigt, als das betriebssystem bereitstellen kann, ist es für mich absolut unbrauchbar.
++
+Das Betriebssystem kann das ja...
+
+Vielleicht kann es Linux nicht.
++++
+http://rudd-o.com/linux-and-free-software/ways-in-which-zfs-is-better-than-btrfs
+07 Apr 2013,
+[How ZFS continues to be better than btrfs]
+ZFS keeps winning over btrfs on many fronts. Here's a short list that explains exactly how [...] btrfs does not allow you to organize subvolumes.  Subvolumes appear where you created them (whether through creation or snapshotting), and you can't move or rename them [...] ZFS [...] you can rename and move them around freely, and you can reconfigure how they attach to your VFS anywhere, including points outside of the mount point where the pool was attached originally. Also, snapshots do not attach themselves to the VFS automatically [...] Want to snapshot a ZFS file system and all its children together?  It's one command. You can snapshot fifty or five thousand file systems this way. Not possible with btrfs [...] One powerful feature of ZFS file systems is that any property set on it -- including the mount point -- will inherit to its children by default. Say you want compression on all your file systems but a specific one.   No problem -- enable it on the root and disable it on the one you don't want to compress data [...] btrfs does not automatically mount file systems [...] you have to register it in the fstab [...] ZFS automatically mounts each file system based on the mountpoint property assigned to it. Since the mountpoint property is inherited too (but overridable), all child file systems are mounted at the right place as well. This means you can forget about having to change fstab with ZFS, if you so choose [...] btrfs cannot show you how much disk space is being referred to by each subvolume [...] ZFS can, and it will do so instantaneously, regardless of the size or amount of your filesystems [...] ZFS distinguishes snapshots from file systems [...] doesn't auto-mount snapshots or allow modifications to it, unless you request otherwise [...] This lack of clutter makes ZFS more efficacious for you to manage large numbers of snapshots with large numbers of file systems [...] ZFS lets you specify compression and other properties per file system subtree [...] ZFS is more stable [...] btrfs has nothing equivalent to RAID5. You can only do RAID10, RAID1 and RAID0.  ZFS has them all plus a RAID5 implementation called RAIDZ that is invulnerable to the write hole problem (which will make you lose your entire array under certain circumstances [...] ZFS lets you mirror an entire pool or subtrees of that pool by incrementally transferring changed data between snapshots.  btrfs does not have that yet [...] ZFS uses atomic writes and barriers [...] we do know of many btrfs pools that have gone bad, and of btrfs inconsistencies that have caused kernel panics [...] Unlike btrfs, which is limited to the system's cache, ZFS will take advantage of fast SSDs or other fast memory technology devices, as a second level cache (L2ARC) [...] ZFS has the ability to designate a fast SSD as a SLOG device [...] ZFS supports thin-provisioned virtual block devices [...] ZFS (in its ZFS on Linux incarnation) lets you allocate block devices called ZVOLs backed by portions of your pool.  ZVOLs are thin-provisioned, so you can create any number of them, and create any kind of file systems on top of them.  TRIM commands from clients using those volumes release unused space on the ZVOLs back to the pool, so you can continue enjoying the advantages of thin provisioning [...] ZFS can save you terabytes by deduplicating your data [...] Yes, it's memory-hungry, and yes, it can reduce your write performance a bit. But at least you can use it. btrfs?  Nope.
++
+http://www.reddit.com/r/linux/comments/rjh5q/why_zfs_continues_to_be_better_than_btrfs
+Just about everything he says btrfs can not do, it actually can. While you do mount the default volume, typically under /mnt, which does contain all subvolumes, this is really just for management purposes. You can mount the individual subvolumes or snapshots wherever you want [...] You specify compression per subvolume on btrfs, too [...] ZFS supports thin-provisioned virtual block devices - So does btrfs [...] BTRFS has the equivalent of raidz in the current dev tree. Should be out in Linux 3.4 [...] 
++++
+http://lwn.net/Articles/342892/
+[A short history of btrfs]
+[Pro Btfs-Artikel]
++++
+http://raid6.com.au/posts/fs_nilfs2_linux-3.0/
+2013-03-13,
+NILFS2 has much smaller code base than Btrfs. Unlike Btrfs NILFS2 is not overburdened with to-be-completed features [...] NILFS2 design is elegant [...] Distinct feature of NILFS2 is automatic snapshotting [...] One of the confusing and inconvenient aspects of NILFS file system is difficulty to understand potential availability of free space [...] NILFS reports only the amount of immediately available free space. For example if 50% of all files in NILFS partition are deleted, free space won't be released until nilfs_cleanerd process rewrite all remaining data which may take hours or days.
+
+This is interesting: whatever change is introduced to NILFS, whenever renaming or deleting a file it will reduce the amount of immediately available free space.
+Eventually nilfs_cleanerd will reclaim free space but it may happen much later so NILFS is under constant threat of running out of disk space.
+Obviously NILFS is not suitable for database or any other IO demanding workflow because even constantly working nilfs_cleanerd may not be releasing free space fast enough. Constantly working nilfs_cleanerd should be expected to negatively affect performance. That's why nearly all NILFS benchmarks that don't have nilfs_cleanerd running in background are worthless because they demonstrate "ideal" performance rarely seen in practice [...] nilfs_cleanerd will never stop on nearly full file system when there is no way to reclaim free space up to configured threshold.
+
+nilfs_cleanerd can not continue if interrupted. It will start all over if computer is rebooted or file system re-mounted. Practically if it takes 3 days to rewrite data in NILFS partition to reclaim free space, restarting will add three more days until free space will be available. NILFS is best for continuous (uninterrupted) operations on stable hardware.
+
+It is hard to understand how much free space is potentially available. For example when many files were just deleted from NILFS partition the amount of potential free space (max_free_space - size_of_all_files) is not advertised so it is hard to determine if enough data was deleted to clear space for something to be copied to partition.
+
+It may be difficult to estimate the safe amount of free space in NILFS partition [...] Reliability [...] we used to test NILFS2 had a hardware problem [...] All the time NILFS was actively used and most of the time nilfs_cleanerd was running. After each reboot we verified integrity of all the data. Remarkably not a single corruption or data loss was found.
+
+There is no fsck utility available for NILFS. It's been argued that such utility could be useful because there are still some fixed areas used by file system meta data. However log-structured nature of NILFS is remarkably effective with recovery after failure. It takes longer to mount NILFS after crash but the file system is always consistent and discard only last unfinished operation(s).
+
+Generally NILFS is good enough on Linux kernel starting from version [...] 3.2 and newer [...]
++++
+http://www.google.at/url?q=http://www.fsl.cs.stonybrook.edu/docs/smr/shingled_nilfs2_eval.pdf&sa=U&ved=0CB8QFjACahUKEwi93tSo5MvHAhUGaRQKHdtkBVk&usg=AFQjCNF4jpqtPIuSdx_xl7w07vVf9KYweg
+~2010,
+The LTP tests confirm that Nilfs2 on the SMR disk is stable and can be used for normal workloads. Overall there were no errors observed for normal working conditions [...] Garbage collection is one of the main costs in any log-structured file system like Nilfs2. The performance of the file system when garbage collection is running in parallel should be determined to account for performance when the disk is nearly full. When Nilfs2’s configuration was modified to run garbage collection continuously on the regular disk, there were kernel errors observed under heavy workload spanning four times the available main memory. These errors need to be investigated in more detail and fixed to make Nilfs2 in Linux more stable while garbage collection is done under heavy load conditions.
++++
+http://www.phoronix.com/scan.php?page=article&item=dragonfly_hammer&num=2
+2011-01-07,
+The disk read performance with BlogBench did the worst by far with the HAMMER file-system. When maintaining the same DragonFlyBSD 2.8.2 stack but switching from HAMMER to the UFS file-system, the performance was actually improved by nearly five times. Interestingly though, UFS on PC-BSD 8.1 was much faster than UFS on DragonFlyBSD either due to differences in the UFS implementation or with the disk/SATA sub-system between these distinct BSD operating systems. Like the HAMMER results, the performance of PC-BSD with a root ZFS file-system was actually slower than using UFS. Meanwhile, all of the tested Linux file-systems were much faster than ZFS and HAMMER on BSD. The performance of EXT4 and Btrfs were neck-and-neck.
+
+While HAMMER did not have any advantages over UFS when it came to the read performance in BlogBench, the HAMMER write performance in this test profile was much faster than the classic BSD file-system. The UFS performance on DragonFlyBSD continued to be slower than UFS on PC-BSD, but HAMMER was able to outperform UFS on PC-BSD and even ZFS on PC-BSD, which itself was slower than UFS. BSD and HAMMER though was still no match for the EXT3/EXT4/Btrfs that all performed much stronger. Interestingly though, with this test the Btrfs performance fell greatly behind EXT4.
++++
+http://www.phoronix.com/scan.php?page=article&item=linux_2638_large&num=2
+2011-03-09,
+When running the PostgreSQL database server on the seven file-systems and two tests, the results were not what we had expected. Btrfs nor EXT4 were the fastest. On the Seagate SATA HDD, ReiserFS and NILFS2 were the fastest while right behind those two was JFS. With the SSD, JFS was the fastest with its default mount options followed by ReiserFS and then NILFS2. EXT4 and Btrfs (and EXT3) were much slower with the respective default mount options.
+
+EXT3 and its default mount options -- with barriers disabled -- were the fastest for SQLite on the HDD followed by NILFS2 and then ReiserFS. Btrfs was the slowest for the SQLite test on both the HDD and SSD, which is not too surprising and is something we have noticed quite some time for this particular test case.
++++

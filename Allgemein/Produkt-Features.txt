@@ -1,0 +1,25 @@
+Mobiltelefon
+
+* Mehrere SIM-Slots
+* MicroSD-Kartenslot
+* Kopfhörer-Buchse statt nur USB-C Anschluss
+* Kompass
+* Autofokus für Barcode-Scans
+* Mindestens 1 GB RAM
+* USB OTG
+
++++
+
+Tastatur
+
+* Beleuchtete Tasten, die sich nach einiger Zeit der Inaktivität wieder abschalten
+
+* N-Key-Rollover, damit keine Phantom-Tastendrücke entstehen wenn man mehr als 3 Tasten drückt. Mit einer Diode für jede Taste können sämtliche Phantom-Tastendrücke verhindert werden.
+
++++
+
+3G Modems
+
+* "AT"-Befehl "+CLAC" zur Auflistung aller unterstützter "AT"-Befehle.
+
+* "AT"-Befehl "+CLTS=1", der das Modem dazu bewegt die aktuelle Zeit/Datum aus dem 2G/3G-Netzwerk zu holen, ohne dass man dazu eine Internet-Verbindung aufbauen müsste. Damit ließe sich Zeit/Datum auch ohne Daten-Guthaben abrufen.

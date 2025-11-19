@@ -1,0 +1,67 @@
+#! /bin/sh -e
+
+trap 'echo "Failed!" >& 2' 0
+
+me=$0
+if test ! -e "$me"
+then
+	me=`which "$0"`
+	test -e "$me"
+fi
+me=`readlink -f "$me"`
+test -x "$me"
+dir=`dirname "$me"`
+test -d "$dir"
+dir=`readlink -f "$dir"`
+test -d "$dir"
+UNISON=$dir/.unison
+test -d "$UNISON"
+
+p=$UNISON/default.prf
+t=$p.template
+ps=$p.cks
+ts=$t.cks
+nsum=`cksum < "$t"`
+if ! osum=`cat "$ts"` || test x"$nsum" != x"$osum" || ! opsum=`cat "$ps"`
+then
+	echo "Expanding updated Unison profile..." >& 2
+	sed 's:\${THIS_DIR}'":$dir:" "$t" > "$p"
+	opsum=`cksum < "$p"`
+	echo "$opsum" > "$ps"
+	echo "$nsum" > "$ts"
+fi
+
+export UNISON
+unison "$@" default && rc=$? || rc=$?
+npsum=`cksum < "$p"`
+if test x"$npsum" != x"$opsum"
+then
+	echo "Extracting template from modified Unison profile..." >& 2
+	sed "
+		s:$dir:"'\${THIS_DIR}:
+		/^ignore/ {
+			s:^\(ignore\)not\(.*\):\1\2!:
+			s:^:2:
+			b
+		}
+		s:^:/:
+	' "$p" | {
+		n=1
+		while read -r line
+		do
+			case $line in
+				/*)
+					line=1`printf '%09u' $n `$line
+					n=`expr $n + 1`
+			esac
+			printf '%s\n' "$line"
+		done
+	} | LC_ALL=C sort | sed '
+		s:^2\(ignore\)\(.*\)!:\1not\2:
+		t
+		s:1[0-9]*/::; t
+		s:^2::
+	' > "$t"
+fi
+trap - 0
+exit $rc

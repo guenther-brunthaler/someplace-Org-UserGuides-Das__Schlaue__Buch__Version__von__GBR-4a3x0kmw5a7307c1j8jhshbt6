@@ -1,0 +1,30 @@
+Tipps & Tricks zum Arbeiten mit LibreOffice
+===========================================
+
+Dieser Text enthält Hinweise auf und Lösungen von Problemen, auf die ich im Laufe der Zeit während meiner Arbeit mit LibreOffice stieß.
+
+Das Festhalten dieser Lösungen soll verhindern, dass ich später erneut vor denselben Problemen stehe, wenn ich die früher gefundene Lösung wieder vergessen habe.
+
+Da LibreOffice sich stets weiter entwickelt und dabei seine Funktionalität ändert, soll bei jedem Eintrag das Datum des Eintrags vermerkt werden. Dabei sollte es ausreichen aufs Monat genau zu sein, da sich die Versionen *so schnell* auch wieder nicht ändern.
+
+Falls der Eintrag später aktualisiert wird, ist das Datum ebenfalls zu aktualisieren, da sonst nicht gewährleistet sein kann, ob die erneuerten Aussagen auch für die LibreOffice-Version zutreffen, welche zum genannten Datum die aktuelle war.
+
+Es wird generell vorausgesetzt, dass eine einigermaßen aktuelle LibreOffice-Version zum Zeitpunkt des vermerkten Eintragsdatums verwendet wurde.
+
+Diese Datei ist wie eine Log-Datei zu führen, d. h. neue Einträge werden hinten dran gefügt, so dass die Einträge annähernd (beim Zusammenführen verschiedener Versionen dieses Dokuments kann die exakte Reihenfolge von Einträgen welche dasselbe Datum tragen nicht gewährleistet werden) nach Datum sortiert sind.
+
+2017-03 Verhindern des Abteilens vom Texten (Hyphenation)
+
+Normalerweise teilt LO Texte automatisch ab, um ein möglichst gleichmäßiges Schriftbild ohne klaffende Lücken oder stark abweichende Zeilenlängen zu ermöglichen.
+
+Was bei normalem Text sehr angenehm ist, stört jedoch bei Dateinamen, Hyperlinks etc. enorm.
+
+Um zu verhindern dass auch diese abgeteilt werden, markiert man sie, und ruft dann den Dialog zur Zeichenformatierung auf.
+
+Dort wählt man aus, dass der gewählte Text keine zugewiesene Sprache hat.
+
+Da die Abteilungs-Automatik sprachabhängig ist, funktioniert sie nicht ohne die bekannte Sprache in welcher ein Textfragment enthalten ist, und daher wird dieses nicht mehr automatisch abgeteilt.
+
+Was nach wie vor möglich ist, ist der Umbruch an Leerzeichen und anderen Sonderzeichen.
+
+Dies lässt sich aber durch das Verwenden geschützter Varianten der Sonderzeichen vermeiden, etwa ein geschütztes Leerzeichen ([Strg]+[Umschalt]+[Leertaste]). In diesem Fall jedoch nicht vergessen, im eigentlichen Hyperlink wiederum normale Leerzeichen zu verwenden, und die geschützten Leerzeichen nur in dessen Anzeigetext!

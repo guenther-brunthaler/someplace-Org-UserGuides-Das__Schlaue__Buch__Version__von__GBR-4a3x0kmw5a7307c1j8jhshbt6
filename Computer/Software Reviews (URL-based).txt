@@ -1,0 +1,1509 @@
+http://example.org/
+## Format, Keywords
+2020-04-18
+Format of THIS file: URL, keywords, date of review/update.
+
+Multiple Keywords (actually: phrases) can be used, comma-separated, ordered by decreasing relevance.
+
+The "##"-Line is optional, as well as the date-line.
+
+https://en.wikipedia.org/wiki/CINT
+## C, Interpreter
+2020-04-18
+CINT is a C/C++ interpreter aimed at processing C/C++ scripts. Scripts are programs performing specific tasks.
+
+Nachteile: Teilweise erhebliche Einschränkungen gegenüber der Standard-Sprache. So sind etwa lokale Variablen nur im Function-Scope möglich.
+
+http://www.typo3.com/
+## CMS, TYPO3
+24.11.2011
+TYPO3 ist ein in PHP geschriebenes OSS Content-Management System für Websites mit Browser-basiertem Front End. Sehr beliebt im deutsprachigen Raum, angeblich weil sogar unfähige Anwender sich wie die Vollprofis vorkommen, wenn sie mit dem Rich-Text-Editor knallbunte Texte verfassen und tolle Fotos uploaden können. Weniger beliebt bei Technikern: Komplexes System mit einer eigenen Konfigurations-Skriptsprache. Die ganzen tollen Features gibt es erst über Plugins, diese aber arbeiten oft nicht mit den aktuellen fehlerbereinigten Versionen das Basis-Systems zusammen. Entsprechend schlecht sieht der Security-Record aus - 32 Sicherheitslücken allein 2008. Expertenempfehlung: Vermeiden, ausser ein K.O.-Argument bei den zugegebenermaßen reichen Features macht es für eine Aufgabe unverzichtbar. Ein weiterer Nachteil: Es hält alle möglichen Settings in Arrays ständig im Speicher, die teilweise für jede aktive Instanz dupliziert werden müssen. Daher belegt das System überproportional viele Ressourcen am Server im Vergleich zu anderen Lösungen. TYPO3 ist im deutschsprachigen Raum sehr beliebt und dominant da es ursprünglich eine primär deutschsprachige Entwicklung war; international jedoch weniger.
+
+http://drupal.org/
+## CMS, Dupal
+24.11.2011
+Drupal ist ein Konkurrent von TYPO3 und ebenfalls ein in PHP verfasstes CMS. Es scheint international verbreiteter und beliebter als TYPO3 zu sein, jedoch nicht im deutsprachigen Raum. Es hat eine beeindruckende Liste an Referenzen, wie das Weiße Haus, die Webseite von MTV und auch vielen anderen Künstlern und Medien-Portalen. Es besteht aus einer Kern-Distribution welche nur die nötigsten Module mitbringt, aber es gibt tausende weiterer Module die alle möglichen Funktionalitäten nachrüsten. Es ist im wesentlichen ein klassisches LAMP-System, unterstützt jedoch auch PostgreSQL und sogar SQLite obwohl MySQL/MariaDB "empfohlen" wird. Die integrierte Suchmaschine scheint schwach zu sein; größere Sites verwenden meist Apache Solr zur Implementation der Suchfunktion (ein in JAVA geschriebenes Frontend für die Volltext-Suchmaschine Lucene). Um dies einbinden zu können wird daher neben PHP, Apache und MySQL meist auch noch ein Tomcat-Server installiert. Drupal scheint nette Features zu haben mit denen man Datenbank-Eingabeformulare erzeugen kann; es kann nicht nur unstrukturierte sondern auch strukturierte Daten handhaben. Auch "Triple-Store-Informationen" a la RDF kann es handhaben. Inhalte können anhand einer Taxonometrie kategorisiert werden. Angeblich hat Drupal trotz seiner "PHP-Bürde" einen vergleichsweise guten Security-Track, da ein eigenes Security-Team bereit gehalten wird und Security-Bugfixes rasch erfolgen. Dabei ist auch die mit ca. 10.000 Entwicklern recht große Entwicklergemeinde sicher ein Faktor. Allerdings dürften die primär Erweiterungsmodule entwickeln und weniger den Kern. Generell ist es unüblich den Kern zu modifizieren; das System ist stark Hook-orientiert und fast immer ist es möglich eine Funktionalität die man ändern will durch einen Hook mittels eines Erweiterungsmoduls zu übersteuern. Drupal ist auch mehrsprachig, aber das Tool "OpenCalais" zum automatischen Kategorisieren versteht noch kein deutsch... allerdings ist dieses Tool nur eine Integration des "Calais" Web-Service von Reuters, der derzeit zwar kostenlos zu sein scheint - doch wer weiß wie lange noch. Außerdem muss man so seine Daten natürlich an Reuters übergeben damit das Tool sie analysieren kann. Von den grundsätzlichen Features her bietet Drupal primär Foren, Blogs und Wizard-ähnliche Workflows, Umfrage-Formulare sowie allgemeine Artikel. Die Navigation erfolgt normalerweise zwischen Artikeln aufgrund von Stichworten oder der eingebauten Suchmaschine, und weniger über Hyperlinks innerhalb von Artikeln (obwohl es auch dafür Module gibt). Es gibt ein recht ausgefeiltes User- und Rechtemanagement. Besser skalierende Datenbanken wie etwa MongoDB können ebenfalls als zusätzliche Datenbank-Backends für Drupal dienen, auch wenn die Kernfunktionalität über eine der eingangs genannten relationalen Datenbanken abgewickelt wird. Bei Gesprächen mit Anwendern und Entwicklern verdichtete sich bei mir der Eindruck, dass Major Updates bei Drupal problematisch sind da man sich dort nicht sonderlich um Rückwärtskompatibilität kümmert. Verschlimmert wird das noch durch die vielen separat entwickelten Erweiterungsmodule; im wesentlichen ein ähnliches Problem wie man es von Firefox her kennt. Nur mit etwas tödlicheren Auswirkungen wenn man das System Mission-Critical verwendet. Ein weiteres Problem scheint die Performance zu sein; im Vergleich zu anderen Lösungen erscheint Drupal einigen Beobachtern langsam. Anderen fällt dies nicht auf, und Drupal wird zweifellos auch zum Betrieb großer Websites verwendet. Allerdings kann man mit entsprechender Hardware, Load Balancing etc. alles "erschlagen".
+
+http://lucene.apache.org/solr/
+## Search Engine, Apache Solr, Lucene
+25.11.2011
+Apache Solr ist eine Volltext-Suchmaschine, die Hadoop verwenden kann um hochskalierbar zu arbeiten. Solr verwendet die Funktionen der Apache Lucene Bibliothek zur Durchführung der eigentlichen Volltext-Indizierung. Solr stellt sich als Netzwerk-Dienst dar, der Suchabfragen mittels einer Vielzahl bekannter Formate (etwa JSON oder XML) von anderen Applikationen entgegen nehmen kann. Somit kann von jeder Programmiersprache aus auf Solr zugegriffen werden welche über Möglichkeiten oder Bibliotheken zum Netzwerkzugriff besitzt. Solr ist genau wie Lucene und Hadoop in JAVA geschrieben und wird als Servlet auf einem JAVA-Applikations-Server betrieben. Der ebenfalls in JAVA geschriebene Tomcat ist dazu ausreichend und die Kombination Tomcat/Solr wird gerne verwendet um Solr in andere, nicht primär JAVA-basierte Portale einzubinden. Solr wird etwa im in PHP geschriebenen Drupal gerne als Suchmaschine eingesetzt, da die nativ integrierte nur sehr schwach (sowohl an Performance als auch an Features) ist. Apache Solr und Apache Lucene sind inzwischen eigentlich dasselbe Projekt; beide Komponenten werden aber nach wie vor als separate Downloads angeboten.
+
+http://lucene.apache.org/
+25.11.2011
+Apache Lucene ist eine JAVA-Bibliothek, welche die Funktionen zur Implementation eines Volltext-Indizierungssystems zur Verfügung stellt. Die Bibliothek selbst stellt daher keine Suchmaschine dar, sondern nur die wesentlichen Algorithmen um eine solche zu implementieren. Apache Solr ist eine solche Suchmaschine; Lucene kann aber auch in eigene (JAVA-) Programme eingebaut werden um Volltext-Suchfunktionalität ohne den Overhead einer kompletten Suchmaschine zu ermöglichen. Organisatorisch wurden Lucene und Solr zu einem Projekt vereinigt, Lucene ist aber weiterhin als separater Download erhältlich. Lucene hat eingebauten Support zur Text-Extraktion aus den Formaten HTML, Microsoft Word, PDF und OpenDocument - es gibt aber vermutlich noch weitere Plugins für andere Datenformate, aus denen sich sinnvolle Textinformationen extrahieren lassen. Grundsätzlich erlaubt es Lucene dass ein Dokument aus verschiedenen Bereichen (etwa: Titel, Textbereich, Stichwörter) besteht und jeder dieser Bereiche kann separat indiziert und später auch separat durchsucht werden. Lucene legt seine Indizes nicht in einer richtigen Datenbank an, sondern in mehreren normalen Dateien welche dynamisch hinzu gefügt und später wieder mit bestehenden kombiniert werden um veraltete Informationen zu entfernen. Die Grundstruktur der Dateien folgt einer "nur Lesen oder am Ende dran hängen"-Philosophie, was die Erfordernis für Locking-Operationen zwar minimiert, aber eine gelegentliche Reorganisation der Dateien notwendig macht um frei gewordenen Platz zurück gewinnen zu können.
+
+http://mahout.apache.org/
+25.11.2011
+Apache Mahout ist ein in JAVA geschriebenes OSS-Projekt welches diverse maschinelle Lernalgorithmen implementiert, die mit Apache Hadoop parallelisierbar und daher hoch skalierbar sind. Auch wenn dies der Schwerpunkt ist, gibt es jedoch auch einzelne Algorithmen die sich ohne ein installiertes Hadoop betreiben lassen.
+Die enthaltenen Algorithmen decken derzeit vor allem folgende Bereiche ab: Erteilung von Produktempfehlungen durch Betrachtung des Benutzerverhaltens, Clustering von Dokumenten in Gruppen mit ähnlichem Inhaltsschwerpunkt, automatisches Kategorisieren von Dokumenten und das Erkennen von Gruppen häufig gemeinsam gekaufter Artikel bzw. gemeinsam verwendeter Suchbegriffe.
+
+http://www.salesforce.com/
+25.11.2011
+Ein sehr erfolgreiches closed-source CRM mit angeblich 52 % Marktanteil 2011. Salesforce ging irgendwie aus einem frühen Fork von SugarCRM hervor, wurde seit dem aber stark und unabhängig davon weiter entwickelt. Es gibt aber nach wie vor erkennbare strukturelle Ähnlichkeiten zwischen den beiden Produkten. Salesforce ist ein typisches SaaS-Produkt; es gibt keine lokal installierbare Version. Für Add-On-Entwickler wird von Salesforce jedoch auch ein PaaS-Hostingprodukt angeboten, die dann ebenfalls in der "Cloud" laufen und von der Kundenapplikation verwendbar sind. Eine Spezialität durch die sich Salesforce zumindest 2011 auszeichnet ist dass neue Funktionalität dem Benutzer wenn möglich nie aufgezwungen wird, sondern zuschaltbar bzw. umschaltbar verfügbar gemacht wird. Ansonsten bemerkt der Benutzer aufgrund des Cloud-Charakters im Regelfall keine Updates und Bugfixes. Da SugarCRM in PHP verfasst ist, liegt der Verdacht nahe dass auch Salesforce zumindest in Teilbereichen ein PHP-Produkt ist. Allerdings verwendet die PaaS-Lösung eine JAVA-ähnliche Sprache, was auf ein internes Redesign schließen lässt. Andererseits kann letztes auch eine reine Sicherheitsmaßnahme sein um sich vor mangelhaft programmierten PHP-Plugins zu schützen, während die Kernapplikation selbst nach wie vor ein reines PHP-Programm ist. Der verteilte Cloud-Character der Architektur ermöglicht es relativ problemlos, dass die diversen Komponenten in völlig unterschiedlichen Programmiersprachen implementiert werden - auch wenn für Add-On-Entwickler nur eine bestimmte Sprache vorgeschrieben ist.
+
+http://www.sugarcrm.com/crm/
+25.11.2011
+Ein Web-basiertes in PHP verfasstes OSS Customer-Relationship Management System. Das bekannte und weit erfolgreichere SaaS CRM-Produkt "Salesforce" (siehe separate verfügbare Beschreibung) dürfte ein früher Fork von SugarCRM sein. Es gibt eine "On-Premises"-Version für die interne Cloud eines Kunden sowie diverse extern gehostete Public-Cloud Angebote sowohl vom Entwickler selbst als auch von dessen Partnern. Gegenüber der kommerziellen Version von SugarCRM ist die freie Version dadurch eingeschränkt, dass einige Komponenten wie das Customer Portal fehlen. Es gibt einen Fork "vtiger" der darauf abzielt ein vollständiges OpenSource-Produkt anzubieten.
+
+http://www.vtiger.com/
+25.11.2011
+Ein von indischen Entwicklern betriebener Fork des in PHP verfassten SugarCRM mit dem Anspruch, eine vollständige OpenSource-Implementation mit annähernd demselben Leistungsumfang wie Salesforce.com oder die kommerzielle Versionen von SugarCRM zu sein. Es gibt auch einen kommerziellen Ableger, dieser unterscheidet sich jedoch (wie es scheint) nur durch die zusätzlichen Service-Dienstleistungen. Das Programm ist multilingual und ein typisches LAMP/WAMP-Produkt. Die tatsächliche Verbreitung ist unklar, aber es ist eindeutig weniger bekannt als SugarCRM. Gleichwohl scheint es nach wie vor weiter entwickelt zu werden und die Umsätze sind offenbar zumindest ausreichend um der Entwicklerfirma das Überleben zu sichern.
+
+http://de.wikipedia.org/wiki/WordPress
+24.11.2011
+Wordpress ist ein in PHP geschriebenes OSS CMS-System, das besonders auf das Erzeugen von Blogs abgestimmt ist. Dort ist es auch schneller als Drupal, welches mehr für komplette Websites ausgelegt ist. Entwickler bemängeln eine geringe Langzeitkonsistenz des APIs, welches bei Updates immer wieder zu Problemen führt. Auch dürfte das API nicht gerade zum Feinsten gehören; ähnlich klingende Namen und redundante Funktionen etc. Sollte für Anwender freilich ohne Belang sein, solange sie nicht auf ein entsprechendes Zusatzmodul angewiesen sind.
+
+http://www.tinymce.com/
+24.11.2011
+TinyMCE ist ein in JavaScript geschriebener OSS WYSIWYG-Editor, der HTML-Code erzeugt. Bestimmte Features wie ein Image Manager oder ein File Manager sind der kommerziellen Version vorbehalten. Für normales Editieren sollte er reichen. Was mir daran missfiel: Unmengen an vielen winzigen Icons ganz in der Tradition der alten Winword-Versionen. Noch dazu ein Look & Feel dass offenbar Microsoft Windows VISTA nachzuahmen versucht.
+
+http://ckeditor.com/
+24.11.2011
+Ein weiterer in JavaScript geschriebener OSS WYSIWYG-Editor, der in diesem Fall XHTML 1.0 Code erzeugt. Das User-Interface gefällt mir (zumindest auf den ersten Blick) besser als das von TinyMCE, da die Buttons und Icons in verschiedene funktionale Gruppen mit dem Look von Toolbars unterteilt sind, die auch optisch von einander abgegrenzt sind. Außerdem gibt es "nur" 3 Reihen solcher Toolbars. Alles in allem wirkt es aufgeräumter und sauberer als TinyMCE. Falls ich je einen HTML-Editor brauche, würde ich diesen zuerst versuchen.
+
+http://en.wikipedia.org/wiki/PlaneShift_(video_game)
+Planeshift ist ein MMPORG mit freier LGPL Game Engine, aber proprietär lizensiertem Content. Es wird übers Internet gespielt und ist nicht für Singleplayer-Missionen gedacht. Derzeit ist das Spielen kostenlos, allerdings ist das Spiel Alpha-Status (2009). Es ist noch nicht einmal möglich, alle Teile des Spiels selbst zu kompilieren. Irgendwie macht das Spiel den Eindruck, als könnte es jederzeit kommerziell werden sobald es ausgereift genug ist, und die Gratisnutzung ist nur Beta-Testing. Die Lizenz des Contents ist restriktiv genug dafür; so darf man ihn etwa nicht verteilen oder woanders hosten.
+
+http://buildroot.uclibc.org/
+Buildroot is a set of Makefiles and patches that makes it easy to generate a cross-compilation toolchain and root filesystem for your target Linux system using the uClibc C library. Buildroot is useful mainly for people working with small or embedded systems. Embedded systems often use processors that are not the regular x86 processors everyone is used to using on their PC. It can be PowerPC processors, MIPS processors, ARM processors, etc. And to be extra safe, you do not need to be root to build or run Buildroot.
+
+http://fixunix.com/unix/84293-beautify-code.html
+"cb" is a Source code reformatter similar to GNU "indent" or "bcpp". It was distributed a long time ago by AT&T and was quite popular then. But there seem to be no versions of it around these days. Some people say "cb" was very similar but far less powerful than "indent".
+
+http://kuzya.wpoonline.com/
+Kuzya ist eine in Qt verfasste IDE, aber wohl die so ziemlich simpelste Ausprägung einer solchen. Unterstützt gcc und Free PASCAL. Windows und Linux. Es gibt ein Quelltextfenster, der Compiler/Linker kann aufgerufen werden und Fehlermeldungen werden ebenfalls in einem Fenster angezeigt. Der Editor ist Scintilla-basiert und vermutlich OK. Obgleich vielleicht für "blutige Anfänger" ganz gut geeignet, ist diese IDE eher ein Witz als ein echtes Arbeitsmittel - vergleichen damit sind sogar die "Lightweightesten" anderen IDEs wie kate oder Geany geradezu Monster an Funktionalität. Für normale Entwickler zum Vergessen; für Schüler und Anfänger vielleicht sinnvoll.
+
+http://www.tecgraf.puc-rio.br/iup/
+2017-09-19
+IUP ist ein in Lua und C implementiertes GUI-Tookkit für Windows und Linux. Es kann von C oder Lua aus verwendet werden. Unter Windows werden native GUI-Elemente verwendet, unter Linux kann entweder Motif oder GTK+ als Backend verwendet werden. Weiters stellt es eine Dialog-Designsprache namens "LED" zur Verfügung, mit der sich Dialoge auch getrennt vom eigentlichen Quelltext der Applikation definieren lassen. IUP basiert auf abstraktem Layout in hbox-, vbox-, grid- und zbox-Layouts. (Zboxes erlauben es, mehrere GUI-Elemente auf verschiedenen Layern "übereinander" zu definieren, wobei immer nur ein Layer zur selben Zeit sichtbar ist. Also ähnlich wie "Tab"-Controls, nur ohne den "Tab"). Ein anderes praktisches Problem ist dass alle "Meldungen" des Toolkits (vermutlich Fehlermeldungen etc.) standardmäßig nur in portugiesisch erfolgen. Sie lassen sich zwar auf Englisch umschalten, nicht aber in andere Sprachen wie etwa deutsch. Hier müsste man sich daher selbst ans Übersetzen machen. Oder die Fehlermeldungen einfach nicht anzeigen, sondern statt dessen generisch formulierte eigene.
+
+http://de.wikipedia.org/wiki/Lx-Office
+Lx-Office ist ein ERP/CRM System, das auf dem Apache Webserver (Front End) und der PostgreSQL Datenbank (Back End) basiert. Der Rest ist in Perl geschrieben. Kein JAVA! Es gibt viele Module: Rechnungen, Artikelverwaltung, Kundendaten, Bestellungen, Angebote, Mahnwesen, Finanzbuchhaltung auch mit Einnahmen/Ausgabenrechnung, CRM, Kontaktverfolgung, Dokumentenverwaltung, Termine, Wiedervorlage, Shopmodul, Barverkauf, und noch etliche weitere.
+
+http://www.intars.de/ERP/
+Ein in Objective-C geschriebenes ERP für KMU, das MySQL als DB verwendet. Verwendet eine eigene Scriptsprache zur Implementation der Logik. Voll auf Versionskontrolle und Script-File-Merging ausgerichtet; alle wichtigen Steuerdateien sind als simple Textdateien vorhanden. Module: Auftragsverwaltung, Angebotserstellung, Disposition, Lagerwesen, Inventur, Mehrlager, Rechnungslegung, Projektabwicklung, Bestellwesen, Arbeitsvorbereitung, Content-Management, Document-Management, Groupware, Fertigungsplanung, Fertigungssteuerung, Leitstand, Prozessteuerung durch Barcode-Scanner, CRM, Statistik-Auswertungen, Datev- und EuroFibu-Schnittstelle, Fuhrpark, Variantentechnik.
+
+http://www.ultimatepp.org/
+2011-12-08
+Ein weiteres C++ basiertes GUI-Framework a la Qt, WxWidgets und GTK+. Allerdings bietet es nur logische Koordinaten und keine Layout-Manager. Aus diesem Grund unbrauchbar für die stark unterschiedlichen Auflösungen und Seitenverhältnisse modernen Anzeigegeräte. Außerdem unterstützt es zwar Linux und Windows, aber kein MacOS. U++ macht keinen oder nur minimalen Gebrauch von der STL, verwendet ansonsten aber intensiv C++ Features. Das Projekt erweckt den Eindruck primär Windows-XP-orientiert zu sein. Der Code ist allgemein kürzer als der für Qt oder JAVA Swing, aber wie gesagt es gibt keine Layout-Manager. Ein grafischer GUI-Designer in der Tradition des klassischen Windows-Ressourcen-Editors aus der Zeit des 16-Bit-Windows ist allerdings enthalten.
+
+http://www.limbas.org/
+2017-09-05
+Da hat jemand Microsoft-Access in PHP und Apache als Web-basierte Lösung nachprogrammiert. Unterstützt zumindest MySQL und PostgreSQL. Formulare scheinen auch Unterformulare zu kennen. Wirkt zumindest auf den ersten Blick interessant. Außerdem kann es scheinbar auch als Dokumenten-Management-System eingesetzt werden, inklusive Indizierung. Weiters ist scheinbar WebDav und CalDAV-Server-Funktionalität irgendwie integriert. Eine Spezialität von Limbas soll es sein, Datensätze versionieren zu können. Mit rund 30 MB Download ist der Source-Code (vor dem erwähnten Update) nicht gerade schlank.
+
+http://files.luaforge.net/releases/lua-gtk/lua-gtk
+2012-01-29
+GTK+ bindings für Lua. Theoretisch sehr nett, praktisch aber nur Beta Software und die neueste Version stammt aus 2008. Es gibt allerdings ein Nachfolgeprojekt [ http://lua-gtk.luaforge.net/en/ ]. Dessen Problem: Braucht diverse Build Tools, die derzeit nicht in Portage enthalten sind.
+
+http://sourceforge.net/projects/huh/?source=directory
+2012-03-19
+A handy cscope & ctags GUI shell. Nennt sich "Ohh", obwohl es dem Directory-Namen nach "Huh" heisst. Leider gibt es kein simples Fenster wie in Geany wo einem alle Symbole des Projekts in einer einfachen Liste angeboten werden. Man kann nur nach Symbolen suchen, auch mit Regular Expressions, aber die Bedienung ist ähnlich umständlich wie im Original cscope. Noch dazu reicht es nicht die cscope-Dateien zu erzeugen; es werden zusätzlich noch generierte ctags-Dateien benötigt. Die Handhabung scheint unnötig kompliziert. So ist es etwa nicht möglich aus dem Source-Code Viewer heraus direkt nach einem markierten Symbol zu suchen, sondern es poppt dann der normale Suchdialog auf wo der markierte Text ins Suchfeld eingefügt wurde. Das ist OK als zusätzliche Option, aber schwach als Hauptfunktion um Verweisen zu folgen. Weiters findet die Suchfunktion nicht immer etwas; aber vielleicht ist das auch nur ein Bedienungsfehler meinerseits. Ich habe das Programm nicht *studiert* sondern "einfach nur so" benutzt. Alles in allem ein vielleicht ausbaufähiges Tool, derzeit aber noch eher unbrauchbar hinsichtlich der gebotenen Funktionalität.
+
+http://wiki.opendune.org/Development/Linux
+2012-03-20
+OpenDune ist ein Versuch, das Original-Spiel "Dune 2" für Linux und andere Plattformen als OpenSource zu reimplementieren. Derzeit verwendet es allerdings noch Teile des Original-Programms und benötigt daher eine Emulations-Library für diese reverse-engineerten Teile des Original-Spiels. Es ist aber geplant, schließlich alle Teile komplett neu zu reimplementieren, dann wird diese Library nicht mehr benötigt werden. Das Projekt ist noch recht unreif und hat noch nicht einmal Version 1.0 erreicht. Man sollte es sich später noch einmal ansehen.
+
+http://www.par4all.org/
+2012-06-03
+Par4All ist ein source-to-source compiler, der sequenziellen C- und FORTRAN-Quelltext automatisiert in eine parallelisierte Version desselben Quelltexts umwandeln kann, welcher von bestehenden Parallelisierungs-Frameworks wie OpenMP und CUDA Gebrauch macht. Leider funktioniert das in der Praxis (noch) nicht so einfach wie es sich anhören mag, da es eine Unzahl an Einschränkungen gibt was der vorhandene C-Code alles nicht tun darf wenn er parallelisierbar sein soll. Meiner Ansicht nach sind diese Einschränkungen zumindest derzeit noch so umfangreich, dass man den vorhandenen Code nach den vorhandenen Vorgaben besser (als nach wie vor sequenzielle Version) neu schreibt, um ihn dann vom Compiler in eine parallelisierte Form umwandeln zu lassen. Zwar ist es nicht zwingend erforderlich sich an die definierten Einschränkungen zu halten, allerdings wird dann suboptimaler bzw. nur unzureichend parallel arbeitender Code erzeugt. Trotz dieser Auflagen ist das Projekt zwar sicher immer noch interessant, aber nicht als drop-in-Replacement den man einfach nur schnell über vorhandenen Code drüberlaufen lässt, sondern eher wenn man neuen Code entwickelt oder gewillt ist bestehenden sehr umfangreich zu überarbeiten. Klein ist der Compiler mit 127 MB (git-Repository) jedenfalls auch nicht gerade. Ein Vorteil gegenüber manueller Parallelisierung besteht darin, dass der Compiler die Parallelisierung für unterschiedliche Backends vornehmen kann, was einen einfachen Wechsel der Parallelisierungsplattform erlaubt.
+
+http://www.aelius.com/njh/redstore/
+2013-04-21
+RedStore is a lightweight RDF triplestore written in C using the Redland library. Requires the libraries raptor2, rasqal and redland. It is mostly a middleware and uses different backends for implementing the actual storage. Without additional libraries, only volatile in-memory hashed storage is available and directly built in. With additional libraries, persistent storage is availabe. Those are the supported storage backends: BerkeleyDB, MySQL, PostgreSQL, SQLite, Virtuoso.
+
+https://github.com/sibson/vncdotool.git
+2014-09-22
+vncdotool is a Python library and script which allows to send strings to VNC servers. Unfortunately, it has several dependencies and it seemed too hard to build for me.
+
+http://supervisord.org/
+## init
+2014-11-03
+Ein weiteres "init"-System. Aussage: "supervisorctl uses XML-RPC to communicate with supervisors over this port". XML-RPC in einen grundlegenden Systemdienst, der einfach und fehlerfrei sein soll? Überdies nutzt er noch INI-Files deren widerliche "Sections" nicht UNIX-freundlich sind. Danke schön! Nächster bitte!
+
+https://gnu.org/software/dmd/manual/dmd.html
+2014-11-03
+DMD, ein ursprünglich für GNU Hurd geplantes init-System. Scheint zumindest teilweise in GNU GUILE geschrieben zu sein. Also einem SCHEME-Dialekt. Also einer Sprache die intensiv auf Garbage Collection basiert, und wo Speicherverschwendung daher zur Tugend erhoben wurde. Danke schön! Ich will ganz sicher kein init-System welches auf dem Speed-Memory-Tradeoff basiert, den Garbage-Collection einem aufzwingt! Außerdem: "RUNLEVELS DO NOT WORK YET! Do not use them! Ignore this section!" Allgemeines: Eine der Ideen im Design von dmd ist, dass Service-Abhängigkeiten ähnlich wie in einem Makefile definiert werden sollen. Durch die schwere "verLISPung" sieht das Endergebnis aber nicht gerade sehr ähnlich aus.
+
+http://giowck.github.io/symphytum/
+2014-01-30
+Symphytum ist eine in Qt verfasste simple Datenbank. Als erstes erstellt man eine neue "Sammlung", was einer Datenbanktabelle zu entsprechen scheint. Man kann neue Felder für die "Sammlung" definieren wobei die wichtigsten Typen wie Text, numerisch, Check Box, Image etc. zur Verfügung stehen, und für jedes Feld zudem festlegen ob es erforderlich ist oder nicht. Dann kann man bereits neue Einträge zur "Sammlung" hinzu fügen, und diese Wahlweise als Tabelle oder Formular anzeigen lassen und bearbeiten. Im Falle der Tabelle stehen die üblichen Bearbeitungsfunktionen zur Verfügung; im Falle des Formulars kann man zusätzlich noch die Formularfelder frei auf dem Hintergrund repositionieren sowie deren Breite (und falls mehrzeilige Eingabefelder gewünscht sind auch deren Höhe) ändern. Dann gibt es noch eine Suchmöglichkeit, die allerdings global in jedem Feld der ausgewählten "Sammlung" eine Substring-Suche durchführt und das Ergebnis inkrementell als gefilterte Tabelle anzeigt. Das war es. Primärschlüssel? Indizes über mehrere Felder? Gar relationale Verknüpfungen zwischen "Sammlungen"? Abspeicherbare Abfragen? Fehlanzeige! Das alles kann dieser "Ersatz für Access" (noch?) nicht. Immerhin gibt es aber Import/Export von/zu CSV (sogar wahlweise alle oder nur selektierte Datensätze) sowie einen optionalen "CloudSync", welcher die Datenbank mit einem Cloud-Service-Anbieter synchronisiert. Derzeit wird nur Dropbox unterstützt, aber sicherlich wird es später einmal auch andere Plug-Ins geben. So primitiv das ganze auch ist, es ist sehr einfach zu bedienen (wohl auch weil es so wenig kann) und kann daher ohne große Einarbeitung sofort verwendet werden. Außerdem sieht es optisch nett aus, da es komplett auf Qt basiert. Beim Bearbeiten von Bild-Feldern kann man entweder ein neues Bild in den Eintrag laden, diesen als Datei abspeichern oder den System-Standard-Bildbetrachter mit dieser Datei starten. Bei Datumsfeldern kann man auch angeben, ob beim Erreichen des Datums/Zeit ein Alarm bzw. Erinnerung produziert werden soll. Es gibt auch automatisch verwaltete Datumsfelder für Erstellungdatum und Änderungsdatum des Eintrags. Felder können jederzeit neu hinzu gefügt werden; bei bereits existierenden Einträgen sind die Felder dann leer.  Drop-Down Comboboxen erlauben die Auswahl von vordefinierten Texten; einer davon kann auch als Default-Wert festgelegt werden. Interessant ist das "Datei"-Feld - es erlaubt das Hinzufügen von beliebig vielen Dateien als Attachments, die im Feld (und somit in der Datenbank) gespeichert werden. Das hört sich vor allem im Zusammenhang mit dem "CloudSync" interessant an. Es gibt weiters eine Backup-Funktion welche die Datenbank als Datei speichert oder wiederherstellt. Dies scheint auch dringend nötig, da der CVS-Export beispielsweise nicht den Inhalt von Datei-Feldern enthält. Auch wenn es nicht verraten wird, speichert Symphytum seinen Inhalt in einer SQLite3-Datenbank und die Dateien oder Bilder aus entsprechenden Feldern werden als Dateien (ohne Unterverzeichnisse) in einem einzigen Unterordner gespeichert. Sie werden dabei in eine 128-Bit-Hexadezimalzahl umbenannt, so dass der Dateiname irrelevant ist. Die Dateierweiterung wird dabei allerdings beibehalten, was auch der Grund dafür ist dass man die Dateien etwa mit einem Bildbetrachter aus der Applikation heraus so einfach öffnen kann. Eine Anaylse der Datenbankstruktur zeigt dass für die oben angesprochene Suche kein Volltextindex verwendet wird; die Skalierbarkeit der ganzen Lösung erscheint daher im Hinblick auf die Such-Performance zweifelhaft. Positiv zu vermerken ist die einfache Installation - man braucht nur qmake und make; kein komplexes Autoconf-Setup.
+
+http://www.pmwiki.org/
+2015-02-25
+"PmWiki is a wiki-based system for collaborative creation and maintenance of websites [...] PmWiki is written in PHP [...]" - thanks, that was all I needed to know. I would never install PHP software on my servers as long as I have a choice.
+
+http://tiddlywiki.com/
+2014-02-25
+TiddlyWiki speichert ein Wiki in einer lokalen HTML-Seite welche auch den in JavaScript verfassten Code von TiddlyWiki enthält. Es ist somit ein Verwandter von "Wiki On A Stick". Allerdings lässt es sich angeblich auch als Node.js Applikation verwenden, welche jede Notiz dann als separate Datei speichert. Das erfordert allerdings ein komplexeres Setup mit einem (zumindest lokal als separatem Serverprozess) laufenden Node.js). Im Gegensatz zu seinem Fork WoaS funktioniert das Abspeichern der Änderungen hier klaglos - es sieht wie der Download einer normalen Datei aus. Ein kleines Ärgernis ist dass die neue Datei vom Browser automatisch umnummeriert wird da das Original bereits vorhanden ist, aber das kann man auch als Backup-Feature ansehen. Die Organisationseinheit von TiddlyWiki ist ein "tiddler", was einem vertikalen Textabschnitt auf der angezeigten Webseite entspricht. Ein wenig ärgerlich ist dabei dass jeder Link normalerweise als zusätzlicher tiddler an der angezeigten Seite hinzu gefügt wird anstatt den vorherigen tiddler zu ersetzen. So ersäuft man schnell in tiddlers und muss ständig die Funktion bemühen alle anderen tiddlers wieder zu schließen. Auf der anderen Seite hat man so eine visuelle History am Bildschirm und muss nicht ständig vor- und zurück blättern wenn man sich durch die logischen Blätter einer Hierarchie klickt. Volltextsuche ist natürlich auch möglich. Neben den üblichen Hyperlinks können auch Tags einem Eintrag zugeordnet werden. Dazu gibt es auch einen Tag-Manager zum Organisieren der Tags. Man kann die tiddlers auch exportieren.
+
+http://sourceforge.net/projects/woas/
+2014-02-25
+WoaS ist ein Fork des scheinbar nicht mehr weiter entwickelten originalen wiki-on-a-stick. Dieses wiederum scheint ursprünglich ein Fork oder Nachbau von TiddlyWiki gewesen zu sein, wurde jedoch um einige Features wie insbesondere selektive AES-256 Verschlüsselung einzelner Wiki-Seiten erweitert. Außerdem unterstützt WoaS Namespaces in Links mit "::"-Schreibweise. Allerdings wird dies leider nicht vor dem Nutzer verborgen der diese Schreibweise exakt so angezeigt bekommt. Das wirkt sperrig und unschön. Leider wird das ganze Wiki immer nur in einer einzigen Datei gespeichert, und das Abspeichern wird nur von bestimmten Browsern unterstützt oder erfordert sogar ein JAVA-Applet welches im Browser ausgeführt werden kann. In Zeiten wo ein JAVA-Plugins zunehmend als unnötiges Sicherheitsrisiko im Browser empfunden wird, keine sehr angenehme Anforderung.
+
+http://twiki.org/
+2017-09-05
+Twiki ist ein in Perl verfasstes Wiki das alle Seiten in simplen Textdateien speichert und mit RCS versioniert. Obgleich es keinerlei Datenbank zum Speichern der Inhalte verwendet sondern diese in ganz normalen (versionierten) Textdateien abzulegen scheint, bietet es eine SQL-ähliche Abfragesprache die man in Wiki-Seiten eingebettet verwenden kann. Scheint relativ verbreitet und einigermaßen beliebt zu sein. Es gibt auch viele Extensions dafür. Bietet Client-seitig Rich-Text Editing auf TinyMCE-Basis. Letzteres erfordert JavaScript am Client, ist aber nur optional und somit lassen sich auch "dumme" Browser damit verwenden. Twiki unterstützt "Skins", einige benötigen JavaScript im Browser um zu funktionieren. Es gibt jedoch zumindest ein klassisches Skin, welches in Browser lediglich HTML 3.2 Support und Cookies verlangt. Und selbst letzteres nur wenn eine "Session" erforderlich ist (Annahme: das bedeutet Benutzer-Authentifizierung). Twiki verwendet normalerweise den Apache Web Server, funktioniert aber zumindest auch mit Nginx und diversen JAVA-Webservern. Lighttpd wird nicht erwähnt, jedoch sehe ich keinen Grund warum es *nicht* funktionieren sollte, da Twiki einfach nur eine CGI-Anwendung zu sein scheint. Die Markup-Sprache für Twiki-Content gefällt mir besser als die von Mediawiki, jedoch hat sie ebenfalls den Nachteil dass sie viel zu viele HTML-Elemente direkt zu verwenden erlaubt. Die Registration für einen Test-Account klappte nicht, es gab ständig Fehler und lange Wartezeiten. Im Gegensatz zu früher prahlt Twiki inzwischen mit "Enterprise"-Features und führt auch viele bekannte Firmen als Referenzen an. Historisch entstanden ist Twiki angeblich aus einer Knowledgebase-Anwendung für ein Support-Center. Mir persönlich erschien zumindest die Twiki-Webseite fürchterlich unübersichtlich - viel zu voll gepackt mit Informationen in 2-dimensionalem Tabellen-Layout, ähnlich wie eine riesige Zeitung aus Papier. Allerdings kann man natürlich hoffen, dass dies eine bewusste Design-Entscheidung ist und nicht so sein muss. Was die Installation angeht, ist Twiki zwar nur ein Perl Script - aber es benötigt zahlreiche Perl-Module, die man erst einmal installieren muss, aufgrund Versionsabhängigkeiten vermutlich zumindest teilweise direkt von CPAN und somit vorbei an der lokalen Paketverwaltung. Das Setup wirkt komplex - Benutzer, Accounts, Rechte... es ist unklar in wie weit man dies als "Personal Wiki" vereinfachen kann. Es gibt auch ein offenes Ticket zu dieser Frage... seit 3 Jahren unbeantwortet.
+
+http://foswiki.org/
+2014-02-25
+Ein Fork von Twiki das so ziemlich dasselbe zu können scheint und auch annähernd ähnlich weit verbreitet ist. Allerdings ist es in Perl und JavaScript (über jQuery) verfasst, womit man es nur mit einem modernen Browser mit aktivierten JavaScript benutzen kann. Längliche Wartezeiten und hoher Speicherverbrauch am Client sind somit zu erwarten. Arbeitet dafür aber auch mit Lighttpd zusammen und braucht nicht unbedingt Apache.
+
+http://www.t2-project.org/
+2015-03-19
+T2 SDE ("System Development Environment") ist eine Meta-Linux-Distribution. Es stellt ein Build-System dar, mit dem auf einer bereits vorhandenen Linux-Installation ein vollständiges Linux-System gebaut werden kann.
+
+Dazu werden zahlreiche Hardware-Plattformen unterstützt, und natürlich ist alles Quelltext-basiert.
+
+Im Unterschied zu Gentoo gibt es keine USE-Flags und deutlich weniger (ca. 3000) Pakete. Dafür ist T2 aber auch wesentlich simpler als Gentoo und die erzeugten Systeme haben einen geringeren Platzbedarf.
+
+Außerdem ist T2 von Haus aus für Cross-Compilation ausgelegt (was allerdings nur rund 50 % der verfügbaren Pakete derzeit auch tatsächlich unterstützen), was unter Gentoo ein eher aufwändiges Unterfangen ist.
+
+Außerdem erfordert T2 nicht notwendiger Weise ein Linux-Kernel - auch Minix, Hurd und einige andere Kernels werden unterstützt.
+
+Packages in T2 sind im Gegensatz zu Ebuilds keine ausführbaren Scripte, sondern schlichte Schlüssel-Wert Beschreibungsdateien. Das automatisierte Build-System macht alles andere. Das bedeutet mehr Sicherheit da jedes Script wie ein Ebuild immer ein Sicherheitsrisiko darstellt, und weniger Potenzial für Probleme. Außerdem erfolgt der automatisierte Bau aller Pakete in einer Sandbox. (Nur die toolchain selbst muss natürlich vorher ohne diesen Luxus gebaut werden.)
+
+T2 kann direkt CD-Images als Endergebnis erzeugen.
+
+Das Hauptproblem von T2 sind die teils uralten Paket-Versionen, obgleich das nicht einheitlich ist: Die gcc-Version von T2 z. B. ist so neu dass sie in Gentoo noch hard-gemasked ist.
+
+https://waf.io/book/
+2015-05-05
+"WAF" ist ein weiteres der unzähligen Build-Systeme von denen cmake der bekannteste Vertreter sein dürfte, welche darauf abzielen "einfacher als alle anderen" zu sein, mit der Konsequenz dass man sich als Anwender mit einem *weiteren* Build-System herumärgern muss. WAF für sich alleine ist zudem nicht einmal ein vollständiges Build-Tool, sondern vielmehr ein Framework mit dem man sich ein projektspezifisches Build-System zusammenstellen kann. Das ganze kommt in Form etlicher Python-Quelltexte daher, welche diverse Helper-Klassen zur Verfügung stellen, und man muss selbst Top-Level-Python-Quelltexte erstellen welche diese Klassen dann verwenden und globale Variablen, etwa für den Projektnamen, setzen, die dann von den Klassen weiterverwendet werden. Für sich allein genommen ist WAF sicher ein tolles Tool, aber User die es gewohnt sind mit configure && make über die Runden zu kommen, eventuell noch mit autogen.sh, haben ein schweres Leben mit einem WAF-Projekt das sie einfach nur bauen wollen. Konkret gelang es mir auch in einer halbstündigen Untersuchung nicht, auch nur so etwas harmloses wie einen Konfigurations-Test für ein "#include"-Verzeichnis anzupassen. Im Gegensatz zu ähnlichen Tools welche zumindest am Ende Makefiles erzeugen, will WAF alles selbst machen, weswegen man sich nur komplett in dieses moderat aber doch komplexe Tool einarbeiten kann oder statt dem Konfigurationsfile die Quelltexte patchen so dass sie die durch Konfigurationstests ermittelten Werte, wo unpassed, gar nicht erst verwenden. Letzteres ist ein Pfusch, aber meist die einzige Lösung da es eine Zumutung ist sich für eine einzelne Anpassung in solch ein komplexes System einarbeiten zu müssen. Gleichwohl bedeutet dies für Entwickler, dass ihnen klar sein muss was sie Anwendern antun wenn sie WAF verwenden und auch nur kleinere Anpassungen an der Projektkonfiguration vernehmen wollen.
+
+http://libharu.org/
+2017-09-05
+libharu ist eine in (soweit ich sah) portablem C geschriebene libtool-basierte Bibliothek zum Erzeugen und (in geringerem Maße) manipulieren von PDF-Dateien. Angenehm schlank im Vergleich zu den fetten Alternativen, insbesondere denen auf JAVA-Basis. Jedoch hat diese Library leider dasselbe Problem wie die meisten anderen PDF-erzeugenden Libraries auch: Um Texte auszugeben, muss man immer die Koordinaten jeder Textzeile angeben. Es gibt zwar Unterstützungs-Funktionen für Word-Wrapping und Ermittlung der Zeilenlänge, aber diese Informationen muss man dann wieder selbst in Koordinaten für Folgezeilen ummünzen. Kurzum, die Library beherrscht nicht die Ausgabe von Fließtext, oder gar dessen automatische Layout-Formatierung. Somit ist die Library nett um irgendwelche Diagramme mit ein bisschen Text drin an vordefinierten Stellen zu erzeugen, aber nicht etwa um Reports oder Rechnungen zu erzeugen.
+
+http://www.pentaho.com/product/product-overview
+2017-09-05
+Pentaho ist ein ziemliches Frankenstein-Projekt, dessen Bestandteile sich aus ehemals unabhängigen OpenSource-Projekten zusammensetzen, die nun unter einem gemeinsamen Dach weiterentwickelt werden. Grundsätzlich scheint es ähnliches wie BIRT zu leisten: Reports, OLAP, Datenanalysen und -miming, Datenimport/Abgleich als Basis der zuvor genannten funktionen. In JAVA implementiert und benötigt zum Betrieb scheinbar einen Applikationsserver, meist wird offenkundig Tomcat verwendet. Zum Erstellen von Berichten ist die Eclipse IDE erforderlich. Ein Problem von Pentaho ist dass es von Hitachi aufgekauft wurde, und nun nur noch eine "Basisversion" kostenlos ist. Für "erweiterte Features" muss man nun bezahlen. Es ist daher zu befürchten, dass gerade besonders interessante Funktionen kostenpflichtig sein könnten.
+
+https://de.wikipedia.org/wiki/BIRT
+2017-09-05
+BIRT scheint irgendwie genau dasselbe wie JasperReports zu sein: In JAVA entwickelt, man benötigt die Eclipse IDE um Reports designen (nicht aber benutzen) zu können. Ähnlich wie Pentaho deckt es aber zusätzlich noch OLAP und "Business Intelligence" ab. Es wird explizit als "für Rich Clients" angeboten, und von einer PDF-Ausgabe der erzeugten Berichte ist zumindest auf den ersten Blick nichts zu sehen (aber man kann wohl annehmen dass diese auch irgendwie möglich sein dürften).
+
+https://de.wikipedia.org/wiki/JasperReports
+2017-09-05
+JasperReports hat zwar starke Ähnlichkeit mit BIRT und teilweise auch Pentaho, fokussiert sich aber auf Reports. Es gibt mit "Jaspersoft ETL" allerdings sehr wohl eine Data-Warehouse-Lösung zum Analysieren von Daten. Zum Erstellen der Reports ist wie bei den Konkurrenten ebenfalls die Eclipse IDE vonnöten, jedoch nicht für deren spätere Benutzung. JasperReports kann die Daten für die Berichte aus zahlreichen Quellen holen, alle von JBDC unterstützten Datenbanken sowie XML und CSV-Dateien. Ausgaben kann es die Reports als PDF, HTML, MS Word, MS Excel, Reintext, RTF, OpenDocument Text, CSV und XML. Weiters gibt es einen Viewer, der die Reports am Bildschirm anzeigen oder ausdrucken kann. Es gibt eine Einbindungsmöglichkeit für JFreeChart, einem anderen Projekt welches Charts erzeugen kann. Im Vergleich zu seinen Konkurrenten scheint mir JasperReports das älteste und vermutlich auch ausgereifteste der Projekte zu sein, es existiert seit 2001.
+
+https://github.com/RhoneAlpes/ciwiki.git
+2018-09-14
+CiWiki ist ein Fork von Didiwiki. Das Format der abgespeicherten Wiki-Seiten unterscheidet sich, indem das sinnlose Null-Byte am Ende entfernt wurde. CiWiki enthält bereits Patches, welche in der DidiWiki-Version 0.7 und 0.8 hinzugekommen sind, welche auf der Webseite von Puppy Linux gehostet sind. Im Wesentlichen sind dies zwei neue Funktionen: "Index" zeigt eine Liste aller Wiki-Seiten an, aber im Gegensatz zu "Changes" alphabetisch sortiert und auch für nicht-authorisierte User zugänglich. Zweitens kam eine Funktion zum Löschen von Wiki-Seiten (mit Bestätigungs-Dialog) hinzu. Neben diesen Erweiterungen welche CiWiki mit den genannten DidiWiki-Versionen gemein hat, gibt es folgende CiWiki-spezifische Erweiterungen: Die "Index"-Funktion kann die Liste aller verfügbaren Seiten für die Anzeige auf mehrere Seiten aufteilen. Außerdem wird die Liste in Kategorien unterteilt, da CiWiki im Gegensatz zu DidiWiki auch die Möglichkeit bietet, eine begrenzte Auswahl an Binärdatei-Formaten (etwa .pdf und .zip) und Bilddateiformaten (die von DidiWiki unterstützten Formate) in das Wiki hochzuladen. Ebenso können HTML-Dateien hochgeladen werden, und diese können dann mit den Wiki-Seiten verlinkt werden. (Ich betrachte dies als ein gemeingefährliches Feature, da man so auch bösartige JavaScripts ins Wiki einschmuggeln könnte.) Weiters unterstützt CiWiki auch Links auf Video-Dateien populärer Video-Portal-Anbieter wie etwa YouTube. Wenn man in CiWiki eine Seite bearbeitet, wird eine einzelne Kopie der letzten vorherigen Version abgespeichert. So kann man die letzte Änderung einer Seite wieder rückgängig machen, indem man (manuell von außen, nicht im Wiki selbst) auf diese Backup-Datei zurück greift. Weiters hat CiWiki eine User-Verwaltung, so dass verschiedene Benutzer Accounts anlegen können und nicht-angemeldete Benutzer keine Änderungen am Wiki vornehmen können. Diese grundsätzlich nette Feature wird allerdings dadurch konterkariert, dass CiWiki genau so wie DidiWiki kein HTTPS unterstützt, und daher jeder Angreifer mit einem Netzwerk-Sniffer das eingegebene Passwort abfangen könnte. Außerdem ist es zur Registrierung eines neuen Accounts nötig, dass "ssmtp" am lokalen Rechner installiert ist und in der Lage Mails ins Internet zu versenden. Das ist erstens problematisch im Hinblick auf die Tatsache dass man unter Debian nicht ssmtp und einen normalen Mailserver zugleich installieren kann. Zweitens bedeutet es dass die Übertragung der Verifikations-Mails grundsätzlich ungeschützt übers Internet geschieht, selbst wenn es sich um lokale User handelt die man eben so gut direkt über /var/spool/mail bzw. "local delivery" erreichen könnte. Und zur Draufgabe erfordert dies auch noch ein Script, welches in /usr/libexec installiert sein muss. Man kann dies zwar im Quelltext ändern, aber eigentlich sollte so etwas eine configure-Option sein, was es jedoch nicht ist. Ein positiver Aspekt ist, dass man diese ganzen eher sinnlosen Account-"Verbesserungen" auch alle abschalten kann, und Ciwiki sich dann eben so simpel wie DidiWiki verhält. Zweitens gibt es einen Modus, mit dem man automatisch eingeloggt wird ohne einen Account haben zu müssen. Man gilt dann als eingeloggter Benutzer, womit man das Wiki ändern kann. Während Benutzer welcher eine ohne diese Option gestartete Instanz des Wikis benutzen als nicht-eingeloggt und somit Minder-privilegiert gelten. Ciwiki enthält ein paar zusätzliche Formatierungs-Optionen gegenüber Didiwiki, so kann man insbesondere Vorder- und Hintergrundfarbe ändern bzw. aus einer kleinen fix vordefinierten Farbpalette wählen. Es gibt eine Markierung, mit dem man den Rest einer Wiki-Seite in der Anzeige unterdrücken kann, wenn der aktuelle Benutzer nicht eingeloggt ist. So kann man interne/private Informationen einfach für die Allgemeinheit unterdrücken. Weiters gibt es eine simple Funktion, ein Formular zu definieren so dass neuer Text zur Seite eines Wikis an dieser Stelle hinzu gefügt wird. Das kann man beispielsweise dazu nutzen, Kommentare zu einer Seite hinzu zu fügen ohne die Seite als Ganzes bearbeiten zu müssen. CiWiki stellt weiters einen RSS-Feed für das Wiki zur Verfügung. Mit DidiWiki gemein hat CiWiki die lästige Angewohnheit, das syslog mit lauter Einträgen für jede Einzelaktion vollzumüllen, ohne dass man dieses Abschalten könnte. Allerdings kann man das Programm selbst kompilieren, und das Logging davor durch simples Hinzufügen von setlogmask(LOG_ALERT) nach dem Aufruf von openlog() im Quelltext de facto deaktivieren.
+
+https://github.com/bazelbuild/bazel/releases
+2018-10-26
+Ein gar tolles in JAVA-geschriebenes Build-System. Vor allen deshalb relevant, da das wesentlich bekanntere TensorFlow es als Build-System verwendet. Sicherlich ist Bazel großartig und alles, aber es hat 3 Probleme: Erstens benötigt es sich selbst, um gebaut zu werden. Man muss daher zunächst eine bereits fertig gebaute Version besitzen. Zweitens vollbringt Bazel das Wunder, plattformspezifisch zu sein obwohl man doch meinen könnte "JAVA - runs everywhere". Mitnichten. Und drittens gibt es solche bereits fertige downloadbare Bazel-Builds nur für die amd64-Plattform. Mit anderen Worten, man hat derzeit keine Chance Bazel auf etwas anderem als amd64 zu bauen.
+
+https://github.com/tensorflow/tensorflow
+2018-10-26
+Anders als man vielleicht glauben könnte hat Tensorflow nicht das geringste mit neuronalen Netzen oder Maschinenlernen zu tun. Es ist nur eine Bibliothek für schnelle numerische Berechnungen mit großen mehrdimensionalen Matrizen bzw. Vektoren. Tensorflow wird dabei zwar als maßgeblicher Teil vieler NN/ML-Projekte verwendet, hat aber davon abgesehen nichts weiter mit diesen zu tun. Tensorflow tut alles um möglichst schnell zu arbeiten, inklusive dem Einsatz von speziellen SIMD-CPU-Instruktionen und der Unterstützung von GPUs. Leider hat Tensorflow aber einen großen praktischen Haken: Es unterstützt offiziell nur die amd64-Plattform. Das beginnt schon einmal damit dass es Bazel als Buildsystem benützt (siehe oben), welches seinerseits nur amd64 unterstützt. Mit einigen Mühen haben es eine Leute geschafft auch 32-Bit-Versionen von Tensorflow zu produzieren, aber das sind alles experimentelle und wenig getestete Versionen. Außerdem hat keine davon GPU-Support. Wer Tensorflow verwenden will muss einen x86-Rechner und ein 64-Bit-System darauf laufen haben, egal ob es eine Linux-, MacOS- oder Windows-Installation ist. Alles andere kann man derzeit praktisch vergessen.
+
+https://github.com/google/fscrypt
+2019-01-16
+FsCrypt ist eine in Go geschriebene Alternative zu eCryptFS und EncFS für das transparente Verschlüsseln auf Dateiebene. Anders als EncFS wird es vom Kernel bzw. Dateisystem implementiert, und hat daher nicht die Beschränkungen eines FUSE-Dateisystems. Funktional ist es ähnlich wie eCryptFS, hat jedoch den Vorteil dass es kein "Stacked"-Dateisystem ist, und es daher zu keinen Problemen/Abstürzen im Kernel wegen zu geringem Stapelspeicher der gestackten Treiber (eCryptFS und der damit verbundene Dateisystemtreiber) kommen kann. Weiters wird es nicht von den Sicherheitsproblemen von EncFS (Stand 2019) gequält, die durch schlechtes Metadaten-Design verursacht werden. FsCrypt kann sowohl Daten verschlüsseln (mit den auch für LUKS verfügbaren Kernel-Algorithmen) als auch deren Integrität sicher stellen (etwa mittels SHA-512). Dateinamen (oft mit AES-CTR) und Dateiinhalte (oft mit AES-XTS) können mit separaten Methoden verschlüsselt werden. Grundsätzlich wäre FsCrypt die beste Methode, transparente Dateiverschlüsselung unter Linux zu betreiben. Leider hat FsCrypt aber einige böse Bugs (Stand 2019) welche "lustige Dinge" bewirken wie dass die dem Benutzer zugeordneten Gruppen nach dem Login falsch sein können. Diese und ähnliche Bugs führen dazu, dass es derzeit nicht ratsam ist sein gesamtes $HOME-Verzeichnis mittels FsCrypt zu verschlüsseln. Außerdem ist FsCrypt - wohl aus diesem Grund - in keiner Debian-Distro enthalten, und muss manuell von GitHub installiert und gebaut werden (was die 20 MB Installation eines Go-Compilers erfordert). Der vielleicht größte Nachteil ist aber dass FsCrypt vom Dateisystemtreiber implementiert werden muss. Und daher gibt es nur eine kleine Hand voll Dateisysteme welche dies bereits unterstützen (Stand 2019): ext4, f2fs, ubifs. FsCrypt ist nur sinnvoll wenn man keine Full-Disk-Encryption benutzt, oder wenn man Daten vor anderen Benutzern am selben System verbergen will, oder wenn man Daten nicht während der ganzen Laufzeit des Systems entschlüsselt haben möchte. Als Zweitverschlüsselung - also zusätzlich zu einer FDE - hat es hingegen kaum einen Wert, da hier nur das AES-Algorithmus zum Einsatz kommt, der vermutlich ohnehin bereits bei der FDE verwendet wird. Wenn ein Angreifer AES knacken kann und damit die FDE, wird er kein Problem haben auf dieselbe Weise auch die FSCrypt-Verschlüsselung zu knacken. Und wenn der Angreifer AES nicht knacken kann, braucht man die Zweitverschlüsselung gar nicht erst. Ein minimaler Vorteil könnte noch die längere Schlüssellänge von FsCrypt sein. Allerdings wird ein Angriff auf AES vermutlich über ein Backdoor im Algorithmus erfolgen und nicht mittels Brute Force, so dass die Länge des Schlüssels irrelevant ist. Eine denkbare Verbesserung wäre es aber, mehrere FsCrypt-Dateisysteme direkt über einander zu legen. Denn dass ein Backdoor über mehrere AES-Schichten hinweg funktioniert, ist unwahrscheinlich. Aber erst wenn man durch alle Schichten gekommen ist hat man den Plaintext, anhand dem man überhaupt erst ermessen kann ob die Entschlüsselung erfolgreich war. Aber diese Lösung wird leider durch 2 Einschränkungen verhindert: Erstens einmal müssen Dateinamen zwingend mit mindestens 4 Bytes gepadded werden - der Wert der entschlüsselten Padding-Bytes ist dem Angreifer bekannt. Zweitens kann man nicht direkt ein verschlüsseltes Verzeichnis auf das nächste setzen, sondern muss zuerst zumindest ein Unterverzeichnis im ersten verschlüsselten Verzeichnis anlegen. Diesen Namen kann der Angreifer kennen, erraten, oder zumindest mit hoher Wahrscheinlichkeit als entschlüsselt erkennen. Beides führt dazu dass der Angreifer die einzelnen Verschlüsselungsebenen nach einander knacken könnte falls AES ein Backdoor hat, und nicht alle zusammen was sicher genug wäre. Daher, leider: FsCrypt taugt nicht als Zusatz-Verschlüsselung die eine bestehende übergeordnete noch sicherer machen könnte. Und auch im Standalone-Einsatz kann man es nicht durch mehrere Schichten gegen Backdoor-Angriffe sicherer nachen, oder zumindest nur marginal. Es ist daher nur brauchbar, wenn die Daten entweder nicht sonderlich wichtig sind, oder man großes Vertrauen in die Ehrlichkeit von Aussagen der NSA hat wie sicher AES doch angeblich sei und dass jeder es benutzen möge - während geleakte NSA-Angriffstools zeigten dass diese lieber RC6 als AES verwendeten. Ein Schelm ist wer böses denkt.
+
+https://github.com/google/fscryptctl
+2019-01-16
+Dieses in C geschriebene (kein Go erforderlich) Low-Level-Tool, welches die FsCrypt zugrunde liegende Verschlüsselung für einzelne Dateien oder Directories zugänglich macht. Es benutzt die Keyrings des Linux-Kernels ("keyctl") zur Verwaltung der benötigten Schlüssel. Anders als FsCrypt welches eine Gesamtlösung darstellt, muss man sich hier selber darum kümmern wo die Schlüssel für die einzelnen Dateien und Verzeichnisse her kommen. Aber auch dieses Tool kann natürlich nicht die Beschränkung umgehen, dass nur wenige Dateisysteme (im wesentlichen nur ext4 - siehe die Beschreibung von FsCrypt für vollständige Liste) die FsCrypt-Verschlüsselung überhaupt unterstützen. Da dies ein Low-Level-Tool ist kann der Dateisystem-Cache selbst nach dem Entfernen des zugehörigen Schlüssels noch den entschlüsselten Inhalt enthalten. Dies kann aber durchs Unmounten des verschlüsselten Verzeichnisses oder dem Löschen des systemweiten Directory-Entry-Caches (mittels /proc/sys/-Setting) behoben werden.
+
+https://github.com/duplicati/duplicati/
+2019-01-19
+Ein Backup-Programm welches AES-256 verschlüsselte Backups in Cloud-Storage ablegen kann (FTP, SSH/SFTP, Amazon S3, Google Drive, Dropbox, Azure, OneDrive, Openstack, Tahoe-LFS etc.) Es scheint klassisch mit Full und Incremental Backups zu arbeiten. duplicati beherrscht auch Komprimierung und Deduplication, wobei leider unbekannt ist ob es dabei eine fixe Blockgröße (wenig effektiv für Deduplication) oder variable Blockgrenzen mittels Rolling Hash (effizienter) benutzt. Das mag alles schön und gut sein, aber leider ist duplicati in C# geschrieben, was bedeutet dass man sich unter Linux die MONO Runtime installieren müsste, was jedem standesbewusstem Linux-User ein Grausen bescheren sollte.
+
+http://lcamtuf.coredump.cx/soft/snowdrop.tgz
+2019-04-14
+Kann steganografische Wasserzeichen in englischsprachige Textdateien sowie C-Quelltexte integrieren. Es nutzt dazu 4 Quellen: Eine Liste von Synonymen, Leerzeichen-Sequenzen, alternative Sonderzeichen (diverse Hochkommas) sowie Rechtschreibfehler. Scheint mir vor allem wegen der letzten Kategorie ein ziemliches Gepfusche zu sein - schon ein Spell-Checker könnte das Wasserzeichen zerstören. Ebenso eine Reformatierung des Textes wegen der Leerzeichen-Sequenzen. Andererseits, besser als nichts, wenn man sonst nichts hat.
+
+http://micropython.org/
+2019-05-06
+Eine schlanke Python-Implementation die mit 16 KiB RAM auskommt und sowohl für "vollwertige" *IX-Systeme als auch mehrere Embedded-Systeme verfügbar ist. Obwohl sich MicroPython ("µPy") "bemüht" so Python3-kompatibel wie möglich zu sein, gelingt ihm das nicht so ganz da selbst sehr grundlegende Funktionen wie "del array[element]" nicht funktionieren, und Vererbung anders als im Original (tolle Ratschläge wie "verzichten Sie am besten auf Mehrfach-Vererbung" werden dazu erteilt). Es ist daher kaum als schlanker Ersatz für normales Python gedacht, sondern eher als Alternative zu C/C++ wenn man von Grund auf neue Anwendungen für Geräte mit schwacher Hardware wie den ESP32 oder ESP8266 entwickelt. Es gibt auch eine "offizielle" Hardware, das "pyboard". Der größte Vorteil gegenüber C/C++-Entwicklung ist die Interaktivität: µPy bringt einen interaktiven Interpreter mit REPL (samt Tab-Completion sowie einem speziellen "Paste Mode") mit, der über die serielle Konsole oder USB direkt am Microcontroller benutzt werden kann. Ein Problem das ich sehe: Ein ESP32 (523 KiB SRAM) oder ESP8266 (32 KiB code RAM, 80 KiB data RAM) ist kaum billiger als ein Raspberry Pi (auf dem problemlos ein vollwertiges Python laufen kann), aber viel leistungsschwächer. Allerdings benötigt er auch deutlich weniger Strom, was im Grunde sein einziger Vorteil ist.
+
+http://www.ulisp.com/
+2019-05-06
+Eine schlanke LISP-Variante für Embedded-Systeme die mit 32 KiB Code und 2 KiB RAM auskommt. Eine besonders schlanke Version davon, uLisp Zero, kommt mit 8 KiB Code und 1 KiB RAM aus. Leider funktionieren beide Varianten nur auf diversen Microcontrollern (vor allem Arduino, ESP32, ESP8266, MicroBit und STM) und es gibt offenbar keine portable Version davon.
+
+http://www.zbasic.net
+2019-05-06
+Eine VB-ähnliche BASIC-Sprache ("Subset" von VB6) für Embedded-Systeme. Ein bisschen unklar ist ob das speziell angepasste Boards sein müssen, oder on ZBasic auch direkt auf den handelsüblichen Embedded Controllern läuft welche in den im Shop angeführten ZBasic-Boards enthalten sind. Überhaupt macht das ganze einen reichlich kommerziellen Eindruck, und die Preise sind auch saftig gemessen an der schwachen Leistung. Aber schlimmer noch, das ganze scheint kein OpenSource zu sein. Und am schlimmsten: Es scheinen auch noch Lizenzgebühren in bestimmten (nicht allen) Nutzungs-Szenarien anzufallen. Fazit: Unbrauchbar! Wer kettet sich schon freiwillig einem kommerziellen Hersteller an dessen Bein, wenn es endlos OpenSource-Lösungen gibt? Vermutlich wer einen beschränkten Horizont hat und auf eine hübsche Entwicklungs-IDE am PC steht, selbst wenn diese ClosedSource ist.
+
+http://wren.io/
+2019-05-06
+Eine garbage-collected Script-Sprache mit dem Anspruch ähnlich schlank wie Lua zu sein, die jedoch optisch eher wie JavaScript aussieht und das auch noch schön findet. Lists (Arrays) sind anders als bei Lua 0-basiert und werden von Maps (Hashes) unterschieden. Es hat nur einen einzigen numerischen Typ: Fließkommazahlen mit doppelter Genauigkeit. Ein Fehler den auch Lua ursprünglich machte und erst ein Lua 5.3 behoben wurde. Allerdings sollte es möglich sein andere Arithmetik-Operatoren in C zu implementieren und diese dann mit einer eigenen Klasse zu benutzen. Ansonsten ist es Lua sehr ähnlich und bietet auch Block Scope für Variablen. Strings haben Byte-Semantik, aber es gibt auch Funktionen um sie als UTF-8 zu interpretieren und ihre Codepoints zu codieren oder zu decodieren. Die Standard-Funktion zur Ausgabe ignoriert alle Fehler. Es gibt reichhaltige Funktionen für Ranges und Sequenz-Operationen (wie map/join/grep von Perl). Eine Sortierfunktion fehlt aber eben so wie Regex-artige Funktionen. Anders als Lua hat es explizite Schlüsselworte für Konstruktoren und Klassendefinitionen. Es scheint nur einfache Vererbung zu geben. Dafür ist das ganze Vererbungs-System aber statisch, und keine teuren Methoden-Lookups zur Laufzeit sind nötig. Alle Instanzvariablen sind privat, ohne setter/getter kann man aus einer Methode heraus nicht einmal auf eine andere Instanz desselben Objekttyps zugreifen. Eine syntaktische Widerlichkeit ist dass in Methoden alle Namen mit führendem Underscore automatisch und zwingender Weise Instanzvariablen sind. Das spart zwar viele "this.", beschert einem dafür aber entsprechend viele Underscores. Die Sprache unterstützt vom Interpreter geschedulte kooperative (non-preemtive) Green Threads namens "fibers", die Koroutinen entsprechen und zugleich auch für die Fehlerbehandlung zum Einsatz kommen. Wren ist wie Lua ein Bytecode-Interpreter, aber offenbar noch um einiges flotter. Es erfordert C99 oder C++98 um gebaut werden zu können. Das Executable ist 210 kB groß und hängt von der libc, libm, pthreads (POSIX threads) und librt (POSIX real-time functions) ab - witziger Weise benutzt es aber gar keine POSIX Threads. Damit ist das Executable um rund 20 % größer als das von Lua 5.3, welches allerdings eine wesentlich umfangreichere Standard-Bibliothek mitbringt.
+
+https://users.dcc.uchile.cl/~gnavarro/software/nrgrep-1.1.1.tar.gz
+2020-01-18
+"nrgrep" ist ein "grep"-artiges Utility, welches andere als vermutet *keine* Fuzzy-Suche beherrscht. Bemerkenswert ist allenfalls dass die einzige Hilfe der eingebaute Hilfstext ist, welcher (in Version 1.1) 55 Zeilen lang ist. Als ich einen Umlaut im Suchmuster eingab, stürzte es sofort ab. Die unterstützten Patterns sind nur ein Bruchteil echter BREs - weder Klammern noch der Stern-Operator werden unterstützt. Die einzig bemerkenswerten Features dieses Programm die ich erkennen konnte sind dass man die Matches auf ganze Worte Einschränken kann und dass man den Zeilentrenner explizit angeben kann - also anstatt zwingend '\n' zu verwenden.
+
+http://forthworks.com/retro/
+## FORTH, retroforth
+2020-04-18
+RETRO: a Modern, Pragmatic Forth
+Alles nett und gut, außer: Das Binary ist rund 100 kB lang. Mitsamt allen Tools (die aber nicht zum Primärbetrieb erforderlich sind) ist es schon 220 kB. Und wenn man die Dokumentation und Beispiele dann auch noch mit installiert, sind es schon 1,3 MB.
++
+Ein paar Seltsamkeiten gibt es auch: Der Autor ist offenbar von funktionalen Sprachen begeistert und hat FORTH reduce, apply & Co spendiert. Leider auch Namespaces, wodurch das ganze nicht mehr sehr FORTH-artig aussieht.
++
+Das größte Problem aber: Es tat nichts nachdem ich es (nach erfolgreichem Bauen) startete. Oder zumindest nichts sinnvolles. Denn als ich "5 3 + ." eingab stürzte es mit dem Hinweise auf einen Stack Overflow ab. "vlist" kannte es auch nicht. Ich war eher nicht so begeistert.
++
+Ich habe ein Download- (830 kB) und -Build-Script retroforth-build.sh.gz dafür erstellt.
+
+https://github.com/viswans83/aforth
+### FORTH, aforth
+2020-04-18
+Ein ziemlich kleines FORTH. Das git-Repository ist nach dem Download nur 170 kB groß (ohne den Checkout, und wenn man nur die letzte Version herunterlädt.)
++
+Der Kern kommt als ca. 30 kB großes x86 Assembler-Listing (nasm wird zum Assemblieren benötigt) daher, was in ein 4,5 kB langes (stripped) statisch gelinktes Executable aforth mündet. Dieser Kern allein ist jedoch noch unbrauchbar, da ihm viele wichtige FORTH-Worte sowie die Eingabeschleife fehlen. Dazu muss man dem Kern beim Start noch ein 5,5 kB großes FORTH-Quelltextfile aforth.f (komprimiert 1,7 kB groß) mit den restlichen Definitionen via stdin zuführen; dann hat man ein funktionierende System. Die beiden Dateien aforth und aforth.f ergeben mit cpio und gzip -9 gepackt ein 4,2 kB großes Archiv. Das ist alles was für die Installation erforderlich ist!
++
+Wenn man den Aufruf von aforth mit rlwrap kombiniert, erhält man auch eine komfortable interaktive Benutzung. Einziges Problem: Auf Fehler reagiert es schlecht und stürzt nahezu immer ab. Aber zum Ausführen von fertigem Code ist das eher egal.
++
+Trotz der geringen Größe sind immerhin 143 FORTH-Worte in aforth enthalten. Der Assembler-Quelltext ist schön dokumentiert, und das aforth.f so kurz dass man leicht herausfindet welches Wort was tut. Alles in allem sehr beeindruckend! Eine schöne Methode FORTH kennen zu lernen, ohne sich gleich mit den aberhunderten Worten einer Voll-Implementation auseinander setzen zu müssen. Ich fand keine Funktionen zum Zugriff auf das Dateisystem. Aber zumindest kann das Programm über stdin/stdout mit der Außenwelt Daten austauschen, und hat sogar die Möglichkeit einen Fehler-Rückgabecode retour zu geben. Zugriff auf stderr fehlt allerdings.
++
+Wenn man - der Dokumentation wegen - alle Dateien aforth, aforth.f, aforth.S und README.md in als cpio-Archiv mit lrzip bei maximaler Kompression packt, ist das Archiv 10,5 kB groß. Mit lzma werden es 11,7 kB und mit gzip 12,6 kB.
++
+Der einzige offensichtliche Nachteil ist seine völlige Abhängigkeit von der x86-32 Plattform. Es kann auf dieser allerdings sowohl unter OSX, BSD als auch Linux gebaut werden. Die Plattformabhängigkeit geht so weit dass es absolute syscall-Nummern von Linux im Assembler-Quelltext verwendet! (Offensichtlich bieten OSX und BSD hier Kompatibilitäts-ABIs an, sonst wäre es nicht möglich dass forth dort läuft.) 
++
+Eine andere Kleinigkeit die störend ist, ist dass einige Worte gegenüber dem Standard umbenannt wurden. So heißt es etwa "words." anstatt "vlist".
+
+https://github.com/uho/preForth
+### FORTH, preForth, seedFORTH, bootstrapping
+2020-04-18
+Ein angeblich auch sehr kleines FORTH-System. Der Kern kann nahezu "nichts": Kein interaktiver Modus, keine Kontrollstrukturen, kein Dictionary, keine defining Words, kein Error handling. Der Sinn dieses FORTH ist es allerdings auch nur, ein anderes FORTH zu bootstrappen. Dafür scheint es zu reichen. Insbesondere kann es sich selbst bootstrappen.
++
+Es gibt auch eine erweiterte Version namens seedFORTH, welche viele der vermissten Features mit Ausnahme eines interaktiven Modus wieder zur Verfügung stellt. Es wird mit Hilfe von preForth gebootstrapped. Allerdings ist auch seedFORTH so minimal, dass es keinen FORTH-Quelltext direkt akzeptiert, sondern diese muss schon vorher tokenisiert worden sein. Ein entsprechendes Utility zu diesem Zweck liegt bei.
++
+Anders als aforth ist preForth nicht in reinem Assembler geschrieben, sondern ebenfalls in FORTH. Genauer gesagt: FORTH das von FORTH-Assembler reichlich Gebrauch macht. Offensichtlich wird dabei aber ein externer Assembler namens fasm eingebunden, der deshalb ebenfalls installiert sein muss. Zusätzlich braucht man auch noch ein bereits vorhandenes anderes FORTH-System (gforth reicht zu diesem Zweck angeblich aus).
++
+Das relativiert den Nutzen für das Bootstrapping erheblich, da keine anderen CPU-Architekturen unterstützt zu werden scheinen. Vor allem aber verschiebt sich die Gefahr eines Backdoors vom FORTH zum fasm. Dieser ist 140 kB lang und in sich selbst geschrieben - das alles zu sichten wird viel Arbeit sein, erst recht wenn man es zu diesem Zweck disassemblieren will.
++
+Der Download für preForth + seedFORTH beträgt 652 kB - zumindest ist dies die Größe des git-Repositorys (minimiert und ohne Checkout) davon (nur das neueste Commit). Hinzu kommt noch fasm mit 152 kB.
++
+Als ich versuchte preForth zu bootstrappen, gelang mir das aber nicht - es stürzte mit irgend einer Fehlermeldung ab. Daher kann ich auch nicht sagen welchen Umfang das preForth-Executable gehabt hätte. Aber Angesichts seiner mangelnden Features kann es eigentlich nicht sehr groß sein.
++
+Fazit: Löst das Bootstrap-Problem nicht wirklich - wegen der Abhängigkeit vom zu großen Assembler-Executable.
+
+https://github.com/crcx/foerthchen
+### FORTH, Foerthchen
+2020-04-18
+Ein wirklich beeindruckend kleines FORTH. Das git-Repository (nur der neueste Commit, ohne Checkout, minimiert) ist 144 kB groß. Es besteht aus 3 x86-32 Assembler-Quelltexten mit zusammen 12 kB Umfang, und ergibt ein ELF-Executable mit 706 Bytes Länge. Allerdings muss man diesem Executable noch einen 860 Byte "großen" FORTH-Quelltext mit zusätzlichen Laufzeitfunktionen zuführen, damit es auch nur irgend etwas tun kann. Es kann auch interaktiv benutzt werden und erlaubt Wort-Definitionen. Sogar ein (non-standard) "COND if( IFPART )/els( ELSEPART )"-Konstrukt ist vorhanden. "loop" oder "Compiler-Worte" gibt es aber nicht. Möglicherweise kann man sich so etwas mit den vorhandenen Mitteln selbst nachimplementieren; doch dies übersteigt meine FORTH-Kenntnisse weit.
++
+Leider ist auch foerthchen, genau wie preForth, in x86-32-Assembler implementiert und benötigt dazu den fetten fasm um gebaut zu werden. Auf der anderen Seite ist das Executable so klein, dass man es einfach disassemblieren und auf Backdoors prüfen kann.
++
+So gesehen wäre es interessant, ob man mit den gebotenen Möglichkeiten die fehlenden FORTH-Worte nachimplementieren kann, um damit dann ein anders FORTH bootstrappen zu können.
++
+Der Assembler-Code ist praktisch undokumentiert. Aber da die meisten Primitives nur 4 Assembler-Zeilen lang sind, kann man vermutlich trotzdem relativ rasch heraus finden wie das Programm arbeitet.
++
+Neben der Assembler-Version gibt es auch eine Perl-Version, deren Quelltext 755 Bytes lang ist. Allerdings scheint die nicht interaktiv zu funktioneren. Davon abgesehen ist es ja keine Kunst in Perl etwas kurz und unleserlich zu schreiben - es gibt ganze Wettbewerbe dafür.
++
+Portabel ist Foerthchen aber natürlich genau so wenig wie die andern in x86 Assembler geschrieben Mini-FORTHs, und es benutzt auch direkte "int 0x80"-syscalls des Linux Kernels. Dennoch eignet es sich besser als die anderen FORTHs um untersucht zu werden, da es der Quelltext so kurz und Übersichtlich ist.
++
+Ähnlich wie aforth kann Foerthchen nur mittels stdin/stdout mit "der Welt draußen" kommunizieren, aber es hat deutlich weniger eingebaute Worte. Allerdings ist auch der Assembler-Quelltext gleichermaßen kürzer. Es ist ebenfalls statisch gelinkt und benötigt daher keine zusätzlichen Bibliotheken. Zusammen mit dem erwähnten zum Start erforderlichen FORTH-Quelltext zusätzlicher Laufzeitfunktionen ist es als gzip-gepacktes cpio-Archiv 1138 Bytes lang. Das kann man sich selbst in einer initramfs noch locker leisten! Bravo.
+
+https://github.com/CarmineCella/nforth
+### FORTH, nforth
+2020-04-19
+In in C++ geschriebenes Mini-Forth. Wenn man dies bedenkt, ist es mit 60 kB Größe beeindruckend klein. Allerdings kann es auch wirklich fast nichts. Es besteht aus einem 7 kB großen C++ Quelltext und einer 150 Byte "großen" Laufzeit-Bibliothek, welche ganze 4 Funktionen definiert - und noch dazu sehr triviale ("dup", "over", "swap", "rot"). Der C++ Kern stellt folgende Funktionen zur Verfügung: "accept", "parse", "eval", "(", ":", ".s", ".@", "words", "drop", "pick", "roll", "load", "while". Immerhin ein "while". Was allerdings auffällt, ist der Fehlen jedweder arithmetischen Operation! Das kann ja wohl nicht ernst gemeint sein?
++
+Ich gehe daher einmal davon aus, dass der Projekt einfach noch so im Pre-Alpha-Stadium ist, dass es einfach noch nicht weiter implementiert wurde. Immerhin muss man sagen dass der C++ Quelltext schön kurz und lesbar ist. Praktisch alles wird mit vorhandenen STL-Funktionen implementiert. Praktisch allerdings völlig unbrauchbar, da man weder einen Zähler implementieren kann, noch gibt es eine Druckfunktion für Zahlen.
++
+Eigentlich lädt der Quelltext geradezu dazu ein, ihn weiter zu schreiben bzw. zu erweitern. Wenn es denn nur nicht so grenzenlos sinnlos wäre, einen FORTH-Interpreter in C++ zu implementieren...
++
+In einer Hinsicht ist nforth allerdings allen anderen getesteten überlegen: Es benutzt ein Standard Autotools-"configure". Daher ist es viel problemloser zu bauen als die meisten anderen.
+
+https://github.com/cstrotm/helforth
+### FORTH, helforth, Foerthchen
+2020-04-19
+"helforth" ist ein von selben Autor wie "Foerthchen" geschriebenes FORTH. Der Name weist übrigens offenbar auf den Autor hin, dessen Vorname "Helmar" ist. Während Foerthchen allerdings eher eine Machbarkeitsstudie darstellt, ist helforth scheinbar dazu gedacht auch tatsächlich benutzt zu werden. Es strebt offenbar sogar ANS FORTH Compliance an, wobei freilich offen bleibt in wie weit dieses Ziel auch erreicht wurde.
++
+Der Code ist weniger verständlich als der von Foerthchen - das liegt aber sicher auch an seiner deutlich größeren Länge. Allerdings kommen auch jede Menge kryptischer Hexadezimal-Konstanten im Quelltext vor - die verdächtig nach Maschinencode aussehen. Sollte das stimmen, wäre es mit der Portabilität noch weniger weit her als bei Foerthchen mit dem fasm. Und überdies weniger leserlich! Allerdings wäre es auch denkbar, dass es sich dabei um FORTH-Tokens handelt, welche Worte definieren, noch bevor der eigentliche Interpreter zur Verfügung steht. Immerhin gibt es file I/O Funktionen inklusive "seek" - nicht oft zu sehen bei schlanken FORTHs. Es gibt auch Variablen, man muss nicht mehr alles am Stack machen. Es gibt auch reichhaltige Kontrollstrukturen, und sogar einen x86-Disassembler! Es gibt auch "allot" und Arrays, wie ein Matrix-Multiplikations-Benchmark beweist. Sogar Objektorientierung scheint es in irgend einer Form zu geben, wie "class" vermuten lässt. Ein 8-seitiges PDF listet alle verfügbare Worte und ihre Signaturen auf - allerdings ohne weitere Erklärung. Es gibt auch immediate-Worte, Exceptions und ausreichend Mathematik-Funktionen. Das einzige was ich nicht finden konnte war "<BUID ... DOES>" und ähnliche Konstrukte. Aber vielleicht heißen die auch nur anders. Es gibt nach wie vor 2 Assembler-Quelltexte, die mit zusammen 24 kB ungleich länger als die von Foerthchen sind.
++
+Das Makefile war bescheuert und wollte unbedingt den fasm selbst bauen, obgleich gar kein Quelltext für diesen beilag. Durch entfernen der entsprechenden Abhängigkeiten aus dem Makefile gelang es dann aber doch. Die folgenden Executables konnten darauf hin gebaut werden: 12K hf, 16K hf-ans, 20K hf-mega, 8,0K hf-nano, 4,0K hf-pico. Wirklich fett sind die alle nicht... und alle statisch gelinkt.
++
+Ich machte die Probe aufs Exempel, und startete die Executables in einem ansonsten leeren chroot-Jail. Und tatsächlich - sie starteten alle und auch simple Berechnungen funktionierten anstandslos.
++
+Die Größe der Executables entspricht auch ungefähr ihrem Funktionsumfang. Hier konkret die Anzahl der FORTH-Worte pro Variante: hf 265, hf-ans 183, hf-mega 277, hf-nano 194, hf-pico 124.
++
++ Weiters sind diese Executables offenbar auch self-contained; sie laden anders als Foerthchen nichts mehr beim Start nach.
++
+Jede dieser Versionen taugt daher, in einer initrd mit geringem Mehrplatz-Aufwand eine zusätzliche Programmiersprache zur Verfügung zu stellen.
++
+Bis auf die nach wie vor vorhandene unsägliche x86-Abhängigkeit macht dieses FORTH jedenfalls auf den ersten Blick einen sehr guten Eindruck.
+
+http://example.org/
+## nildb, key-value-store
+2020-04-27
+Eine sehr primitive Hash-Datenbank, die sich aber außergewöhnlicher Portabilität , Code-Kürze und geringem RAM-Verbrauch rühmt.
++
+Schlüssel als auch Werte sind auf 4 GiB limitiert und müssen eine fixe (aber beliebig konfigurierbare) Länge haben. Soweit die Anwendung dies erlaubt, ist die Datenbank dann aber sehr platzeffizient.
++
+Das Datenformat ist noch simpler als die CDB, insbesondere gibt es den Unsinn mit den 2-stufigen Hash-Tables und dem redundanten letzten Byte aller Hashwerte nicht.
++
+Außerdem kann diese Datenbank auch aktualisiert und nur nur gelesen werden. Freier Speicherplatz wird sogar sofort recycled, auch wenn die Datei deswegen niemals geschrumpft wird.
++
+Der Quelltext ist nur ca. 8 kB groß und simpel genug, dass man das Format bei Bedarf wohl ohne all zu große Probleme auf 64 Bit erweitern könnte.
++
+Etwas unklar ist die maximale Datenbankgröße. Einerseits wird von 64 Bit geredet, dann wieder von 32-Bit.
++
+Meine Vermutung: Die Hash-Table kann bis zu 2**32 Einträge mit je 4 Byte Größe aufnehmen und sollte, um noch Performance zu bieten nicht mehr als 50 % gefüllt sein. So viele Schlüssel-Wert Paare gibt es dann, und wie viel Platz diese belegen kommt auf die verwendete fixe Größe von Schlüsseln und Werten an.
++
+Wenn jeder Schlüssel und Wert je 2**32 Byte lang wäre, könnte die Datenbank folglich 2**32 * 2 * 2**31 Bytes an Schlüssel/Werten speichern und dazu noch 2**32*4 Bytes für die Hashtabellen, zusammen also 16*2**60 Byte oder ziemlich genau das was man mit 64 Bit adressieren kann.
++
+Die praktische Maximalgröße hängt aber wohl eher vom der Größe der einzelnen Datensätze ab, da eine fixe Größe von 8 GB pro Datensatz wohl etwas unrealistisch für praktische Problemstellungen ist. (Obwohl, möglicherweise könnte man das für praktisch variable Datensatzgrößen verwenden, wenn die Datenbank eine sparse-Datei ist.)
++
+Ein weiteres Problem ist dass das Programm keinerlei Schutz vor Datenkorruption vorsieht - weder kann diese entdeckt noch repariert werden. File locking gibt es genau so wenig (aber natürlich kann man das extern erledigen).
+
+https://gitlab.com/notklaatu/ninit.git
+## ninit, init, minit, runit, ngetty, ninit
+2020-12-27
+"ninit" ist ein weiteres "init"-System, das dem "runit"-System relativ ähnlich ist. Allerdings bietet es anders als dieses auch Support für Service-Abhängigkeiten, und zwar nicht nur zum Starten sondern auch zum Stoppen.
+
+Es handelt sich um einen Fork des "minit"-Systems, wobei letzteres allerdings nicht die erwähnten Service-Abhängigkeiten kennt und "runit" noch wesentlich ähnlicher ist.
+
+Alle Steuerdateien für das Programm werden unter /etc/ninit abgelegt, was auf normalen UNIX-Systemen zu keinen Namenskollisionen mit existierenden Dateien führen sollte.
+
+Es wird bevorzugt mit der libdiet als C-Runtime kompiliert, und ergibt dann bei statischen Linken ca. 570 kB an Installationsumfang (inklusive Dokumentation und Hilfsprogrammen).
+
+Es alloziert Speicher nur vom Stack und kommt dabei mit sehr wenig RAM aus. Nachteilig ist dass es dazu alloca() benutzt, das nicht auf allen Systemen verfügbar und nicht durch POSIX spezifiziert ist. Ansonsten basiert ninit weitgehend auf POSIX-APIs. Die noch portableren I/O-Funktionen des "C"-Standards werden nicht genutzt. Allgemein scheint mir die Portabilität des Quellcodes zweifelhaft zu sein da ich den Verdacht hege dass dieser einige Annahmen über den Inhalt von System-Headerdateien trifft die nicht von POSIX garantiert werden. Allerdings könnte dieser Eindruck auch falsch sein.
+
+Der eigentliche "init"-Daemon wurde bewusst schlank gehalten; für die meisten administrativen Aufgaben werden daher andere, zusätzlich beiliegende Hilfsprogramme verwendet.
+
+Den Quelltexten des Projekts liegen auch welche für ein zusätzliches Programm namens "ngetty" bei, welches ähnliche Funktionen wie "getty", "agetty" etc. bietet, jedoch für alle Login-Konsolen nur mit einem einzigen Daemon-Prozess auskommt der zudem sehr wenig RAM (8 KiB für 4 Konsolen auf irgend einem Demonstrations-System) benötigt. Damit kann man noch ein paar weitere Bytes RAM sparen wenn man auf einem System mit sehr wenig RAM arbeitet. Dieses Programm hat keinen Zusammenhang mit "ninit" und ist angeblich so zuverlässig dass es überhaupt keine Überwachung durch einen supervision-Prozess benötigt. Leider ließ es sich nicht bauen, da es offensichtlich auf undokumentierte ehemalige Makros aus System-Header Files zurück greift, welche es inzwischen nicht mehr gibt. Oder anders gesagt, ngetty ist non-portabel und funktioniert nur auf bestimmten ehemaligen Linux-Versionen.
+
+Es liegen überdies noch die Quelltexte für ein zusätzliches Programm ohne direkten Bezug zu "ninit" namens "nlogin" bei, welches offensichtlich "login" ersetzen kann. Anders als ngetty ließ sich dieses zumindest bauen und erzeugte dann 3 Executables "nlogin-tiny", "nlogin-auth" und "nlogin". Auch diese sind vermutlich wieder besonders ressourcenschonend. Allerdings kommt es mir völlig sinnlos vor diese zu benutzen das gerade "login" ohnehin nur kurzzeitig läuft und daher anders als getty nicht langfristig Ressourcen bindet. Ein Vorteil von "nlogin" mag bestenfalls die geringe Codegröße trotz statischem Linken und die damit einher gehende Unabhängigkeit von anderen Bibliotheken sei. In der Praxis dürfte es aber sinnvoller sein in solchen Fällen die BusyBox-Utilities fürs Login zu nutzen. Zudem ist auch die Portabilität dieses Hilfsprogramms sehr zweifelhaft, da es Header-Files wie <shadow.h> inkludiert welche POSIX nicht definiert. Zumindest unter Linux scheint es aber lauffähig zu sein.
+
+Ein weiteres beiliegendes Hilfsprogramm ohne Bezug zu "ninit" ist eine Reimplementation von "xinit". Auch hier gilt vermutlich dasselbe wie für die anderen Hilfsprogramme ohne Bezug - sparsamer aber zweifelhafte Portabilität und wohl nur wirklich für Systeme mit extremem RAM-Mangel (128 MB RAM oder weniger) sinnvoll.
+
+Schließlich scheint das Hilfsprogramm "mkhtmlindex" ein Directory-Listing als HTML-Datei erzeugen zu können. Es scheint aber eher speziell auf die Bedürfnisse der ninit-Dokumentation selbst zugeschnitten zu sein als für allgemeine Benutzung konzipiert. Entsprechend auch hier ein eher zweifelhafter Praxisnutzen.
+
+Die Dokumentation ist eher dürftig. Es gibt zwar man-Pages für die wichtigsten Kommandos sowie HTML-Seiten mit einigen Beispielen und Erklärungen. Jedoch gibt es mehr Kommandos als dokumentiert sind, und auch bei den dokumentierten bleibt noch die eine oder andere Frage offen. Das wichtigste ist allerdings schon dokumentiert.
+
+Das Projekt scheint entwicklungsmäßig tot zu sein, doch der Code ist unter der obigen URL noch verfügbar und es war mir ohne Probleme möglich die aktuelle Version 0.4 damit unter Linux zu bauen.
+
+Der Autor ist sehr überzeugt von der Sicherheit seines Programms und bietet in einer "Garantie" jedem 100 EUR der eine (praktisch ausnutzbare) Sicherheitslücke darin findet. Da das Projekt tot zu sein scheint sollte man darauf freilich nicht all zu viel geben. Immerhin ergab eine Kurz-Begutachtung der Quelltexte, dass zumindest in den begutachteten Fällen alle Rückgabewerte von Funktionsaufrufen auf Fehler geprüft wurden. Der Code ist auch offenbar bewusst einfach und kurz gehalten.
+
+ninit hat auch eine (primitive) cron-Funktionalität eingebaut, wo man bei einem Service festlegen kann dass er anhand von (vereinfachten) cron-artigen Regeln periodisch gestartet werden soll. Da diese aber nicht die POSIX-Vorgaben für crontab entsprechen, ist es kein Drop-in-Ersatz für cron.
+
+ninit scheint in der Leistungsfähigkeit die Lücke zwischen "runit" und "s6" zu füllen. Es lässt sich allerdings wesentlich einfacher bauen und installieren als "s6" - zumindest wenn man dies selbst tun möchte.
+
+Ein Gegenstück zu den "socket activation"-Features (inetd-Ersatz) manch anderer init-Systeme konnte ich allerdings nicht entdecken.
+
+Zumindest Barry Kauler, die Leitperson hinter Puppy Linux (welches großen Wert auf sparsamen RAM-Verbrauch legt) schien von "ninit" recht angetan zu sein.
+
+Im Vergleich zur "s6"-Suite dem es grundsätzlich sehr ähnlich ist, scheint mir folgendes gegeben zu sein:
+
+* ninit ist kürzer, schlanker und einfacher zu erlernen, da es weniger Einzelprogramme gibt
+
+* s6 ist allerdings portabler, vollständiger, und auch weitaus besser dokumentiert
+
+* ninit beherrscht nur simple "requires"-Abhängigkeiten. Nicht einmal virtuelle "provides"-Abhängigkeiten beherrscht es, geschweige denn "before". Immerhin kann man Service-Gruppen durch Schlüsselworte bilden, und diese dann zusammen starten/stoppen.
+
+* ninit ist nicht minimal genug. Die cron-Funktionalität ist beispielsweise völlig unnötig in einem init-Daemon. Offensichtlich war hier der Wunsch so wenige Hintergrundprozesse wie möglich zu haben und lieber beides in einem Daemon zu vereinen. Das ist allerdings gefährliche Denke, denn auch systemd hat einst so begonnen.
+
+* Der Codeumfang einer Vollinstallation von ninit ist zwar vermutlich geringer als der von s6, aber nur weil es auch deutlich weniger kann. Die s6-Autoren selbst bemühen sich offensichtlich sehr den Ressourcenverbrauch ihrer Utilities zu minimieren.
+
+* s6 liegen viele Utilities bei die man einfach löschen kann wenn man sie nicht benutzt. Diese Utilities stellen optionale Features dar die man in externe Programme ausgelagert hat damit sie nicht Teil der Kernkomponenten zu sein brauchen die dann in vielen Fällen ungenutzt bleiben.
+
+* s6 scheint für jede denkbare Aufgabe eines init-Systems eine Lösung zu bieten. ninit deckt nur das gemeinhin benötigte ab. s6 bietet insbesondere auch Support für Socket Activation und Service Notifications. Auch dies aber durch eigene Hilfsprogramme und nicht als Teil der schlanken Kernkomponenten.
+
+* Unterm Strich scheint mir ninit anstatt s6 nur dort zielführend zu sein, wo man um jedes Byte kämpfen muss und einem selbst s6 schon zu fett wäre. Das dürfte aber eher nur auf Embedded-Plattformen, Routern etc. der Fall sein.
+
+http://xbasic.cvs.sourceforge.net/
+## x11-basic, xbasic, BASIC
+2021-02-06
+x11-basic ist ein BASIC interpreter, compiler und scheinbar auch GUI designer für Win32 und (zumindest auch) Linux. Der Name diverser Archive lautet aber "xbasic" anstatt "x11-basic".
+
+Ein Problem: x11-basic ist in xbasic geschrieben, also benötigt man x11-basic um x11-basic aus den Quelltexten bauen zu können...
+
+Es ist eine ausführliche 700+ seitige PDF-Dokumentation vorhanden.
+
+Angeblich kann man mit x11-basic portable Programme für alle möglichen UNIX-Plattformen erstellen; wie der Name schon sagt erfordern die Grafikfunktionen soweit man sie benötigt X11. Praktisch ist schon das Bauen unter Linux wegen der oben genannten Zirkelreferenz problematisch.
+
+Ich holte mir die Quelltexte mit CVS von Sourceforge, ca. 12 MB entpackt und 1,4 MB mit lrzip und höchster Kompression gepackt. (Davor hatte ich allerdings alle win32 binaries gelöscht von denen es im CVS Download nur so wimmelt.)
+
+Mühselig erstellte ich mir darauf hin in einer VM einen Account wohin ich auch ein downloadbares Binary herunter lud um damit xbasic bauen zu können. Ergebnis all dieser Mühe: "Gleitkomma-Ausnahme" beim Ausführen das Executables.
+
+An den Libraries  sollte es eigentlich nicht liegen, die waren alle vorhanden.
+
+Möglicherweise ein Pfadproblem - das Binary hätte sich gerne in /usr gesehen, aber dorthin installierte ich es natürlich *nicht*.
+
+Bis auf weiteres daher: Vielleicht toll... aber wenn es sich nicht bauen lässt, und auch im Debian-Repository nicht angeboten wird, ist es eben schwierig.
+
+Update 2021-02-06: Ich versuchte die Installation nun erneut, nachdem ich die VM-Konfiguration auf eine (natürlich Single-Core) 80486 reduziert hatte, für den Fall dass das schon ziemlich alte "xb" Binary (es stammt als 2002) vielleicht MMX oder SSE nicht mögen sollte.
+
+Doch das änderte nichts an der Gleitkomma-Ausnahme - übrigens ein Divisonsfehler laut Kernel Log.
+
+Da mir nichts mehr einfällt was ich tun könnte um xbasic doch noch zum Laufen zu bringen damit es sich selbst übersetzen kann, beende ich hiermit das Evaluationsprojekt bis auf weiteres mit dem Status "nicht mehr funktionsfähig".
+
+https://chunkfs.florz.de/
+## ChunkFS, UnChunkFS, ChunkSync
+2021-02-06
+ChunkFS und UnChunkFS sind FUSE-Dateisysteme.
+
+ChunkFS repräsentiert eine einzige physische Datei als einen virtuellen Haufen automatisch benannter Chunks identischer wählbarer Größe (bis auf den letzten).
+
+Der Sinn ist es, dass man diese Chunks nun einzeln Backuppen kann - etwa nur solche deren Inhalt sich verändert hat.
+
+Das kann beispielsweise rsync mit der --link-dest Option vollbringen.
+
+Überdies kann man auch effiziente inkrementelle Backups auf diese Weise erstellen, indem man zunächst alle gebackupten Chunks des letzten Backups in ein Directory für das neue Backup hard-linked, und dann nur jene Chunks durch neue ersetzt deren Inhalte sich geändert haben.
+
+Das Script ChunkSync vollbringt diese Aufgabe effizienter als rsync.
+
+UnChunkFS macht genau das Gegenteil von ChunkFS: Es setzt physische Chunks aus den Backups zu einer virtuellen Datei zusammen, welche man dann als Dateisystem mounten kann (im allgemeinen wird man verschlüsselte Dateisysteme auf diese Weise backuppen wollen).
+
+Es handelt sich dabei also um Utilities für ein sehr simples inkrementelles Backup auf Block-Ebene bei dem wenig schief gehen kann und man keine komplexe Software im Fall von Problemen braucht: Auch ohne UnChunkFS könnte man die Chunks einfach zu einer neuen Datei zusammen fügen.
+
+Der einzige Nachteil ist dass hier keinerlei Kompression zum Einsatz kommen kann - aber das ist bei verschlüsselten Daten ohnehin nie möglich (bzw. nicht sinnvoll).
+
+http://example.org/
+## OnlyOffice
+2021-02-23
+OnlyOffice ist ein Online-Office, Plattform für Dokumenten- und Projektmanagement, CRM-System und E-Mail-Client. OnlyOffice ist Open Source [...] ist in ASP.NET für Windows und auf Mono für Linux und Distributionen geschrieben.
+
+https://florianjw.de/en/insecure_generators.html
+## OpenSSL, LibreSSL
+2021-03-16
+The good news is that there are fool-proof ways to pick a suitable generator.
+
+If you do what I strongly recommend you to do and use a safe-prime, you can use 4 as a generator. Since it is a square in the natural numbers, it is a square in all residue-classes that contain it as well. There are other ways as well, but this is the easiest and most fool-proof one.
+
+[...] A post like this would be only halve as interesting, if there were no widely used pieces of software that are affected by the problem. Unluckily I can inform you that the most widely used software is in fact affected. (I guess, that those who just want to watch the world burn, might consider it lucky.)
+
+The problem is not just, that these libraries do it wrong and may occasionally pick bad generators, they actually go out of their way to make sure that the generator is bad [...]
+
+I have since opened a bug in the libressl-bugtracker that hasn’t seen any answers. 
+
+Update: OpenSSL on the other hand fixed the issue, though they certainly took their time for it.
+
+In summary: If you use more than just plain DH-KX, check that your library does the right thing!
+
+https://launchpad.net/ical-tcl/3.x/3.0.4/+download/ical-3.0.4.tar.gz
+## ical, Calendar
+2021-04-25
+Eine in Tcl/Tk implementierte Kalenderlösung. Wird nicht mehr weiter entwickelt, war früher jedoch sehr beliebt und ist es bei vielen damaligen Anwendern immer noch.
+
+Grundsätzlich werden "Appointments" (Termine mit Start- und Endzeit) und "Notices" (ganztägige Termine) als Eintragstypen unterstützt. Beiden können als "To-Do"-Einträge markiert werden. In diesem Fall verwenden sie immer das aktuelle Datum bis zu dem Zeitpunkt an dem sie als erledigt markiert werden. Einträge können wiederholt werden.
+
+Es können "Early Warning" für einen Eintrag gesetzt werden, die zu ab einer gewissen Anzahl von Tagen voraus (bis zu 15) einen täglichen Hinweis auf den Termin bewirken. Nur für Einträge mit Anfangszeit können ferner auch beliebig viele Alarme gesetzt werden, welche eine definierte Anzahl (bis zu 60) an Minuten vor dem Ereignis ausgelöst werden.
+
+Man kann (optional) exakt eine Verknüpfung zu einer externen Datei oder zu einer Webseite zu jedem Eintrag hinzu fügen.
+
+Weiters gibt es 4 Optionen zur Hervorhebung eines Eintrags in der Monatsanzeige: Immer, Nie, bis zum Ablaufdatum (für To-Do Einträge) oder als Feiertag.
+
+Es gibt keine Unterscheidung zwischen einem Eintragstitel und Eintragstext. Eintragstitel können daher mehrzeilig sein. Man kann das automatische weiche Umbrechen jedoch auch mit einer Option abschalten.
+
+Es gibt keine (mir bekannte) Lokalisierung, alles ist in Englisch. Immerhin kann man wählen ob die Woche mit Sonntag oder Montag beginnt und ob man 12-Stunden (mit AM/PM) oder 24-Stunden Zeitdarstellung wünscht.
+
+Cut/Copy/Paste von Einträgen wird unterstützt. Innerhalb der Eintragstexte kann man Text zumindest einfügen/löschen, jedoch mit non-Standard Tastenkombinationen.
+
+Man kann mehrere externe Kalender in den eigenen lokalen integrieren. Deren Einträge werden dann mit einer anderen Farbe angezeigt. Es gibt eine Funktion zum Verschieben von Einträgen zwischen den Kalendern.
+
+Es gibt eine Druckfunktion sowie eine Funktion zur Darstellung einer Liste von kommenden Terminen in einem auswählbaren Zeitraum.
+
+Jeder Kalender wird als Textdatei gespeichert; der Defaultname ist ~/".calendar". Es handelt sich um ein proprietäres Format welches Hierarchien mit eckigen Klammern abbildet. Gegenüber den im GUI angezeigten Attributen wird für jeden Eintrag noch ein Owner und eine eindeutige ID mitgespeichert.
+
+Es gibt weiters noch ein externes Programm das als Kalenderserver für solche Kalender dienen kann bzw. sie zwischen Accounts/Rechnern synchronisieren.
+
+Ein Nachteil des Datenformats ist dass es schlecht skaliert - da keinerlei Datenbank zum Einsatz kommt, muss der gesamte Kalender immer komplett im RAM gehalten werden und verbraucht so daher immer mehr Platz, außer man löscht alte Einträge irgendwann wieder.
+
+Alles in allem macht diese Anwendung zwar einen guten Eindruck was ihre Portabilität und Leistungsfähigkeit für den vorgesehenen Zweck angeht.
+
+Jedoch ist die mangelnde Skalierungsfähigkeit ein Problem für einen Langzeiteinsatz ohne alte Einträge löschen zu wollen. Auch das Fehlen einer Lokalisierung könnte etliche User abschrecken. (Aber immerhin wird UTF-8 in den Eintragstexten unterstützt, Umlaute verursachen keine Probleme.)
+
+Vom Aussehen her gehört es zwar zum Besten was ich unter Tk bislang gesehen habe; allerdings ist Tk allgemein grafisch nur sehr schlicht.
+
+Der insgesamte Installationsumfang beträgt 830 kB. Der Download des Quelltextpaketes ist 520 kB groß.
+
+Zum Bauen des Pakets ist nur ein C++ Compiler, ein installiertes Tcl/Tk und die zugehörigen Development-Dateien (*-dev Pakete unter Debian) erforderlich. Es handelt sich um einen Standard Autoconf ./configure Build, also sehr portabel.
+
+https://www.reddit.com/r/KeePass/comments/ol67qk/why_use_keepass_xc_instead_of_just_running/
+## keepass, keepassxc
+2021-10-26
+Why use Keepass XC instead of just running Keepass under mono? [...] What features does KeePass have that XC is missing? [...]
+
+just for example, Keepass XC doesn't support plugins while Keepass does, and Keepass XC has yet to implement the 4.1 file format which comes with new features. Also in general Keepass XC tends to lag behind Keepass [...]
+
+KeePassXC does not have any option to export encrypted single entries or groups. It only allows you to export as plain CSV or HTML. The password generator in KeePass is also more sophisticated than in KeePassXC [...]
+
+I like KeepassXC + Yubikey better than Keepass + some plugin.
+
+Also the KeepassXC+ Yubikey method is compatible with Keepass2Android and Keepassium (iOS) so that works on all platforms [...]
+
+KeepassXC supports TOTP secrets natively. Only reason I switched.
+
+https://de.wikipedia.org/wiki/KeePassXC
+## keepass, keepassxc
+2021-10-23
+Die Kennwortdatenbank verschlüsselt KeePass 1.x wahlweise mit dem AES-Algorithmus oder dem Twofish-Algorithmus. KeePass 2.x unterstützt den AES-Algorithmus und den ChaCha20-Algorithmus.
+
+Es gibt mehrere Plugins für KeePass 2.x, die zusätzliche Verschlüsselungsverfahren zur Verfügung stellen, unter anderem Twofish, Serpent, Salsa20 und GOST R 34.12-2015. Teilweise unterstützen auch andere KeePass-kompatible Apps die zusätzlichen Verschlüsselungsverfahren; beispielsweise unterstützt KeePassXC ebenfalls Twofish. [Anmerkung des Revisors: Letzteres unterstützt Twofish allerdings nur als fix eingebautes Feature und keine Plugins, da jene alle in C# geschrieben sind.]
+
+git://git.2f30.org/noice.git
+## noice, nnn
+2019-08-28
+Noice ist ein minimalistischer Dateibrowser für das Terminal. Anders als sein zum Dateimanager weiter entwickelter Fork nnn ist noice zu nichts anderem gut als sich durch den Dateibaum zu bewegen und Dateien dabei auf verschiedene Art zu sortieren.
+
+Seine Sortierfunktionen sind intelligent:
+
+* Per Default wird nach Name aufsteigend sortiert, mit einer Taste kann man dies nach Datum absteigend umschalten.
+
+* Taste "d" wählt ob Directories immer an den Anfang sortiert werden oder gemischt mit den Dateien.
+
+* Taste "i" wählt ob die Sortierung Groß-/Kleinschreibung unterscheidet.
+
+* Taste "v" wählt, ob die Sortierung wie bei Versionsnummern ablaufen soll oder nicht.
+
+* Taste "." wählt, ob mit "." beginnende Einträge versteckt werden sollen
+
+Optionale Farbunterstützung kann aktiviert werden.
+
+Ein paar weitere Tasten starten entweder spezielle externe Kommandos (wie "top") oder rufen die aktuelle Datei mit einem externen Kommando auf (etwa "vi" oder "less").
+
+Die Anzeige ist mit einem Regex filterbar.
+
+Neben noice enthält das Paket noch ein Hilfsprogramm "nopen". Dieses wird von noice immer dann aufgerufen wenn man einfach die Eingabetaste über einer Datei drückt.
+
+Dieses Programm testet anhand einer Liste von Regexps welches externe Kommando für die übergebene Datei aufgerufen werden soll.
+
+Die Default-Konfiguration kennt ein paar Dateitypen wie Musikdateien und spielt diese dann mit einem Player ab, ansonsten wird "less" aufgerufen.
+
+Es gibt keine Konfigurationsdateien.
+
+Jedoch kann man etliche Aspekte, wie etwa die speziellen externen Kommandos oder die Regex-Liste für "nopen", in Header-Files relativ einfach ändern. Freilich muss man danach die Programme rekompilieren.
+
+Mehr kann "noice" nicht.
+
+Insbesondere kann es nicht mehrere Dateien auswählen, geschweige denn etwas mit der Auswahl tun wie etwa kopieren, verschieben oder löschen. Das geht nicht einmal für den aktuellen Eintrag.
+
+Zumindest nicht von Haus aus.
+
+Allerdings kann man im Header-File unbenutzte Tasten frei belegen und diese mit beliebigen externen Kommandos belegen. Daher wäre es auch kein Problem, die obigen vermissten Funktionen in primitiver Weise selbst zu implementieren.
+
+Allerdings bleibt dabei problematisch, dass es kein Feedback gibt falls das aufgerufene Kommando z. B. die aktuelle Datei einer Liste mit Markierungen hinzu fügt, welche andere externe Kommandos dann benutzen wollen.
+
+Das Program "nnn" bietet all das was "noice" fehlt - allerdings ist nnn dafür auch sehr viel fetter und hat viele Funktionen von zweifelhaftem Wert. Insbesonders hat es die ärgerliche Angewohnheit ständig zu fragen ob ein externes Kommando im CLI oder GUI gestartet werden soll. Als ob man mit nnn ständig GUI-Programme starten wollte!
+
+Außerdem hat nnn viele Abhängigkeiten von externen Scripten die alle installiert sein müssen damit es auch nur die Hälfte seines Funktionsumfangs erbringen kann.
+
+Anderseits sind genau die Basics wie Markieren, Kopieren, Verschieben und Löschen von Dateien fix im Programm eingebaut - genau was noice fehlt. Außerdem kann es einen Hilfebildschirm mit allen Tastenbelegungen anzeigen. (Was noice mit einem externen Kommando das einen Text anzeigt freilich auch könnte, aber das müsste man sich eben selbst schreiben.)
+
+Leider fehlen nnn die vielfältigen Sortiermöglichkeiten von noice. In jeder anderen Hinsicht kann es deutlich mehr, ist allerdings auch wesentlich größer obwohl immer noch ein kleines Programm.
+
+https://github.com/deadpixi/mtm
+## mtm, tmux, screen, dtach
+2021-11-12
+"mtm" ist ein Terminal-Multiplexer ähnlich wie "tmux" oder "screen", allerdings mit extrem beschränkter Funktionalität.
+
+Es ist dabei orthogonal zu "dtach": Während letzteres nur das "Detach"-Feature von tmux implementiert, beherrscht "mtm" nur das Unterteilen des Bildschirms in beliebige Teilfenster durch horizontales oder vertikales Splitten des aktuellen Teilfensters.
+
+Doch es kann *kein* Detach!
+
+Damit ist es für die meisten Anwendungen unbrauchbar, außer wenn man wirklich nichts anderes will als das Terminalfenster in kleinere Einheiten zerstückeln.
+
+Dann hat es sogar den Vorteil dass es nur ganz wenige Tastenkombinationen gibt die man sich merken muss - und deutlich einfacher als "tmux" zu erlernen ist.
+
+mtm ließ sich nicht unter der Kontrolle von "screen" starten, nur in einem "normalen" Terminalfenster.
+
+Eigentlich könnte man meinen, dass die Kombination von "mtm" und "dtach" sowohl Fenster-Teilung als auch Attach/Detach bringen könnte.
+
+Doch leider ist dies nicht so: mtm lässt sich unter der Kontrolle von "dtach" zwar starten, entzieht "dtach" dabei aber seinen Hotkey, so dass man damit das "Detach"-Feature verliert was das ganze sinnlos macht.
+
+Schade. Eine Kombination beider winziger Programme wäre äußerst mächtig gewesen.
+
+https://github.com/afify/sfm/
+## sfm, dtach
+2021-11-05
+Ein simpler 2-Pane Dateimanager fürs Terminal. UNICODE-fähig. Klein (ca. 50 kB) und besteht nur aus einer einzigen Datei.
+
+Kann grundsätzlich nur das Minimum: Durch die Verzeichnisse browsen, Dateien selektieren, und die Auswahl verschieben/kopieren/löschen.
+
+Anders als der mc bedient sich das Programm dabei der Copy/Cut/Paste-Logik, womit zwar die andere Fensterhälfte das Ziel einer Operation sein kann, aber nicht muss. Im wesentlichen sind es einfach zwei Verzeichnisse zwischen denen man hin- und her wechseln kann.
+
+Rechts und links oben werden die Pfade zu den beiden aktuellen Verzeichnissen der beiden Fensterhälften angezeigt.
+
+Unten werden die Details des gerade aktiven Eintrags angezeigt: Die wievielte Datei von wievielen insgesamt im Verzeichnis es sich handelt, Permissions, Ownership, Änderungsdatum, Größe (in automatisch gewählten Einheiten wie "K").
+
+Ein Anzeigefilter kann für eine schnellere Suche aktiviert werden.
+
+Neben der erwähnten Grundfunktionalität sind ein paar wenige Kommandos eingebaut: Neue leere Datei erstellen, neues Directory erstellen, Datei umbenennen, chmod, chown, chattr, Shell im aktuellen Verzeichnis starten.
+
+Als letztes kann man noch die aktuelle Datei "öffnen", wobei eine Liste von Regeln abgearbeitet wird wie dies tatsächlich geschieht. Typischer Weise wird die Datei im Default-Editor des Benutzers zum Bearbeiten geöffnet wenn kein speziell unterstützter Dateityp erkannt wird. Doch dies lässt sich in der Konfiguration frei anpassen.
+
+Ist in der Bedienung ist das Programm leider sehr an den vi und nicht an den mc angelehnt, was seine Tastenbelegungen angeht. Immerhin kann man auch mit den Cursortasten navigieren.
+
+Andererseits kann man die Tastenbelegungen und auch die Regeln für das externe Öffnen frei bearbeiten.
+
+Doch leider geht dies nur indem man ein Header-File editiert - und danach muss man das Programm natürlich neu kompilieren.
+
+Grundsätzlich wäre das Programm nicht so schlecht als "mc für Arme", jedoch sind 2-Pane Dateimanager im Terminal grundsätzlich keine so gute Idee, wenn man nur die normalen 80 Spalten zur Verfügung hat.
+
+Bei einem breiteren Terminal kann es hingegen durchaus Sinn machen.
+
+Das Programm verhält sich anders wenn man es in einem Text-Terminal oder einem xterm-Fensters startet - offensichtlich abhängig von der $TERM variable. Dann sieht es optisch etwas hübscher aus mit mehr Farben und sichtbaren Trennungen zwischen den Fensterbereichen.
+
+Es läuft auch gut unter dtach.
+
+Was man vermisst ist ein Hilfe-Bildschirm auf dem die Tastenkommandos angezeigt werden. Dafür muss man die man-Page bemühen. Andererseits sind es nicht sonderlich viele Tastenkombinationen die man zu erlernen hat, da das Programm ja nicht all zu viel kann.
+
+Wenn man die beiden Panes auch vertikal anordnen könnte oder die 2. davon an- und abschalten, wäre es wohl ein wunderbar nützliches Programm.
+
+So aber bleibt es Leuten vorbehalten die nichts von der 80-Zeichen-Beschränkung von Terminals wissen wollen, welche von konservativen Entwicklern häufig bevorzugt wird.
+
+https://github.com/dudik/herbe
+## herbe
+2021-03-29
+"herbe" ist ein simples Programm zum Anzeigen von Popup-Meldungen. Es zeigt eine beliebige Meldung - die auch mehrzeilig sein kann, für bis zu 5 Sekunden am Bildschirm an, und entfernt sie danach.
+
+Die Anzeige erfolgt in einem schmucklosen grauen Fenster ohne Rahmen.
+
+Man kann die Meldung durch das Draufklicken auch schneller zum Verschwinden bringen.
+
+Alternativ kann man mit der rechten Taste drauf klicken, was als "Bestätigung" gewertet wird - der Unterschied zwischen Verschwinden und Bestätigen besteht ausschließlich im Return-Code des Programms.
+
+Das besondere am "herbe" ist der Umstand dass es keinen Server braucht, keinen D-Bus, nichts.
+
+Dennoch kann man beliebig viele davon als Hintergrundprozesse starten wenn mehrere Meldungen angezeigt werden sollen, und sie koordinieren sich automatisch mit einander so dass immer nur ein Pop-Up nach dem anderen angezeigt wird.
+
+Es handelt sich nur um ein einziges Executable ohne Konfigurationsdateien.
+
+Die Konfiguration wird vielmehr in einem Header-File vorgenommen welches man anpassen kann. Dort kann man den Font, die Zeichengröße, die Farben, die Grundposition des Pop-Ups sowie die Anzeigedauer festlegen.
+
+Freilich muss das Programm danach erneut kompiliert werden damit diese Änderungen auch greifen.
+
+Weiters setzt dies offensichtlich eine nicht zu stark variierende Auflösung des Bildschirms voraus, da die Fontgröße fest einkompiliert ist.
+
+Dennoch eine sehr spannende Alternative zu diversen fetten "Notification Daemons", die keinesfalls immer so problemlos funktionieren wie sie sollten. Vor allem aber muss bei "herbe" solch ein Daemon gar nicht erst permanent laufen!
+
+https://git.simple-cc.org/scc/file
+## scc
+2021-11-12
+Ein gar toller C-Compiler welcher sogar C99 nahezu überall übersetzen kann und noch dazu (natürlich) self-hostend ist. Unterstützt auch etliche Plattformen - inklusive Cross-Compiling.
+
+Leider jedoch nicht - mehr (früher war das anders) - 32-Bit x86. Damit erscheint es mir sinnlos, da es für allen alten PCs ungeeignet ist.
+
+Derzeit noch unterstützt werden: amd64 (dragonfly, linux, netbsd, openbsd, posix), arm32 (linux, posix), arm64 (linux, posix) und ppc32 (linux, posix).
+
+http://www.trinitydesktop.org
+## tde, trinity
+2021-11-21
+Das "Trinity Desktop Environment" (TDE) ist ein Fork von KDE 3.x für all jene, die KDE4 als Rückschritt in Optik, Ressourceneffizienz und Bedienungskonfort empfanden. Ich evaluierte Version R14.0.11 dieser Paket-Suite. Und zwar die englische Version, da ich vergessen hatte ein deutsches Sprachpaket herunter zu laden.
+
+Es ist nicht im Debian Standard-Paket-Repository enthalten, jedoch stellt das Projekt ein Repository für Debian bereit welches man einfach in Debian integrieren kann, so dass sich Trinity danach ganz normal mit den regulären Debian-Pakettools installieren lässt.
+
+Bereits beim Start von Trinity fühlte ich mich sofort wohl - es sieht tatsächlich noch so hübsch aus wie KDE 3. damals.
+
+Nach der Anpassung einiger Optionen (Thema "Keramik", danach Übersteuerung der Fenster-Verzierungen mit Auswahl "Plastik") wurde mein Auge sogar noch seliger und erinnerte sich wehmütig an die KDE3 Zeiten.
+
+Optisch ist jedenfalls nichts an TDE auszusetzen - es bringt die Schönheit des damaligen KDE3 zurück, jedoch unter Verwendung von zeitgemäßen Qt-Libraries.
+
+Mir gefiel auch, dass TDE nahezu alle seine installierten Dateien in /opt installiert und weder in /usr noch in /usr/local - genau so gehört sich das für eine extern installierte Paket-Suite meines Erachtens auch.
+
+Es scheint zwei Startmenü-Varianten zu geben, zwischen denen man umschalten kann: "Trinity Classic Menu" Style und "Kickoff Menu".
+
+Das "Classic" Menü ist ein klassisches Pull-Down Menü mit Untermenüs. Oben gibt es automatische Einträge für die zuletzt benutzten Menüeinträge, in der Mitte ist die erste Ebene der klassischen Startmenü-Einträge, und unten ist ein Bereich für Spezialfunktionen wie die Trinity-Einstellungsmenüs, Abmelden des Users usw.
+
+Das "Kickoff"-Menü braucht unglaublich lange um sich zu initialisieren - eine gute halbe Minute oder so. Danach funktionierte es dann aber genau so schnell wie das klassische. (Ich vermute mittlerweile allerdings dass dies ein PAM-Problem während der Evaluationsperiode war und gar nicht die Schuld von Trinity.)
+
+Ich erinnerte mich dabei vage an das Startmenü von Linux Mint: Es besteht aus mehreren horizontal angeordneten Tabs mit unterschiedlichen Funktionen. Der erste Tab sind Favoriten - Startmenü-Einträge welche man sich dort selbst ablegen kann. Also ein klassisches anpassbares "Quicklaunch"-Menü. Dieser Tab erscheint auch immer als der aktuelle wenn man das Menü aufklappt. Im 2. Tab sind die Einträge des eigentlichen Startmenüs zu finden - die installierten Anwendungen. Im 3. Tab ist der "Arbeitsplatz" von M$ Windows nachgebildet - es stehen verschiedene Dateisystem-Wurzelverzeichnisse zur Verfügung, für welche dann der TDE Dateimanager gestartet wird. Im 4. Tab sind in der oberen Hälfte die zuletzt gestarteten Anwendungen und in der unteren Hälfte die zuletzt geöffneten Dokumente aufgelistet, um sie schnell erneut starten/öffnen zu können. Im 5. Tab gibt es wiederum die Spezialfunktionen wie Abmelden usw.
+
+Eine Spezialität des Kickoff-Menüs ist es, dass Untermenüs nicht einfach nur aufklappen sondern eher wie das Betreten eines Ordners wirken - auch nach Loslassen der Maustaste bleibt man dort, und kann entweder in tiefere Untermenüs verzweigen oder zurück zum Elternmenü wechseln, indem man Pfeiltasten anklickt. Erst wenn man tatsächlich eine Anwendung zum Start anklickt, klappt auch das Menü wieder zu.
+
+Das klassische Startmenü kennt solche Sperenzchen nicht - Untermenüs klappen automatisch auf oder zu wenn man den Mauszeiger darüber bewegt, wenn man einen Eintrag anklickt startet die entsprechende Anwendung, und wenn man den Mausknopf los lässt klappt das Menü wieder zu.
+
+Beide Startmenü-Varianten haben weiters ein Suchfeld integriert, mit dem man über eine Teilzeichenketten-Suche eine Anwendung im Startmenü suchen kann ohne zu wissen in welchem Untermenü sie unter welchem genauen Namen versteckt ist.
+
+Was ich sehr nett fand war der Komfort beim Entfernen unerwünscher Einträge im System-Tray Bereich: Anstatt nur einfach beim Schließen aus dem Tray zu verschwinden, fragte KDE auch nach ob dieser Eintrag beim nächsten Start von KDE erneut automatisch geladen werden soll. Indem man dies ablehnt, kann man unliebsame Einträge schnell dauerhaft los werden.
+
+Doch es gibt auch Nachteile.
+
+So fand ich keine Möglichkeit, Fenster automatisch als linke oder rechte Bildschirmhälfte anzuordnen.
+
+Weiters scheint "twin", der DTE Fenstermanager, nur Einrasten von Fenstern aber keinen "Kantenwiderstand" zu kennen. Leider ist das bei Fluxbox nicht besser - nur Mate scheint dies von Haus aus zu können. (Bei Compiz bin ich nicht mehr sicher).
+
+Schließlich startet Trinity automatisch "arts", einen Soundserver der sogar noch unfähiger ist als PulseAudio. Immerhin funktionierte er aber wenigstens auf Anhieb, um Systemklänge von KDE abzuspielen.
+
+Immerhin ist arts so freundlich, sich nach einer Minute inaktivität schlafen zu legen und dabei die Kontrolle über ALSA zurück zu ziehen, so dass auch andere Anwendungen die nicht mit arts zusammen arbeiten einen Sound direkt über ALSA ausgeben können. Außerdem kann man das Soundsystem komplett abschalten. Dann ertönen allerdings überhaupt keine Systemklänge mehr.
+
+Weiters sind die Anpassungsmöglichkeiten vieler DTE-Komponenten mangelhaft im Vergleich zu KDE4+.
+
+So kann man bei der Uhr z. B. nicht einmal ein eigenes Datumsformat einstellen, ohne dass dieses Format dann nicht auch gleich für ganz Trinity gelten würde.
+
+Der Konqueror (der kombinierte Webbrowser und Dateimanager) schnitt lange Dateinamen in allen Icon-basierten Ansichten immer bereits nach relativ wenigen Zeichen ab, und ich fand keine Möglichkeit dies zu ändern. Diese Ansichten sind damit praktisch außer in Spezialfällen unbrauchbar.
+
+In den verbleibenden Ansichten war das Ändern der Namens-Spalte die einzige Möglichkeit die maximale Breite des angezeigten Textes zu wählen. In den meisten dieser Ansichten nervte dann allerdings der Umstand, dass die Kopfzeilen der Detailansicht überhaupt zu sehen waren, obgleich es dort überhaupt keine zugeordneten Spalten gab. Die Kopfzeilen dienten dort nur der Bestimmung der Spaltenbreite der Namens-Spalte und der Sortierreihenfolge.
+
+Dennoch erwies sich die "Info List"-Ansicht dabei noch als die sinnvollste für Alltagsaufgaben mit langen Dateinamen. Sie sieht aus wie die "Listenansicht" bei den meisten Dateimanagern, scrollt jedoch vertikal was ein riesiger Vorteil beim Selektieren zahlreicher Dateien ist.
+
+Was man scheinbar gar nicht speichern kann, ist die Breite und Anordnung der Spalten. Sie wird sofort auf die Vorgabewerte zurück gesetzt, sobald man die aktuelle Ansicht wechselt. Und das, obwohl man sogar großartig benannte Ansichts-Profile speichern kann. Doch Kleinigkeiten wie die Spaltenreihenfolge scheinen dabei ignoriert zu werden.
+
+Man kann ein Hintergrundbild für den Dateimanager festlegen. Sehr sinnvoll scheint mir das nicht zu sein, da es die Dateilisten anstrengender zu lesen macht. Immerhin kann man statt dessen auch einen einfärbigen Hintergrund festlegen, und bekommt dann zur Belohnung sogar abwechselnd eingefärbte Hintergründe zwischen benachbarten Zeilen, was immer vorteilhaft ist.
+
+Konqueror unterstützt den freedesktop.org "Papierkorb". Zum Glück kann man sich auch das Hinzufügen einer richtigen Löschfunktion zum Kontextmenü einstellen. Leider fand ich keine Möglichkeit, das mir verhasste "Feature" gänzlich aus dem Kontextmenü zu verbannen, damit man es nicht irrtümlich anwählt.
+
+Konqueror unterstützt sowohl ein optionales Seitenpanel für die Dateibaum-Navigation, als auch eine einzelne oder geteilte Dateiansichten. Letztere können vertikal oder horizontal geteilt werden. Die geteilte Ansicht erspart häufig ein 2. Fenster beim Kopieren/Verschieben ohne andauernd das Verzeichnis wechseln zu müssen. Eine geteilte Ansicht kann beliebig oft erneut geteilt werden, so dass auch unübliche Fensterunterteilungen möglich werden. So könnte man z. B. links ein Quellverzeichnis darstellen, und rechts mehrere Zielverzeichnisse über einander in welche man Dateien verschieben kann.
+
+Man kann Ansichten mit einander verbinden, so dass jeder Verzeichniswechsel in jeder dieser Ansichten dasselbe mit den anderen Ansichten tut. Nützlich beim parallelen Navigieren in zwei ähnlichen aber nicht völlig identischen Dateibäumen, wie etwa einer alten und neuen Version einer Verzeichnis-Struktur.
+
+Die Web-Browser-Komponente von Konqueror unterstützt sowohl JavaScript als auch Java, und darüber hinaus sogar noch Netscape-Plugins. JAVA und JavaScript können Domain-basiert erlaubt oder verboten werden.
+
+Ein Adblock-Filter ist implementiert - leider nur recht umständlich durch eine Liste von Regexes. Allerdings lässt sich die Liste auch importieren/exportieren, so dass man vielleicht auch eine der bekannten "Adblock Plus"-Filterlisten irgendwie importieren kann. Allerdings scheint es keine Funktion zum automatischen Akualisieren zu geben; man dürfte aktualisierte Filterlisten daher wohl manuell reimportieren müssen.
+
+Benutzerdefinierte Web shortcuts werden unterstützt und viele nützliche sind bereits vordefiniert.
+
+Cookies können ebenfalls Domain-spezifisch erlaubt werden, oder global erlaubt/verboten. Das Ablehnen von Third-Party Cookies ist ebenso möglich wie das Löschen aller Cookies beim Beenden einer Sitzung. (Wobei unklar bleibt was genau eine "Sitzung" charakterisiert.)
+
+Für den Browser-Cache kann man eine fixe Maximalgröße einstellen, und dann gibt es neben dem Normalbetrieb noch zwei sehr interessante Optionen:
+
+* Den Cache zu verwenden wenn immer möglich - also "Expiry"-Angaben komplett zu ignorieren und Objekte im Cache ewig zu verwenden. Damit kann man sicherlich viel Datenvolumen sparen, obwohl man trotzdem Bilder anzeigt. Denn Werbebanner werden dann nicht ständig ausgetauscht sondern es bleiben immer dieselben.
+
+* Offline-Modus - gar nicht erst versuchen Dateien von woanders als dem Cache her zu beziehen. Zumindest nicht aus dem Internet.
+
+Auch TLS-Support gibt es natürlich, mit eigener Zertifikatsverwaltung. Auch Site-spezifische Zertifikate und eigene (zur Authentifizierung) werden unterstützt. Beim OpenSSL-Support wird sogar der EGD unterstützt, mit dem der Zufallsgenerator von OpenSSL dann scheinbar initialisiert werden kann. Alternativ kann man auch einfach eine normale Datei mit Zufallsbytes angeben, die zur Initialisierung verwendet wird. Letzteres mag vielleicht für ad-hoc Initialisierungen nützlich sein, wenn man manuell mit einem Tool wie haveged solch eine Datei erzeugt bevor man Konqueror zum Surfen benutzt.
+
+Neben dem Konqueror bringt TDE aber natürlich noch zahlreiche weitere Anwendungen mit:
+
+* Kword - Textverarbeitungsprogramm
+* Kspread - Tabellenkalkulation (mit KChart als Diagramm-Komponente)
+* KPresenter - Powerpoint-artig
+* Karbon14 - Vektorgrafikzeichenprogramm
+* Chalk - simples pixelbasiertes Zeichenprogramm a la "paint"
+* Codeine - Video Player
+* Dolphin - bloßer Dateimanager (in dieser Hinsicht leistungsfähiger als Konqueror)
+* Filelight - Visualisierung der Dateisystembelegung (welche Dateien und Verzeichnisse wie viel Platz belegen)
+* Gwenview - Bildbetrachter für viele Grafikformate, kann einige Metadaten auch editieren und ist mit Plugins erweiterbar
+* JuK - Music Player und Media Library Organizer
+* Amarok - noch aufwändigerer Music Player als JuK, unterstützt Web-Streams, Download von Lyrics und Album Covers, usw.
+* Kaboodle - ein Mediaplayer für Audio als auch Video
+* Kmplayer - noch ein Audio/Video Player. Es können nie genug sein?
+* K3b - Brennen optischer Medien
+* Kaddressbook - Kontaktmanager (unterstützt neben lokalen Dateien auch Datenbankserver und LDAP)
+* Karm - Zeiterfassungs-Werkzeug (wie viel Zeit man für welche Projekte verwendet hat)
+* Kate - Texteditor für Entwickler, der sich auch als simple IDE verwenden lässt. Mehrere Dateien zugleich bearbeiten, Tabs, Syntax Highlighting, Strukturfaltung. Mit Plugins erweiterbar.
+* KAudioCreator - Audio Ripper und Encoder mit CDDB Support.
+* KBarcode - Barcode- und Etikettendruckprogramm
+* KDEgames - Sammlung dutzender Spiele, die meisten davon Logikpuzzles
+* Kbookreader - eBook-Betrachter
+* kchmviewer - kann Microsoft CHM Hilfedateien originalgetreuer anzeigen als die meisten HTML-basierten Linux-Tools.
+* kmail - Mailprogramm
+* korganizer - PIM-Framework um Kalendereinträge, Kontakte und Alarme zu kombinieren
+* tdevelop-trinity - eine IDE für C/C++, samt Editor, Debugger und Buildsystem
+* kexi - Datenbank-Anwender und MS-Access wannabe. Bei meiner letzten Evaluation hielt kexi allerdings nicht was es versprach und bot nur einen Bruchteil der Features von MS Access, mit denen kein ernsthaftes Arbeiten außer in sehr simplen Fällen möglich war.
+* Kile - LaTeX Front-End und GUI-Editor (vermutlich ähnlich wie Lyx)
+* kmyfirewall - Personal Firewall, im wesentlichen ein GUI Front-End für iptables.
+* knotes - digitale "Post It"-Zettel für den Monitor. Einfach nur idiotisch. Aber manche Leute werden es vermutlich lieben.
+* knowit-trinity - Organisiert Notizen in einer baumförmigen Struktur
+* kommander - GUI-Tool um GUI-Dialoge zu erstellen welche Kommandozeilen bauen, mit Argumenten befüllen und diese dann als Befehl ausführen - ohne dazu ein Script schreiben zu müssen.
+* kdialog - GUI-Dialoge aus Shell-Scripten heraus erzeugen und benutzen.
+* kopete - Instant Messenger
+* kplato - Projektplanung und -Management
+* krecipes - Verwaltung von Kochrezepten und Einkaufslisten
+* krusader-trinity - an Trinity angepasste Version des 2-Pane-Dateimanagers "Krusader", einem Klon des "Total Commander" von Windows und (soweit mir bekannt) der bislang mächtigste Dateimanager für Linux überhaupt
+
+Und es gibt noch hunderte Pakete mehr, so dass mir hier die Lust vergangen ist sie alle aufzuschreiben oder gar zu evaluieren.
+
+Wenn man die alle installiert, dürfte einen dieses mehrere GB Plattenplatz kosten. Aber viele davon tun sehr ähnliche Dinge, so dass man eher zwischen Alternativen auswählen wird wollen anstatt z. B. 5 Media-Player oder Bildbetrachter zugleich installieren.
+
+Der Kern von Trinity ist allerdings "nur" rund 200 MB groß - mit Fenstermanager, Startmenü, wie Panels, Systemeinstellungen, Stilauswahl, Dateimanager, Editor, Taskmanager. Wenn man keinen Bedarf an weiteren speziellen KDE-Anwendungen hat, ist dieser Kern alles was man für den Betrieb einer hübschen grafischen Oberfläche benötigt.
+
+TDE hat zwar einen eingebauten Fenstermanager, kann aber auch mit einer Reihe anderen Fenstermanager zusammen arbeiten. Konkret mit Compiz, von dem es auch eine angepasste Version im TDE-Repository gibt.
+
+TDE benutzt keinen DBUS, sondern bringt seinen eigenen IPC-Server namens "dcopserver" zu diesem Zweck mit. Da einige Programme wie der Firefox DBUS benötigen um korrekt zu funktionieren, bedeutet dies dass man DBUS *und* dcopserver laufen lassen muss wenn man Trinity benutzt.
+
+Remote Desktop Sharing ist möglich; TDE hat dazu einen speziell angepassten VNC-Server integriert.
+
+TDE mag zwar schlanker und hübscher sein als KDE, ist aber was die Anzahl der verfügbaren Pakete angeht genau so ein Monster.
+
+Freilich zwingt einen niemand dazu die auch alle zu installieren, und tatsächlich wird man nur die wenigsten davon jemals praktisch brauchen.
+
+Allerdings gilt das für das Original genau so.
+
+Am Ende bleibt die Erkenntnis, dass TDE genau so fett und groß wie das echte KDE ist, allerdings per Default hübscher aussieht.
+
+Da allerdings auch KDE meines Wissens nach wie vor die "Keramik"- und "Plastik"-Styles unterstützt, fragt sich ob TDE überhaupt irgend einen praktischen Mehrwert hat, abgesehen davon dass es einige Anwendungen noch gibt (insbesonderen den Konqueror) die KDE inzwischen entsorgt hat.
+
+Möglicherweise ist der Ressourcenverbrauch von TDE geringer - aber das müsste man erst einmal vergleichen. Und ich habe keine Lust mir jetzt auch noch KDE zu installieren um dies tun zu können.
+
+https://github.com/agl/jbig2enc
+## JBIG2, PDF
+2021-11-22
+jbig2enc ist ein Encoder für das JBIG2-Komprimierungsverfahren, dass PDF-Dokumente zum Komprimieren von S/W-Grafiken und insbesondere von eingescanntem Text unter anderem verwenden können.
+
+Im Vergleich zu allen anderen S/W-Komprimierungsverfahren die in PDF-Dokumenten erlaubt sind ist JBIG2 mit Abstand das beste, d.h. komprimiert am stärksten bei vergleichbarer visueller Qualität des Ergebnisses.
+
+Da JBIG2 aber bis 2017 von vielen Patenten behaftet war (einige könnten vielleicht sogar jetzt noch gelten), gab es bislang nur wenig Unterstützung dazu in OpenSource-Programmen.
+
+Zwar konnten viele Programme JBIG2-komprimierte PDFs anzeigen, doch kein einziges kommte neue auf diese Weise komprimierte PDFs erzeugen.
+
+Mit dem dem Paket "jbig2enc" welches das Kommandozeilen-Utility "jbig2" mitbringt, ist dies nun nicht länger der Fall.
+
+Es gibt auch ein zugehöriges Paket "jbig2dec" zum Dekomprimieren, jedoch ist dies zumindest unter Debian in einem offiziellen Paket verfügbar und muss daher nicht selbst aus Third-Party Quelltexten gebaut werden wie "jbig2enc".
+
+Auch wenn es erfreulich ist dass man mit jbig2enc nun gut komprimierte auf gescannten Texten basierende PDFs erzeugen kann, so gibt es leider auch eine schlechte Nachricht: Wenn man bei jbig2enc von "Refinement"-Feature gebrauch macht, erzeugt dies PDF-Dateien welche den Adobe Acrobat beim Versuch sie anzuzeigen abstürzen lassen.
+
+Das ist natürlich eine Katastrophe, da jenes Programm nach wie vor die de-facto Standard-Anwendung für das Anzeigen von PDFs ist. Zumindest unter Windows. Doch dieses benutzen eben die weltweit meisten Benutzer, ob man es nun gut findet oder nicht.
+
+Das "Refinement"-Feature ist dabei das welche eine verlustlose Komprimierung ermöglicht.
+
+Man kann daher nur verlustbehaftete Komprimierung mit jbig2enc benutzen bis dieser Bug behoben ist, oder muss damit rechnen dass der Empfänger eines PDFs dieses nicht ansehen kann da sein PDF-Anzeigeprogramm beim Versuch es zu tun abstürzt.
+
+Die verlustbehaftete JBIG2-Komprimierung verringert die Dateigröße zwar zusätzlich erheblich, ist also durchaus nicht ohne Vorteile.
+
+Ein Nachteil ist jedoch dass ähnliche Zeichen dabei vertauscht werden können. So können z. B. aus einer "6" eine "8" werden - das kam zumindest sehr häufig in Fällen vor, wo solche unerwünschten Vertauschungen beklagt wurden.
+
+Mit anderen Worten, die verlustbehaftete JBIG2-Komprimierung kann den Textinhalt gegenüber den Original verändern, was insbesondere bei Dokumenten mit wichtigem Zahlenmaterial katastrophal sein kann.
+
+Die EU hat daher den Einsatz von JBIG2 in PDFs zu Archivierungszwecken verboten, auch wenn diese Probleme mit aktivierten "Refinement"-Feature vermieden werden hätten können.
+
+Und genau dieses Refinement-Feature kann man mit jbig2enc also derzeit und bis auf weiteres nicht verwenden.
+
+Man hat somit die unglückliche Wahl zwischen dem Verzicht auf das Zeichenkomprimierungs-Featzure von jbig2enc (mit der -s Option aktivierbar) welches die größte Platzeinsparung erzielt, oder es zu verwenden und dann mit der Möglichkeit rechnen zu müssen dass ähnliche Zeichen mit einander vertauscht werden was vor allem bei Zahlen problematisch ist.
+
+Eine weitere Einschränkung von jbig2enc ist dass es derzeit noch nicht die Halbtonraster-Komprimierung beherrscht welche ebenfalls in der JBIG2-Spezifikation definiert ist. Dadurch lassen sich Grafiken welche Halbtonraster enthalten nur sehr ineffizient komprimieren.
+
+http://unknown.invalid/
+## Mage, Startmenü, Linux Mint
+2021-11-24
+Review von Michael N.:
+
+Das Mage-Menü bietet
+
+* links eine Spalte mit "Orten" (obere Hälfte) und "System" (untere Hälfte)
+
+* rechts gibt es dann entweder die zweispaltigen "Favoriten" (extrem praktisch; maximal 16 Einträge) oder
+
+* alle "Anwendungen) - hier hat der rechte Bereich auch wiederum 2 Spalten: in der linke wählt man eine Kategorie und in der rechten eine Anwendung aus der gewählten Kategorie (es gibt auch eine Kategorie "Alle")
+
+Beim Öffnen des Startmenüs wird man immer mit den "Favoriten" empfangen.
+
+Ein "Suchen"-Feld wird stets im rechten unteren Bereich des Startmenüs angezeigt.
+
+https://www.heise.de/hintergrund/WebAssembly-Webanwendungen-auf-der-Ueberholspur-4165049.html?seite=4
+## Wasm
+2021-12-08
+Außerdem gibt es bei WebAssembly derzeit keinen Garbage Collector. Ohne ihn muss man sich selbst um die Speicherverwaltung kümmern. Das ist heutzutage in Sprachen wie Rust mit seinen Lifetime- und Borrow-Checkern allerdings kein großes Problem mehr. Fehlt ein Garbage Collector, wird zudem keine Rechenzeit in Anspruch genommen.
+
+https://erik-engheim.medium.com/is-zig-the-long-awaited-c-replacement-c8eeace1e692
+## Zig, V, C++, C, D, Rust, Java, C#, Go, Swift, Objective-C
+2020-11-11
+Over time I learned C++ was a complex monster that could never be tamed no matter how many thick best practices books I read [...]
+
+The first hopeful alternative was D. D looked promising initially but upon closer inspection I decided that D was really just a cleaned up version of what was fundamentally a bad idea [...]
+
+While implementing a simple game engine in C and Lua, I came to realize that it was actually less mental overhead to keep these two languages in the head at the same time than C++. It brought me some renewed love for C. For all its limitations, C is a fairly simple language that gives you a lot of control [...]
+
+Java and C# was in many ways just attempts at rehashing C++. They may have kept things more simple, but kind of ended up being too caught up in the Virtual Machine and object-oriented programming hype of the 90s. Not saying Java or C# are bad but not really my cup of tea. A lot of that may have more to do with the community around those languages which favor bloated IDEs and over-engineering [...]
+
+Go from Google was a welcome departure from the excesses C++, D, Java and C#. It took us right back to the starting point, to C. Go reimagined what C could have been if it did not venture down the C++ path [...]
+
+Closely following Go we got Rust. Initially I thought Rust was really what D should have been all along. A real rethinking of what C++ should have been. Rust kept low level control, high level abstraction mechanism and manual memory management but added unparalleled type safety [...] Learning Rust on the other hand felt a lot like learning Haskell. Simply a lot of concepts and theory to understand before you can do anything useful.
+
+If C++ taught me anything, it is to value simplicity, and that is not something Rust does [...]
+
+Objective-C was kind of clunky, but it had a certain beauty in its simplicity. Unlike C++ it was a fairly minimalistic addition to the C language. From experience you can actually teach a junior developer Objective-C really fast [...]
+
+Swift borrowed many ideas from Rust, and in many ways I thought we had finally gotten a sort of Rust for mortals. Swift can be learned in a decent amount of time.
+
+But my experience with Swift has been mixed [...] Compared to C++, C# and Java I would say Swift is the better language. Almost all my specific issues with C++ was solved by Swift. But I realized each time I spent some time with Go, that it was simply much more fun to program Go than Swift. Yet Go has kind of shitty error handling, and it repeated the million dollar mistake of having null pointers. Swift avoided both those problems.
+
+Last time I came back to Swift [...] it became clearer to see some of the problems with Swift: Swift Syntax is Poorly Suited for Functional Programming
+
+The Smalltalk inspired syntax continued from Objective-C works very well with object-oriented programming, but is simply terrible for functional programming. When using functions as first class objects you don’t want to fiddle with making sure you got the right parameter names [...] Swift is trying to serve two different masters and suffering for it [...] Swift ended up catering primarily to the OOP crowd, placing functionality primarily in methods. Once you have done a lot of functional programming this becomes jarring [...] So Swift never really worked out as my ultimate all purpose programming language  [...]
+
+But that still leaves an unfilled space for a C like alternative. Julia cannot really replace C. It gobbles memory, cannot produce small binaries, isn’t that suitable for making libraries other languages can use [...]
+
+Both Go and Rust got really close to being a replacement of C. Go pulled off the getting the simplicity and a lot of the feeling of using C. But it uses garbage collection which doesn’t make it fully C replacement [...]
+
+Rust got the manual memory allocation bit down, but failed in replicating the simplicity and feel of C. Is there perhaps something that fills the space between these two languages?
+
+Indeed there is. That is exactly what I think Zig is. Zig is more complex than Go, but much simpler than Rust to learn and use [...]
+
+Although it is hard to not notice that the V language does it all in less than a second. Which reminds me to explore V, in more detail. A quick scan suggests it is sort of Go with manual memory allocation, generics and optionals (null pointer must be explicitly allowed).
+
+https://github.com/landley/toybox.git
+## toybox, BusyBox
+2022-03-23
+Toybox ist der Versuch einer Re-implementation von BusyBox unter einer *tatsächlich* freien Lizenz: Nicht nur dass alles erlaubt ist, wird nicht einmal gefordert die Herkunft der Software kund zu tun wenn sie irgendwo verwendet wird.
+
+Der Entwickler war lange Zeit ein BusyBox-Entwickler und einige Jahre sogar der Projekt-Inhaber davon. Er verließ das Projekt aber wegen einem Streit über die GPLv3 und gründete dann das Toybox-Projekt als Ersatz dafür.
+
+Grundsätzlich wird die Toybox ähnlich gebaut und konfiguriert wie die BusyBox; tatsächlich sogar einfacher.
+
+Allerdings sind bei weitem nicht genau so viele Applets wie in der BusyBox enthalten. Gut 1/3 der Applets (Stand: 2022-03) sind zudem noch ungeprüfte Neu-Einreichungen von Code von ungewisser Qualität; einige davon kompilieren nicht einmal, andere wiederum sind reine "stubs" die nichts tun. Viele funktionieren zwar, aber bieten noch nicht alle Features die vorgesehen sind.
+
+Unter diesen Minder-qualitativen Applets befinden sich leider auch viele wichtige, wie allen voran eine POSIX Shell, aber auch vi, expr und dd.
+
+Doch die Haupt-Motivation des Autors für die Entwicklung der toybox war eine POSIX-artige Entwicklungs-Umgebung unter Android aufbauen zu können.
+
+Dieses Ziel wurde angeblich bereits erreicht, zumindest mit früheren Android-Versionen. Da Android eine POSIX Shell mitbringt, war das Fehlen einer vollständigen Shell in Toybox auch kein besonderes Problem.
+
+Außerdem gibt es trotz der fehlenden/unzureichenden Applets auch bereits eine ganze Menge komplett fertige - über 230 Stück.
+
+Der Quelltext (git fast-export) der aktuellen (Stand: 2022-03) Toybox-Version ist xz-gepackt 3,1 MB groß.
+
+Toybox mag noch nicht an die BusyBox heran reichen, ist aber definitiv bereits ein interessanter Herausforderer der nur noch besser werden kann.
+
+Und anders als BusyBox kann man Toybox bedenkenlos überall installieren und verteilen.
+
+https://github.com/ponchio/untrunc
+## untrunc, mp4, repair
+2022-11-24
+Angeblich kann dieses in C++ geschriebene Utility kaputte MP4 Dateien reparieren. Es benutzt dazu Funktionen der libav, welche als externes Submodul eingebunden ist.
+
+Das Utility ließ sich von mir zwar bauen, stützte danach aber mit einem Fehler bei free() ab noch bevor es irgend eine Ausgabe erzeugen konnte.
+
+Fazit: Buggy Dreck - zumindest zum derzeitigen Zeitpunkt. (Git commit c6416245 von 2022-10-28.)
+
+Ich frage mich allerdings ohnehin, ob das Ding vielleicht nichts anderes getan hätte als ein Video von dem das Ende der Datei abgeschnitten wurde so zu reparieren dass man den noch nicht abgeschnittenen Rest ansehen kann.
+
+Doch da es nicht funktioniert ist die Frage müßig.
+
+https://www.dirsyncpro.org/features.html
+## DirSync Pro, unison, rsync
+2023-05-04
+
+"DirSync Pro" ist ein Tool für uni- und birektionales Abgleichen von Verzeichnisbäumen, wie es oft auftritt wenn man Dokumente zwischen zwei Rechnern oder zwischen einem Rechner und einem Backup-Medium hin- und her kopieren will.
+
+Anders als der Name vermuten lässt, ist es freie und offene Software.
+
+Es ist in JAVA geschrieben und daher sehr fett. Dafür punktet es mit einer gewissen Plattform-Unabhängigkeit und einem (auf dem "swing"-Toolkit basierten) einigermaßen hübschen GUI.
+
+Es ist *kein* Remote-Synchronisierungs-Tool, sondern arbeitet nur im lokalen Dateisystem.
+
+Allerdings kann man sich natürlich ein Netzwerk-Dateisystem wie dav2fs oder sshfs mounten, und so auch Verzeichnisbäume mit anderen Rechnern synchronisieren.
+
+Dabei bietet DirSync Pro ähnliche Features wie die Funktion zum Abgleichen von Verzeichnis-Bäumen des Total Commanders unter Windows bzw. des Krusader unter Linux.
+
+Da der Krusader allerdings ein extrem fettes KDE-Programm ist, kann für Leute welche auf den Rest dieses Dateimanagers dankend verzichten können das DirSync Pro eine interessante Alternative sein.
+
+Nett, vor allem für Anfänger, ist auch das hübsche GUI wo alle wichtigen Modus-Schalter direkt als Text im Fenster erklärt sind, so dass man nicht ständig in der Hilfe nachblättern muss. Außerdem kann das GUI Scripte erzeugen, die man dann ohne weitere Optionen aus der Kommandozeile für häufig wiederkehrende Einsatzfälle ausführen kann.
+
+Gegenüber unison bleibt allerdings die fehlende integrierte Diff-Ansicht ein gewisser Nachteil im Komfort.
+
+Und auch das Symlink-Handling ist sehr viel weniger flexibel als bei unison, wo man wahre Wunder mit Symlinks bewirken konnte.
+
+Grundsätzlich aber ein ganz nettes Tool.
+
+Geschrieben wurde es offensichtlich mit der Netbeans-IDE, da entsprechende Projektdateien beilegen. Es erfordert jedenfalls kein fettes zusätzlich installiertes Gradle, Maven oder andere JAVA-tyisch fette Build-Tools.
+
+Dafür braucht man aber Netbeans, oder man findet heraus wie man das Zeug mit der Hand kompiliert.
+
+git://git.savannah.gnu.org/gsl.git
+## libgsl, scientific, blas, interpolation, fft, statistics, simulation, sparse matrices, numerical ode
+2023-05-31
+Eine sehr interessante Bibliothek, auch wegen ihrer sehr guten Dokumentation im HTML-Format welche auch reichlich Beispiele enthält.
+
+Sie kann die bekannten BLAS und FFTW Bibliotheken ersetzen, ist allerdings langsamer als diese.
+
+Sie ist in C geschrieben (kein umständliches C++). Jede Funktion kann entweder ganz konservativ einen Fehlercode zurück geben. Aber man kann auch eine Callback-Funktion festlegen die dann für jeden Fehler aufgerufen wird. Hervorragend! Einziges Ärgernis ist, dass man dann dann ein "(void)"-Cast vor jeden Aufruf schreiben muss, um Warnungen wegen ignorierter "return"-Werte in höheren Warning-Levels zu vermeiden.
+
+Die Funktionsvielfalt ist beeindruckend - und das alles in rund 5 MB Download-Umfang (direkt aus Git archiviert und mit "lrzip"-gepackt).
+
+Vor allem aber hat die Library keine externen Abhängigkeiten.
+
+Einzig um auch die (optionale, aber sehr empfehlenswerte) HTML-Dokumentation bauen zu können, benötigte ich zusätzlich das Paket "python3-sphinx-rtd-theme".
+
+Die Funktionen decken praktisch alles ab was man für numerische Berechnungen braucht: Differenzieren, Integrieren, sogar (ordinäre) Differenzialgleichungen. Allerdings nicht symbolisch - alles nur numerisch.
+
+Weiters Approximationen, Interpolationen, Polynome, Wavelets, Splines, FFT, Least-Square-Fit, Wurzelsuche, Zufallszahlen, Sortieren, digitale Filter, Matrizen (auch sparse), Vektoren, lineare Algebra, Permutationen, mathematische Funktionen welche in der libm fehlen, komplexe Zahlen (für ältere C-Standards die noch keine eigenen hatten, verwenden diese aber falls vom Compiler angeboten), Sammlung physikalischer Konstanten, Histogramme.
+
+Weiters kann sie Zufallszahlen für einer Unzahl statistischer Verteilungen erzeugen. Ebenso kann sie die grundlegenden und die kumulativem Wahrscheinlichkeitsdichtefunktionen all dieser vielen Verteilungen berechnen.
+
+https://picolisp.com/wiki/?home
+## picolisp
+2020-05-27
+Ein ganz ein tolles minimales LISP. Allerdings ist es auf LLVM aufgebaut und kann nur auf 64-Bit-Systemen gebaut werden.
+
+Es gibt angeblich auch ältere 32-Bit Varianten von PicoLisp die nach wie vor im Gebrauch sind - nur der Author kümmert sich nicht mehr um diese und unterstützt sie auch nicht. Konkret gibt es einen 32-Bit Fork auf https://github.com/pahihu/picoLisp zum Download.
+
+Das "pico" im Namen bezieht sich nicht auf die Größe, sondern die kleine Anzahl von Konzepten auf denen diese Implementation aufbaut.
+
+PicoLisp ist kein experimentelles neues sondern ein tatsächlich ein ziemlich altes und erprobtes System, das seit 1988 in vielen kommerziellen Projekten verwendet wurde.
+
+PicoLisp ist ein Interpreter der in einem Subset von sich selbst implementiert ist. Er erzeugt maschinenunabhängigen Bytecode der vom LLVM dann in jede von diesem unterstützte Ziel-Architektur übersetzt wird.
+
+Als Sonderbarkeit ist ein vi-artiger Editor direkt in den Interpreter integriert. Allerdings ist das ganze keine IDE wie explizit festgestellt wird.
+
+PicoLisp bietet Namespaces, Coroutinen, eine objektorientierte Datenbank und native Aufrufe von C-Code.
+
+Es gibt angeblich auch eine abgespeckte Variante von PicoLisp welche in der JVM läuft.
+
+Aber wie man es Bootstrappen kann ohne eine Kopie von sich selbst zu haben ist mir noch unklar. Angeblich geht es irgendwie. Vielleicht über die JAVA-Version, deren Bytecode zumindest portabel ist.
+
+Ich habe es jedenfalls nicht geschafft.
+
+https://www.fourmilab.ch/javascrypt/javascrypt.zip
+# AES, CBC, MD5, Offline JavaScript-Applet
+2023-09-16
+Version (neuestes Dateidatum im Archiv): 2018-05-25
+cksum: 751606231 354876
+
+Enthält HTML-Dateien mit JavaScripts, welche lokal im Web-Browser geöffnet werden können um Text mit AES und einem Passwort zu ver- und entschlüsseln.
+
+Die Dateien sind auch direkt auf der Webseite gehostet, so dass man sich den lokalen Download ersparen kann wenn man darauf vertraut, dass dort seit dem Review keine ungünstigen Veränderungen vorgenommen wurden.
+
+Zwei Versionen der Browser-App liegen bei: Eine mit Erklärungen, und eine wo nur die Formulare zu sehen sind, wodurch weniger Scrollen erforderlich ist.
+
+Die Browser-App erlaubt es, beliebigen Text den man in ein Eingabefeld eingibt mit AES zu verschlüsseln und mit MD5 die Integrität zu schützen.
+
+Dies geschieht dadurch, dass zunächst die MD5 über den Plaintext berechnet wird.
+
+An dieses 128-Bit Digest wird noch die Plaintext-Länge als 32-Bit Zahl im Little-Endian Format angehängt, gefolgt von Plaintext.
+
+Das Ergebnis wird mit Null-Bytes auf Vielfache von 128 Bit gepadded und dann mit AES-256-CBC verschlüsselt.
+
+Der von CBC benötigte 128-Bit Initialisierungsvektor wird zufällig erzeugt und vor die verschlüsselte Ausgabe gehängt.
+
+Der verschlüsselte Text kann auf mehrere Weisen codiert werden, Base64 ist die sinnvollste darunter.
+
+Der IV wird mittels eines auf AES basierenden Pseudozufallsgenerator erzeugt. Dieser wird mit Entropie initialisiert, welche aus Datum und Zeitpunkt von Eingabe-Events im Browser-Fenster gewonnen wird - insbesondere Mausbewegungen.
+
+Als AES-Schlüssel kann man entweder als hexadezimalen 256 Bit Wert angeben der dann direkt verwendet wird.
+
+Oder man verwendet einen Text als Schlüssel. Dann werden dessen Zeichen an den geraden und ungeraden Positionen getrennt extrahiert und zwei MD5-Digests daraus berechnet, welche zusammen den 256-Bit Schlüssel ergeben.
+
+Es ist noch eine zweite Browser-App enthalten, welche Text (typischerweise zuvor verschlüsselter) als schwacher Versuch einer Steganografie in Ausgabetext umwandeln kann welcher aus Sätzen mit Worten aus einem Wörterbuch und Satzzeichen besteht, jedoch keinerlei Sinn ergibt.
+
+MAC-Then-Encrypt und MD5 sind zwar nicht ganz die sicherste Wahl und AES ist nicht gerade der vertrauenserweckendste Algorithmus, aber davon abgesehen erscheint die Implementation seriös.
+
+Wenn nicht gerade die NSA persönlich der Angreifer ist, dürfte die Verschlüsselung sicher sein solange man ein ausreichend langes Passwort verwendet.
+
+Im Übrigen ist auch ein Passwort-Generator in der App enthalten.
+
+Dieser kann wahlweise direkt einen hexadezimalen 256-Bit-Schlüssel erzeugen, oder eine reichlich idiotische Text-Repräsentation davon die nur aus Großbuchstaben mit Bindestrichen dazwischen besteht.
+
+Es gibt auch eine separate Version des Generators, welcher gleich eine Liste aus Passworten generieren kann. Optional können auch MD5, SHA-224 und SHA-256 Prüfsummen der Passworte angehängt werden. Außerdem hat man hier mehr Kontrolle über das Alphabet und die Passwortlänge.
+
+Der Passwort-Generator verwendet den selben Pseudozufallsgenerator welcher auch den IV erzeugt.
+
+Ein Problem des Zufalls-Generators ist dass er nicht sicher stellt dass ausreichend viel Entropie gesammelt wurde bevor Zufallszahlen generiert werden.
+
+Man sollte daher ausreichend die Maus bewegen bevor man ein Passwort oder einen Schlüssel generieren lässt. Für IVs hingegen besteht keine Gefahr, da ein einziger Timestamp ausreicht (müssen nur eindeutig, nicht zufällig sein).
+
+https://pijul.org/manual/
+## Pijul, Darcs, DVCS, Theory of Patches
+2023-10-14
+
+Pijul ist ein patch-basiertes DVCS welches von "Darcs" inspiriert wurde. Konkret scheint es diesem sehr ähnlich zu sein.
+
+Ein wesentlicher Unterschied ist, dass nicht nur Patches sondern auch Conflict Resolutions aufgezeichnet und zu einem Teil der Versionsgeschichte gemacht werden können.
+
+Dadurch vermeidet Pijul auch die exponenzielle Rechenzeit bei Merges welche Darcs oft gequält hat.
+
+So nett sich das alles anhört, es gibt auch einige Dinge die mir missfallen.
+
+Als erstes ist Pijul in Rust geschrieben. Zwar ist das Haskell von Darcs auch nicht gerade eine schlanke Sprache, aber der funktionale Charakter von Haskell lässt zumindest die Verhinderung vieler Fehler erhoffen.
+
+Rust ist jedoch nicht funktional sondern einfach nur fett, und die idiotische Fehlerbehandlung lässt befürchten dass so ein Programm jede Menge Fehler unentdeckte Fehler haben kann.
+
+Ein weiteres Problem das ich sehe ist dass Pijul seine eigene PKI implementiert mit der Patches signiert werden.
+
+Es ist unklar was für einen Metadatenaufwand das verursachen wird. Ebenso unklar ist wie sicher diese Signaturen sind - etwa im Hinblick auf die Entropie der automatisch generierten Schlüssel. Erfahrungsgemäß sieht es sehr schlecht um die Entropie aus, wenn die Software-Autoren keine Ahnung von Kryptografie haben aber unbedingt tolle Krypto-Features in ihr Programm einbauen wollen.
+
+Pijul arbeitet normal, kann aber via SSH auf andere Repository-Klone zugreifen und dorthin pushen/pullen. Read-Only Zugriff via https:// ist ebenfalls möglich. Einen Standalone-Smartserver sah ich bislang noch nicht als Option.
+
+Obwohl Pijul auf derselben "Theory of Patches" aufbaut wie Darcs, hat es nicht alle Features von Darcs übernommen. Konkret scheint zumindest derzeit (2023-10) noch das Feature zu fehlen, ein find/replace anstatt einem Patch als Änderung aufzuzeichnen.
+
+https://www.baeldung.com/ant-maven-gradle
+## Ant, Gradle, Maven
+2023-12-11
+Maven ist schlanker als Gradle, jedoch weniger flexibel. So bietet Gradle deutlich mehr Möglichkeiten bei den Abhängigkeiten unter Beachtung von Versionsnummern. So kann man Abhängigkeiten gezielt übersteuern und Downgrades erzwingen.
+
+Der praktisch größte Vorteil von Gradle scheint aber zu sein, dass die Projektdatei in einer Groovy-artigen Scriptsprache verfasst wird, während man sich in Maven mit widerlichem XML herum ärgern muss.
+
+Gradle ist weiters auf Multi-Project-Builds ausgelegt, und nicht nur für ein Projekt zur gleichen Zeit.
+
+Gradle kann Duplikate cachen, ähnlich wie ccache. Das Funktioniert auch über Projektgrenzen hinweg.
+
+Ein Daemon kann gestartet werden, um den Startaufwand für die verwendeten Build-Werkzeuge zu verringern in dem diese ständig im RAM gehalten werden.
+
+Angeblich kann Gradle auch C und C++ Projekte bauen.
+
+Was den Vergleich zwischen Ant und Maven angeht, erlegt Ant dem Projekt keine Konventionen auf. Maven hingegen schreibt eine gewisse Organisationsform der Quelltexte vor.
+
+Beide verwenden gräßliches unleserliches XML für ihre Projektdateien.
+
+Die von Ant ist aber semantisch ähnlich einem Makefile, es gibt also Ziel-Regeln und Actions wo dann Compiler aufgerufen werden usw.
+
+Bei Maven hingegen muss man alles deklarativ angeben. Anstatt Ziel-Regeln beschreibt man das Layout der Quelltexte, wobei man bestimmten Konventionen folgen muss. Dafür ruft Maven dann aber automatisch die richtigen Tools auf um alles zu bauen.
+
+Ant ist flexibler da einen keine Konventionen einschränken.
+
+Dafür kann man fremde Maven-Projekte offenbar direkt als Unterabhängigkeiten in eigene Maven-Projekte aufnehmen, ohne dazu Maven rekursiv aufrufen zu können wie make oder Ant es wohl tun würden.
+
+Auf jeden Fall soll Maven beliebter als Ant sein, was allerdings vielleicht auch nur seiner starken Unterstützung durch IDEs verdankt ist. Denn wer will schon freiwillig mit der Hand ein XML-File editieren?
+
+Gradle ist scheinbar auch deklarativ, ähnlich wie Maven. Nur mit deutlich besser lesbarere Syntax, da kein XML.
+
+Tatsächlich ist das ganze aber ein ausführbares Script, und somit ähnlich wie scons welches ähnliches in Python tut.
+
+Man kann bei Gradle dabei wählen, ob die Scriptsprache auf Groovy oder Kotlin basieren soll. Was davon der Fall ist bestimmt die Dateierweiterung der Projektdatei (".gradle" für Groovy, ".kts" für Kotlin).
+
+Ein Nachteil von Gradle soll allerdings der Umfang seiner Dokumentation sein, aber nicht weil sie zu knapp wäre sondern weil sie im Gegenteil riesig ist mit entsprechendem Leseaufwand.
+
+https://github.com/google/grittibanzli
+## gzip, reconstruction
+2025-01-09
+
+grittibanzli ist ein Kommandozeilenwerkzeug, welches zwei zusätzliche Metadaten-Dateien aus einer .gz Datei extrahiert. xz-komprimiert sind diese beiden Dateien meist nur wenige kB groß.
+
+Später kann grittibanzli dann aus diesen beiden Dateien sowie der unkomprimierten Originaldatei die originale .gz Datei binär identisch rekonstruieren.
+
+Manchmal lässt sich eine .gz Datei einfach durch neu-Komprimieren erzeugen wenn man beim Dekomprimieren die --name Option verwendet hat um auch den gespeicherten Dateinamen und Timestamp wiederherzustellen.
+
+Doch in anderen Fällen versagt dies, und dann kann grittibanzli helfen.
+
+Ein typischer Anwendungsfall wäre wenn eine große .gz Datei platzsparender mit als .xz oder .lrz komprimiert aufbewahrt werden soll, doch eine Anwendung erwartet sich die originale .gz Datei und vergleicht diese auch anhand einer digitalen Signatur.
+
+Mit grittibanzli kann man die originale .gz Datei bei Bedarf wiederherstellen, ohne sie dauerhaft speichern zu müssen.
+
+https://de.wikipedia.org/wiki/Btrfs
+## btrfs
+2024-09-09
+Red Hat beauftragte im zweiten Quartal 2010 Edward Shishkin, einen der ursprünglichen Reiser4-Entwickler, mit einem Codereview. Shishkins Schluss war, dass das Design fehlerhaft ist, da dem ursprünglichen Algorithmus in Kernpunkten nicht gefolgt wird. Die Designfehler führen dazu, dass in speziellen Fällen der Plattenplatz ausgehen kann, obwohl genügend Platz vorhanden ist. Die Btrfs-Entwickler widersprachen der Behauptung, dass es sich um einen Designfehler handele. Sie bezeichneten es vielmehr als Implementierungsfehler, der bereits behoben sei. Im August 2017 kündigte Red Hat an, langfristig die Unterstützung von Btrfs in Red Hat Enterprise Linux (RHEL) einzustellen. Anlass dafür seien Probleme des Dateisystems im Zusammenspiel mit Docker, sowie Anwenderbeschwerden, die nach Aussage von Mitentwicklern häufig aufwändige manuelle Korrekturen im Dateisystem erforderten. Die zu dem Zeitpunkt aktuelle Version von RHEL nutzte allerdings den Linux-Kernel 3.10, der den Btrfs-Entwicklungsstand von 2013 widerspiegelt und von den Btrfs-Entwicklern nicht empfohlen wird.
+
+https://forum.zdoom.org/viewtopic.php?t=27083
+## Timidity++, FluidSynth
+2010-09-07
+FluidSynth is a software synthetiser which uses sound fonts. Con: you need a sound font. A good sound font can take up to hundred of megabytes. It also is a CPU hog.
+
+Timidity++ is another software synthetiser, which also uses sound fonts (or alternatively sound patches). Con: you have to set up an external program, Timidity4ZDoom. Pro: it is less CPU intensive than FluidSynth.
+
+https://www.heise.de/news/Delphi-wird-30-Jahre-alt-Totgesagte-leben-laenger-10281256.html
+## Delphi, PASCAL
+2025-02-14
+Warum steckt überall noch irgendwie Delphi drin [...] Die Sprache war immer schon technisch modern, früh objektorientiert, gut mit Datenbanken zu verwenden, schon beim Entwurf für Netzwerke konzipiert und mit vielen Bibliotheken ausgestattet. Außerdem verfügte sie bald über eine durchdachte IDE, die für viele nachfolgenden als Vorbild diente. "Die eigentliche Innovation war, dass man eine leistungsfähige Programmierumgebung mit einem benutzerfreundlichen GUI-Designer statt einer Klassenbibliothek sowie einem optimierenden Compiler, einem Debugger und einer Datenbankzugriffs-API ausstattete", erinnert sich David Intersimone, einer der Gründungsväter bei Borland [...]
+
+Die steil aufsteigende und später eher wechselvolle Geschichte von Delphi beginnt 1985 mit Object Pascal, einer objektorientierten Pascal-Erweiterung, an der auch der Pascal-Erfinder Niklaus Wirth mitgewirkt hat [...]
+
+Mit der ersten Windows-Version von Turbo Pascal änderte Borland den Namen: Delphi wurde heute vor dreißig Jahren geboren. In der Namenswahl, dem griechischen Orakel, steckte ein intendierter Bezug zu Oracle, der Datenbank [...] von einer "strategischen Entscheidung, Datenbank-Tools und Konnektivität zu einem zentralen Punkt des neuen Produkts zu machen." [...]
+
+Zerfallserscheinungen prägen die späten Jahre [...] Auskoppelungen und schließlich in Firmenverkäufen [...] Parallel vertrieb Borland selbst erfolglos die Turbo-Linie, die einzelne IDEs für Delphi, .NET usw. enthielt, sogar in kostenlosen Varianten. Der Pascal-Delphi-Komplex geriet immer stärker unter Druck durch Visual Studio und Open Source.
+
+https://www.reddit.com/r/cpp/comments/3a42cq/skia_vs_cairo_best_library_for_crossplatform_gui/?rdt=49133
+## cairo, agg, skia
+2015-06-17
+We use both internally in our products. We find that Cairo is better documented and easier to compile and use, while Skia on the other hand is somewhat faster [...]
+
+Cairo and Skia are for high performance 2D vector graphics.
+You can check Skia source code and see how big and complex a library offering such features can get [...]
+
+2D graphics programming, but I am hung on what library to use. In particular, cairo's C++ bindings seem to be nothing more than a paper-thin wrapper around the C API, which bothers me in principle and in execution. The C API seems to be very nice compared to some I've used, and it would be easy enough to simply do the module in C [...]
+
+if you don't care about hardware acceleration then AGG (http://www.antigrain.com) is a very good pure C++ 2D graphics toolkit. It does everything in software and has zero dependency (not even STL), which makes it super easy to port to different platforms (especially embedded systems). AGG's software rasterizer is also significantly faster than Cairo's (about 2 to 3 times faster in my tests).
+
+agg2.5 went gpl so that's a consideration for commercial software [...]
+
+https://news.ycombinator.com/item?id=39438908
+## skia, cairo, blend 2d, qpainter, agg, impeller
+2024-02-20
+
+Skia is a great library, but as all things Google it's a pain to build. They don't use CMake and building it from source takes 20-30 minutes on a modern laptop. Furthermore, it's constantly changing its APIs and much of it is undocumented and unclear on how to use optimally. Most of the decisions taken by development team aren't discussed in the open and this makes it hard to understand the codebase.
+
+I wish there was a nice and small vector graphics library with GPU acceleration. So far Skia is the only real option, despite its downsides.
+
+[...] I have an open source project that uses Skia, and I just keep static libraries for all target platforms because the Skia build process is so painful [...] Even though it’s a pain in the ass, I still use Skia because it’s got the best combination of performance and features. Sadly Cairo doesn’t quite compete. 
+
+[...] The Skia C++ API changes quite a lot. If I didn't sync up regularly, the tech debt could become a problem down the line [...]
+
+there is no such concept as "Skia version" - just revisions/milestones. It used to be an attempt to make stable plain C API but AFAIR it was removed recently.
+
+[...] Cairo is in a maintenance-only mode. Nobody develops this library anymore and it only has a maintainer or two. Since nobody really worked on Cairo in the past 15 years it's not optimized for modern hardware.
+
+[...] I think that when it comes to 2D rendering libraries there is in general not too many options if you want to target CPU or both CPU+GPU. Targeting GPU-only is bad for users that run on a hardware where GPU doesn't perform well or is not available at all due to driver issues or just not present (like servers).
+
+If you consider libraries that offer CPU rendering there are basically:
+
+* AGG (CPU only)
+
+* Blend2D (CPU only, GPU planned, but not now)
+
+* Cairo (CPU only)
+
+* Qt's QPainter (CPU only, GPU without anti-aliasing / deprecated)
+
+* Skia (CPU + GPU)
+
+* Tiny Skia (CPU only, not focused on performance)
+
+* GPU only libs (there is many in C++ and Rust)
+
+Nobody develops AGG and Cairo anymore and Qt's QPainter hasn't really improved in the past decade (Qt Company's focus is QtQuick, which doesn't use QPainter, so they don't really care about improving the performance of QPainter). So, only 2 libraries from this list have active development - Blend2D and Skia.
+
+As an author of Blend2D I hope that it will be a go-to replacement for both AGG and Cairo users. Architecturally, Blend2D should be fine after a 1.0 release as the plan is to offer a stable ABI with 1.0 - And since Blend2D only exports C-API it should be a great choice for users who want to use every cycle and who want their code to work instead of making changes every time the dependency is updated (hello Skia).
+
+[...] Not an expert on graphics libs - but I did notice that the Google project Flutter is moving away from Skia to something new called Impeller.
+
+[...] I believe Impeller is even worse with regards to all the issues mentioned in the parent comment. In particular since it is so tight to Flutter.
+
+[...] Our joke was "the recommended way to build Skia is to become a Google employee, but there are workarounds available if for some reason that isn't practical".
+
+There's also the question of "which parts of Skia". If there are five different conceivable ways to implement something in vector graphics, Skia will implement all five, and there will be some sort of hidden obscure configuration setting that Chrome and Android will use to determine which one actually gets used. It's a very unfriendly piece of software to use, honestly.
+
+[...] Out of interest what's difficult about it to build?[...] Is the problem specific to Skia [...]?
+
+The difficult parts change all the time and usually boil down to some sort of undocumented or poorly-documented dependency, especially if you're trying to enable the GPU backends. Every time someone I know tries to get it building it takes them a week to figure out how to do it.
+
+https://blend2d.com/
+## blend 2d
+2025-01-24
+Blend2D is a high performance 2D vector graphics engine written in C++ and released under the Zlib license. The engine utilizes a built-in JIT compiler to generate optimized pipelines at runtime that take the advantage of host CPU features [...] Blend2D can render rectangles, simple shapes, geometries composed of lines and Bézier curves, and text. The 2D pipeline supports pixel composition, opacity control, and styles such as solid colors, gradients, and images [...] provides JIT backends for X86 (32-bit or 64-bit) and ARM64 (AArch64) architectures [...] Blend2D also provides a portable pipeline that can be used on hardware without a working JIT acceleration.
+
+[...] Blend2D is written in C++ but it provides both C and C++ APIs [...] The C API makes it possible to use Blend2D from many programming languages which are able to interface with C (either natively or through FFI). The primary goal of the C++ API is to make the library easy-to-use in C++ projects without the need of managing resources manually.
+
+https://appmus.com/vs/freecad-vs-solvespace
+## FreeCAD, SolveSpace
+2025-02-25
+FreeCAD is a comprehensive open-source CAD software that offers a wide range of features and strong community support, making it ideal for complex projects. In contrast, SolveSpace focuses on simplicity and speed, making it suitable for users who need effective 2D and 3D modeling without the extensive capabilities of FreeCAD.
+
+FreeCAD Pros:
+* Versatile with many features
+* Strong parametric modeling capabilities
+* Large community and support
+* Supports various file formats
+* Extensive plugin support
+
+FreeCAD Cons:
+* Steeper learning curve for beginners
+* Can be overwhelming due to features
+* Less intuitive interface
+* Occasional bugs and performance issues
+* Less focused on specific applications
+
+SolveSpace Pros:
+* Lightweight and fast
+* Good for 2D and 3D modeling
+* Easy to use for basic designs
+* Effective for mechanical design
+* Simpler interface
+
+SolveSpace Cons:
+* Limited features compared to FreeCAD
+* Less community support
+* Not as versatile for advanced projects
+* Fewer export options
+* Limited simulation tools
+
+https://www.reddit.com/r/programming/comments/9d5kr/ask_preddit_what_was_your_experience_with_boehms/
+## BoehmGC
+2008-09-05
+what was your experience with Boehm's conservative GC? Is it reliable?
+
+[...] I use Boehm GC in phc. It works if you're careful, and its very useful. However, it has some downsides:
+
+* When you use a lot of memory, it all goes to shit - crashes and hangs.
+
+* You can't use valgrind on it, so its hard to profile it.
+
+* Documentation is pretty poor, its hard to know how it works and how to tune it.
+
+* I can't even remember where I found the C++ documentation, but it was quite hidden.
+
+[...] as noted in Boehm's hp page* you may observe 'short' term leaks as it's a conservative collector. If you want to fully avoid these you need precise garbage collectors, which can be difficult to integrate into certain environments.
+
+[...] I tried using it and found it to be too unreliable and too much of a pain to use. In essence, the cost of learning how to use it and debug problems that occur because of it were greater than the cost of just using a smart pointer/scoped pointer and other memory management policies.
+
+Not to mention the performance penalty was pretty big, especially in multi-threaded programs.
+
+https://www.reddit.com/r/programming/comments/82zwf/comment/c083syj/
+## BoehmGC
+2007-06-17
+Did anyone ever use the Boehm garbage collector for a C project ? 
+
+[...] Be wary of using Boehm GC when doing cryptography-type computations. Boehm attempts to distinguish pointers from raw binary data, and is successful for most programs since most integers have small values. Data generated from crypto computations is completely randomly distributed, and thus Boehm has a really hard time distinguishing pointers from plain data.
+
+[...] That should not cause any serious problems, though, just some delay in the collection of some memory blocks. 
+
+[...] Depending on how pervasive the data is. Consider applications like Mercurial which almost exclusively manipulate such data. The OpenCM project ran directly into this wall, which is how I know it's a problem for conservative GC.
+
+https://en.wikipedia.org/wiki/Boehm_garbage_collector
+2025-01-02
+## BoehmGC
+The Boehm–Demers–Weiser garbage collector, often simply known as the Boehm GC or Boehm collector, is a conservative garbage collector for C and C++ [...]
+
+The collector uses a mark-sweep algorithm. It provides incremental and generational collection under operating systems which provide the right kind of virtual memory support. (Currently this includes SunOS[45], IRIX, OSF/1, Linux, and Windows, with varying restrictions.) It allows finalization code to be invoked when an object is collected. It can take advantage of type information to locate pointers if such information is provided, but it is usually used without such information.
+
+Boehm GC can also run in leak detection mode in which memory management is still done manually, but the Boehm GC can check if it is done properly. In this way a programmer can find memory leaks and double deallocations.
+
+Boehm GC is also distributed with a C string handling library called cords. This is similar to ropes in C++ (trees of constant small arrays), but instead of using reference counting for proper deallocation, it relies on garbage collection to free objects. Cords are good at handling very large texts, modifications to them in the middle, slicing, concatenating, and keeping history of changes (undo/redo functionality).
+
+The garbage collector works with most unmodified C programs, simply by replacing malloc() with GC_MALLOC() calls, replacing realloc() with GC_REALLOC() calls, and removing free() calls.
+
+For completeness, Boehm supports explicit deallocation via GC_FREE(). All the substitution can be done using preprocessor macros.
+
+The Boehm GC is used by many projects [...] like Inkscape [...] the GNU Compiler for Java runtime environment, the Portable.NET project, Embeddable Common Lisp, GNU Guile, the Mono implementation of the Microsoft .NET platform [...]
+
+https://86box.net/
+## 86box
+2025-06-01
+Ein x86-Emulator bis zum Pentium. Qt-basierte grafische Oberfläche. Angeblich eine sehr genaue Emulation.
+
+Nachteil: Neuere Versionen (ab 2024-09) lassen sich nur noch für x86-64 und ARM64 bauen. Kein 32-Bit Support mehr. Eben so wenig werden gänzlich andere Plattformen unterstützt.
+
+https://simplex.chat/
+## SimpleX
+2025-06-02
+The first messenger without user IDs
+
+Other apps have user IDs: Signal, Matrix, Session, Briar, Jami, Cwtch, etc.
+
+SimpleX does not, not even random numbers. This radically improves your privacy [...]
+
+SimpleX protects the privacy of your profile, contacts and metadata, hiding it from SimpleX network servers and any observers [...]
+
+You are protected from spam and abuse
+
+Because you have no identifier or fixed address on the SimpleX network, nobody can contact you unless you share a one-time or temporary user address, as a QR code or a link [...]
+
+SimpleX stores all user data on client devices in a portable encrypted database format — it can be transferred to another device.
+
+The end-to-end encrypted messages are held temporarily on SimpleX relay servers until received, then they are permanently deleted [...]
+
+The SimpleX network is fully decentralised and independent of any crypto-currency or any other network, other than the Internet.
+
+You can use SimpleX with your own servers or with the servers provided by us — and still connect to any user [...]
+
+* E2E-encrypted messages with markdown and editing
+
+* E2E-encrypted images, videos and files
+
+* E2E-encrypted decentralized groups — only users know they exist
+
+* E2E-encrypted voice messages
+
+* Disappearing messages
+
+* E2E-encrypted audio and video calls
+
+* Portable encrypted app storage — move profile to another device
+
+* Incognito mode — unique to SimpleX Chat
+
+SimpleX uses temporary anonymous pairwise addresses and credentials for each user contact or group member.
+
+It allows to deliver messages without user profile identifiers, providing better meta-data privacy than alternatives.
+
+Many communication networks are vulnerable to MITM attacks by servers or network providers.
+
+To prevent it SimpleX apps pass one-time keys out-of-band, when you share an address as a link or a QR code.
+
+End-to-end encryption
+
+Double-ratchet protocol — OTR messaging with perfect Forward secrecy and Break-in recovery.
+
+NaCL cryptobox in each queue to prevent traffic correlation between message queues if TLS is compromised.
+
+To guarantee integrity the messages are sequentially numbered and include the hash of the previous message.
+
+If any message is added, removed or changed the recipient will be alerted.
+
+Additional layer of server encryption for delivery to the recipient, to prevent the correlation between received and sent server traffic if TLS is compromised.
+
+SimpleX servers act as low latency mix nodes — the incoming and outgoing messages have different order.
+
+Only TLS 1.2/1.3 with strong algorithms is used for client-server connections.
+
+Server fingerprint and channel binding prevent MITM and replay attacks.
+
+Connection resumption is disabled to prevent session attacks.
+
+To protect your IP address you can access the servers via Tor or some other transport Overlay network.
+
+To use SimpleX via Tor please install Orbot app and enable SOCKS5 proxy (or VPN on iOS).
+
+Each message queue passes messages in one direction, with the different send and receive addresses.
+
+It reduces the attack vectors, compared with traditional message brokers, and available meta-data.
+
+SimpleX uses Content padding for each encryption layer to frustrate message size attacks.
+
+It makes messages of different sizes look the same to the servers and network observers.
+
+Simplex Chat provides the best privacy by combining the advantages of P2P and federated networks.
+
+Unlike P2P networks
+
+All messages are sent via the servers, both providing better metadata privacy and reliable asynchronous message delivery, while avoiding many problems of P2P networks.
+
+Unlike federated networks
+
+SimpleX relay servers do NOT store user profiles, contacts and delivered messages, do NOT connect to each other, and there is NO servers directory.
+
+servers provide unidirectional queues to connect the users, but they have no visibility of the network connection graph — only the users do.
+
+You can create contacts and groups, and have two-way conversations, as in any other messenger.
+
+How can it work with unidirectional queues and without user profile identifiers?
+
+For each connection you use two separate messaging queues to send and receive messages via different servers.
+
+Servers only pass messages one way, without having the full picture of user's conversations or connections.
+
+The servers have separate Anonymous credentials for each queue, and do not know which users they belong to.
+
+Users can further improve metadata privacy by using Tor to access servers, preventing corellation by IP address.
+
+https://www.freie-messenger.de/simplex/
+
+Die Zustellung von Offlinenachrichten [...] erfolgt über individuelle „Relay-Server“:
+
+SimpleX speichert alle Benutzerdaten auf den Client-Geräten, die Nachrichten werden nur temporär auf den SimpleX-Relay-Servern gehalten, bis sie empfangen werden.
+
+Ist der Empfänger nicht gleichzeitig online, so werden die Nachrichten auf einem SMP-Server bis zur Abholung/Löschung maximal 21 Tage zwischengespeichert, danach verworfen. Größere über XFTP geroutete Dateien werden maximal 48 Stunden zur Abholung beim XFTP-Server aufbewahrt. Die Aufbewahrungswerte können von Serverbetreibern für ihre eigenen SMP-/XFTP-Server verändert werden.
+
+https://www.heise.de/news/CachyOS-im-Test-Wie-schnell-kann-ein-Linux-sein-10492703.html
+CachyOS im Test: Wie schnell kann ein Linux sein?
+## CachyOS
+2025-07-18
+
+CachyOS steckt mitten im Hype: Laut DistroWatch hat es sogar Mint als populärste Linux-Distribution abgelöst [...] gilt als Spiele-OS, ist aber vor allem konsequent auf Reaktionsgeschwindigkeit getrimmt — es eignet sich also für alle, die Schwuppdizität goutieren [...] ich habe das auf jeden Fall installiert und ziemlich intensiv genutzt. Und ganz ehrlich, ich bin begeistert. Genau so muss sich 2025 ein Betriebssystem anfühlen [...] soll sich so schnell wie möglich anfühlen. Und da wurde an so vielen Ecken wie möglich versucht, jegliche Verzögerung zu verhindern [...] dachte ich am Anfang ernsthaft, dass da irgendwas kaputt ist, weil Software so schnell installiert wurde [...] die Installation von Thunderbird - ungefähr eine Sekunde dauert das. Und hier Audacity, auch super schnell. Und hier einfach mal Blender: Das dauert weniger als 20 Sekunden für dieses riesen Software-Paket [...] klar, das ist nicht nur der Verdienst von CachyOS [...] CachyOS basiert auf Arch Linux [...] Aber CachyOS hat da direkt out of the box so ein bisschen optimiert. Zum Beispiel, dass Cachy immer direkt 10 Download-Verbindungen aufmacht [...] an ganz vielen Stellschrauben optimiert, wo die Sachen vielleicht einzeln gar nicht so ins Gewicht fallen, aber in der Masse dann eben doch [...] Alleine an Desktop-Umgebungen hat man da 17 Stück zur Auswahl. Voreingestellt ist aber KDE Plasma [...] wird man direkt von so einem Menü begrüßt, wo man dann zum Beispiel mit einem Klick das ganze Gaming-Geraffel installieren kann. Also Steam und Lutris und so - praktisch [...] gibt es dann halt direkt unter "Beliebte Pakete" so eine kuratierte Auswahl, zum Beispiel von Office-Programmen. Einfach anklicken, installieren, fertig [...] Kann man auf "Repo" klicken. Und da gibt es dann mehr zur Auswahl. Also während meines Tests waren das 15.808 Pakete [...] Die vorinstallierte Fish-Shell kannte ich noch nicht und ich fand die sehr, sehr schön. Also erstmal schön bunt, aber auch die Autovervollständigung ist echt praktisch [...] Und bei Cachys Scheduler - der heißt übrigens Bore, B-O-R-E - da geht's bewusst ein bisschen ungerecht zu. Nämlich, dass alle interaktiven Sachen - also was weiß ich, so was wie Fenster verschieben oder Mausklick in einem Spiel - priorisiert werden [...] der Vorteil bei Bore ist halt, dass sich alles immer schnell anfühlt [...] Der Scheduler ist übrigens auch der Grund, warum das CachyOS heißt [...] Der Scheduler hieß früher einfach "Cachy" [...] CachyOS ist trotz der großen Beliebtheit nach wie vor ein Hobbyprojekt von Peter. Und was ich auch krass finde: Er schreibt im Cachy-Forum, dass er erst 2018 von Windows auf Linux umgestiegen ist und da sein erstes Linux installiert hat. Also recht schnell vom Windows-User zum Linux-Kernel-Magier geworden - ist beeindruckend.
+
+Eine andere wichtige Sache bei CachyOS sind die architekturoptimierten Repositories. Das klingt jetzt erstmal kompliziert, aber das bedeutet einfach nur, dass je nach eurer CPU speziell drauf angepasste Software heruntergeladen wird. Also zum Beispiel, wenn ihr einen AMD-Prozessor mit Zen-4-Architektur habt - die Teile gibt's seit 2022 - oder bestimmte Intel-CPUs, dann holt sich CachyOS automatisch daran angepasste Software, die den sogenannten AVX512-Befehlssatz beherrscht.
+
+Und andere Linux-Macher nutzen halt einfach den kleinsten gemeinsamen Nenner - also immer nur einen Softwarestand, der dann aber auch auf steinalten Prozessoren läuft. CachyOS-Macher gehen halt die Extra-Meile, dass sie für viele Prozessoren optimierte Programmvarianten anbieten. Was das am Ende bringt [...] so im Bereich von 5 bis 20 % [...] Und ja, die Performance. Ich hatte ja vor ein paar Wochen [...] die drei Spiele Cyberpunk 2077, Shadow of the Tomb Raider und Black Myth Wukong jeweils unter Windows 11 und unter Linux - also hier SteamOS - gebenchmarkt. Und Linux war immer schneller.
+
+Die gleichen Spiele habe ich nun auch hier auf meinem System mit AMD Ryzen 9 7950X3D und Nvidia RTX 4090 unter CachyOS und Windows gebencht. Und hier liefen die Spiele unter Linux mit zwischen 15 und 23 % weniger Frames.
+
+Ist CachyOS nun langsamer als SteamOS? Nein, sicherlich nicht. Der Punkt ist einfach: Das Legion Go S hat eine AMD-Grafikeinheit [...] Leider ist der Nvidia-Linux-Treiber bei weitem nicht so gut optimiert wie der AMD-Treiber. Und das ist einfach das Problem [...] Interessant ist aber, dass andere Sachen [...] tatsächlich schneller unter CachyOS laufen als unter Windows. Ich habe ein bisschen KI-Zeug auf der GPU - also mit CUDA - ausprobiert, zum Beispiel zwei Sprachmodelle mit Ollama. Und die liefen beide zwischen 7 und 10 % schneller unter CachyOS als unter Windows.
+
+Und die Open-Source-Sprach-Transkriptionssoftware Whisper [...] lief nahezu doppelt so schnell unter CachyOS, mit der gleichen Tondatei, mit den gleichen Einstellungen. Also da scheinen wirklich die ganzen Optimierungen von CachyOS wirklich reinzuhauen.
+
+Mein Fazit [...] Nobara und Pop!_OS - die habe ich auch schon mal ausprobiert und mit beiden bin ich nicht warm geworden [...] Ich wundere mich allerdings selbst, dass ich hier CachyOS so super finde. Was mich nämlich zuerst ein bisschen abgeschreckt hat: Weil als Basis Arch Linux verwendet wird. Ein zumindest früher berüchtigtes Linux.
+
+Wir hatten ja schon mal ein ziemlich positives Video über EndeavourOS gemacht - was ja auch auf Arch basiert, wie übrigens SteamOS auch. Und Endeavour habe ich dann die ganze Zeit genutzt, bis mir dann ein Update das komplette System geschrottet hat. Also: bootete nicht mehr. Ja, doof [...] ist halt auch ein Rolling-Release-Linux [...] Das ist cool, weil man dadurch halt immer den neuesten Kram hat, aber ist natürlich auch riskanter, dass da mal was zusammenbricht.
+
+https://github.com/formio/formio
+## database form builder
+2025-09-18
+Based on MongoDB and Node.js.
+
+But it does not include a database!
+
+Instead, it needs to use the database services provided by https://form.io/, which are not free except for a 30-day trial. Then, the periodic payments range from $ 330 per monto to $ 5280 per year as of 2025.
+
+Thanks ...
+
+https://github.com/gitana/alpaca
+## database form builder
+2025-09-18
+Written in 87 % JavaScript, 5 % PHP, the rest in Ruby and even more exotic languages like "Gherkin".
+
+Alpaca ist mostly HTML5 with JavaScript and makes heavy use of the JS Libraries Bootstrap, jQuery Mobile and jQuery UI.
+
+In practice, the alpace .js module downloads a plethora of foreign .js modules from a CDN and there seems to be no way to just host all those files locally.
+
+When I opened a demo form in Firefox and used its inspector to examine the .js Modules, I found a large number of those.
+
+Perhaps it is possible to save them to disk, but who knows. Local installation might be hard.
+
+Also, there does not seem to be a functional form builder (there is an "example" of one, but neither is it officially supported by the project nor did it seem to work). Coding in JavaScript and setting up JSON files seem to be necessary.
+
+## database form builder
+2025-09-18
+A mostly PHP-based form builder.
+
+However, a self-hosted installation seems to be so complicated that only docker images are provided instead of an installation guide.
+
+Also, many hyperlinks to documentation on the GitHub page are just dead.
+
+It seems, the "preferred" way to use OpnForm is to subscribe to the commercial services provided by "opnform.com". But that web site seems to be down also.
+
+To me, all this together suggests to better forget about this project. It does not seem to be reliable in any way.

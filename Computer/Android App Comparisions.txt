@@ -1,0 +1,38 @@
++++
+Quando vs. AnachB|VOR 2016-04-26:
+
+Beide Apps bieten Fahrtroutenplanung, Haltestellen-Abfahrtsmonitor sowie Umgebungskarten.
+
+AnachB basiert derzeit auf aktuellerem Kartenmaterial als Quando, was aber nur bei kurzfristig Kartenänderungen relevant ist. Außerdem soll Quando im kommenden Jahr auf dasselbe Kartenmaterial umgestellt werden.
+
+Quando zeigt die Karte als Vektorkarte an, während AnachB eine Bitmap-Karte anzeigt. Möglicherweise bedeutet dies, dass AnachB mehr Datenvolumen für die Übertragung der Karte verbraucht. Außerdem sieht die Bitmap-Karte klobiger aus.
+
+Quando besitzt mehr Zusatz-Features als AnachB. So blendet es beispielsweise automatisch Informationen über kommende Verkehrsbehinderungen wie Demonstrationen in die Auskunft ein. Es ist unsicher in wie weit AnachB diese Informationen ebenfalls anzeigt. Quando kann überdies Meldungen wie Rolltreppenstörungen oder Verspätungen, nach Verkehrsmittel oder Station gefiltert, als Meldung anzeigen.
+
+AnachB hat eine einfachere und flachere Bedienungshierarchie als Quando. Die Hauptfunktion von AnachB ist von vorn herein die Routenplanung und man braucht dazu durch keine Menüs verzweigen. Bei Quando ist hingegen der Haltestellenmonitor die Vorgabe beim Starten der App; allerdings lässt sich dies (im Gegensatz zu AnachB) in den Einstellungen auswählen.
+
+AnachB erlaubt im Gegensatz zu Quando auch die Verkehrsmittel zu filtern, die für die Routenplanung verwendet werden sollen. Man kann beispielsweise Autobusse oder andere Verkehrsmittel die man nicht leiden kann ausschließen. Das ist vor allem praktisch wenn für lächerlich kurze Strecken ein Autobus empfohlen wird den man vermeiden will, während für den Rest der Strecke Straßenbahn und U-Bahn ausreichen.
+
+AnachB kann im Gegensatz zu Quando nicht nur Fahrtrouten für den öffentlichen Verkehr planen, sondern auch für den reinen Fußweg sowie Radfahren. Alle drei Routenplaner stehen gleichberechtigt für dasselbe Start/Ziel zur Verfügung. Dies ist durch aufklappbare Routenverläufe implementiert.
+
+AnachB zeigt die Route übersichtlicher an, indem erstens durch unterschiedliche Farbverläufe die Art des jeweiligen Verkehrsmittels angezeigt wird. Zweitens wird die Route durch aufklappbare Detailabschnitte aggregiert, was sinnvoll ist wenn man nicht an allen Details (wie Umgebungskarte oder Fußwegabschnitten) interessiert ist.
+
+AnachB bricht die Fußweg-Abschnitte (optional aufklappbar) bis auf Einzelinstruktionen der Form wie viele Meter man in welche Richtung gehen und wo abbbiegen soll herunter. Quando zeigt dies nur in Form der Karte an. Einzelinstruktionen sind bei komplexen Fußwegen unter Umständen hilfreicher, da man sich nicht für jeden Abschnitt erneut auf der Karte orientieren muss sondern nur der jeweils nächste Instruktion zu folgen braucht.
+
+Quando ist stark an die Positionsermittlung des Geräts ausgerichtet. Viele Funktionen verwenden die aktuelle Position ungefragt als Vorgabe. Bei AnachB kann man zwar ebenfalls die aktuelle Position auswählen, aber ebenso kann man eine globale "Heim"-Position definieren, die man dann ebenfalls schnell auswählen kann. Beide Apps erlauben es natürlich, auch explizit eine Adresse auszuwählen.
+
+AnachB scheint kompetenter bei der Adressauswahl zu sein, da häufig nicht nur Hausnummern sondern auch Stiegen zur Auswahl vorgeschlagen werden. Gleichwohl nervt dieses Ausführlichkeit gelegentlich, wenn man nämlich gar keine Stiege kennt.
+
+AnachB ist eine geringfügig umfangreichere Installation als Quando, scheint dafür im Gegenzug aber weniger häufig aktualisiert zu werden. Unterm Strich dürfte die App-Größe kein Argument für die eine oder andere App sein.
+
+Das Festlegen und Auswählen von Favoriten ist in AnachB simpler als in Quando, wo man sich dazu erst durch diverse Menüebenen quälen muss. Möglicherweise ist Quando aber besser wenn man sehr viele Favoriten hat, da es Lesezeichengruppen etc. unterstützt. *Glaube* ich mich zumindest zu erinnern. Bei AnachB kann man dafür nicht nur einzelne Adressen, sondern auch Routen als Favoriten abspeichern.
+
+AnachB kann - optional - auch das Android-Adressbuch auf der Suche nach Adressen für die Endpunkte der Routen durchsuchen. Ich kann mich nicht daran erinnern dass Quando dies angeboten hat. Oder aber es tut dies automatisch und bietet es nicht als abschaltbare Option an.
+
+AnachB kann die erzeugte Route auch als Eintrag in den Android-Kalender exportieren, wo man gleich einen (oder mehrere) Alarme dafür setzen kann.
+
+Quando wird von einem Partnerunternehmen der Stadt Wien entwickelt und hat einen klaren Fokus auf die Wiener Linien. AnachB wird von der VOR entwickelt und umfasst deren gesamtes Verkehrsnetz, und nicht nur die Wiener Linien. Allerdings dürften beide Apps auf dieselben Backend-Echtzeit-Datenserver zugreifen, so dass die erzeugten Routen zumindest sehr ähnlich sein sollten.
+
+Ich empfehle derzeit eher AnachB, da es mehr Funktionen bezüglich der eigentlichen Routenplanung bietet, während Quando zwar mehr "unnötige" Features implementiert aber die eigentliche Routenplanung wenig flexibel ist.
+
++++

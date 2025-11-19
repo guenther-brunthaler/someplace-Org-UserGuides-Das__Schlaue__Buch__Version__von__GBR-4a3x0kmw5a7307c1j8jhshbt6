@@ -1,5 +1,15 @@
-﻿"Billion" für "billion" anstatt "Milliarde"
-
-"Truppen" für "troups" wenn eine Anzahl von Soldaten genannt ist
+"Truppen" für "troops" wenn eine Anzahl von Soldaten genannt ist
 
 "Physiker" als "physician" (Arzt) anstatt "physisist"
+
+(U.S.) "billion" translated as German "Billion" instead of "Milliarde".
+
+"loser" incorrectly written as "looser".
+
+"physician" translated as "Physiker" instead of "Arzt".
+
+"site" translated as German "Seite" instead of "Ort", "Gegend".
+
+German "Handy" translated as "handy" instead of "cell phone". (In Australia, however, "handy" is actually used in some places.)
+
+"tablet" translated as German "Tablett" instead of "Schreibtafel" or "Notizblock".

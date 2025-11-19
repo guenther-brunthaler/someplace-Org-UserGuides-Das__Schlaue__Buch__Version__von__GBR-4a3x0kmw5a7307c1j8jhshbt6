@@ -1,0 +1,1024 @@
+## Format, Description
+http://invalid
+1970-01-01 2015-06-18,
+The Format of THIS file is as follows: It contains an arbitrary number of sections from various sources.
+
+The sections are terminated by "+++"-lines.
+
+Every section consists of 2 parts: "##" followed by a comma-separated list of software names, the URL from where the article was taken, and then either a single article or a series of postings separated by "+"-lines.
+
+It is also possible to combine a leading article with selected postings at its end, also separated by "+"-lines.
+
+An article is identified by starting with a line containing one or two dates (separated by a single space) being followed by a comma as the first line.
+
+In this case, the first date specifies the original publishing date (or date of snapshotting if no publishing date is available), where the optional second date specified the date of last revision/update of this article. Both dates must be specified in YYYY-MM-DD format.
+
+Postings use a different syntax: First a subject or headline comes, which can be empty. Then a line specifying the name of the poster (which is allowed to contain spaces and commas), a comma, a space, the date of the posting in YYYY-MM-DD format, followed by another comma. After this, the text of the posting follows.
+
+Empty lines are allowed within the article, but there may be no leading/trailing empty lines (except empty headlines in postings).
+
+Trailing whitespace at the end of lines shall be stripped.
+
+If this file shall be sorted for preparation of merge operations, the following sort order shall be used: First by date line (containing one or two dates), then by URL (case is significant), then by MD5-hash (created in text mode) of the article contents.
+
+The comma-separated list of names may also use whitespace around the names, but whitespace within a name is left as is.
+
+The idea is that the list of names lists the softwares discussed or reviewed within the article, allowing related articles to be locates easily given the name of a specific software.
+
+There may be different names or spellings in use for a particular software, but only one of them must be used as "name" and will serve as the "primary key" when searching for related articles. Therefore, the same variants of names must be chosen for all hash tags ("##").
+
+The alternative names can be added as comments within one of the articles, however, allowing to reverse-lookup the "normalized name" from the hash tag of this article if only the alternative names is searched for (in a full-text search).
++++
+## Nginx, Lighttpd
+http://hostingfu.com/article/nginx-vs-lighttpd-for-a-small-vps
+Nginx vs. Lighttpd
+2009-09-14,
+Lighttpd
+
+Pros
+
+* Light weight. Clean restart of 1.4.13 takes no more than 2Mb RSS on this 64bit VPS. It binds the port, drops the privilege and that’s it! A single process does all the tricks even when you have hundreds of concurrent connections. No more pre-fork MPM with mis-configured MaxClient that sends you to swap hell.
+* Speed. Very fast static file serving. Very fast FastCGI serving. Very fast proxy serving.
+* Modules, and lots of them. Good comprehensive documentation as well. It even has SCGI for your Quixote apps.
+* Mod_magnet. Wanna a scripting engine right inside your web server? Mod_magnet integrates Lua into lighttpd, so your World of Warcraft scripting skillz can be put into better use.
+* Community. It has got a Blog, a Wiki/bug tracker and a forum. It is easy to find help when you need one.
+
+Cons
+
+* Stability (or lack of according to the RoR folks). I had quite a lot of issues using Lighttpd as proxy+HTTPS front-end for our Python stuff, but the same app runs fine with just lighttpd + proxy without HTTPS.
+* Mod_rewrite (or again, lack of it). Built-in rewriting engine sucks, and porting Apache mod_rewrite rules over can be non-trivial sometimes. Update: Here’s an article I have written on Drupal clean URL on Nginx and Lighttpd, which looks at the URL rewrite options of these two web servers.
+* Memory leak. The RSS of my lighty process grows by about 1.5Mb per day, but then I don’t have lots of traffic (less than 50k requests a day). At the end I just need to restart it once a week. Many people have far worse memory leaking issues I heard.
+
+Nginx
+
+Pros
+
+* Light weight. It is not as light weight as lighttpd when it clean-starts. At least two processes are needed — one master process running as root that binds to the port, and one or more worker processes that handle the actual requests. Around 7Mb RSS together on my 64bit VPS (and only 4.5Mb on 32bit VPS). Still beats Apache hands down.
+* Fast. Some benchmarks have shown that Nginx has a slight edge over Lighttpd, but so far I haven’t been able to notice any. Again, much faster than Apache over static file serving or proxying, especially when you turn up the value of keep alive (more than 1 minute for example).
+* Modules. There are many modules available on Nginx. Some very useful, and some are just plain weird. While lighttpd has Lua embedded, you can now also embed the whole Perl interpretor inside Nginx.
+* Better Rewrite Module. A much better rewrite module than Lighttpd that supports complex conditions. Porting mod_rewrite rules from Apache is actually now feasible without touching the apps themselves.
+* Stable and not leaking. Been running Nginx on a production site doing PHP-FastCGI, and have no issue what so ever.
+
+Cons
+
+* Lack of community. Where can I find help regarding Nginx? There’s only IRC as far as I know. And while the lead developer writes beautiful code, all documentation were initially in Russian which was a big stumbling block before the English docs came along.
+* No CGI support. Oh well, maybe I am the only one who still hacks small CGI scripts. Apparently Nginx does not spawn CGI or FastCGI processes, which means you need to either (1) convert it into external-spawn FastCGI, or (2) proxy to another web server that does CGI.
+* No simple virtual host support. Lighttpd has mod_simple_vhost and mod_evhost to let you quickly deploy lots of name-based virtual hosts. You can somehow do the same with using $server_name in root and a wild-card in server_name, but it’s still not as clean as lighttpd. At the end you will find Nginx configuration files much more verbose if you run lots of small sites off a single web server.
+* No X-sendfile support. I found Lighttpd’s X-sendfile support very useful when my scripts need to send back large files, and was disappointed to find out that Nginx does not have it. X-Accel-Redirect is different as it requires extra configuration on web server, which makes your web-app less portable.
++++
+## Nginx, Lighttpd
+http://www.wikivs.com/wiki/Lighttpd_vs_nginx
+2009-09-05,
+One problem with Lighty is that it leaks memory like a sieve. I audited it for a little bit and I gave up, it's a mess. I'd steer clear of it, it will quickly ruin your day if you throw a lot of traffic at it.
++
+nginx [...] Both servers performed extremely well, though it seems that Lighttpd might perform best in a more fragmented file system (smaller files). [...] Considering that each would easily saturate the pipeline I doubt a real-world performance difference would be seen.
++++
+## Seafile, Owncloud
+http://m.heise.de/open/news/foren/S-Owncloud-taugt-nichts/forum-278641/msg-25130590/read/
+Owncloud taugt nichts.
+Thales von Milet, 25.04.2014,
+Das steigt ab einer gewissen Datenmenge mit einer 5-stelligen Dateienanzahl aus. Dann dauert der Sync ewig.
+
+Seafile ist sehr viel schneller und verträgt auch eine 6- oder gar 7-stellige Anzahl von Dateien, auch mit mehreren Dutzend GB an Datenbestand.
++
+Re: Seafile oder OwnCloud?
+Nigge,
+... egal was, nur nicht OwnCloud...
++
+Für Dateisynchro seafile
+CoolAllo,
+Ich fange gar nicht erst an über PHP zu lästern.
+
+Aber das Killerfeature: Inkrementeller Sync.
+Owncloud: 1 Byte in 100 MB geändert, 100 MB Upload.
+Seafile: 1 Byte Upload (naja, mit Overhead bischen mehr).
++++
+## Spideroak
+http://en.wikipedia.org/wiki/Spideroak
+2014-06-14,
+SpiderOak is a US based online backup tool to back up, share, sync, access and store data [...] for Windows, Mac and Linux [...] and Android, N900 Maemo and iOS [...] uses encrypted cloud storage and client-side encryption key [...] However, these claims cannot be [...] verified since the client's source is not available [...] the company has announced their intent for the client to be fully open source in the future.
++++
+## Seafile, Owncloud
+http://www.heise.de/forum/iX/News-Kommentare/BSI-gibt-Tipps-fuer-sicheren-Einsatz-von-ownCloud-in-Unternehmen/Re-warum-immer-owncloud-u-nie-seafile/posting-20918427/show/
+Re: warum immer owncloud u nie seafile?
+deryo, 17.06.2015,
+Vielleicht, weil ownCloud seine Wurzeln in DE hat und Seafile aus China kommt. Keine Ahnung.
+
+Wer Datendurchsatz und robuste Synchronisation will, sollte Seafile wählen. Ich habe beides auf dem selben Computer laufen: oC macht regelmäßig Probleme und arbeitet bei etwa 3 MB/s, Seafile machte bisher keine Probleme und arbeitet bei etwa 70 MB/s.
++++
+## Openstack
+http://www.golem.de/news/openstack-foundation-wir-werden-von-der-community-ueberrannt-1506-114728-2.html
+18.6.2015,
+Bestätigt wird dieses harmonisch gezeichnete Bild von den Anwesenden auf dem Openstack-Dach-Day je nach Ansprechpartner aber selten. Den auffälligsten Kontrapunkt setzt dabei Kristian Köhntopp mit dem Vortrag "45 Minutes of Openstack Hate" [...]
+
+Köhntopp beschreibt darin mit viel Häme, was an dem Code von Openstack alles falsch und unbrauchbar sei. Die wohl häufigste Erfahrung aus seinem Arbeitsalltag sei, dass der Upstream-Openstack-Code fast nicht zu gebrauchen sei. Dies sei teils so schwerwiegend, dass er annehme, dass die Software wohl nie unter realen Bedingungen in einem Rechenzentrum getestet worden sei.
+
+Darüber hinaus sei die Architektur wohl darauf ausgelegt, dass Zusatzprodukte einzelner Anbieter hinzugekauft werden müssten. Diese und ähnliche, wenn auch weniger gravierende Beschreibungen zeugen von einem harten Konkurrenzkampf statt einer gemeinsamen Entwicklung.
++++
+## vim, gvim
+http://geoff.greer.fm/2015/01/15/why-neovim-is-better-than-vim/
+15.1.2015,
+I started programming in C almost 20 years ago. Vim is, without question, the worst C codebase I have seen. Copy-pasted but subtly changed code abounds. Indentation is haphazard. Lines contain tabs mixed with spaces. Source files are huge. There are almost 25,000 lines in eval.c. That file contains over 500 #ifdefs and references globals defined in the 2,000 line globals.h.
+
+Some of Vim’s source code isn’t even valid text. It’s not ASCII or UTF-8. The venerable file can’t figure out the encoding.
+
+[...] Complexity stemming from cross-platform support may be excusable, but even something as simple as reading keyboard input is a nightmare in Vim [...] figuring out Vim’s control flow is harrowing [...] Here’s a snippet [...] That if statement’s conditions span 17 lines and 4 different #ifdefs. All to call gettimeofday(). Amusingly, even the body of that statement has a bug [...] out of all the developer communities I’ve encountered, Vim’s is the most hostile to change [...] Patches are often criticized for ridiculous reasons. After we posted our patch to the Vim-dev mailing list, the first reply was:
+
+"NOTE: Don’t use ANSI style function declarations. A few people still have to use a compiler that doesn’t support it."
+
+Seriously? C89 is a quarter-century old. The number of people stuck on older compilers can be counted on one hand.
++++
+## tmake, qmake, cmake, scons, waf
+http://blog.qt.io/blog/2009/10/12/to-make-or-not-to-make-qmake-and-beyond/
+2009-10-12,
+Before QMake came around, there was TMake. TMake was a perl script which did a good job for what it was designed for at the time. The inner workings of QMake was based upon TMake, and a gazillion features and hacks later, QMake has ended up as a very-hard-to-maintain-without-breaking-anything-esoteric beast [...] As we have already experienced with QMake, maintaining an own language is sub-optimal. You actively have to work on both developing the language to support new features, and on the internals/usage of the language. You might end up ‘designing yourself’ into bad constructs which hinders new development, and doesn’t make as much sense as perhaps other possible language constructs [...] CMake, for example, relies on the Makefile generator, and creates Makefiles which in turn calls back into CMake to do the build. This solution is not only fork-heavy, but also limiting, since you can only parallelize as well as the backend generator allows you to. So, unless the output Makefile is one single huge Makefile, you’ll run into limitations. Scons will build directly, but is too slow at parsing dependencies, so each build you do takes forever to start. Waf is better in this respect, but both lack a proper set of backends for project generations (Vcproj, XCode, Makefiles etc). They are also based on Python, which adds a dependency of a 3rd party library, which we want to avoid due to both the multitude of platforms Qt supports, and because of all the utility libraries.
++++
+## libtool, pkg-config
+https://wiki.gentoo.org/wiki/Pkg-config
+2012-08-30,
+libtool works implicitly whenever it is used to build a library or a program [...] pkg-config needs to be used explicitly [...] libtool provides no distinction between dynamic and static linking. In both cases, the complete list of dependant libraries is passed to linker.
+
+pkg-config explicitly distinguishes between public and private dependencies. This way, when using dynamic linking only actually necessary libraries are passed to linker; and when using static linking, the complete list is used.
+
+libtool archives are usually useful only when libtool is used both to build the library and the final executable. pkg-config is designed to be build system-agnostic instead.
+
+libtool archives contained absolute paths to dependent library archives. Effectively, whenever libraries were moved to another library directory, all libraries depending on them became broken and required rebuild [...] pkg-config expresses dependencies through package names [...]
+
+Usually, custom -config applications are built for the specific platform the library is built for. Effectively, they are of no use when cross-compiling if the host is unable to execute code for the target platform.
+
+pkg-config uses simple text files which are platform-independent. Thus, for cross-compilation to work it is only necessary to install pkg-config on the host system and set appropriate PKG_CONFIG_PATH.
++++
+## Ruby, Java, Scala
+https://de.wikipedia.org/wiki/Twitter
+2016-05-22,
+Twitter setzt Java für die Erzeugung von Webseiten ein. Ursprünglich war die Message Queue, die für die Weiterleitung der eigentlichen Nachrichten zuständig ist, in Ruby geschrieben. Diese musste jedoch aufgrund von Skalierungsproblemen neu geschrieben werden, was in der Programmiersprache Scala erfolgte.
++++
+## Go
+http://www.heise.de/newsticker/meldung/Beta-von-Go-1-7-erschienen-Was-sich-aendert-3227311.html
+07.06.2016,
+Beta von Go 1.7 erschienen: Was sich ändert [...] ist auch der beschleunigte Kompiliervorgang wichtig. Mit der Umstellung der Compiler-Sprache von C auf Go selbst in der Version 1.5 hatte sich der Zeitbedarf verdreifacht. In der aktuellen Beta ist es zumindest nur noch eine Verdopplung.
++++
+## Alembic, FBX, COLLADA, GTO
+https://www.heise.de/forum/iX/News-Kommentare/SIGGRAPH-Sony-und-ILM-stellen-offenes-Grafikformat-fuer-3D-Szenen-vor/Re-Warum-nicht-Collada/posting-2406902/show/
+2016-10-02,
+Unlike FBX, which is closed, unreliable, and non-extensible, or
+COLLADA, which is inefficient (ASCII only) and unable to store large
+assets and non extensible, or custom solutions using GTO, which are
+non-standardized and require too much implementation-specific
+knowledge.
++++
+## firebird, postgresql
+http://stackoverflow.com/questions/1635273/postgres-vs-firebird
+2010-04-10,
+For me FB is not a good choice. I can point two stories:
+
+* I wrote constraint on table. Users add some strings to table. After a while user is trying to add one more string, but FB complains on constraint. What's wrong? This new string is surely under constraint. Problem is in a last string that was added before it! That string was added some time ago, it was wrong, and so far it is in DB, and who knows how many wrong data are now in DB. Very bad. FB implements constraints in a wrong manner.
+
+* I wrote a Stored Procedure (SP). FB stored it in DB, FB can run it, and it works - select data as expected. No one warning. Then backup is done without errors. And only on restore FB complains that something is wrong with SP and ... what ... you have no restorable backup copy now.
+
+I can point two or three more but these are enough for me to say: no, FB is not my choice, it's not RDBMS, it's a toy.
+
+And they have bad documentation. In fact there is no actual references with each release. When people ask in forums: what is a full list of functions in release XX? The standard answer is: take a list from last official Interbase release and add (remove) functions from all later releases's "release notes".
+
+And they have strange support/development strategy. They are working on what are interesting for them, on deep technical issues, not on what are really critical or annoying for users.
++
+I've been working with Firebird for a long time and recommend to NOT use it in any way. They have many fundamental problems that Postgres does not have [...] It's not correct to compare these DB Engines at all. I've had many cases when Firebird database was corrupted even without power loss, with usual workloads, and so on.
++++
+## ZeroMQ, 0MQ, ZMQ
+https://en.wikipedia.org/wiki/0mq
+2016-11-13,
+[...] aimed at use in distributed or concurrent applications. It provides a message queue, but unlike message-oriented middleware, a ZeroMQ system can run without a dedicated message broker [...] The basic ZeroMQ patterns are Request–reply [...] Publish–subscribe [...] Push–pull (pipeline) [...] Exclusive pair [...] transports include TCP, PGM (reliable multicast), inter-process communication (IPC) and inter-thread communication (ITC) [...] can outperform conventional TCP applications in terms of throughput by utilizing an automatic message batching technique [...] The CERN study compared two open source implementations of CORBA, Ice, Thrift, ZeroMQ, YAMI4, RTI, and Qpid (AMQP) and scored ZeroMQ highest [...] In March 2013 [...] implemented the CurveZMQ authentication and encryption mechanism in the core library [...]
++++
+https://www.heise.de/forum/p-29574291/
+30.11.2016,
+Aus dem Paper: Julia’s garbage collector currently does not scale well.
+
+Wenn man das Paper liest, klingt das gar nicht so sehr nach Werbung für Julia:
+
+"""
+Julia’s garbage collector currently does not scale well.
+...
+The GC time approaches half of total runtime for longer duration jobs.
+The foremost reason for excessive GC time is that Julia’s
+garbage collector is serial.
+...
+Currently, however, to scale beyond 4 to
+6 threads requires the programmer to carefully consider
+memory utilization—avoiding copies and temporaries, and
+extensively using in-place operations—which hinders the
+ease and expressiveness of programming in Julia.
+
+Additionally, while Julia’s runtime is thread-safe, much
+of the standard library currently is not. That too limits the
+ease of writing multi-threaded programs in Julia.
+"""
+
+Julia profiliert sich bei HPC, aber leider noch nicht als gut, sondern eher als unreif.
+Die Versionsnummer 0.5 ist also berechtigt.
++++
+## pdfunite, pdfjam, pdftk
+https://blog.dbrgn.ch/2013/8/14/merge-multiple-pdfs/
+2013-08-14,
+Merging Multiple PDFs under GNU/Linux [...] If Poppler is installed on your system, you should have the pdfunite command [...]
+It is very fast but has no configuration options and internal hyperlinks in the resulting output are broken.
+
+If you've installed a LaTeX distribution and the pdfpages package, there's also a pdfjam command [...] has tons of configuration options [...] slower than pdfunite and all hyperlinks are gone in the resulting output.
+
+The pdftk command comes together with Ghostscript [...] tons of options [...] In contrast to the other commands, hyperlinks are preserved and work fine.
+
+Conclusion [...] I'd usually go for pdftk. The command is harder to memorize and generates the largest files, but it is very fast and preserves both original file format and hyperlinks.
+
+For the cases where I need additional features like header injection, page numbering, presentation handouts and more, I'll use pdfjam.
++++
+## PREEMPT_RT Linux Kernel Patch
+https://lwn.net/Articles/146861/
+2005-08-10,
+This [...] patch provides [...]
+
+* Preemptible critical sections
+* Preemptible interrupt handlers
+* Preemptible "interrupt disable" code sequences
+* Priority inheritance for in-kernel spinlocks and semaphores
+* Deferred operations
+* Latency-reduction measures
+
+[...] There is (inevitably) some scheduling overhead due to having more contexts, I've measured it to be 3-5%, worst-case [80 thousand irqs/sec], and near zero for the common case [couple of thousand irqs/sec], which is pretty good.
++++
+## PHP
+https://eev.ee/blog/2012/04/09/php-a-fractal-of-bad-design/
+2012-04-09,
+PHP is not merely awkward to use, or ill-suited for what I want, or suboptimal, or against my religion. I can tell you all manner of good things about languages I avoid, and all manner of bad things about languages I enjoy. Go on, ask! It makes for interesting conversation.
+
+PHP is the lone exception. Virtually every feature in PHP is broken somehow. The language, the framework, the ecosystem, are all just bad. And I can’t even point out any single damning thing, because the damage is so systemic. Every time I try to compile a list of PHP gripes, I get stuck in this depth-first search discovering more and more appalling trivia. (Hence, fractal.)
+
+PHP is an embarrassment, a blight upon my craft. It’s so broken, but so lauded by every empowered amateur who’s yet to learn anything else, as to be maddening. It has paltry few redeeming qualities and I would prefer to forget it exists at all.
+
+I just blurted this out to Mel to explain my frustration and she insisted that I reproduce it here:
+
+I can’t even say what’s wrong with PHP, because— okay. Imagine you have uh, a toolbox. A set of tools. Looks okay, standard stuff in there.
+
+You pull out a screwdriver, and you see it’s one of those weird tri-headed things. Okay, well, that’s not very useful to you, but you guess it comes in handy sometimes.
+
+You pull out the hammer, but to your dismay, it has the claw part on both sides. Still serviceable though, I mean, you can hit nails with the middle of the head holding it sideways.
+
+You pull out the pliers, but they don’t have those serrated surfaces; it’s flat and smooth. That’s less useful, but it still turns bolts well enough, so whatever.
+
+And on you go. Everything in the box is kind of weird and quirky, but maybe not enough to make it completely worthless. And there’s no clear problem with the set as a whole; it still has all the tools.
+
+Now imagine you meet millions of carpenters using this toolbox who tell you “well hey what’s the problem with these tools? They’re all I’ve ever used and they work fine!” And the carpenters show you the houses they’ve built, where every room is a pentagon and the roof is upside-down. And you knock on the front door and it just collapses inwards and they all yell at you for breaking their door.
+
+That’s what’s wrong with PHP.
++++
+## Java, Kotlin, JVM
+https://de.wikipedia.org/wiki/Kotlin_%28Programmiersprache%29
+2017-05-19,
+[...] stellte JetBrains im Juli 2011 das Projekt "Kotlin" [...] als neue Sprache für die JVM vor. Der leitende Entwickler Dimitry Jemerow erklärte, dass die meisten Sprachen nicht die Merkmale zeigen, nach denen sie gesucht hätten, mit Ausnahme von Scala. Diese jedoch hätte einen langsamen Compiler. Daher war eines der erklärten Ziele für Kotlin die hohe Kompiliergeschwindigkeit, wie man sie von Java her kenne.
++++
+## ZFS, btrfs, LVM
+https://www.heise.de/forum/p-30467069/
+2017-05-31,
+Wobei auch ZFS seine Grenzen/Nachteile hat. Beispielsweise ist es zumindest mit ZFS on Linux bislang nicht möglich, nen Pool zu verkleinern - bei btrfs+LVM hat man das Problem nicht und kann bei Bedarf sogar das Wurzeldateisystem im laufenden Betrieb vergrößern und verkleinern wie man lustig ist.
++
+[...] Hat ZFS nicht einem immensen RAM-Bedarf? [...] Wenn man Deduplication einschaltet: ja. [...] Ist das per Default an? Ich hatte es in einer VM mit 3x60GB HDDs in Raid5 mal getestet, da waren direkt mal 2 GB Ram weg.
+## Go, Linux Namespaces
+https://www.weave.works/blog/linux-namespaces-and-go-don-t-mix
+2017-07-07,
+[...] This finding raised a question whether we can safely change a namespace in Go. Unfortunately, the answer is no, as we do not have almost any control on scheduling goroutines [...] Having all the limitation in mind, the fix to our problem is to execute every function which requires changing a namespace in a separate OS process [...] via nsenter [...] Unfortunately, the fix introduces not only big penalties in performance, but also it makes our code less readable and less debuggable.
+
+Considering the discovered limitations, the vast adoption of Go within container software raises a few eyebrows.
++++
+## Rust, Go, C, Docker, Cgroups, Containerd, Linux Namespaces
+https://www.golem.de/news/railcar-oracle-veroeffentlicht-container-runtime-und-debugger-in-rust-1707-128780.html
+2017-07-06,
+Das neue Open-Source-Projekt Railcar von Oracle [...] ist [...] komplett in Rust geschrieben. Das soll für Speichersicherheit sorgen und ermöglicht es den Programmierern, sich nicht erst mit Garbage Collection und Multithreading beschäftigen zu müssen.
+
+Oracle hat sich für diese Software entschieden, weil Go Probleme im Umgang mit Linux Namespaces hat und C nicht sicher genug ist. Rust bewegt sich zwischen beiden, erlaubt eine weitgehende Kontrolle über das Threading und kommt so auch mit Namespaces zurecht [...]
+
+Oracle beschreibt auch die Herausforderungen beim Implementieren von Railcar. Probleme bereite es demnach unter anderem, ein Backend zur Zusammenarbeit mit Docker zu überreden, weil so viele verschiedene Prozesse involviert seien, was Debugging erschwere. Die Spezifikation sei zudem nicht vollständig, denn Containerd und Runc unterstützen bestimmte wichtige Aufrufe, die nicht in der Spezifikation stehen. Auch an anderen Stellen folgt das Duo nicht exakt der Spezifikation. So sollte ein zweifaches Löschen von Containern eine Fehlermeldung ausgeben, was nicht der Fall ist. Auch die Implementierung der Pre- und Poststart-Hooks sei nicht ganz einfach gewesen, wohl auch, weil die Spezifikation noch recht jung sei [...]
+
+Insgesamt sei man aber sehr zufrieden mit der Wahl von Rust für das Projekt. Anders als Go habe man für die Rust-Implementierung keine C-Code-Injektion benötigt und man sei sehr zuversichtlich, was die Speichersicherheit von Railcar angehe. Die Startzeit für Container sei gut, hier bremse aber tatsächlich der Kernel: Das Anlegen von Cgroups und Network Namespaces sei das größte Hinderniss in dem Konstrukt. 
++++
+## Solaris, Veritas, AIX
+https://www.heise.de/forum/iX/News-Kommentare/Unix-Betriebssysteme-Solaris-Klon-OmniOS-wird-weiter-entwickelt/Re-Solaris-ist-eines-der-geilsten-OS-und/posting-30725921/show/
+2017-07-18,
+Solaris war ganz gut, habe selber viel damit gearbeitet. Aber das das system anderen voraus war? Das Filesystem z.B. war so "gut", dass man mind. ein Veritas einsetzte, um die "rasende Geschwindigkeit" ein wenig wieder gut zu machen. Und die Failover Lösungen habe ich auch nie richtig funktionieren sehen, war eher ein Lottospiel. Und das schärfste an Sun (OK, hat nicht unbedingt etwas mit Solaris zu tun) war der Service.
++++
+## UNIX, AIX
+https://www.heise.de/forum/iX/News-Kommentare/Unix-Betriebssysteme-Solaris-Klon-OmniOS-wird-weiter-entwickelt/Re-Solaris-ist-eines-der-geilsten-OS-und/posting-30727039/show/
+2017-07-18,
+Mein Eindruck ist daß AIX das langsamste Filesystem von allen UNIXen hat.
++++
+##
+https://softwareengineering.stackexchange.com/questions/247298/how-are-rust-traits-different-from-go-interfaces
+2015-03-03,
+I think of Rust as a safe C++, and Go as a fast Python (or a vastly simplified Java).
++++
+## ZFS, ReFS, Btrfs
+https://en.wikipedia.org/wiki/ReFs
+2017-07-11,
+ZFS [...] was widely criticized for its comparatively extreme memory requirements of many gigabytes of RAM for online deduplication [...] However, turning off online deduplication [...] ZFS then has a memory requirement of only a few hundred megabytes.
+
+[...] an analysis [...] of ReFS vs Btrfs [...] features are similar [...] However, ReFS lacks deduplication, copy-on-write snapshots, and compression, all found in Btrfs and ZFS.
++++
+## Kubernetes
+https://www.golem.de/news/container-githubs-kubernetes-cluster-ueberlebt-regelmaessige-kernel-panic-1708-129543.html
+2017-08-18,
+Das Team berichtet auch davon, dass sehr hohe Lasten teilweise zu einer Kernel-Panic in den Kubernetes-Nodes führt. Bei solch einem Systemabsturz helfen nur Neustarts des gesamten Systems. Obwohl dieses Problem weiterhin auftritt und die Entwickler noch nach einer Ursache suchen, läuft Kubernetes bereits produktiv im Einsatz.
++++
+## MONO, C#
+http://www.mono-project.com/docs/about-mono/languages/csharp/
+2017-08-23,
+The Mono C# compiler [...] performs a number of simple optimizations on its input: constant folding (this is required by the C# language spec) and can perform dead code elimination.
+Other more interesting optimizations like hoisting are not possible at this point since the compiler output at this point does not generate an intermediate representation that is suitable to perform basic block computation.
++++
+## Btrfs
+https://news.ycombinator.com/item?id=13851349
+2017-03-13,
+Btrfs has experienced some data loss bugs in recent memory. It looks like ZFS is the only remaining option [...] Yes I have tried to use btrfs several times for work projects and personally because I was very excited about it but every time I have ran into severe bugs even though it was said to be "stable" [...] I really like btrfs for my backup machine, but it sometimes manages to hang when it's cleaning up deleted snapshots. This is a problem that's much worse when on a hard drive or fragmented file system [...] I think the record I managed was slightly over two minutes of btrfs blocking all disk I/O. Something is deeply wrong with how it organizes transactions [...] Turns out at the time, re-balancing still had to be run manually [...] It is still a problem, I just had one of my personal servers hit issues where I couldn't even manually re-balance because the metadata was full. Had to apply weird workarounds to be able to write to that filesystem again... 
++++
+https://arstechnica.com/information-technology/2014/01/bitrot-and-atomic-cows-inside-next-gen-filesystems/
+## VSS, LVM, ZFS
+2014-01-15,
+The quickest objection you could make to defining "generations" like this would be to point at NTFS' Volume Snapshot Service (VSS) or at the Linux Logical Volume Manager (LVM), each of which can take snapshots of filesystems mounted beneath them. However, these snapshots can't be replicated incrementally, meaning that backing up 1TB of data requires groveling over 1TB of data every time you do it. (FreeBSD's UFS2 also offered limited snapshot capability.) Worse yet, you generally can't replicate them as snapshots—with references intact—which means that your remote storage requirements increase exponentially, and the difficulty of managing backups does as well. With ZFS or btrfs replicated snapshots, you can have a single, immediately browsable, fully functional filesystem with 1,000+ versions of the filesystem available simultaneously. Using VSS with Windows Backup, you must use VHD files as a target. Among other limitations, VHD files are only supported up to 2TiB in size, making them useless for even a single backup of a large disk or array. They must also be mounted with special tools not available on all versions of Windows, which goes even further to limit them as tools for specialists only.
+
+Finally, Microsoft's VSS typically depends on "writer" components that interface with applications (such as MS SQL Server) which can themselves hang up, making it difficult to successfully create a VSS snapshot in some cases. To be fair, when working properly, VSS writers offer something that simple snapshots don't—application-level consistency. But VSS writer bugs are a real problem, and I've encountered lots of Windows Servers which were quietly failing to create Shadow Copies. (VSS does not automatically create a writer-less Shadow Copy if the system times out; it just logs the failure and gives up.) I have yet to encounter a ZFS or btrfs filesystem or array that won't immediately create a valid snapshot.
++++
+https://arstechnica.com/information-technology/2014/01/bitrot-and-atomic-cows-inside-next-gen-filesystems/2/
+## RAID5
+2014-01-15,
+It's a common misconception to think that RAID protects data from corruption since it introduces redundancy. The reality is exactly the opposite: traditional RAID increases the likelihood of data corruption since it introduces more physical devices with more things to go wrong. What RAID does protect you from is data loss due to the instantaneous failure of a drive. But if the drive isn't so obliging as to just politely die on you and instead starts reading and/or writing bad data, you're still going to get that bad data. The RAID controller has no way of knowing if the data is bad since parity is written on a per-stripe basis and not a per-block basis. In theory (in practice, parity isn't always strictly checked on every read), a RAID controller could tell you that the data in a stripe was corrupt, but it would have no way of knowing if the actual corrupt data was on any given drive [...] Healing is made possible by combining per-block checksumming with (redundant) volume and drive management. If you aren't storing your data redundantly, all you can do with a checksum is realize that your data is corrupt [...] when a corrupt block is detected, it's read from parity or from an alternate copy, which is also verified. If the reconstruction/alternate copy does pass verification, it's quietly handed to you while btrfs rewrites it over the corrupt version in the background.
+
+This is an awesome feature, and (in ZFS) it has personally saved me from data loss on many occasions. It's not uncommon at all to see five, or 10, or 50 checksum errors on a disk that's been in service for a few years... and in some cases I've seen ZFS raidZ arrays with 100,000+ checksum errors on one drive—and no data lost or corrupted. If you care about your data, and especially if you care about your data surviving for decades or longer, you absolutely need this feature.
++++
+https://arstechnica.com/information-technology/2014/01/bitrot-and-atomic-cows-inside-next-gen-filesystems/3/
+## ZFS, Btrfs
+2014-01-15,
+"File-level cloning" means that I can make a fully writable clone copy of one of these several-hundred-gigabyte files in an instant [...] cp --reflink=always [...] will "copy" that 200GB of data in milliseconds, and it's a deduplicated copy at that. At the time of copying, no actual additional drive space is needed [...] just points to all the same data blocks [...] This feature also enables you to selectively copy big chunks of data out of snapshots back into your main filesystem without having to preemptively roll the whole thing back... and again, without taking up any extra disk space unless and until you actually modify the copied (technically, cloned) files. This really can be a lifesaver.
+By contrast, if you want to get individual files out of a ZFS snapshot (or one of the more primitive snapshots in NTFS or LVM), you have to actually copy them block by block, both consuming extra space and potentially taking a tremendous amount of time if it's a whole lot of data. Wasted disk space aside, the 200GB virtual machine image I used in my example could easily take three hours or more to copy out of a ZFS snapshot. In practice, this means that with ZFS, you want to create tons and tons of child filesystems since you can roll an entire filesystem back to a snapshot of itself instantly, but picking and choosing individual files means painful copy operations. With btrfs, you don't need to do that. Snapshot the entire btrfs filesystem, then just copy stuff back out of it piecemeal if you like. I consider this to be a pretty killer feature [...] With ZFS, once you set up a RAIDZ array, it's immutable. You can repair it by replacing drives, but you can never expand it, or contract it, or change its level. (You can add another array to a pool, but that's rarely what hobbyists or small businesses actually want.)
+
+Btrfs, on the other hand, allows you to do pretty much anything in terms of live storage reconfiguration [...] Btrfs is perfectly happy converting any raid level to any other raid level on the fly while the system is running. This is a killer feature for hobbyists and admins at smaller organizations who can't afford to just build entire new systems and migrate data over [...] Btrfs [...] letting you set any given file or directory NODATACOW, which means that the file or files within a directory will not be handled copy-on-write like normal files under btrfs (or zfs) are [...] you will be giving up per-block checksumming at least by doing so [...] ZFS offers compression, but it needs to be enabled on an entire filesystem level. Btrfs also offers compression with multiple algorithms (currently gz is the default, and lzo is available out of the box), but btrfs allows you to control compression at the filesystem, subvolume, directory, and even individual file level. You can also do neat things like choose not to compress files whose names end in .jpg or .jpeg or .avi since those are compressed formats already, and general-purpose compression can only make them larger and cost you unnecessary CPU cycles. (This is the default behavior—you don't even need to set it up!) [...] devs on the mailing list are talking about making the feature even smarter by scanning files for MIME headers and/or test-compressing the first few blocks on write, then writing the rest decompressed if the compression algorithm doesn't seem to be working well.
++++
+https://forum.golem.de/kommentare/sonstiges/banana-pi-m2-berry-per-sata-wird-der-raspberry-pi-attackiert/uralt-kernel-gibt-es-da-auch-was-aktuelles/111955,4897652,4897652,read.html#msg-4897652
+## ARM, Mali, GPU, Driver
+2017-09-06,
+Der Grund für den alten Kernel ist die Mali 400 GPU, für die es keine aktuelleren proprietären Treiber gibt. Mit dem Lima-Treiber gab mal einen Ansatz für Mainline-Unterstützung, jedoch wurde das Projekt eingestellt, nachdem mit rechtlichen Schritten gedroht wurde. Von daher würde ich von SoCs mit Mali-GPU ebenso die Finger lassen, wie z.B. von PowerVR. Besser sind VC4, Adreno, Vivante und Tegra GPUs. Auch wenn es teilweise mit viel gefrickel verbunden ist, gibt es zumindest freie Treiber. Die beste Unterstützung hat aber noch immer der VC4 aus dem Rasperry Pi.
++++
+## ecryptfs, fscrypt
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f4f864c1219cd88c01fd6359ffc870da9b4acf92
+2017-10-31,
+Unlike eCryptfs, which is a stacked filesystem, fscrypt is integrated directly into supported filesystems - currently ext4, F2FS, and UBIFS. This allows encrypted files to be read and written without caching both the decrypted and encrypted pages in the pagecache, thereby nearly halving the memory used and bringing it in line with unencrypted files. Similarly, half as many dentries and inodes are needed. eCryptfs also limits encrypted filenames to 143 bytes, causing application compatibility issues; fscrypt allows the full 255 bytes (NAME_MAX). Finally, unlike eCryptfs, the fscrypt API can be used by unprivileged users [...] fscrypt allows one encryption mode to be specified for file contents and one encryption mode to be specified for filenames. Different
+directory trees are permitted to use different encryption modes. Currently, the following pairs of encryption modes are supported:
+
+* AES-256-XTS for contents and AES-256-CTS-CBC for filenames
+* AES-128-CBC for contents and AES-128-CTS-CBC for filenames
++++
+## fscrypt, e4crypt
+https://wiki.archlinux.org/title/Fscrypt
+2021-10-25,
+The e4crypt tool from e2fsprogs can be used as an alternative to the fscrypt tool. However, this is not recommended since e4crypt is missing many basic features and is no longer being actively developed.
+
+[...] It is also highly recommended for the kernel version to be 5.4 or later, as this allows the use of v2 encryption policies. There are several security and usability issues with v1 encryption policies. 
++++
+## fscrypt
+https://www.kernel.org/doc/html/latest/filesystems/fscrypt.html#limitations-of-v1-policies
+2021-10-25,
+Limitations of v1 policies
+
+v1 encryption policies have some weaknesses with respect to online attacks:
+
+There is no verification that the provided master key is correct. Therefore, a malicious user can temporarily associate the wrong key with another user’s encrypted files to which they have read-only access. Because of filesystem caching, the wrong key will then be used by the other user’s accesses to those files, even if the other user has the correct key in their own keyring. This violates the meaning of “read-only access”.
+
+A compromise of a per-file key also compromises the master key from which it was derived.
+
+Non-root users cannot securely remove encryption keys.
+
+All the above problems are fixed with v2 encryption policies. For this reason among others, it is recommended to use v2 encryption policies on all new encrypted directories.
++++
+## fscrypt
+https://github.com/google/fscrypt#some-processes-cant-access-unlocked-encrypted-files
+2021-10-25,
+Some processes can't access unlocked encrypted files
+
+This issue is caused by a limitation in the original design of Linux filesystem encryption which made it difficult to ensure that all processes can access unlocked encrypted files [...] To fix this issue [...] you'll need to upgrade your directory(s) to policy version 2. To do this:
+
+* Upgrade to Linux kernel v5.4 or later.
+
+* Upgrade to fscrypt v0.2.7 or later.
+
+...
+
+* Re-encrypt your encrypted directory(s). 
++++
+## OAuth 2
+http://lostindetails.com/blog/post/A-look-at-OAuth-2.0
+2017-10-31,
+If you need to access OAuth 2.0 protected resources, than go ahead [...] If you want to implement the server-side you might want to reconsider, as OAuth2 is both complicated and doesn’t do what you need on it’s own [...] In this article I present why I don’t think that OAuth 2.0 meets those requirements.
++++
+## OAuth
+https://bill.burkecentral.com/2012/11/15/do-you-really-need-oauth2/
+2012-11-15,
+Do you *not* need the ability to grant permission to a thirdparty to access your data?  Then you don’t need OAuth [...] OAuth2 does not define how a user authenticates.  If you are looking for OAuth to be an SSO solution, your code-driven clients will have to have specific integration with each and every auth server to pass credentials. OAuth2 does not define what credentials should be passed around. It does not define how those credentials are transmitted [...] So what does this mean?  Writing generic OAuth2 support for a framework is not possible. Users will have to implement integration code for each OAuth2-compliant auth-server they want to integrate with both on the client side of things [...] The point of the blog was to make people realize that OAuth is not a solution, it is a framework to implement solutions on top. I get a lot of customers/users say “I want OAuth”, but they don’t know exactly what this means.
++++
+## Scala, JAVA, Kotlin
+https://www.heise.de/forum/p-31915104/
+2018-04-22,
+Nachteil:
+* Es ist kein Ziel der Scala-Implementierung, unter Android lauffähig zu sein. Jetzt targetet Scala das Java-8, aber Google implementiert nur ein Subset von Java-8 ->Schiffbruch der aktuellen Version unter Android. Wenn man das große Scala lernt, möchte man es eben auch auf Android nutzen können auch wenns klar ist dass Scala nie die allerangepassteste Androidsprache sein wird. Es sollte explizit auch ein Scala-Ziel sein, unter aktuellem Android zumindest zu funktionieren.
+* Momentan sind die 2-3 Job-Bereiche wo es Jobs gibt deshalb blos Spark=Big-Data ( damit zusamenhängend aber nicht immer Data Science ) und Play-Framework. Big-Data hat so den Geruch von Datenmissbrauch, und Play-Framework ...
++++
+## Scala, JAVA, Kotlin
+http://sotagtrends.com/?tags=[playframework]
+2018-04-22,
+* Zur Frage "warum ist Scala so komplex" dachte ich zuerst an den Verriss von Hadmut Danisch "da wollen verschiedene Lehr-Kirchen ihre Features reinbringen" - und legte mir die Strategie zurecht "nur einen sinnvollen Teil von Scala lernen". Nun stelle ich fest: Scala ist gegenüber anderen modernen oder funktionalen Programmiersprachen wie OCaml, F#, Julia, Prolog, Rust auch deshalb komplex, weil eben das Umbiegen der Extrem-OO-Philosophie von Java Richtung Funktional ein bisschen arg ambitioniert ist und nun beides 100% drin ist
+
+Vorteil:
+* Bestrebungen, Scala auch ohne JVM unter LLVM laufen zu lassen
+* Die Schweizer sind uns schon näher als die eisigen Nordmeer-Freaks der Insel Kotlin ( wer weiss, vielleicht müssen wir ja dank der vorausschauenden Politik unserer Geschäftsführenden irgendwann alle in die Schweiz o.ä. flüchten soweit man es kann ). Scala ist je mehr gefragt je näher man der Schweiz kommt.
+* Kotlin ist letztlich von einem IDE-Hersteller gesponsort, was zur Folge hat, dass diese Art von Sprachen immer in die Richtung laufen werden dass sie nur mit ner IDE leicht programmiert werden können, wärend bei Scala die REPL eine längere Tradition hat
+* Kürzerer Programmcode = schneller lesbar wenn der Programmierer keine Blödsinn machte
++++
+## Scala, JAVA, Kotlin
+https://www.heise.de/forum/p-31902218/
+2018-04-21,
+Und mit der ziemlich frei gestaltbaren Syntax für eigene APIs wird sehr viel Schindluder getrieben [...] Hier ist ein kleines Beispiel [...] Was bitteschön soll diese Tilde zwischen den Routen? Das ist eine total willkürliche Syntax [...] es gibt wirklich völlig absurde Anwendungsfälle [...]
+
+Ähnlich ist es mit impliziten Konvertierungen: die sind sehr mächtig und in bestimmten Fällen geradezu fantastisch, aber sie können den Code auch absolut unverständlich machen [...]
+
+Und wenn dann noch völlig unterschiedliche Programmierstile aufeinander treffen, ist der Spaß endgültig vorbei. Von "Java mit schönerer Syntax" bis "Haskell in Scala" (ja, ich meine dich, ScalaZ) ist alles vertreten und solchen Stilwildwuchs kann man sich dann ungewollt auch eintreten.
+
+Alles in allem muss ich sagen, dass man in der Praxis mit Kotlin viele Vorteile von Scala hat, ohne die Nachteile von Scala zu bekommen. Man muss dafür zwar auf ein paar wirklich schöne Sachen verzichten, aber letztlich sind die nicht kriegsentscheidend.
++++
+## Flatpak
+https://forums.linuxmint.com/viewtopic.php?t=261171
+2018-01-08,
+The advantages of Flatpak are clear. But the disadvantages are not only that they can eat up lots of disk space, but also that they can generate a lot of internet traffic (because of frequent updates) [...] Flatpak installs a "micro environement" where the software and it's required libraries are in it's own bubble. So every program brings it's own bubble [...] Fatpak is a much better name [...] I looked at the plusses and minuses [...] and got rid of flatpak [...] Limited space on my SSD (dual boot). I want that for photos.
+Installing updates without notifying...very Micro$oft [...] Inceased data use...sometimes I tether to my phone [...]
++++
+## Flatpak
+https://news.ycombinator.com/item?id=
+2016-05-14,
+[...] it seems like Flatpak creates an artifical separation between "runtimes" and "bundles" [...] As I understand it, there's the concept of a runtime, which is kinda like an OS installation (but it's an immutable image type thing that gets distributed identically to everyone who wants that runtime), which packages can be built against, meaning the application package only needs to include its own specific dependencies that aren't part of the runtime. So, similar to how one might build for Fedora 24 now, one could build for a Fedora runtime, and any user who had that runtime wouldn't need that image to be downloaded...they would already have it. So, if you only installed packages provided by your OS vendor, the size of things wouldn't change much [...]
+
+To me, that just makes the dependencies more coarse-grained -- now you have this artifical 2-level system of apps and runtimes. You've just recreated the same problem again with bigger blobs.
+
+So I can't see right now how it's going to work. I feel like it will flame out. But this kind of thing involves a lot of social problems in addition to technical problems, so you never know.
+
+EDIT: A more concrete example. Apache, nginx, Python, Ruby, Perl, node.js, Erlang web servers, etc. all depend on OpenSSL.
+
+OpenSSL is 500K lines of code. When an important update inevitably comes out for it, what happens? Are you now updating 10+ runtimes that are 1+ GB each? Do they use differential compression at all?
+
+I don't see how the two-level hierarchy really solves any problems. It could be the worst of both worlds (very fine-grained sharing vs. duplicating all dependencies) [...]
+
+The images are being updated via snapshot (transparent to the user). Just as RPMs can currently be updated with delta RPMs [...]
++++
+## Node.js, Deno
+2018-06-11,
+Ryan Dahl, Erfinder von Node.js, sprach in einem Vortrag über zehn Designfehler der Laufzeitumgebung [...] Neben dem Entfernen von Promises [...] bis hin zu fehlenden Sicherheitsfunktionen bezeichnet Dahl die Verwendung von GYP (Generate your project) als Build-System als größten Fehler der Laufzeitumgebung [...] Das Build-System macht Node.js laut Dahl unnötig komplex, und der Einsatz sei für die Nutzer schrecklich. Dahl entschuldigt sich auch für den Einsatz von node_modules. Das Verzeichnis sei in den meisten Fällen zu groß, und es weiche sehr stark von der Browser-Semantik ab. Darüber hinaus verkompliziere es den Model-Resolution-Algorhithmus einfach viel zu sehr. Auch das Hinzufügen von Index.js sei ein Fehler gewesen: "Ich dachte es wäre ganz nett. Ich habe mittlerweile gelernt, dass man Dinge nicht hinzufügen sollte, nur weil sie ganz nett sind. Man bereut es immer" [...] Nach einer 15-minütigen Auflistung darüber, was alles schlecht in Node.js laufe, stellte Dahl sein neues Projekt Deno vor. 
++++
+## Speck, Simon, SM4
+https://www.spinics.net/lists/linux-crypto/msg33291.html
+2018-06-01,
+The NSA (in particular, the exact same person who previously promoted DUAL_EC in ISO) proposed to include Simon & Speck in ISO/IEC 29192-2 back in 2015. For obvious reasons they were met with skepticism. A main concern was the lack of any design rationale and internal cryptanalytic results. The NSA people fought tooth and nail for a year and a half simultaneously arguing two almost mutually-exclusive points: (i) they employ the most talented cryptographers and hence, we should trust them when they say that an algorithm is secure; and (ii) they are average cryptographers and hence they would not be able to insert a backdoor into the algorithm.
+
+More than once they argued in a meeting that the cryptanalysis for the ciphers has been stabilized (i.e., that attacks will not improve) just to be proved wrong in the next meeting (their answer: "well, _now_ it has fully stabilized", which was again proven wrong in the next meeting).
+
+[...] they announced that they will provide a design rationale [...] there is no nice way to say that, but this document includes omissions, falsehoods, half-truths and outright lies [...] these algorithms seem insecure, attacks against them keep improving, their designers either refuse to answer basic questions about their security or lie... What other conclusion could we have reached except that there might be a security problem with these algorithms?
+
+[...] There are two main things that separate Speck from SM4. Firstly, it seems more secure. This is either because it actually is more secure, or because the Chinese did a better job in hiding their backdoors; but at least it doesn't scream "something strange is going on here!!!".
++++
+## AES-GCM, GCM
+https://codeload.github.com/netheril96/securefs/tar.gz/0.8.2
+2018-05-12,
+NIST recommends that a single key is not used with more than 2^32 IVs for AES-GCM.
++++
+## Gradle, Maven, Ant
+https://www.softwareyoga.com/10-reasons-why-we-chose-maven-over-gradle/
+2015-09-09,
+When it come to the build mechanism to use for a project, Maven vs Gradle is one such battle [...]
+
+Maven
+
+* A game changer introduced in 2002 after developers suffered years of sweat and toil with complex ant scripts
+
+* Great (and simple) dependency management
+
+* Maven enforced a directory structure for projects, thereby introducing a ‘standard’ layout for projects
+
+* Identifies each build artifact using G:A:V. Artifacts can also be stored in a repository such as Nexus
+
+* [...] Maven’s pom.xml is based on xml format. So, it is declarative by nature [...]
+
+* Maven supports a huge number of build life-cycle steps [...]
+
+Gradle
+
+* Relatively new entry [...] Google chose Gradle as the build system for their Android projects.
+
+* Uses Maven’s directory structure, but could also be customized
+
+* Has it own central repository, but can also use Maven’s repository to manage dependencies
+
+* Utilizes the G:A:V format to identify artifacts, same as Maven
+
+* Is based on Groovy, a programming language. So, instead of xml’s, the build script will be in Groovy code [...] a full-fledged programming language. Gradle makes no intention of hiding that fact. Their intention was to provide the power of programming languages to use in the build script – something that the predecessors such as ant and maven lack. We knew that because groovy is a programming language, we could have “bugs” in our build script/code. This was a worrying fact [...]
+
+Gradle support for any given plugin/product is much harder to find compared to Maven. The amount of documentation (both in terms of official documentation and on the dev forums) is sparse compared to Maven.
+
+* At the end of the experimentation, the fact that stood out for us is the amount of effort needed to write the build script(Groovy code) and to resolve bugs. The real benefit of Gradle seems to be when there is customization needed in both the structure of the project and also the build artifacts.
+
+* It is however very true that Gradle is much more powerful than Maven because it brings the power of a real programming language to the build scripts.
++
+My own observations (Guenther B., 2018-07): Gradle is an extremely fat installation - 76 MB download. However, it seems to share most dependencies with Maven, because only a few hundred kB of downloads were necessary to install Maven after Gradle. (I do not know whether the reverse is also true.)
++++
+## TFS
+http://ticki.github.io/blog/why_im_leaving_open_source/
+2018-05-06,
+In the later days, my main project was TFS, but matter of the fact is I never accomplished anything with it. It is vaporware -- possibly among the most well-documented and well-designed pieces of vaporware out there, but it is what it is, vaporware. I wanted perfection and was unwilling to make compromises to produce results, meaning that what is left is just a bunch of very robust libraries. In terms of the project goal itself (being a state of the art file system!), nothing was ever achieved.
++++
+## links, elinks, lynx, w3m
+https://bbs.archlinux.org/viewtopic.php?id=62409
+2009-01-05 2009-01-06,
+links & lynx dont exactly cope well wih languages other than english, at least from what ive seen. elinks & w3m do.
+
+also links has some kind of javascript implemention too, its just not complete. elinks achieves full javascript support by using mozilla js.
+
+w3m can do graphics in console somehow. theres a thread around here that guides you to it. IIRC finferflu was involved. he can tell you more.
+Conclusion: i dont like lynx. if i only wanted supported for the english language i would use links. but solely cause i have the need to visit webpages that use other than english fonts, i use elinks.
++++
+Elinks' support for Javascript is quite limited, and doesn't support Chinese well, last time I checked.
+w3m perhaps renders tables best among all.
++++
+I like w3m because it is also a pager.  I use it instead of less.  I also format html to text with it.
++++
+Lynx does NOT support tables let alone css, javascript, xhtml, rss and a whole lot more!
++++
+Elinks can execute JavaScript, can use page stylesheets, can display in 256 colors, is very customizable, has tabbed browsing, has session saving (a la Firefox), supports a shitton of protocols including BitTorrent, is extensible via scripts [...]
++++
+## links, links-hacked, links2, elinks, lynx, w3m, netrik, retawq
+https://kmandla.wordpress.com/2011/01/13/a-comparison-of-text-based-browsers/
+2011-01-13,
+I’m concerned strictly with text-based interfaces here, so things like links2 and the image support patch for w3m are out of the contest [...]
+
+elinks [...] has tabs, an on-board download manager, a replete bookmarking and history system, more options than you can shake a stick at [...] it’s a bit heavy and can be quite sluggish at times [...] Yes, it can take a while longer to load a page. But I get more goodies with elinks than with some other browsers.
+
+elinks and links are obvious cousins [...] links recoups some speed when compared with its relative [...] links has a few other progeny you should be aware of: links-hacked drags some features into the links corpus, while links2 is an offshoot that makes the leap to graphical arenas. Albeit framebuffer driven and somewhat basic [...]
+
+Lynx does a lot of the things elinks does, and does a fairly quick and clean job doing it [...] one of the things I liked best about lynx was it’s flat approach to configuration. Everything is right there, and easy to control.
+
+That being said, lynx probably has the most configuration options at the command line [...]
+
+netrik is very light and very sparse, and many of the features or frills that others have, netrik seems to avoid.
+
+Which is most likely a good thing, because the ultimate feel of netrik is more of a pager and less of a browser [...]
+
+retawq is next, and probably the best thing I can mention about retawq is that it is so small and so light that one of my favorite distributions that I don’t use — ttylinux — keeps it on board as its sole application.
+
+retawq is a speed demon even when compared to the other five in this list, and while it doesn’t do a lot of the fun stuff (or necessary stuff) that most people probably want, it’s hard to find something to complain about.
+
+You can see in the screenshot that retawq, like netrik, stumbles a little when it comes to specialized characters, but it doesn’t impede the main function — getting in and around the web [...]
+
+w3m makes it easy to browse — and this time I mean browse, not just page — in an easy fashion. A simple combination of arrow and tab keys will have you surfing in no time [...]
+
+RAM usage (from lightest to heaviest):
+
+604.5 KiB retawq
+633.0 KiB netrik
+1.6 MiB	links
+1.8 MiB	w3m
+2.2 MiB	elinks, lynx
++++
+My vote goes to w3m; it’s omnipresent and doubles as a pager.
++++
+## Scala, JAVA, Go
+https://www.heise.de/developer/artikel/Martin-Odersky-Scala-ist-durchaus-noch-ein-Vorreiter-3972880.html
+20.02.2018,
+Scala-Erfinder Martin Odersky [...] Wir hatten uns bereits länger überlegt, wie man Java und funktionales Programmieren zusammenbringt. Die erste Sprache hieß Pizza und hatte mäßigen Erfolg. Dann habe ich einen erfolgreichen Java-Compiler geschrieben, den Borland-Compiler. Danach habe ich noch einen Compiler geschrieben, der zu dem offiziellen Sun-Compiler javac ab Java 1.4 wurde und mit Generics umgehen konnte [...]
+
+Es gab einen sehr guten Blogpost in der Scala-Community mit dem Titel "The Principle of Least Power": Man sollte immer die Lösung wählen, die am wenigsten mächtig ist, aber noch das Problem löst. Und ich finde, das ist genau richtig [...] Eine Sprache wie Go ist quasi diametral das Gegenteil zu Scala. Programmierer haben dabei im Kern das, was es gibt, und sonst kann man gar nichts machen. Man sollte mit den wenigen generischen Typen programmieren – und fertig. Scala ist das exakte Gegenteil. In der Sprache ist sehr wenig, aber man kann alles über Bibliotheken ausdrücken [...]
+
+Dann ist es natürlich auch interessant, Sprachen zu studieren, die manches grundsätzlich anders machen [...] Eine wäre Rust, um zu sagen, "OK, was macht man, wenn man keinen Garbage Collector hat?" Das ist ein interessantes Problem. Und bei den betroffenen Sprachen ist Rust wohl die mit dem ausgefeiltesten Typsystem.
++++
+## Linux, Rockchip, MALI
+https://www.cnx-software.com/2017/08/07/rock64-board-review-part-2-quick-start-guide-with-ubuntu-16-04-3-mate-multimedia-features-some-benchmarks/
+2018-05-26,
+Another person informed me that contrary to Amlogic, Rockchip does not use AFBC (ARM Frame Buffer Compression) natively, and the memory bandwidth is critical, 4K H.265 HDR videos may not always play that well in RK3328. I’ve been told it may take one to two more months for 4K support in Linux, and that 1080p is now supported but not released just yet in the Ubuntu image.
++++
+https://www.heise.de/forum/heise-online/Kommentare/Python-Konkurrent-Einstieg-in-die-Programmierung-mit-Julia/Julia-ist-wirklich-deutlich-besser-als-Python/thread-6309322/
+## julia, python
+2020-03-16,
+Persönlich bin ich ja ein Lisp-anhänger aber die einzige nicht S-expr basierte Sprache die ich halbwegs akzeptabel finde ist Julia.
+
+Vorteile gegenüber Python:
+
+- multi-line anonyme Funktionen (Lambdas)
+- optional feste/dynamische Typisierung (also das beste aus beiden Welten)
+- deutlich schneller
+- advanced Controlflow in Match Module (besseres if/else für größere Sachen)
+- bessere if/elseif/else Syntax. (zwischen if und dem Ende des Gesamtblocks gibts EINE End-Anweisung)
+
+in Python sind syntaktisch if und else 2 separate blöcke was semantisch natürlich schwachsinnig ist, wenn mans weiß machts einen (mich) verrückt. Wie wenn man ständig hinschreiben müsste 1 + 1 = 3
+- Funktion gibt den letzten Wert zurück ohne überflüssige explizite return Anweisung z.B.:
+function f(x,y)
+    x + y
+end
+
+- Vereinfachte funktionssyntax:
+f (x,y) = x + y
+
+- Fast vergessen ein wichtiger Punkt:
+Blockweiter Scope Python ist ja so primitiv das es nur Global und funktionsweiten Scope hat.
+- let block
+
+Nachteile
+- Partial fehlt noch ist aber in Python auch versteckt.
+- Natürlich kleinere Klassenbibliotek aber das würde mit wachsender Popularität von Julia dort ja auch kommen.
+
+Nimmt damit (fast) alle Schwächen/Kritikpunkte von Python weg. 
++
+Weiter Vorteile, meiner Meinung nach:
+
+* Performanz (dank LLVM) und das auch auf GPU (mittles CUDAnative)
+* Die Julia Funktionen in der Regel haben eine in-place Variante (z..B. sum!) um das Speicher Allokationen zu vermeiden/reduzieren.
+* Macros: ein Julia Macro kann Julia Code erzeugen. Also wenn man eine Reihe von änlichen Funktionen hat, kann man Sie mit einer for-Schleife definieren.
+* Multiple-dispatch
+* Integrierter Pakete Manager (einschließlich virtuelle Environements)
+* Insgesamt einheitlicheres Ökosystem. In Python gibt unittest (in der Standardbibliothek aber kaum noch empholen), pytest, nose, ... oder auch venv, virtualenv, pipenv, poetry,... Natürlich ist das auch die Kehrseite des großen Erfolges von Python. Bei einer kleineren Entwicklergemeinde (wie bei Julia) ist es einfacher sich abzustimmen.
+* Modulename = Packagename -> Github Repo (gitlub.com/user/Modulename.jl). Außerdem, haben die Repos (quasi) immer das selbe Layout (Project.toml, src/, test/, , docs/...)
++
+Da wären noch "Computable Types" zu nennen. In Julia kann man dynamisch neue (co/contra/bivariante) Typen erzeugen. Sehr wichtig für Type Generics.
+
+https://docs.julialang.org/en/v1/manual/types/index.html
++++
+## NFS, Kernerbos
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nfs-cg/GUID-3ECE9551-A805-460B-86EC-EBCC14422528.html
+2019-12-05,
+Using Kerberos with NFS for strong security [...]
+
+* krb5p (Kerberos v5 protocol with privacy service)
+
+* You should use a secure directory service in your environment, such as Active Directory or OpenLDAP, that is configured to use LDAP over SSL/TLS. Do not use NIS, whose requests are sent in clear text and are hence not secure.
+
+
+* You must have a working time server running NTP. This is necessary to prevent Kerberos authentication failure due to time skew.
+    Domain name resolution (DNS)
+
+* Each UNIX client and each SVM LIF must have a proper service record (SRV) registered with the KDC under forward and reverse lookup zones. All participants must be properly resolvable via DNS.
++
+https://unix.stackexchange.com/questions/14014/can-someone-sniff-nfs-over-internet
+
+If you use NFSv4 with sec=krb5p, then it is secure. (That means use Kerberos 5 for authentication, and encrypt the connection for privacy.) But if you use NFS v3 or NFS v4 with sys=system, then no, it's not secure at all.
++
+NFS itself is not generally considered secure - using the kerberos option [...], but your best bet if you have to use NFS is to use a secure VPN and run NFS over that - this way you at least protect the insecure filesystem from the Internet [...]
++++
+## VPN
+https://de.vpnmentor.com/blog/vpn-protokollvergleich-pptp-vs-l2tp-vs-openvpn-vs-sstp-vs-ikev2/
+2020-04-10,
+VPN-Protokollvergleich [...] Derzeit gibt es fünf populäre Protokolle, die Du in den meisten kommerziellen VPN Services findest – PPTP, SSTP, OpenVPN, L2TP/IPsec und IKEv2 [...]
+
+Willst Du einfach das VPN-Protokoll nutzen, das die Experten der Branche empfehlen, dann gibt es hier eine kurze Zusammenfassung:
+
+* Nimm OpenVPN, sofern es verfügbar ist.
+* Meide PPTP auf jeden Fall.
+* Meide SSTP, wenn möglich.
+* L2TP ist eine gute Wahl, wenn es richtig implementiert ist. Empfohlen ist es aber auch nicht.
+* Die Open-Source-Version von IKEv2 ist eine gute Alternative zu OpenVPN.
+
+OpenVPN ist derzeit das sicherste VPN-Protokoll und deswegen so etwas wie der Standard in der Branche. Premium-VPN-Provider stellen komplette Unterstützung für OpenVPN zur Verfügung. Es gibt native Clients, tolle Funkionen und meist auch Unterstützung für andere VPN-Protokolle.
+
+PPTP im Detail
+
+Das Point-to-Point-Tunneling-Protokoll gibt es schon seit 1999. Damit ist es das erste echte VPN-Protokoll, das der Öffentlichkeit zugänglich war [...] wurde von einem Konsortium unter der Führung von Microsoft entwickelt. Es benutzt Microsoft Point-to-Point Encryption (MPPE), zusammen mit MS-CHAP-v2-Authentifizierung. Das Protokoll wird heutzutage ausschließlich mit 128-Bit-Verschlüsselung eingesetzt, hat aber trotzdem viele Schwächen und birgt Sicherheitsrisiken [...]
+
+Es gibt noch weitere große Probleme mit diesem Protokoll. Das größte ist, dass die NSA Daten entschlüsseln kann, die via PPTP gesendet werden. Das funktioniert übrigens schon länger, es wusste nur keiner. Kurz gesagt ist PPTP für die NSA kein Problem. Deine verschlüsselten Daten können gesammelt werden und sie lassen sich auch knacken.
+
+Geschwindigkeit ist der einzige Vorteil von PPTP, aber auch darüber lässt sich streiten. Das Protokoll benötigt nicht viel Rechenleistung [...] aber PPTP lässt sich auch sehr einfach blockieren [...] Hinzu kommt noch, dass PPTP bei Verbindungen mit Paketverlusten sehr ineffizient sein kann [...]
+
+SSTP im Detail
+
+PPTP war Microsofts erster Versuch, ein sicheres und zuverlässiges VPN-Protokoll zu entwickeln. SSTP ist die neuere und bessere Variante [...] weil SSTP ein proprietärer Verschlüsselungsstandard ist, der Microsoft gehört [...] Der Nachteil ist, dass SSTP nur so sicher ist, wie Du Microsoft vertraust. Der Code ist nicht öffentlich einsehbar und niemand außer dem Besitzer kennt die Details hinter dem Protokoll. Microsoft und die NSA haben eine Geschichte und es halten sich hartnäckige Gerüchte, dass es eine Hintertür in Windows gibt. Das sind alles gute Gründe, um SSTP mit Vorsicht zu genießen und die Sicherheit des Protokolls in Frage zu stellen [...]
+
+OpenVPN
+
+Kurz gesagt: Es ist der Branchen-Standard. Das VPN-Protokoll ist transparent, wird regelmäßig aktualisiert und ist die beste Option für garantierte Sicherheit [...]
+
+L2TP
+
+Kurz gesagt: Ein Multi-Plattform-Protokoll, das theoretisch angemessene Sicherheit und höhere Geschwindigkeiten bietet. In der Realität ist es aber oftmals sehr schlecht implementiert [...] Layer 2 Tunneling-Protokoll wurde ungefähr gleichzeitig mit PP2P entwickelt [...] gewisse Ähnlichkeiten. Sie sind fast überall verfügbar und laufen auf allen großen Plattformen.
+
+L2TP verschlüsselt allerdings nicht. Deswegen musst Du es zusammen mit IPSec kombinieren. Du siehst Kombinationen bestehend aus „L2TP“ und „IPSec“ immer wieder, wenn Du die VPN-Anbieter durchforstet. Meist wird die Kombination als L2TP/IPSec dargestellt.
+
+Heutzutage bietet sicheres L2TP ausschließlich AES-Chiffre. In der Vergangenheit wurden auch 3DES-Chiffre genommen. Allerdings gab es hier mehrere sogenannte Collision-Angriffe und deswegen verzichtet man auf diese Methode.
+
+Auch wenn L2TP die Daten doppelt verkapselt, ist es dennoch schneller als OpenVPN, so zumindest die Theorie. In der Realität ist der Unterschied aber so gering, dass man sich darüber den Kopf nicht zerbrechen muss [...]
+
+IKEv2
+
+Kurz gesagt: Ein starkes uns sicheres Protokoll, das sich sehr gut für mobole Geräte eignet. Allerdings ist es nicht das populärste Protokoll [...] Internet Key Exchange Version 2 ist aus einer Zusammenarbeit von Microsoft und Cisco entstanden [...] IKEv2 an sich ist nur ein Tunneling-Protokoll. Genau wie L2TP wird es ein VPN-Protokoll, wenn man es mit IPSec kombiniert. Oftmals wird das Paar IKEv2/IPSec einfach mit „IKEv2“ abgekürzt [...]
+
+IKEv2 ist kombiniert mit AES-Verschlüsselung ein robustes VPN-Protokoll. Der größte Vorteil ist aber Stabilität. Sollte es temporäre Störungen bei der Verbindung geben, funktioniert es sofort automatisch wieder. Stromausfälle oder ein echter Tunnel, gerade bei der Verwendung eines Mobilgeräts, können Gründe für Unterbrechungen der Verbindung sein.
+
+IKEv2 unterstützt außerdem das Protokoll MOBIKE (Mobility and Multihoming). Das ist sehr nützlich, wenn andauernd Verbindungen gewechselt werden. Vielleicht springst Du zwischen Internet-Cafés und mobilen Daten, wenn Du in einer neuen Stadt unterwegs bist.
++++
+IKEv2 ist kombiniert mit AES-Verschlüsselung ein robustes VPN-Protokoll. Der größte Vorteil ist aber Stabilität. Sollte es temporäre Störungen bei der Verbindung geben, funktioniert es sofort automatisch wieder. Stromausfälle oder ein echter Tunnel, gerade bei der Verwendung eines Mobilgeräts, können Gründe für Unterbrechungen der Verbindung sein.
+
+IKEv2 unterstützt außerdem das Protokoll MOBIKE (Mobility and Multihoming). Das ist sehr nützlich, wenn andauernd Verbindungen gewechselt werden. Vielleicht springst Du zwischen Internet-Cafés und mobilen Daten, wenn Du in einer neuen Stadt unterwegs bist.
++++
+## lessfs
+https://www.linux-community.de/ausgaben/linuxuser/2010/11/das-deduplizierende-dateisystem-lessfs/2/
+2010-11-01,
+Die Idee klingt bestechend: LessFS speichert ausschließlich die absolut notwendigen Daten, wodurch die Festplatte spürbar aufatmet. Zumindest derzeit bleibt dabei jedoch die Datensicherheit auf der Strecke. Nur eine kleine Delle in der Datenbank an der falschen Stelle, schon sind sämtliche Dateien Geschichte.
++++
+https://forums.gentoo.org/viewtopic-t-799870-start-0-postdays-0-postorder-asc-highlight-.html
+## lessfs
+2009-10-29,
+I have one serious concern about lessfs: the absence of any double checking for hash colissions. I know it would affect speed, but there ought to be an option to enable it for the paranoid among us. Its not the probability of a collision that bothers me; its the possibility [...]
++
+OK, I have about convinced myself that it is acceptable and reasonable to ignore collisions. The reasoning goes like this:
+
+We are going to compare the probability of an unchecked and undetected hash collision in a dedup file system such as lessfs with the probability of an undetected CRC error associated with a disk I/O operation. 
++++
+https://baldnerd.com/automatically-deduplicating-data-on-debian-linux/
+## lessfs, SDFS
+2018-01-23,
+Lessfs is another one I peeked at, but once I noticed their “official” web site was offline, and distribution is done through Sourceforge, I moved on pretty quickly as it seems pretty obvious that either it’s a dead project or at least not a well-supported one.
+
+Then I got looking at OpenDedup’s SDFS, which is a volume-based deduping filesystem, which sounds ideal for my use case, for now. I won’t hold the fact that it is Java-based against it just now as the functionality sounds perfect. Plus SDFS appears well-supported and professional in its presentation, which gives me hope for its future.
+
+I’m going to add some more memory to my little server to accommodate the RAM requirements. Make sure your system has adequate RAM… SDFS likes to eat memory for breakfast. “The SDFS Filesystem itself uses about 3GB of RAM for internal processing and caching. For hash table caching and chunk storaged kernel memory is used. It is advisable to have enough memory to store the entire hashtable so that SDFS does not have to scan swap space or the file system to lookup hashes. To calculate memory requirements keep in mind that each stored chunk takes up approximately 256 MB of RAM per 1 TB of unique storage.”
++++
+https://www.heise.de/forum/p-36545893/
+## qtcreator, gnome builder
+2020-04-25,
+Antwort auf Re: Dir ist bewußt, dass man QtCreator gratis benutzen kann? von philippun.
+
+philippun schrieb [...]
+
+> Und ja, QtCreator ist 1000 mal besser als Builder. ;)
+
+Ob er besser als der Builder ist mag ich nicht beurteilen, aber QtCreator an sich ist nervig an allen Ecken und Enden.
+
+- Anscheinend ist es zu kompliziert, Einstellungen nach einem Upgrade beizubehalten (wenn sich z.B. das Kit ändert). BuildDir, CommandLineArguments und cmake-Einstellungen sind erstmal wieder weg. Ebenfalls defaultet das "neue" Kit den Compiler auf Standard-Einstellungen (ja, ich verwende CentOS 7, da ist nunmal gcc 4.8.5 default, aber ich brauche wenigstens 7.3.1, welches im Bash-Profile schon gesetzt ist).
+- Und hey, wenn ich das Kit ändere dann macht QtCreator ein cmake und make kompiliert das Projekt von 0 weg. Wäre ja ok wenn ich irgendwas von Qt verwende, tue ich aber nicht, ich benutze keine Libraries von Qt im Projekt.
+- CodeColoring ist lahm
+- Scrollen in einer Datei hängt öfter mal, weil irgendein Prozess einen Core auslastet.
+- Wehe man schließt ein Projekt, für welches gerade ein Build läuft -> Segfault.
+- Sowas wie Intellisense ist für Qt zu kompliziert.
+- Variablen einer Klasse auflisten dauuuuuuuuuuuuuert. Warum?
+- usw.
+
+Sagen wir mal so, KDevelop und Konsorten sind noch schlechter, aber QtCreator ist auch schlecht. Aber Hauptsache ein MarketPlace-Button ist jetzt drin.
++++
+## RB, LLRB, red-black-tree
+http://read.seas.harvard.edu/~kohler/notes/llrb.html
+1970-01-01 2015-06-18,
+Left-Leaning Red-Black Trees Considered Harmful
+Robert Sedgewick’s left-leaning red-black trees are supposedly simpler to implement than normal red-black trees
+[...]
+Left-leaning red-black trees are hard to implement [...] Additional rotations [...] Performance [...] conventional wins [...] In practice iterative conventional RB code will be longer than recursive LLRB code, but not by much [...] Whether you’re choosing or writing a red-black tree, go conventional, not left-leaning. The exception: if you very rarely or never iterate over tree ranges, you never need to combine iteration with modification, your nodes are small (so parent pointer overhead is significant), your comparison function is cheap (or perhaps you never delete anything), and your workload is very heavily biased towards find, then LLRB trees might win. But know that the optimized LLRB implementation you choose will be just as complex as a well-implemented conventional tree, if not more so.
++++
+## gcc, clang, llvm
+https://www.heise.de/forum/p-36629908/
+2020-05-08,
+Kurzform:
+- Clang hat bessere Fehlermeldungen, aber GCC holt von Version zu version auf.
+- Clang ist schneller beim Übersetzten.
+- GCC baut die schnelleren Executables, wobei das in den letzten Jahren arg zusammengeschmolzen ist und es auch Beispiele gibt, bei denen Clang schneller ist.
+- Sprachstandards setzten beide gleich gut um, haben beide große Teile von C++20 bereits dabei, C++17 quasi komplett.
+- Clang hat ein paar interessante Werkzeuge in seinem Umfeld, clang-analyer, static analyzer. Dafür kann es mit alten Tool vereinzelt zu Problemen kommen, wobei die selten sind. Wobei sich die Compiler in diesem Punkt auch annähern. GCC hat einen statischen Analyzer bekommen und Clang räumt Probleme in der Zusammenarbeit mit anderen Werkzeugen aus.
+- Clang kann man recht gut erweitern um Plugins. Das geht inzwischen auch im GCC, aber wohl nicht so gut. Dürfte nicht interessant sein für die meisten.
++
+Clang ist eigentlich nur der Bezeichner für den C/C++ Parser, der den Source Code in die eigentliche Intermediate Language des LLVM übersetzt, der dann in die jeweiligen Maschinencodes der verschiedenen Prozessorarchitekturen übersetzt.
+
+GCC Compiler Suite umfasst auch andere Prorgammiersprachen (Ada, Fortran, ...) und bietet zudem auch Unterstützung für viel mehr Prozessorachitekturen. Da kommt LLVM bei weitem nicht heran. Auch hat GCC eine interne Lisp - ähnliche AI Sprache namens MELT, die wesentlich besser optimiert, als LLVM.
+
+Phoronix berichtet regelmäßig über die Unterschiede:
+
+https://www.google.com/search?q=phoronix+gcc+clang
+
+Das ganze LLVM Projekt ist eigentlich ausgemachter Schwachsinn. Die Manpower wäre besser in GCC investiert worden.
++
+clang kennt viele pragmas (nicht standardisiert) mit denen die Codegenerierung recht genau gesteuert werden kann. Beim gcc geht das nur mit Funktionsattributen (auch nicht standardisiert) und wenn ne Funktion inline ist werden diese Attribute ignoriert :-(
+
+OT:
+- Leider ist std::bit_cast noch nicht implementiert
++
+Jetzt, mit der -fanalyzer Funktion kann ich keinem mehr zu LLVM raten.
++++
+## Enlightenment, EFL
+https://what.thedailywtf.com/topic/15001/enlightened
+2019-12-03,
+I work for a certain corporation which uses a certain product. This is its story. To put the quality of this product into perspective, let me say it’s been in development for about 20 years and has pretty much no users (besides my corp and some “hey - let’s make our own Linux crappy distro, which no one will ever use” fanatics) and no community. It was written by a C programmer who “doesn’t like the notion of ‘type’ in programming”. Let that be a prelude of what’s to follow. Envy those who don’t know it; pity those who use it.
+
+The product is called Enlightenment Foundation Libraries and it’s the absolutely worst piece of shit software you can imagine. In many years of my programming career I’ve never seen something that bad, including every TDWTF CodeSOD (yes, I’ve seen them all). EFL is a set of libraries which pretend to be a worthy replacement for Qt or GTK. In essence, it’s a bunch of hacks you can (try to) use to make windows/widgets/etc. The first thing a programmer notes while using EFL is that almost nothing works [...] Oh, did I mention the documentation is shit and some bits are in a form of “hell if I know” (exact quote)? There is a docs section on the webpage, but try using the information there in practice – good luck.
+
+[...] EFL disregards any notion of memory ownership. It frees some data you pour into it, and it doesn’t free other. Which is which? You’ll only know when your process crashes on double free. Or when your memory fills up. Or never.
++++
+## Swing, JavaFX
+https://de.wikipedia.org/wiki/JavaFX
+2020-05-27,
+"Mobile first" und "Web first" motiviert Oracle dazu, den Support für JavaFX voraussichtlich 2022 einzustellen. Weitere Entwicklung soll dann als separates Open-Source-Modul erfolgen [...]
+
+Der ehemalige Sun-Mitarbeiter und Codename-One-Gründer Shai Almog bescheinigt JavaFX eine wenig rosige Zukunft. Er teilt JavaFX-Nutzer in drei Kategorien: Unternehmen mit großen Investitionen in Swing, Studenten und eingefleischte Fans. Auf diesem Fundament lasse sich laut Almog nur schwer eine lebhafte Community aufbauen. Außerdem sende Oracle keine klaren Signale aus, wie es um sein zukünftiges Engagement für JavaFX bestellt sei. Insgesamt macht er für die mangelnde Zukunft von JavaFX drei Hauptgründe verantwortlich:
+
+* Oracle selbst nutzt JavaFX nicht bzw. nicht in ausreichendem Maße: Selbst Swing-basierte Produkte bewegen sich nicht in Richtung JavaFX. Zudem wird der Scene Builder seit einiger Zeit nicht mehr von Oracle selbst vertrieben.
+
+* JavaFX hat nie denselben Einfluss wie Swing gewonnen. Die Hauptzielgruppe von JavaFX, nämlich die Swing-Entwickler, seien nicht auf die neue Technologie umgestiegen.
+
+* Der Jobmarkt sehe düster aus: Auf der Karriereseite dice.com fand Almog nur 28 Stellen, die JavaFX-Kenntnisse verlangten, im Gegensatz zu 198 Stellenangebote für Swing, 2333 für Android und 16752 für Java EE (Stand 22. November 2015).
++++
+## PL/I, CP/M, APL
+https://ia600309.us.archive.org/26/items/byte-magazine-1983-08/1983_08_BYTE_08-08_The_C_Language_djvu.txt
+1983-08,
+Alas, APL has been described, with good reason, as a "write only" language: you're just not likely to understand your program an hour after you've written it. Used interactively, though, it's hard to beat.
+
+[...] The PL/I programming language is very popular among mainframe and large minicomputer programmers. It was one of the earliest of the "higher level" languages and one of the first designed to allow formal structuring. It has good string handling, relatively good portability, and better input/output and file handling than Pascal. 
+
+In fact, considered a feature at a time, PL/I sounds nearly ideal.
+
+Much of the original CP/M was written in a subset of PL/I.
+
+Despite these advantages, PL/I hasn't caught on in the microcomputer world [...] Then, too, many computer users including myself— do not find PL/I programs readable, nor is the language easily learned.
++++
+## Common LISP, Python, Reddit
+https://de.wikipedia.org/wiki/Reddit
+9. Juli 2020,
+Die Software hinter Reddit wurde ursprünglich in Common Lisp geschrieben, im Dezember 2005 dann allerdings in der Programmiersprache Python neu erstellt. Gründe hierfür waren vor allem die größere Auswahl an Programmbibliotheken, bessere Performance und flexiblere Entwicklungsmöglichkeiten.
++++
+## Saltstack, Salt
+https://www.golem.de/news/configuration-management-tools-ansible-chef-puppet-und-saltstack-im-vergleich-2009-150394-3.html
+2020-09-10,
+"Saltstack", oft auch nur einfach "Salt" genannt, ist ein in Python implementiertes Software Configuration Management (SCM) System ähnlich wie "Ansible", jedoch (Stand 2020) mächtiger als dieses. Die Konfigurationsdateien werden auch hier mittels Python und YAML verfasst, jedoch kann das System wahlweise wie "Ansible" über agent-less mittels SSH oder aber wie "Chef" mit dezidierten Client-Agents arbeiten welche in definierten Intervallen automatisch die Konfiguration vom Server aktualisieren und Änderungen gegebenenfalls anwenden. Ein besonderer Fokus von Salt scheint die integration aller bekannten großen Cloud-Anbieter zu sein. Es scheint weiters neben der kostenlosen Community-Edition auch eine kostenpflichtige kommerzielle zu geben. Der Support für zumindest die Community Edition ist kleiner als bei Ansible, Chef oder Puppet; es sind (Stand: 2020) nur ca. ein Zehntel an bereits fertigen Konfigurationsdateien im Vergleich zu jedem der anderen Systeme verfügbar.
++++
+## WebAuthn
+https://www.heise.de/newsticker/meldung/Passwortlose-Anmeldung-WebAuthn-ist-beschlossene-Sache-4325432.html
+2022-02-11,
+Die Standardisierung von WebAuthn (Web Authentication) durch das W3C (World Wide Web Consortium) ist abgeschlossen. WebAuthn definiert eine Browser-Schnittstelle, mittels derer man sich bei Diensten ohne Passwort anmelden kann. Statt des Passworts kommt dazu ein öffentlicher kryptografischer Schlüssel zum Einsatz. Das ermöglicht eine Anmeldung bei Websites mittels Hardware-Security-Tokens, biometrischen Anmeldeverfahren oder Mobilgeräten.
+
+Bislang war die WebAuthn-Spezifikation lediglich eine Empfehlung und ist nun zu einem Webstandard geworden. Die großen Browser Firefox, Chrome und Edge beherrschen WebAuthn bereits. Lediglich Safari bietet WebAuthn nur als experimentelles Feature an [...]
+
+Der Standard wurde in der Vergangenheit auch kritisiert. So gilt die für WebAuthn vorgeschlagene veraltete RSA-Verschlüsselung als angreifbar. Auch das zur Verifikation der Schlüsselintegrität empfohlene ECDAA gilt als problematisch.
++++
+## PipeWire, PulseAudio
+https://en.wikipedia.org/wiki/PipeWire
+2022-02-11,
+PipeWire is a server for handling audio and video streams and hardware on Linux. It was created by Wim Taymans at Red Hat [...] A goal was to improve handling of video on Linux the same way PulseAudio improved handling of audio [...]
+
+The project aims include:
+
+* To work with sandboxed Flatpak applications.
+
+* To provide secure methods for screenshotting and screencasting on Wayland compositors.
+
+* To unify handling of cases handled by JACK and PulseAudio.
+
+PipeWire has received much praise, especially among the GNOME and Arch Linux communities. Particularly, it fixes many problems that PulseAudio had experienced, including its high CPU usage, Bluetooth connection issues, and its JACK backend issues.
+
+https://www.linux-community.de/ausgaben/linuxuser/2018/05/unter-einem-hut/
+
+Mit Wayland gelingt es standardmäßig nicht mehr, Vorgänge auf dem Bildschirm mit Screen-Rekordern wie Recordmydesktop oder Vokoscreen aufzuzeichnen: Das Anzeigeprotokoll verzichtet aus Gründen der Sicherheit auf Netzwerktransparenz. Auch die Ausgabe von Audio- und Video-Dateien in Containern wie Flatpak erfordert neue Techniken.
+
+Hier kommt Pipewire ins Spiel [...] Der Name Pipewire geht auf die Pipelines zurück, über die Gstreamer Aktionen auf Multimediadaten zu Ketten zusammenfügt [...] Für den Audio-Bereich integrierten die Developer mittlerweile das Jack-Protokoll in Pipewire. Das ermöglicht, entsprechende Anwendungen ohne Jack auszuführen. Später könnte Pipewire dann den jetzigen Standard-Soundserver Pulseaudio ablösen. Schon jetzt dürfen alle Anwendungen Pipewire im Hintergrund einsetzen, die Gstreamer oder Alsa nutzen. 
++++
+## PVM, MPI
+http://wwwmayr.informatik.tu-muenchen.de/konferenzen/Jass04/courses/2/Papers/Comparison.pdf
+2004-01-01,
+PVM und MPI dienen demselben Zweck: Um Cluster-Applikationen zu erstellen, die mittels ausgetauschter Nachrichten ihre Arbeit verrichten.
+
+Beide Systeme sind portabel.
+
+PVM ist darauf spezialisiert verschiedene Rechner mit unterschiedlicher Ausstattung in einen gemeinsamen Ressourcen-Pool einzugliedern und Aufgaben an diese zu verteilen.
+
+MPI kann das unter Umständen abhängig von der Implementierung zwar auch, ist aber primär darauf ausgelegt lauter identisch oder zumindest sehr ähnlich ausgestattete Rechner zu verwenden. Es wird vorwiegend auf Supercomputern betrieben.
+
+PVM ist in der Regel langsamer als MPI, da letzteres besser gezielt von Hardware-Herstellern unterstützt und höher optimiert wurde. Wenn die Rechner in einem Pool sehr unterschiedlich ausgestattet sind, kann sich das aber auch zugunsten vom PVM umkehren.
+
+MPI ist in erster Linie eine Bibliothek welche von den Applikationen zum Nachrichtenaustausch verwendet wird. Sie ist kein Netzwerkbetriebssystem. Die einzelnen Programme kommunzieren selbst mit Hilfe dieser Bibliothek mit den anderen Programmen. MPI verwaltet eine Ressourcen, das bleibt den Applikationen selbst überlassen. Es gibt auch keine zusätzlichen Daemonen außer den laufenden Anwendungsprozessen welche die MPI-Bibliothek verwenden.
+
+PVM auf der anderen Seite fungiert als ein rechnerübergreifendes Betriebssystem, das Ressourcen verwaltet und den Nachrichtenaustausch zwischen verschiedenen Rechnern abwickelt. Es startet einen Daemon pro Maschine.
+
+Dieser Daemon wird wird von allen PVM-Anwendungsprozessen auf dieser Maschine kontaktiert und wickelt dann für diese die Kommunikation mit PVM-Daemonen auf anderen Maschinen ab, welche dann ihrerseits wieder die PVM-Anwendungsprozesse auf der Maschine des jeweiligen Daemons kontaktieren.
+
+Der Start einer PVM-Anwendung sieht so aus dass zunächste am lokalen Rechner wo der Anwender sitzt ein PVM-Daemon gestartet wird. Dieser startet darauf hin auf den anderen Maschinen ebenfalls PVM-Daemonen. Dann koordiniert der ursprüngliche PVM-Daemon der nun als Master fungiert den Start der Applikationen im Cluster.
+
+Bei MPI wird normalerweise ein Prozess pro CPU-Kern jedes teilnehmenden Rechners gestartet; diese Konfiguration ist in der Regel statisch und kann nachdem ein MPI Programm erst einmal gestartet wurde nicht mehr verändert werden. Zumindest bein MPI-1 Standard war das so. Mittlerweile gibt es bereits MPI-2 und sogar MPI-3, und diese erlauben auch den Start/Stopp neuer Prozesse unter der Kontrolle der MPI-Applikation.
+
+PVM bietet die Grundlagen zur Implementierung von Fehlertoleranten Anwendungen. Konkret stellt es Notification- und Polling-Mechanismen bereit, welche die Anwendungen dafür nutzen können. Außerdem kann der Benutzer manuell PVM-Prozesse starten und stoppen.
+
+MPI bietet zwar ein paar standardisierte Hilfsprogramme an um eine MPI-Anwendung zu starten. Sobald dies aber geschehen ist, muss diese allein sich darum kümmern alles weitere zu tun.
+
+PVM wurde von einem relativ kleinen Team Ende der 90er Jahre designed und vom selben Team auch implementiert.
+
+MPI hingegen wurde ein paar Jahre später komplett neu aus dem Boden gestampft und von großen Kommitees gesteuert und koordiniert, die völlig Unterschiedliche Prioritäten aller Beteiligten unter einen Hut bringen musste.
+
+PVM stellt ein relativ simples und kleines API zur Verfügung. MPI hingegen hat schin in der ersten Version weit über 100 Funktionen, bei MPO-2 kam fast noch einmal so viel dazu, bei MPI-3 noch mehr.
+
+MPI bietet daher mehr Funktionen und feinere Abstufungen der diversen Features. PVM hingegen ist eher ein "Friss oder Stirb"-Ansatz mit nur geringen Wahlmöglichkeiten.
+
+PVM ist primär auf die Benutzung eines normalen TCP/IP-Netzwerks zur Kommunikation ausgerichtet, MPI unterstützt FibreChannel und eine ganze Latte noch tollerer Hochgeschwindigkeits-Connects zwischen Rechnern. Es ist daher in diesem Bereich viel effizienter.
+
+MPI wird derzeit (2022) auf nahezu jedem Supercomputer verwendet. Die Glanzzeit von PVM war hingegen jeder der vernetzten Workstations, welche damit parallelisierte Workloads abarbeiteten.
+
+MPI beherrscht ein paar wichtige Features wie non-Blocking I/O oder parallel I/O mittels RDMA die PVM nicht beherrscht. Andererseits ist die Hardware für solche Features in Workstations meist auch nicht vorhanden.
+
+MPI-1 ist ein nahezu überall unterstützter Standard, jedoch auch recht feature-beschränkt. Vor allen das Starre Layout der Prozess-Konfiguration sind Ärgernisse, die in MPI-2 und -3 dann zumindest teilweise behoben wurden.
+
+Doch MPI-2 ist leider nicht überall eingeführt, und MPI-3 noch weniger.
+
+Wenn man eine neue verteilte Applikation entwickeln will, ist man mit MPI relativ zukunftssicher. Allerdings sollte man dann auch hochwertige und vor allen nicht zu Unterschiedliche Cluster-Nodes haben.
+
+PVM hingegen ist eher für die Verteilung von Workloads auf traditionelle Workstations ausgelegt, deren Ausstattung sich auch stark unterscheiden kann.
+
+## OnlyOffice
+https://de.wikipedia.org/wiki/OnlyOffice
+2022-11-18,
+Die Lösung basiert technisch auf drei Komponenten: Document Server, Community Server und Mail Server [...] Der Community Server schließt alle Funktionsmodule von OnlyOffice ein. Er ist in ASP.NET für Windows und auf Mono für Linux und Distributionen geschrieben [...] Die Suite ist eine plattformübergreifende Lösung, die für Windows 10, 8.1, 8, 7, XP, 2003, Vista (sowohl 32-bit als auch 64-bit), Debian, Ubuntu und Derivate, RPM-basierte Linux-Distributionen, Mac OS 10.10 oder höher erhältlich ist [...] OnlyOffice Desktop Editors kann man als Flatpak, Snap-Paket und AppImage installieren.
+
+
+ Mastodon, Rails, Ruby
+https://www.heise.de/meinung/Interview-Grosse-Bedenken-auf-Mastodon-zu-setzen-aus-technischer-Sicht-7477138.html
+2023-02-03,
+Mastodon weist nämlich eine Reihe von technischen Aspekten auf, die ich persönlich als schwierig ansehe [...] wird dann erwähnt, dass man Ruby on Rails installieren müsse. Das liegt daran, dass Mastodon auf Basis dieser Technologie entwickelt wird. Und das finde ich wiederum für ein Produkt, was es erst seit 2016 gibt, eine schwierige Entscheidung.
+
+Ruby on Rails hatte seine Hochzeit um 2007 herum, plus/minus zwei Jahre, aber es ist seit Jahren auf dem absteigenden Ast, was die Verbreitung angeht. Dass es bestehende Projekte auf dieser Basis gibt, ist selbstverständlich – aber ich hätte mir bei einem noch so verhältnismäßig jungen Projekt dann doch eine etwas andere Technologie gewünscht. Es geht dabei nicht darum, das Neueste zu verwenden, sondern etwas zu nutzen, bei dem absehbar ist, dass es nicht beständig Marktanteile und Relevanz verliert – und das war bei Ruby bereits 2016 absehbar, dass das so kommen würde.
+
+[...] Natürlich kann niemand die Zukunft voraussagen, und gerade Aussagen über die Zukunft von Technologien sind schwierig. Aber trotzdem gibt es Tendenzen, wenn man den Markt über Jahre beobachtet. Und da zeigt Ruby eben eher eine Tendenz nach unten.
+
+[...] Die nächste Enttäuschung war die Anbindung der Datenbanken. Mastodon braucht PostgreSQL und Redis, optional lässt sich noch ElasticSearch anbinden [...] wir sind an der Verbindung zu Redis gescheitert: Denn unsere Redis-Installation setzt eine TLS-Verbindung voraus, was Mastodon aber nicht unterstützt, weil das zugehörige Ruby-Modul über vier Jahre alt ist und TLS schlichtweg nicht kennt!
+
+[...] dass derart grundlegende Sachen wie eine TLS-Verbindung zur Datenbank nicht möglich sind, weil der Client dafür hoffnungslos veraltet ist, das vermittelt leider kein gutes Gefühl, dass es im Code nicht noch mehr solche Probleme gibt, und dass man sich hier eventuell ein größeres Sicherheitsproblem ins Haus holt, denn anscheinend stehen Themen wie Verschlüsselung oder Pflege von Dependencies nicht besonders weit oben auf der Tagesordnung [...] theoretisch könnte man den Code auch selbst patchen, aber die Frage ist natürlich: Wie viel Aufwand zieht das nach sich, und welche Probleme gibt es noch alle, von denen man erst einmal gar nichts weiß? Will man das alles wirklich, und lohnt sich das langfristig?
++++
+## fftw, gsl
+https://stackoverflow.com/questions/36214883/is-fftw-significantly-better-than-gsl-for-real-transform-calculations
+2023-05-31 2023-05-31,
+
+Is FFTW significantly better than GSL for real transform calculations? [...]  according to GSL developers' own admission, FFTW is expected to outperform GSL. How much so? You can have a look at this speed performance benchmark from FFTW which suggests that GSL is about 3-4 times slower than FFTW 3.
++++
+## fftw, gsl, fftpack
+https://www.hackerfactor.com/blog/index.php?/archives/452-Not-So-Fast.html
+2011-10-11 2023-05-31,
+* FFTPACK. The National Center for Atmospheric Research (NCAR) provided FFTPACK as a completely public domain solution. Although it was written in Fortran, it has been translated to C and other programming languages. FFTPACK may not be the fastest solution, but it is good enough [...]
+
+* GSL. The Gnu Scientific Library includes FFT functions. As far as I can tell, it is a rewrite of FFTPACK with better variable names, better formatting, better documentation, and a GPL license.
+
+* FFTW [...] some pretty amazing optimizations. If you want to process lots of large pictures, then FFTW is the best option. But be careful: unlike the other libraries, FFTW has many options for quickly estimating the FFT values. Some of the shortcuts are very fast but are non-deterministic (you will likely get different values each time you run it, but the values will be in the right ballpark). Other options are deterministic, and will always return the same outputs for the same inputs.
++++
+## simhash, minhash, superminhash, LSH
+https://stackoverflow.com/questions/27712472/choosing-between-simhash-and-minhash-for-a-production-system
+2023-09-04,
+
+I'm familiar with the LSH (Locality Sensitive Hashing) techniques of SimHash and MinHash. SimHash uses cosine similarity over real-valued data. MinHash calculates resemblance similarity over binary vectors. But I can't decide which one would be better to use [...]
+
+Simhash is faster (very fast) and typically requires less storage, but imposes a strict limitation on how dissimilar two documents can be and still be detected as duplicates. If you are using a 64-bit simhash (a common choice), and depending on how many permuted tables you are capable of storing, you might be limited to hamming distances of as low as 3 or possibly as high as 6 or 7. Those are small hamming distances! You'll be limited to detecting documents that are mostly identical, and even then you may need to do some careful tuning of what features you choose to go into the simhash and what weightings you give to them.
+
+The generation of simhashes is patented by google, though in practice they seem to allow at least non-commercial use.
+
+Minhash uses more memory, since you'd be typically storing 50-400 hashes per document, and it's not as CPU-efficient as simhash, but it allows you to find quite distant similarities, e.g. as low as 5% estimated similarity, if you want. It's also a bit easier to understand than simhash, particularly in terms of how the tables work. It's quite straightforward to implement, typically using shingling, and doesn't need a lot of tuning to get good results. It's not (to my knowledge) patented.
+
+If you're dealing with big data, the most CPU-intensive part of the minhash approach will likely be after you've generated the minhashes for your document, when you're hunting through your table to find other documents that share some of its hashes. There may be tens or hundreds of thousands of documents that share at least one hash with it, and you've got to weed through all of these to find those few that share e.g. a minimum of half its hashes. Simhash is a lot quicker here [...]
+
+I have now tried superminhash. It's fairly fast, though my implementation of minhash using a single hash function plus bit-transformations to produce all the other hashes was faster for my purposes. It offers more accurate jaccard estimates, about 15% better under some situations I tested (though almost no difference under others). This should mean you need about a third fewer hashes to achieve the same accuracy. Storing fewer hashes in your table means less "weeding" is needed to identify near duplicates, which delivers a significant speed-up. I'm not aware of any patent on superminhash [...]
+
+Go-Implementation: https://github.com/nnnet/superminhash
+Paper: https://arxiv.org/pdf/1706.05698.pdf
++++
+## postgresql
+https://stackoverflow.com/questions/23762110/hdd-overhead-and-the-most-efficient-storage
+2023-09-16,
+
+PostgreSQL has an overhead of 24-28 bytes per row.
+
+It's that big because the rows contain all the MVCC transaction visibility information - there's no "redo" and "undo" logs like some other MVCC database implementations have. That has some real advantages in some workloads, and some real disadvantages in others. Yours is probably one of the disadvantages.
++++
+## postgresql
+https://medium.com/@lk.snatch/postgresql-compression-854a4647ee43
+2023-09-16,
+
+Postgresql hasn’t row- or page-compression, but it can compress values more than 2 kB. The compressor with default strategy works best for attributes of a size between 1K and 1M.
+
+In detail: Postgresql uses TOAST (The Oversized-Attribute Storage Technique).
+
+“PostgreSQL uses a fixed page size (commonly 8 kB), and does not allow tuples to span multiple pages. Therefore, it is not possible to store very large field values directly. To overcome this limitation, large field values are compressed and/or broken up into multiple physical rows.”
++++
+## NextCloud, syncthing, seafile
+https://www.heise.de/forum/p-44231195/
+2024-07-22,
+Je nach Szenario sind dafür Seafile oder Syncthing besser. Seafile ist in etwa wie Dropbox und funktioniert im Gegensatz zu Nextcloud einfach. Auch die Apps sind okay und es gibt sie für jedes gängige OS. Es gibt auch eine alternative App, die nicht alles abgleicht, sondern ein virtuelles Laufwerk stellt, was Dateien nur bei Bedarf runterlädt, ähnlich wie das bei Firmenlösungen mit box.net der Fall ist.
+
+Syncthing ist gut, wenn man einfach nur Daten zwischen Clients abgleichen will und nicht wirklich einen Server braucht, da es kein Problem ist, die Clients zeitgleich laufen zu lassen. Ich verwende das z.B. um die Datei meines Passwortmanagers zwischen Clients abzugleichen (die soll nicht im Internet liegen) oder um die Musikbibliothek auf meinem PC vollautomatisch wireless auf meinen androidbasierten FiiO-Player zu syncen. Manche Leute nehmen es auch zum Savegame-Sync von Emulatoren zwischen Steam Deck und PC.
+
+[...] Meine Erfahrung mit Nextcloud ist, dass es die eierlegende Wollmilchsau sein will, aber dann halt nicht überall wirklich gut sein kann. Ich hab es bisher für Dateien, Kontakte und Kalender verwendet. Für Dateien fand ich es sehr problematisch, aber es wird von vielen Apps wie z.B. Joplin (getippte Notizen) oder Saber (handschriftliche Notizen) direkt unterstützt, was bei Seafile nicht so ist, deswegen hab ich Nextcloud parallel zu Seafile weiterhin für sowas laufen. Für Kalender und Kontakte fand ich es sehr zuverlässig, aber ehrlich gesagt gibt es dafür auch kleinere, spezialisierte Tools wie z.B. Baïkal, die v.a. bei eher schrottigen oder billigen Hostern unproblematischer sind, weil sie nicht so viel Ressourcen brauchen.
++
+> Das ist (leider) auch meine Erfahrung.
+>
+> Ich will Nextcloud lieb haben - aber es lässt mich nicht.
+> Zu oft Probleme nach Updates, sync von Dateien klappt nicht usw... Schade.
+
+Nimm Seafile, das ist wie der Cloudstorage von Nextcloud, nur dass es zuverlässig funktioniert. :-)
++++
+## X11, Wayland, KeePassXC
+https://keepassxc.org/docs/#faq-autotype
+2024-07-23,
+Is Auto-Type supported on macOS, Windows and Linux?
+
+Yes, Auto-Type works on all three supported platforms, although on Linux it only works in an X11 session, not Wayland.
++++

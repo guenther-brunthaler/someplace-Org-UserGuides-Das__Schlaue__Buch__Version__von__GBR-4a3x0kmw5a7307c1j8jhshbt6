@@ -1,0 +1,30 @@
+-----
+
+AOC Monitor (von links nach rechts):
+
+#1 Change mode; within OSD: move left or decrement value
+#2 Change volume; within OSD: move right or increment value
+#LED
+#3 Select signal source; within OSD: exit one menu level
+#4 Enter OSD; within OSD: Enter menu or start modifying value
+#5 Toggle device on/off state
+
+Default Settings: Profile "Internet Explorer", Sound Volume 75 %, OSD Transparenz 50 % Aus-Zeit 10 Sekunden.
+-----
+
+HUAWEI-Modems
+
+Put into low-power (no internet but still receives SMS) mode:
+at+cfun=0
+
+From low-power mode back to normal mode:
+at+cfun=1
+
+Put into offline-mode:
+at+cfun=7
+at+cfun=4
+
+Reset from offline-mode to normal mode (full modem reset):
+at+cfun=6
+
+-----

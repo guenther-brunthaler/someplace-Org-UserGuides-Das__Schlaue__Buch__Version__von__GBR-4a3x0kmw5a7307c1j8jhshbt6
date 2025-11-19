@@ -1,0 +1,41 @@
+GNOME3
+======
+
+2018
+----
+
+Kali Linux Live-System dieses Datums mit GNOME3.
+
+Das vielleicht einzig Gute war dass es leicht möglich ist Fenster an den linken und rechten Rand zu ziehen um sie als Fensterhälften anzuordnen. Wenn man nach oben zieht wird das Fenster maximiert. Obere und untere Hälfte ist hingegen offenbar nicht vorgesehen.
+
+Ärgern musste ich mich jedoch beim Dateimanager "Dateien":
+
+* Erstens über seinen schwachsinnig-generischen Namen, wenn mehr als eine Dateimanager installiert ist.
+
+* Ich fand keine Möglichkeit das aktuelle Verzeichnis in jenes zu ändern das ich mit der Maus als primary Selection oder in die Zwischenablage kopiert hatte. Der alte Trick mit [Strg]+[L] funktionierte zwar, jedoch konnte man in das so geöffnete Eingabefeld nichts mit der Maus einfügen.
+
+* Bei der detaillierten Anzeige gab es nur Name, Datum und Größe was mir soweit noch gefiel. Jedoch wurde das Datum so weit rechts im Fenster dargestellt dass die niederwertigsten beiden Stellen der Jahreszahl von Scrollbalken verdeckt wurden während man die Ansicht scrollte. Sobald man den Balken los ließ verschwand er dann zwar und verdeckte das Datum somit nicht länger. Aber es war damit unmöglich das Datum zu begutachten während man durch die Dateiliste scrollt. Ich versuchte darauf hin die Reihenfolge der Felder zu ändern, so das z. B. die Größe rechts stand und daher nicht mehr das Datum überdeckt wurde. Das war nicht möglich. Immerhin konnte man weitere Spalten hinzu fügen bis ich schließlich eine "unnötige" fand die in der - offensichtlich fix vorgegebenen - Feldreihenfolge weiter rechts stand. Dann endlich konnte ich das Datum sehen. Was für ein Schwachsinn!
+
+* Er lud den Inhalt neuer Verzeichnisse immer ziemlich langsam. Und das obwohl es ein USB-Stick war und nicht etwa Kopfbewegungen einer Festplatte in verlangsamen hätten können. Er braucht wohl einfach wirklich so lange zum Verarbeiten der Verzeichniseinträge wenn es viele davon gibt, wie in /usr/bin.
+
+Ein paar Vorteile sah ich aber auch:
+
+* GNOME verschwendet wenig Platz von der Display-Fläche. Nur am oberen Rand ist standardmäßig eine einzelne Textzeile für die Ausgabe von GNOME reserviert. Den Rest können die Fenster nutzen.
+
+* Alle sinnvollen Sortieroptionen können mit 2 Mausklicks ausgewählt bzw. umgeschaltet werden. Das ist bei den meisten anderen Dateimanagern immer ein mittleres Drama wo man sich erst durch mehrere Menüebenen klicken muss.
+
+Danach testete ich GNOME Evolution, da es auf den ersten Blick gar nicht so uninteressant schien: Eine Kombination aus E-Mail-Programm und "Palm Desktop"-typischem Organizer mit Notizen, Kalender, To-Do-Liste und Adressbuch.
+
+Zum Test wollte ich meinen Geburtstag eingeben - und scheiterte bereits daran: Zumindest der Auswahl-Dialog für das Datum erlaubt keine Datumsangaben die sich nicht als UNIX-Zeit ausdrücken lassen! Da ich vor 1970 geboren wurde, daher kein Geburtstags-Eintrag für mich. Evolution ist offenbar nichts für ältere Leute! Das fand ich dann wirklich "stark" für ein Kalenderprogramm. So etwas habe ich bislang noch nicht erlebt!
+
+Allerdings stürzte Evolution mir auch gleich bei meinen ersten Versuchen damit herum zu spielen ab - sehr stabil scheint es demzufolge auch nicht gerade zu sein. Allerdings dürfte der Absturz durch das Datum vor 1970 bedingt gewesen sein - als ich erneut versuchte diese Jahreszahl einzugeben, diesmal mir dem kleinen Pfeil links vom Feld für die Jahreszahl im Haupt-Interface des Programms - stürzte es sofort erneut ab.
+
+Allerdings frisst es dafür Unmengen an RAM - 100 MB allein der Data Server. Verglichen mit den 200 MB für die GNOME Shell selbst ist das allerdings noch eher sparsam... Natürlich brauchte das eigentliche GUI Front End von Evolution dann noch zusätzlichen RAM. Aber im Vergleich zum Data Server war das noch geradezu sparsam. Meine Erkenntnis: Für einen Raspi Zero wohl eher unbrauchbar... aber nicht nur Evolution, sondern die ganze GNOME3 Shell und alles rund um diese herum.
+
+Auch mit dem Interface freundete ich mich schließlich mit Einschränkungen an. Man kann unten eine Taskleiste einblenden wie in einem "normalen" DTE. Man muss es nur in den Einstellungen finden. Das GNOME Terminal hat zwar ein paar lästige Einschränkungen wie dass man das Cursorblinken nicht abschalten kann. Aber es hört nach ein paar Sekunden ohnehin von selbst zu blinken auf. Und während man tippt ist das Blinken ziemlich egal weil der Cursor sich dann ohnehin bewegt. Und netter Weise gibt es eine einzelne Option um alle Tastenkürzel abzuschalten - davon träumt man im lxterminal nur, wo man sehr umständlich sämtliche Befehle zuerst festlegen und dann manuell im Konfigurationsfile auf leer setzen muss um dasselbe zu erreichen.
+
+Natürlich braucht das GNOME-Zeugs fürchterlich viel RAM - 900 MB waren belegt während ich nichts anderes als ein Terminal offen hatte. Aber egal, ich habe ja 8 GB. Da geht das schon. Ist ja nicht für lange.
+
+Der GNOME-Fenstermanager beherrscht immerhin Kantenwiderstand, obwohl man das nicht sofort merkt da er sehr dezent arbeitet. Auch das schnelle Anordnen als linke und rechte Fensterhälfte wird unterstützt. So halbwegs komme ich daher damit zurecht. Wenn nur diese schreckliche Ressourcenvergeudung nicht wäre! Der Compiz z. B. frisst ja auch viel - aber der bietet dafür wenigstens auch etwas.
+
+Die lästige Seitenleiste schaffte ich allerdings nicht weg zu bekommen. Sie hat nach wie vor die "Unity-Krankheit" (das GUI welches Ubuntu vor Jahren einsetzte): Zwar versteckt sie sich wenn man etwas hinschiebt, etwa ein Terminalfenster. Doch sobald man mit der Maus irrtümlich den linken Rand berührt, was beim Selektieren natürlich ständig vorkommt, spring sie immer hervor und man läuft daher Gefahr irrtümlich einen Leistenbutton anzuklicken. Zum Glück ist mein Bildschirm groß genug dass ich es mir leisten kann links einfach Platz zu lassen so dass die Leiste dort stehen kann ohne mein Terminalfenster zu gefährden.

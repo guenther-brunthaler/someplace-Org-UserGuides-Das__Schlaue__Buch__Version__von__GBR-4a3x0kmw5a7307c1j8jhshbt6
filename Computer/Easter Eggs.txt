@@ -1,0 +1,14 @@
+2007-05-08
+Neues OpenOffice-Tabellendokument öffnen.
+
+In eine Zelle eingeben:
+
+=GAME("StarWars");
+
+Optional: Zuvor eingeben:
+
+=GAME();
+
+Funktioniert 2020 offenbar nicht mehr.
+
++++

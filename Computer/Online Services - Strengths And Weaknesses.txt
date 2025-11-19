@@ -1,0 +1,59 @@
+Amazon Cloud Drive (Stand 2012-02-05):
+Amazon ist ein Online-Speicherdienst für Daten.
+* 5 GB kostenlos.
+* Die Legalität des Dienstes ist umstritten; Amazon befindet sich hier im Streit mit der Content-Industrie. Was bedeutet dass dieses Angebot jederzeit wieder verschwinden könnte.
+
+Firefox Sync (Stand 2015):
+Firefox Sync ist ein Online-Speicherdienst, um lokale Firefox-Einstellungen wie Bookmarks und Passworte im verschlüsselter Form auf Mozilla-Servern zu speichern und mit anderen Browser-Installationen (desselben Nutzers) zu synchronisieren.
+* Kostenlos
+* Es gab eine ältere Version vor Firefox 29, die einen 256-Bit Schlüssel verwendete und allgemein auf AES-256-CBC-HMAC256 basierte. Damals wurde dieser Master-Key immer nur auf lokalen Geräten gespeichert, und konnte nur durch umständliches "Pairing" auf andere Geräte synchronisiert werden. Im Verfahren, J-PAKE genannt, wurden einige kryptografische Schwächen bekannt. Allerdings glaube ich nicht, dass die dazu genutzt werden konnten die Daten zu entschlüsseln. Jedoch möglicherweise in verschlüsselter Form zu kopieren und zu korrumpieren.
+* Die neuere Version von Sync die 2014 mit Firefox 29 eingeführt wurde, [ https://github.com/mozilla/fxa-auth-server/wiki/onepw-protocol ], speichert den Master-Key mit dem Sync-Passwort verschlüsselt auf den Firefox-Servern ab. Man muss daher sicher stellen, dass das Sync-Passwort sicher genug ist, denn sonst könnten es die Server-Betreiber knacken.
+* Der Firefox 29+ Sync benutzt das Account-Password für den Firefox-Account und die e-Mail-Adresse als Salt, um daraus mittels PBKDF2-HMAC-AES256 2 Schlüssel abzuleiten: Einen der zum tatsächlichen Einloggen auf den Mozilla-Servern verwendet wird, und einen 2. der den Master-Key entschlüsselt.
+* Der FF 29+ Master Key wird zufällig auf den Mozilla-Servern generiert, doch ist dies letztendlich egal, da erst mit dem nur lokal aus Passwort und e-Mail abgeleiteten Master-Key-Decryption Key der eigentliche Master-Key daraus generiert wird, der die vertraulichen Daten verschlüsselt.
+* FF 29+ Sync überträgt niemals das Account Login Passwort zum Firefox Server, nur die e-Mail-Adresse (nur bei der Einrichtung) sowie den aus dem Passwort abgeleiteten Login-Schlüssel. Der Master-Key-Decryption Key gelangt ebenfalls nie zum Server. Nur der damit verschlüsselte Master-Key liegt auf dem Server, doch damit allein kann man nichts anfangen.
+* Der am Client abgeleitete Login-Schlüssel sowie der vom Server versandte verschlüsselte Master Key (den nur der Client entschlüsseln kann) werden zwischen Client und Server mit normalem TLS ausgetauscht.
+* Der Server selbst verwendet den übermittelten Login-Schlüssel nicht direkt, sondern führt eine teure Scrypt-Schlüssel-Ableitung damit durch, die 64 MB RAM benötigt. Erst die dabei abgeleiteten Schlüssel werden dann tatsächlich benutzt, um den Account-Zugriff zu verifizieren (einer der abgeleiteten Schlüssel ist in der Datenbank gespeichert und muss identisch sein), bzw. den am Server doppelt verschlüsselt gespeicherten Master-Key zu entschlüsseln, so dass er nur noch einmal entschlüsselt werden muss. Da der vom Client per TLS übermittelte Login-Schlüssel immer gleich ist, dient dieser vermutlich auch zum Lookup um welchen Account es sich handelt. Die Scrypt-Operation am Server verwendet einen Salt, der ebenfalls aus der Account-Datenbank kommt.
+* FF 29+ Sync unterscheidet zwischen "Class A" Daten welche per e-Mail Verifikation wieder hergestellt werden können, und somit auch Mozilla selbst bekannt sind, sowie "Class B"-Daten, welche durch den oben genannten Master Key Decryption Key geschützt sind. Angeblich kann der User beim Einrichten selbst wählen, welche Daten mit welcher Schutzklasse gespeichert werden sollen.
+* Doch selbst wenn Class A Daten Mozilla bekannt sind, gilt dies nur für einen besonders geschützten Server wo ein Schlüssel gespeichert ist, mit dem die Class-A Daten verschlüsselt sind, so dass zumindest die Storage-Server diese Daten nie unverschlüsselt zu sehen bekommen.
+* Alle Schlüssel, egal wie weit sie abgeleitet wurden, dürften immer 256-Bit AES-Schlüssel sein.
+* Das Schema dürfte sicher sein, solange man ein Account-Passwort mit 256 Bit Passwortstärke verwendet, welches wie gesagt niemals direkt an die Mozilla-Server gesendet wird.
+* Jedoch ist das Schema natürlich nur sicher gegenüber Angreifern, die AES-256 nicht knacken können. Darauf dass es auch vor der NSA sicher ist, würde ich daher mein Leben lieber nicht verwetten wollen. Doch vor allen Angreifern abseits der US-Regierung sollte es sicher sein.
+
+Dropbox (Stand: älter als 2012-02-05):
+Dropbox ist ein 2007 gegründeter Webdienst, der ein Netzwerk-Dateisystem für die Synchronisation von Dateien zwischen verschiedenen Rechnern und Benutzern bereitstellt und damit gleichzeitig eine Online-Datensicherung ermöglicht. URL: http://www.dropbox.com/
+* Zwar werschlüsselte Daten des Benutzers, der Schlüssel wird jedoch vom Provider vergeben. Es ist jedoch möglich, eigenverschlüsselte Image-Dateien als Datendateien synchronisieren zu lassen.
+* Unterstützt auch Linux
+* Closed Source.
+* Alte Versionen aller Dateien bleiben verfügbar.
+* Kostenfrei bis 2 GB; kostenpflichtig bis 100 GB.
+
+ownCloud:
+ownCloud ist ein Online-Speicherdienst für Daten.
+* Basiert auf Apache und PHP 5. Zur Datenspeicherung werden entweder MySQL oder SQlite verwendet.
+* Basiert nur auf OpenSource-Komponenten.
+* Man kann einen eigenen Server aufsetzen und betreiben.
+* Das Sharing von Dateien basiert auf WebDAV.
+* Das Sharing von Kalendern erfolgt mit CalDAV.
+* Das Sharing von Kontakten erfolgt mit CardDAV.
+* Einige Dokumenttypen können auch im Web-Interface editiert werden (JavaScript-basiert am Client).
+* Music-Streaming wird unterstützt.
+
+SparkleShare:
+SparkleShare ist ein Online-Speicherdienst für Daten.
+* Basiert nur auf OpenSource-Komponenten, insbesondere SSH und Git.
+* Erlaubt es auch einen solchen Dienst auf eigenen Servern zu betreiben.
+* Bieten selbst keinen Speicherplatz an, aber man kann "github" und ähnliche Dienste für diese Zwecke missbrauchen.
+* Es besteht die Gefahr, dass Dienste wie Github welche nie für riesige Datenmengen sondern Quelltexte ausgelegt waren, durch den Missbrauch finanziell ausgehöhlt werden und dann ihre Dienste einschränken oder kostenpflichtig machen müssen.
+* Dadurch dass SparkleShare git als Backend zur Datenspeicherung benutzt, erbt es auch dessen Probleme. Etwa dass das Verschieben/Umbenennen und gleichzeitige Ändern von Dateien die Delta-Bildung erschwert oder sogar unmöglich macht. Weiters speichert es die Historie aller Dateien "ewig", was bedeutet dass eine gelöschte riesige Videodatei danach immer noch in der Versionsgeschichte gespeichert bleibt und der Platz daher niemals wieder freigegeben wird.
+* SpakleShare ist wegen dem Problem dass Speicherplatz alter Versionen nie mehr wieder frei gegeben wird weitgehend unbrauchbar für große Dateien. Für kleine Dateien mag es OK sein.
+* Insgesamt fragt man sich wozu SparkleShare eigentlich gut ist, denn "git" kann man bekanntlich "auch so" benutzen um Dateien zu replizieren; ganz ohne SparkleShare.
+
+Wuala (Stand 2012-02-05):
+Wuala ist ein Online-Speicherdienst für Daten.
+* Bis 2 GB kostenlos nutzbar.
+* Frühere Versionen von Wuala erlaubten das "tauschen" von lokalen Festplattenspeicher gegen zusätzlichen kostenlosen Online-Speicher; das wurde inzwischen eingestellt.
+* Daten werden angeblich clientseitig verschlüsselt, und nicht einmal der Anbieter kann diese entschlüsseln.
+* Angeblich kommen AES-128 und RSA-2048 als Verschlüsselungsalgorithmen zum Einsatz; Reed-Solomon erlaubt Fehlerkorrektur.
+* Diese schöne Behauptung ist nicht verifizierbar, da der clientseitige Code nicht OpenSource ist.
+* Schlimmer noch, Wuala installiert automatisch client-Updates, so dass auf diese Weise Trojaner oder Backdoors installiert werden könnte falls die Anbieter dies entgegen allen Beteuerungen tun sollten.
+* Ich glaube, Wuala wurde 2015 entweder eingestellt oder zumindest die kostenlose Nutzung gestrichen. Bitte verifizieren.
