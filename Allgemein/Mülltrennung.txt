@@ -1,0 +1,11 @@
+#1: Müll-Trennung (Österreich)
+#2: v2025.341
+#3:
+#4:Müll-Art;Priorität;Tonne;Kommentar
+BluRay Discs;1;Altstoffsammlung;Hochwertig wiederverwertbar
+BluRay Discs;2;Restmüll
+CDs;1;Altstoffsammlung;Hochwertig wiederverwertbar
+CDs;2;Restmüll
+DVDs;1;Altstoffsammlung;Hochwertig wiederverwertbar
+DVDs;2;Restmüll
+Jewelcases;1;Gelbe Tonne
