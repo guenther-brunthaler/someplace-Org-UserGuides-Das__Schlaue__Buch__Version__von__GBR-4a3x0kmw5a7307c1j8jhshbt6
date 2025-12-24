@@ -1,0 +1,69 @@
+Atemschutzmasken und Krankheitserreger
+======================================
+v2025.358
+
+Atemschutzmasken
+----------------
+
+FFP-Masken
+~~~~~~~~~~
+
+[options="header,autowidth"]
+|====
+| Klasse | Filterleistung | Schutzwirkung vor Partikelgrößen (max. 0,6 μm)
+| FFP-1  | n/v  | bis zum 4-fachen
+| FFP-2  | 94 % | bis zum 10-fachen
+| FFP-3 	| 99 % | bis zum 30-fachen
+|====
+
+Die Filterleistung gibt am, welcher Prozentsatz an in der Luft befindlichen Partikel von maximal 0,6 µm Größe aufgehalten werden müssen. Der Durchmesser biologischer Teilchen in einem Aerosol wie sie bei einer Tröpfcheninfektion vorkommen beträgt meist über 1 µm.
+
+Die Schutzwirkung gibt die maximale Konzentration durchgelassener Partikel bis zu einem Mehrfachen der maximalen Arbeitsplatz-Konzentration an.
+
+Die Zusatzbezeichnung "V" besagt dass die Maske ein Ventil hat, und bei dem meisten Produkten nur zum Eigenschutz dient. Wenige Produkte decken das Ventil mit einen Vlies ab und bieten dann auch einen Fremdschutz.
+
+Im Fall der Norm EN 149:2001+A1:2009 werden der Bezeichnung FFP X (X: 1, 2, oder 3) zusätzliche Buchstaben zugefügt:
+
+[options="autowidth"]
+|====
+| D | Erfolgreiche Dolomitstaubeinlagerungsprüfung. Nur für Einsatz gegen Staub relevant.
+| R | "Reusable" - die Maske kann wiederverwendet werden.
+| NR | "Non-Reusable" - die Maske darf nur eimal (typischer Weise maximal 8 Stunden lang) verwendet werden.
+|====
+
+Japan, USA
+~~~~~~~~~~
+
+In den USA wurde vom National Institute for Occupational Safety and Health (NIOSH) der Standard 42 CFR Part 84 herausgegeben, der die zulässigen Schutzmasken (NIOSH-approved particulate filtering facepiece respirators) in sieben Klassifikationsstufen (N95, Surgical N95, N99, N100, R95, P95, P99 und P100) einteilt (United States NIOSH-42CFR84).
+
+Der Buchstabe N bedeutet, dass die damit gekennzeichnete Maske nicht ölresistent ist, während ein R eine teilweise, das P eine starke Ölresistenz ausweist.
+
+Die Zahlen stehen für die jeweilige Filterleistung aerogen übertragbarer Partikel; so filtern z. B. Masken mit der Kennzahl 95 mindestens 95 %; für Masken mit der Kennzahl 100 müssen mindestens 99,97 % Filterleistung nachgewiesen werden.
+
+
+Benutzung
+~~~~~~~~~
+
+Sofern vom Hersteller nicht anders angegeben, sind FFP-Masken aus hygienischen Gründen grundsätzlich für einmalige Nutzung innerhalb einer Arbeitsschicht von maximal acht Stunden vorgesehen. Bei wiederverwendbaren Masken muss, sofern vom Hersteller vorgesehen, der Dichtrand der Maske desinfiziert werden. In Deutschland empfehlen die Arbeitsschutzausschüsse beim Bundesministerium für Arbeit und Soziales (BMAS), eine Schutzmaske mit Atemventil maximal 120 Minuten, ohne Atemventil höchstens 75 Minuten zu tragen; vor der erneuten Verwendung ist eine Erholungszeit von 30 Minuten einzuhalten.
+
+[...] wurde [...] festgestellt, dass bei einer Tragedauer von mehr als vier Stunden vermehrt Kopfschmerzen auftraten (da die Maske im Gesicht die Entfernung von Kohlendioxid während des Ausatmens stört). Zum Teil entzündliche Hautreaktionen [...] festgestellt [...] Tragedauer [...] acht Stunden täglich über einen Zeitraum von über acht Monaten betrug.
+
+
+Abstandhaltung und Verweildauern
+--------------------------------
+
+Große Tröpfchen haben einen Durchmesser von mehr als 5 µm. Nachdem sie ausgeatmet wurden, sinken sie rasch ab und werden nur bis zu einer Distanz von gut einem Meter übertragen. Tröpfchen mit einem Durchmesser von 100 µm benötigen sechs Sekunden, um aus zwei Metern Höhe auf den Boden zu sinken, Tröpfchen von 10 µm Durchmesser 10 Minuten. Die maximale Distanz für eine Infektion durch kleine Tröpfchen [...] im Rahmen der COVID-19-Pandemie [...] dass Flüssigkeitspartikel beim Husten oder Niesen ohne mechanische Barriere bis zu acht Meter weit verbreitet werden können.
+
+In einer Studie wurden Aerosole (<5 μm), die [...] SARS-CoV-2 (den Krankheitserreger von COVID19) enthielten, mithilfe eines Zerstäubers erzeugt [...] blieb in Aerosolen 3 Stunden lebensfähig [...] Die Ergebnisse deuten darauf hin, dass die Übertragung [...] durch Aerosole plausibel ist, da sie in schwebenden Aerosolen über Stunden lebensfähig und infektiös bleiben können [...] Virenhaltige Aerosole können als Bioaerosole beim Sprechen und Singen freigesetzt werden, aber auch schon beim Ausatmen, längere Zeit in der Luft schweben und sich im Raum verteilen.
+
+
+Übertragung
+------------
+
+Speichel und andere flüssige Absonderungen der Atemwege [...] enthalten grundsätzlich Mikroorganismen, darunter auch Krankheitserreger. Beim Ausatmen, Sprechen, Erbrechen sowie beim Niesen und Husten werden sie durch Vernebelung als Tröpfchen und Aerosole (Tröpfchenkerne) an die Umgebung abgegeben. Zur Infektion von Kontaktpersonen kommt es, wenn die Erreger anschließend auf deren Schleimhäute – meist des oberen Atemtrakts, möglich ist aber auch die Bindehaut der Augen – gelangen und sich dort vermehren, was unter Umständen eine Infektionskrankheit auslöst. Die erregerhaltigen Tröpfchen können auch über die Hände oder Gegenstände als Schmierinfektion weiterverbreitet werden, zum Beispiel beim Berühren von Mund oder Augen mit ungewaschenen bzw. nicht-desinfizierten Händen. Als Tröpfchen sind die Erreger von Wasser umgeben. Ist das Wasser verdunstet, verbleiben die Erreger als Schwebstaub (Feinstaub) in der Luft, getrocknet überleben nur wenige biologisch aktive Erreger längere Zeit, deren Exosporen (Dauerformen) können erhalten bleiben.
+
+
+Durch Tröpfcheninfektion übertragbare Krankheiten
+-------------------------------------------------
+
+Dies sind vor allem akute respiratorische Erkrankungen (ARE) wie der grippale Infekt, die Grippe, COVID-19, Tuberkulose und die Streptokokken-Angina; aber auch Masern und Windpocken verbreiten sich auf diesem Weg.
