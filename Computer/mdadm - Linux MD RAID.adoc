@@ -1,7 +1,36 @@
-﻿mdadm
+mdadm
 =====
-v2025.109
+v2026.6
 
+
+Simple assembly
+---------------
+
+Even without a proper configuration file, the following usually works with simple configurations like RAID-1:
+
+----
+$ mdadm --assemble --scan
+
+$ cat /proc/mdstat # Show running arrays.
+----
+
+This will scan for array component drives, derive the RAID configuration from their superblocks, then start the RAIDs found.
+
+
+Scrubben
+--------
+
+----
+$ mdadm --misc --action=check /dev/md0
+...
+$ mdadm --misc --detail /dev/md0 # "Check Status" shows completion percentage
+...
+$ grep -s . /sys/block/md0/md/* # Show results, especially "mismatch_cnt".
+----
+
+
+Erzeugen
+--------
 
 So erzeugt (und startet) man ein RAID-1 aus 2 Volumes $d1 und $d2, wobei $d2 (soweit machbar) nicht zum Lesen verwendet werden soll:
 

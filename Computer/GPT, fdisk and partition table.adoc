@@ -1,6 +1,6 @@
-﻿GPT (GUID Partition Table)
+GPT (GUID Partition Table)
 ==========================
-v2025.234
+v2025.360
 
 
 Partition-Typen
@@ -9,12 +9,15 @@ Partition-Typen
 ----
 024DEE41-33E7-11D3-9D69-0008C781F39F "MBR partition scheme" (MBR disk image für VMs)
 07041C10-2471-11EB-80C5-001999FDCDD9 stand-alone dm-integrity (privater non-Standard)
+07B633E6-E27B-11F0-8399-DCA632491A1D Medium Management (privater non-Standard)
 0FC63DAF-8483-4772-8E79-3D69D8477DE4 Linux filesystem (z. B. "ext4")
+0FD32A3E-E27B-11F0-9D50-DCA632491A1D Medium Management Backup (privater non-Standard)
 21686148-6449-6E6F-744E-656564454649 "BIOS boot" für z. B. Stage 1.5 Loader von GRUB
 420B95EE-246D-11EB-90DA-001999FDCDD9 Protective MBR Backup (manually)
 7FFEC5C9-2D00-49B7-8941-3EA10A5586B7 "dm-crypt", etwa für encrypted swap
 80A29844-F5E3-11E3-B1C1-B827EB896DB5 TrivialFS (textbasiert)
 97FD874C-2471-11EB-BF72-001999FDCDD9 Partition-Kommentare (privater non-Standard)
+BB820A4E-E27B-11F0-A6FD-DCA632491A1D dmintegrity protection (privater non-Standard)
 BC13C2FF-59E6-4262-A352-B275FD6F7172 "Linux extended boot" für /boot
 C12A7328-F81F-11D2-BA4B-00A0C93EC93B "EFI System" Partition (ESP)
 CA7D7CCB-63ED-4C53-861C-1742536059CC LUKS, etwa für encrypted LVM PV
