@@ -1,6 +1,6 @@
-﻿Suspend, Hibernate and Wake-On-LAN (WOL)
+Suspend, Hibernate and Wake-On-LAN (WOL)
 ========================================
-v2024.353
+v2026.16
 
 
 Suspend
@@ -56,6 +56,14 @@ Während es für "freeze" und "standby" daher 2 Methoden gibt dies zu erreichen,
 
 Wake On LAN (WOL)
 -----------------
+
+Mit `ethtool`:
+
+----
+$ ethtool eth0 wol # Show current status
+$ ethtool -s eth0 wol g # Enable WOL; wake on magic packet
+$ ethtool -s eth0 wol d # Disable WOL
+----
 
 Ich lernte, wie man "Wake On LAN" (WOL) ohne "ethtool" einschaltet:
 

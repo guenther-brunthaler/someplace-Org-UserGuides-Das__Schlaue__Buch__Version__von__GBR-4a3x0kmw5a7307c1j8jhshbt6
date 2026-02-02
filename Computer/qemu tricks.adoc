@@ -1,6 +1,21 @@
-﻿QEMU
+QEMU
 ====
-v2025.296
+v2026.33
+
+
+Default Usernet IP configuration
+--------------------------------
+
+If one uses QEMU's default userspace network stack, the following IP addresses will be used:
+
+[options="autowidth"]
+|===
+| 10.0.2.0/24   | Network
+| 255.255.255.0 | Network mask
+| 10.0.2.15     | Guest VM's IP address
+| 10.0.2.2      | Hypervisor host's IP address
+| 10.0.2.3      | DNS-server provided by QEMU
+|===
 
 
 How to control the mouse/keyboard grab
