@@ -1,7 +1,7 @@
-﻿2FA
+2FA
 ===
 Guenther Brunthaler
-v2025.177
+v2026.35
 
 How to set up time- or event-based 2-factor authentication in Linux.
 
@@ -11,7 +11,7 @@ The easiest way to setup 2FA for Linux seems to be the "Google Authenticator" PA
 Installing Google Authenticator
 -------------------------------
 
-Google Authenticator consists of a PAM plug-in module as well as a userspace application.
+Google Authenticator consists of a PAM plugin module as well as a userspace application.
 
 The module performs the actual authentication checks when logging in, and the application is used to set up 2FA for the current user.
 
@@ -30,13 +30,13 @@ case `command -v apt dpkg dpkg-deb | wc -l` in
 esac
 ----
 
-Linux-Distributions *not* based on Debian
+Linux distributions *not* based on Debian
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You are on your own for now.
 
 
-Debian-based Linux-Distributions
+Debian-based Linux distributions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the following instructions if your system's package management is based on 'dpkg'.
@@ -71,9 +71,7 @@ als "root".
 +
 --
 ----
-$ cd /path/to/somewhere
-$ mkdir gauth
-$ cd gauth
+$ tmpdir-shell # Create a tmpfs-based temporary directory and go there.
 ----
 --
 
@@ -129,7 +127,7 @@ $ cat deps/DEBIAN/control
 Damit sind die Erfordernisse für den Bau eines Abhängigkeitspakets
 erfüllt - so ein Paket enthält nicht mehr als eine DEBIAN/control Datei.
 
-Erzeugen des Abhängigkeits-Pakets:
+Erzeugen des Abhängigkeitspakets:
 
 ----
 $ fakeroot dpkg-deb -b deps
@@ -164,7 +162,7 @@ Paketdatei wieder löschen:
 $ rm deps.deb
 ----
 
-Nun sollten alle benötigten Tools und Utilities installiert und das
+Nun sollten alle benötigten Tools und Utilitys installiert und das
 Arbeitsverzeichnis wieder leer sein.
 --
 --
@@ -418,7 +416,7 @@ riesigen Swap-File anlegst - damit sich alles im RAM der Live-DVD
 ausgeht ohne dass du ein Dateisystem einrichten musst.
 
 Die gebauten Installationspakete für Debian und Fedora (siehe weiter
-unten) sicherst du dann mit scp aus der VM bevor die diese wieder
+unten) sicherst du dann mit `scp` aus der VM bevor die diese wieder
 herunter fährst.
 --
 
@@ -438,8 +436,7 @@ $ git clone --bare . /path/to/elswhere/google-authenticator-libpam.git
 Danach alles vorhin Angelegte wieder löschen:
 
 ----
-$ cd ..
-$ rm -rf gauth
+$ exit # Leave and destroy temporary directory created by `tmpdir-shell`
 ----
 --
 
@@ -561,105 +558,302 @@ Man kann das Ding nun benutzen, genau wie in der man-Page erläutert.
 
 Hier als Beispiel wie man eine zeitbasierte Authentifikation erstellt:
 
-=========================
-$ google-authenticator -t -Q UTF8                               
-Warning: pasting the following URL into your browser exposes the OTP secret to Google:                                                                         
-  https://www.google.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/gb
-@xrpi3%3Fsecret%3DTILW7JWXYRM3NIFPYJC5COPASE%26issuer%3Dxrpi3                
-                                                                                
-  █▀▀▀▀▀█ ██▄█ ▀█▀ █▄  █▀█ ▄  ▀ █▀▀▀▀▀█  
-  █ ███ █ ▄█ ▀ ▀█▀▀  ▀  ▄▀ ███  █ ███ █  
-  █ ▀▀▀ █   ▄▄█  ▀▀▄█▄▄ ▄ ██▀▀▀ █ ▀▀▀ █  
-  ▀▀▀▀▀▀▀ █▄█ █ █▄█ ▀ █ ▀ █ ▀▄█ ▀▀▀▀▀▀▀                                     
-  ▀▄█▀ ▀▀▀▄█▄▀▄ ▄█  █ ▄█ █▀ █▀▀ █▄ █▄█▀                                    
-  ▄█▀▀█▀▀█▀█▄▀██  █ █▀█ ▀▀ █▀ ▀▄█▀▀█▄                                        
-  ▀ ▄▄▀▄▀█ █ █▀▀ ▀▄██▀ ▄▀▀  ██ ▄█ █▀ █▀     
-   ▀▄▄ ▀▀███▀ ▀▄▄ ▀  ▀▄▄█▄█ ▄▄▀▄ ▀█ ▀▀   
-  ▀▀▀  █▀▄▀▄ █▄█▄  ▀▄▄ ▀ ███▄    █ ▄█▄█       
-  ████▀▄▀ ▀▄▄▄█ ▀▄▄█▄ █ ▄▄▄ ▄█▀▀▄▀██▀▀█  
-   ▀   █▀ ██▄▀ ▄▀█▄▄█▀██▄██ █ ▄█  ▀█▀▀█  
-   ▄▀█ █▀▄█ ▄▀▀▄█ █▄▀▄▄▀ ▀▀██  ▄█▄██▄▄▄  
-  ▀ ██▄▀▀ ▀▀██▀█▀ ▀  ▀ ▀ ▀ █▀▀█▀▀▄▄ ▀▄█  
-  ▄▀  █ ▀ █▀▀█▄  ▄ ▀▄▄▄█▀▄▄▀ ▄ ▀▄▀█ ▀▀   
-    ▀▀ ▀▀ ▄█▄█▄▄█ ▀▀█▀ ███▄█▄▄█▀▀▀██▄▄▄  
-  █▀▀▀▀▀█ █▀█▀█ █▀ ▄█  ▄▀▄▀ ▀▄█ ▀ █▄  ▀  
-  █ ███ █ ▄▄█▄█▀ ██  ▀▀▄ ▄▀ ▀ ███▀██▄▀█  
-  █ ▀▀▀ █ ▀█▀ ▀▄██  █▄  ▀▀██▀▀█▀▀█▀█▄    
-  ▀▀▀▀▀▀▀ ▀ ▀ ▀   ▀   ▀ ▀  ▀▀   ▀▀ ▀ ▀▀  
-                                         
-Your new secret key is: TILW7JWXYRM3NIFPYJC5COPASE
-Enter code from app (-1 to skip): -1
-Code confirmation skipped
+----
+$ host=`hostname` user=`id -un` && echo "$user@$host from $host" # Default for --label and --issuer
+$ host=demohost user=demouser
+
+$ google-authenticator --label="${user:?}@${host:?}" --issuer "$host" --no-confirm --time-based --disallow-reuse --force --qr-mode=UTF8_INVERSE --rate-limit=3 --rate-time=30 --window-size=17 --emergency-codes=0
+                                             
+  █▀▀▀▀▀█ █ ▄█  ▀  ▀█▄ ▄█ ▀█▄▀ ▄▀█▄ █▀▀▀▀▀█  
+  █ ███ █ ▀▄▄▀█▀▄ █ ▄▀█ ▀  ▀█▀▄▀▀▄▄ █ ███ █  
+  █ ▀▀▀ █ ▀  ▄▀▀█  █▄  ▄ █▄  ▀▀ ▀▀▄ █ ▀▀▀ █  
+  ▀▀▀▀▀▀▀ ▀▄▀ █ █ █ █▄▀ █▄█▄█ █ ▀▄▀ ▀▀▀▀▀▀▀  
+  █▄▄█▀█▀█▀▄  █▀▀█▀▀▄▀ ▄ █▀ ▄▄ ▀██▄▀▄▄█▄▀▀▀  
+     █▀█▀ ▀▀██▀▄█▀██▀▄▀▀▄█  ▄▀ ▄▀▄▀▀█ ▄█  ▄  
+  ▄▀▀▄ ▄▀▄▀ █▀▀▄ ▀ ▀▄█▀▀▄ ▄ ▀▀█  ▄█ █▄▄   ▀  
+   ▄▀ █ ▀   █▀▀█ █   ▄  ▄ ▄▀ ▄▀▀█▀ ▄█▀▄▄█▄█  
+  █ █ ▄▄▀▀  █▀▄▄▀▄█  █▄ ██▀▄   █▄ ▄▄  ▄  ▀   
+  ▄▀█ ▄▄▀██████▄▄▀ ▄▄▀▄▀██  ▄▀ ▀▀▀▄ ▀ █ █▄▀  
+  ▄█ █▀▀▀▀█ ▄▀█▀▀█▀ ▄▀▀▀▀  ██▄▄▄▀█ █▀▄▄▄▄    
+  ▄█▄█▀█▀▄▀ ▄██▀▄▄██▄  ▀▀▀▄▀▄▀ ▄ ▄ ▀▀  █▀ ▄  
+  ▄ █ ▄█▀▀▀██▀ ▄▀▄ ▄▄▀  ▄█▀▄▄█▄  ▀▄ ▀▄█▀▄▀▄  
+  ▄    █▀▀█▄█▀▀▀█ ▀ ▄▀▀▀   ▀▀█ ▀█▀▄▄ ▄▄█▄▄█  
+  █▀█▄  ▀█▀▄  █▄▀▄▀█   ███▀   █▄▄█▄▄  ▄▀▄▄█  
+  ██▄▄ █▀███▀▀▄█▀▀▄ ██▄▀█▄▀▄▄▀ ▀▄▀▄ ▀▄ ▀█ ▀  
+  ▀▀   ▀▀ ▄ ▀█ ▄▄█ ▀▀█▀▄ █▄▀█▀▀▄▄██▀▀▀███ ▀  
+  █▀▀▀▀▀█ █  ▀█   ██▀▄ ▄██▄ █▀  ▄▄█ ▀ █▀ ▄▄  
+  █ ███ █ █  █▄▀█▀ ▀▀█ ▀ ▀▀█▀█▄▀▄▀▀█▀▀▀  ▄▀  
+  █ ▀▀▀ █    ▀▀ ██▄█ █▀ ▀  ▀█▀  ▄▄▀█ ▀█▄▄ █  
+  ▀▀▀▀▀▀▀ ▀▀ ▀▀▀ ▀▀▀▀ ▀ ▀▀▀▀ ▀   ▀▀ ▀▀▀      
+                                             
+Your new secret key is: E5ECZXUGQTALTQAW6WJOSZBDDIDYFA7E
+Your verification code for code 1 is 492058
 Your emergency scratch codes are:
-  78997976
-  22422406
-  23283417
-  12138545
-  26107186
-
-Do you want me to update your "/home/gb/.google_authenticator" file? (y/n) y
-
-Do you want to disallow multiple uses of the same authentication
-token? This restricts you to one login about every 30s, but it increases
-your chances to notice or even prevent man-in-the-middle attacks (y/n) y
-
-By default, a new token is generated every 30 seconds by the mobile app.
-In order to compensate for possible time-skew between the client and the server,
-we allow an extra token before and after the current time. This allows for a
-time skew of up to 30 seconds between authentication server and client. If you
-experience problems with poor time synchronization, you can increase the window
-from its default size of 3 permitted codes (one previous code, the current
-code, the next code) to 17 permitted codes (the 8 previous codes, the current
-code, and the 8 next codes). This will permit for a time skew of up to 4 minutes
-between client and server.
-Do you want to do so? (y/n) n
-
-If the computer that you are logging into isn't hardened against brute-force
-login attempts, you can enable rate-limiting for the authentication module.
-By default, this limits attackers to no more than 3 login attempts every 30s.
-Do you want to enable rate-limiting? (y/n) y
 
 $ cat ~/.google_authenticator
-TILW7JWXYRM3NIFPYJC5COPASE
+E5ECZXUGQTALTQAW6WJOSZBDDIDYFA7E
 " RATE_LIMIT 3 30
+" WINDOW_SIZE 17
 " DISALLOW_REUSE
 " TOTP_AUTH
-78997976
-22422406
-23283417
-12138545
-26107186
-=========================
+----
+
+Das obige Kommando setzt voraus dass das Terminal hellen Text auf schwarzem Hintergrund verwendet. Verwendet es hingegen dunklen Text auf weißen Hintergrund, muss eine der Optionen zu `--qr-mode=UTF8` geändert werden.
 
 Den obigen QR-Code kann man am Handy direkt in die FreeOTP-App einscannen, mit dem QR-Code Icon in dieser App.
 
-Anmerkung: Der obige QR-Code enthält *nicht* die Google-URL vor der gewarnt wird, sondern folgende:
+Decodiert ergibt der QR-Code folgenden Text im Falle des obigen Beispiels:
 
-otpauth://totp/gb@xrpi3?secret=TILW7JWXYRM3NIFPYJC5COPASE&issuer=xrpi3
+----
+otpauth://totp/demouser@demohost?secret=TKUPW2ZFPD6VGBFIIO5YZSLK2J4JABY5&issuer=demohost
+----
 
-Aber die Warnung war ja auch nur vor dem Browser, und den QR-Code sollte man statt dessen direkt in die OTP-App einscannen.
+Der Issuer (`--issuer`) ist der Rechner für den der Code zum Einloggen gedacht ist. Default ist der Hostname des aktuellen Rechners; normalerweise sollte das gut genug sein.
 
-Man kann beim Aufruf der Tools mit -i einen "issuer" angeben und mit -l ein "label".
+Das Label (`--label`) hingegen ist das was in der FreeOTP-App als Eintragstitel angezeigt wird. Default ist user@hostname wobei "user" natürlich der aufrufende User ist und "hostname" der Name des eigenen Rechners. Unter der Annahme dass man ein Login für diesen Rechner erzeugen will, passt das normalerweise auch.
 
-Der Issuer ist der Rechner für den der Code zum Einloggen gedacht ist. Default ist der Hostname des aktuellen Rechners; normalerweise sollte das gut genug sein.
+Das Label setzt sich aus "issuer:account" zusammen, wobei der "issuer:"-Teil im Label jedoch optional ist und weggelassen werden darf. Die obige URI macht von diesem Weglassen Gebrauch.
 
-Das Label hingegen ist das was in der FreeOTP-App als Eintragstitel angezeigt wird. Default ist user@hostname wobei "user" natürlich der aufrufende User ist und "hostname" der Name des eigenen Rechners. Unter der Annahme dass man ein Login für diesen Rechner erzeugen will, passt das normalerweise auch.
+Wenn der "issuer:"-Teil jedoch benutzt wird, muss das darin enthaltene ":" als "%3A" URI-encoded werden.
 
-Aber wenn du mehr als einen Dienst hast, kannst du mit -l unterschiedliche Namen für die Einträge erzeugen.
+Neben den oben gezeigten Parametern sind noch weitere definiert, etwa für den Hash-Algorithmus. Die Parameter-Werte "SHA1", 30 Sekunden, 6 Ziffern sind jedoch der Default und dürfen daher weg gelassen werden.
 
+Das Secret muss zumindest 128 Bit lang sein, darf jedoch auch länger sein. Es darf *keine* Padding-Zeichen ("=") am Ende enthalten. Wenn der Base-32 Encoder diese ausgibt, müssen sie entfernt werden bevor das Secret in die URL eingefügt wird.
 
 Secret ersetzen
 ---------------
 
-Der Google Authenticator codiert das binäre Secret als Base-32 mit dem folgenden Alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ234567 ("A"-"Z", "2"-"9"). Dieses Alphabet ist in RFC 4648 definiert und auch das "coreutils"-utility "base32" verwendet es.
+Dem vom Google Authenticator erzeugten Secret sollte man nicht trauen, da es mit möglicherweise geringer Entropie generiert wurde. Es ist daher sicherer es nach der Erzeugung durch ein selbst erzeugtes Secret zu ersetzen.
 
-Das TOTP/HOTP Secret sind 128 Zufallsbits die als 26 Base-32 Zeichen dargestellt werden; ich vermute die ungenutzten letzten beiden Bit sind immer 0.
+Der Google Authenticator codiert das binäre Secret als Base-32 mit dem folgenden Alphabet: `ABCDEFGHIJKLMNOPQRSTUVWXYZ234567` ("`A`"-"`Z`", "`2`"-"`9`"). Dieses Alphabet ist in RFC 4648 definiert und auch das "coreutils"-Utility "`base32`" verwendet es.
+
+Das TOTP/HOTP Secret sind 32 Zeichen aus dem Base-32 Alphabet. Das sind 160 Bit bzw. 20 Octets ("Bytes").
+
+In früheren Versionen war das anders und 128 Bit bzw. 16 Bytes wurden damals zu einem Secret mit 26 Zeichen aus dem Base-32 Alphabets formatiert. Die OTP-Apps akzeptieren offensichtlich unterschiedliche Längen des Secrets und füllen es falls nötig durch Anhängen von `0`-Bits auf eine Anzahl kompletter Bytes auf.
 
 Das bedeutet, dass man sich eigene hochwertigere Base-32 Secrets mit folgendem Befehl erzeugen kann:
 
 ----
-$ keygen-octets-by-harvesting-entropy 16 | base32 | tr -d =
+tmpdir-shell # Create a tmpfs-based temporary directory and go there.
+
+outchars=32
+
+octets=`expr \( $outchars \* 5 + 8 - 1 \) / 8`
+
+nl=`printf '\n:'` && nl=${nl%:}
+
+keygen-octets-by-harvesting-entropy ${octets:?} | base32 | cut -c 1-$outchars > secret.psw
+
+chmod +w ~/.google_authenticator
+
+sed -i "1{r secret.psw${nl:?}d}" ~/.google_authenticator
+
+chmod -w ~/.google_authenticator
+
+qr="otpauth://totp/${user:?}@${host:?}?secret=`cat secret.psw`&issuer=$host"
+
+qrencode -t UTF8 "$qr"
+
+echo "QR-encoded string: $qr"
+
+exit # Leave and destroy temporary directory created by `tmpdir-shell`
 ----
 
 Der Verification Code ist 6-stellig, als Hash kommt SHA-1 zum Einsatz.
 
+
+QR-Code anzeigen
+----------------
+
+So zeigt man den QR-Code für den aktuellen Account an:
+
+----
+host=`hostname` user=`id -un`
+
+qr="otpauth://totp/${user:?}@${host:?}?secret=`head -n 1 ~/.google_authenticator`&issuer=$host"
+
+qrencode -t UTF8 "$qr"
+
+echo "QR-encoded string: $qr"
+----
+
+
+QR-URIs om Batch erzeugen
+-------------------------
+
+Eine Datei `logins.txt` im aktuellen Verzeichnis anlegen. Jede Zeile soll die Form user@host haben, was zugleich der Eintragstitel in einer OTP-App sein wird.
+
+Die folgenden Kommandos erzeugen eine URI für jeden Eintrag, der - in einen QR-Code umgewandelt - von einer OTP App eingescannt werden kann, um einen Eintrag zu erzeugen.
+
+----
+$ tmpdir-shell # Create a tmpfs-based temporary directory and go there.
+
+#echo "`id -un`@`hostname`" > logins.txt # Uncomment to generate demo file
+
+outchars=32 show_qr_code=false
+
+octets=`expr \( $outchars \* 5 + 8 - 1 \) / 8`
+
+nl=`printf '\n:'` && nl=${nl%:}
+
+while read account
+do
+	issuer=${account#*"@"}
+	
+	keygen-octets-by-harvesting-entropy ${octets:?} | base32 | cut -c 1-$outchars > secret.psw
+	
+	qr="otpauth://totp/${account:?}?secret=`cat secret.psw`&issuer=$issuer"
+	
+	if $show_qr_code
+	then
+		echo && qrencode -t UTF8 "$qr" # Uncomment to display QR-Codes in output
+	fi
+	
+	echo "QR-encoded string: $qr"
+	
+done < logins.txt | tee output.txt | less --quit-if-one-screen
+
+echo 'Enter 'exit' to delete this directory and its contents!'
+echo 'Before you do so, make sure 'output.txt' and 'logins.txt''
+echo 'have been saved somewhere else if you want to keep them.'
+
+#exit # Leave and destroy temporary directory created by `tmpdir-shell`
+----
+
+Wenn `show_qr_code=true` geändert wird, werden die QR-Code in die Ausgabe eingefügt.
+
+Die Ausgabe befindet sich danach in der Datei `output.txt`, wird davor aber mit "less" am Bildschirm angezeigt.
+
+
+Secret aus URI lokal setzen
+---------------------------
+
+Wenn man viele TOTP-URIs im Batch erzeugt hat, möchte man sie danach auf auf lokalen Accounts installieren.
+
+Die folgenden Befehle fragen nach einer URI oder dem Pfadnamen einer Grafikdatei welche den QR-Code einer URI enthält. Das enthaltene Secret wird extrahiert und in die Datei `~/.google_authenticator` geschrieben. Danach kann man sich dann mit einer PIN einloggen welche von einer Authenticator-App stammt, welche mit demselben QR-Code initialisiert wurde.
+
+----
+clear && echo "{ base64 -d << EOF | gzip -dc | sh -e; } 5<& 0"
+gzip -9c << 'EOF' | base64; echo EOF
+prefix='otpauth://totp/'
+clear
+while :
+do
+	echo 'Please paste either an TOTP configurtion URI or the path to an"
+	echo "image file containing a QR-encoded TOTP URI.'
+	printf %s "Your input [press Return at the end]? "
+	if reply= && IFS= read reply <& 5
+	then
+		if test -z "$reply"
+		then
+			echo "Empty input. Assuming user wants to abort."
+			uri=
+			break
+		fi
+		case $reply in
+			"$prefix"*) uri=$reply; break;;
+			*)
+				if test -f "$reply"
+				then
+					uri=`zbarimg -- "$reply" 2> /dev/null || :`
+					uri=${uri#*:} # Strip "QR-Code:"
+					case $reply in
+						"$prefix"*) break
+					esac
+				else
+					echo "Invalid QR-code image pathname." >& 2
+					echo >& 2
+					continue
+				fi
+		esac
+	fi
+	echo; echo "Invalid input."; echo
+done
+while :
+do
+	test "$uri" || break
+	uri=${uri#"$prefix"} # Strip prefix.
+	secret=`
+		printf '%s\n' "$uri"	| sed 's/.*[?&]secret=\([A-Z2-9]\{26,\}\).*/\1/; t; d'
+	`
+	if test -z "$secret"
+	then
+		echo "No valid URI containing a secret. Aborting." >& 2
+		false || break
+	fi
+	if test ! -f ~/.google_authenticator
+	then
+		google-authenticator --no-confirm --time-based --disallow-reuse --force --qr-mode=UTF8_INVERSE --rate-limit=3 --rate-time=30 --window-size=17 --emergency-codes=0 || break
+	fi
+	chmod +w ~/.google_authenticator
+	sed -i "1s/.*/$secret/" ~/.google_authenticator
+	chmod -w ~/.google_authenticator
+	echo "Successfully replaced TOTP secret in user account with that from URI."
+	break	
+done
+rc=$?; unset reply secret uri prefix
+test $rc = 0 && unset rc || unset rc && false
+EOF
+----
+
+Dieser Befehl tut zunächst einmal noch gar nichts, sondern verpackt die enthaltenen Befehle lediglich in einen sehr viel kürzerne Befehl welchen man danach einfacher in mehrere Terminals kopieren und dort ausführen kann, da er noch zur Gänze auf den Bildschirm passt.
+
+
+TOTP-Einmalcode anzeigen
+------------------------
+
+Dies zeigt jenen 6-stelligen Code an, der zum Einloggen in den aktuellen Account via TOTP nötig ist:
+
+----
+$ head -n 1 ~/.google_authenticator | oathtool --totp --base32 @/dev/stdin
+----
+
+Das dazu benötigte Utility `oathtool` kann man mit einem Paket gleichen Namens installieren.
+
+
+TOTP-Einmalcode verifizieren
+----------------------------
+
+Man kann eine TOTP auch als Mensch nutzen, um sicher zu stellen dass ein Kommunikationspartner derjenige ist welcher er zu sein behauptet.
+
+Das Kommando zum Verifizieren ist dasselbe wie zum Erzeugen, nur dass die zu prüfende PIN als zusätzlicher Kommandozeilen-Parameter dran gefügt wird.
+
+`oathtool` zeigt dann `0` an wenn die PIN gültig ist, und eine Fehlermeldung andernfalls. Der Exit-Code des Kommandos gibt ebenfalls darüber Auskunft, ob die PIN korrekt war.
+
+
+Emergency scratch codes
+-----------------------
+
+Wenn man nicht `--emergency-codes=0` angibt um dies zu unterdrücken, generiert der Google Authenticator bei der Erzeugen einer neuen Datei `~/.google_authenticator` mehrere sogenannte "Emergency Scratch Codes".
+
+Das sind einfach Zufallszahlen, welche man anstatt einer gültigen TOTP-PIN ebenfalls eingeben kann um sich anzumelden. Durch diese Benutzung wird der Code "verbraucht" und aus der `~/.google_authenticator` gelöscht.
+
+Die Generierung solcher Codes macht nur dann einen Sinn, wenn man sie sich auf Papier ausdruckt und an einem sicheren Ort aufbewahrt (z. B. einem Safe).
+
+Dann kann man sich für eine begrenzte Anzahl an Situationen auch dann einloggen, wenn man keine OTP-App zur Verfügung hat oder diese nicht funktioniert. Etwa weil das Handy kaputt oder gestohlen wurde.
+
+Man kann sie aber natürlich auch in einem Passwort-Manager oder sonst wo deponieren wo man sie finden kann; es muss nicht unbedingt ausgedruckt sein.
+
+Normalerweise braucht man solche Codes nicht. Und wenn man mehrere Geräte besitzt wo dieselben TOTP-URIs eingerichtet sind, reichen die in der Regel als Backup.
+
+
+TOTP vs. HOTP
+-------------
+
+Einige Authenticator Apps unterstützen neben TOTP auch HOTP. Das ist dasselbe Prinzip, nur wird die aktuelle Uhrzeit durch einen Zähler ersetzt.
+
+Vorteil von HOTP ist dass es auch dann korrekt funktioniert wenn entweder auf dem Rechner wo man sich einloggen will oder auf dem Gerät wo die OTP-App läuft die Uhrzeit falsch oder sehr ungenau ist.
+
+Nachteil ist dass sowohl Client als auch Server denselben Zählerwert irgendwo speichern muss.
+
+HOTP funktioniert daher üblicherweise nur ein einzelner Account mit einer einzigen App auf einem einzigen Gerät zusammen arbeitet.
+
+Denn wenn man mehrere Apps auf verschiedenen Geräten betreibt - wie sollten diese ihre Zählerwerte mit einander synchronisieren?
+
+Man könnte den Zähler natürlich in der Cloud speichern, aber dann das höhlt die Einfachheit des Systems empfindlich aus.
+
+Da kann man statt dem HOTP gleich ein langes Passwort nehmen.
+
+Sinn würde HOTP vor allem für Logins in ein Preboot-Environment auf Rechnern ohne batteriegestützte Echtzeituhr haben.
+
+Den Counter-Wert speichern diese Rechner an besten in einer winzigen Partition welche nur einen Sektor umfasst. So braucht kein Dateisystem gemountet zu werden um den Counter zu lesen oder zu aktualisieren.
