@@ -1,6 +1,6 @@
-﻿UNICODE Sonderzeichen
+UNICODE Sonderzeichen
 =====================
-v2025.265
+v2026.46
 
 
 Dateinamen-Ersatzzeichen
@@ -18,7 +18,16 @@ Man kann diese Kombinationen unter Linux in GUI-Programmen (allerdings weder im 
 
 Gute Alternativen für andere problematische ASCII-Zeichen können die Zeichen U+FF01 bis U+FF5E aus dem "FULLWIDTH" Unicode-Block sein:
 
-？！＊＄：．… ＞＜—
+....
+？ ！ ＊ ＄ ： ． … ＞ ＜ —
+....
+
+Weitere:
+
+....
+★ (gut als Kleinbuchstabe)
+⭑ (eher winzig)
+....
 
 
 Hoch- und tiefgestellte Zeichen

@@ -1,7 +1,7 @@
 2FA
 ===
 Guenther Brunthaler
-v2026.35
+v2026.36.1
 
 How to set up time- or event-based 2-factor authentication in Linux.
 
@@ -88,7 +88,7 @@ gebraucht werden.
 Als nächstes lege die folgende Textdatei an:
 
 ----
-$ cat << 'EOF' > t
+cat << 'EOF' > t
 Package: google-authenticator-bdeps-20230509$
 Version: 1.0$
 Architecture: all$
@@ -111,9 +111,9 @@ Nun entfernen wir diese Umbrüche wieder um die benötigte Originaldatei
 herzustellen:
 
 ----
-$ mkdir deps
-$ mkdir deps/DEBIAN
-$ cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
+mkdir deps
+mkdir deps/DEBIAN
+cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
   > deps/DEBIAN/control
 ----
 
@@ -171,12 +171,12 @@ Arbeitsverzeichnis wieder leer sein.
 +
 --
 ----
-$ repourl='https://github.com/google/google-authenticator-libpam.git'
-$ commit=366ace3e5849d0d259915ddff22c8ec55e40b3ad
-$ git init
-$ git remote add origin "${repourl:?}"
-$ git fetch -q --depth=1 origin "${commit:?}"
-$ git reset --hard FETCH_HEAD
+repourl='https://github.com/google/google-authenticator-libpam.git'
+commit=366ace3e5849d0d259915ddff22c8ec55e40b3ad
+git init
+git remote add origin "${repourl:?}"
+git fetch -q --depth=1 origin "${commit:?}"
+git reset --hard FETCH_HEAD
 ----
 
 Die Quelltexte sollten nun im aktuellen Verzeichnis sein.
@@ -211,8 +211,8 @@ Wir können es nun benutzen.
 +
 --
 ----
-$ ./configure CFLAGS="-D NDEBUG -pipe -O2 -mtune=native" \
-              LDFLAGS="-s -Wl,-O1,--as-needed,--hash-style=gnu"
+./configure CFLAGS="-D NDEBUG -pipe -O2 -mtune=native" \
+   LDFLAGS="-s -Wl,-O1,--as-needed,--hash-style=gnu"
 ----
 
 Das sollte uns ein Makefile erzeugen.
@@ -225,7 +225,7 @@ Als erstes ermitteln wir die Anzahl paralleler Build-Prozesse anhand
 der vorhandenen CPU-Cores:
 
 ----
-$ n=`getconf _NPROCESSORS_ONLN || echo 1` && n=`expr $n + 1` && echo $n
+$ n=`nproc || echo 1` && n=`expr $n + 1` && echo $n
 ----
 
 Dann bauen wir:
@@ -279,7 +279,7 @@ Zeilenende abgesichert, damit du es hier aus der Mail problemlos ins
 Terminal-Fenster kopieren kannst:
 
 ----
-$ cat << 'EOF' > t
+cat << 'EOF' > t
 Package: libpam-google-authenticator$
 Source: google-authenticator$
 Version: 20230505-1.09-g366ace3$
@@ -309,8 +309,8 @@ Nun wie schon beim ersten Paket die "$" entfernen und eetwaige Umbrüche
 rückgängig machen:
 
 ----
-$ mkdir stage/DEBIAN
-$ cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
+mkdir stage/DEBIAN
+cat t | sed 's/ [$]$/ /; t; s/[$]$/|/' | tr -d '\n' | tr '|' '\n' \
   > stage/DEBIAN/control
 ----
 
@@ -319,8 +319,8 @@ Architektur des aktuellen Geräts, welchen wir durch die des lokalen
 Geräts ersetzen müssen:
 
 ----
-$ eval `dpkg-architecture | grep ^DEB_HOST_ARCH=`; echo $DEB_HOST_ARCH
-$ sed -i "s/@ARCH@/$DEB_HOST_ARCH/" stage/DEBIAN/control
+eval `dpkg-architecture | grep ^DEB_HOST_ARCH=`; echo $DEB_HOST_ARCH
+sed -i "s/@ARCH@/$DEB_HOST_ARCH/" stage/DEBIAN/control
 ----
 
 Auch hier das Ergebnis kontrollieren ob es richtig aussieht:
@@ -686,31 +686,24 @@ Eine Datei `logins.txt` im aktuellen Verzeichnis anlegen. Jede Zeile soll die Fo
 Die folgenden Kommandos erzeugen eine URI für jeden Eintrag, der - in einen QR-Code umgewandelt - von einer OTP App eingescannt werden kann, um einen Eintrag zu erzeugen.
 
 ----
-$ tmpdir-shell # Create a tmpfs-based temporary directory and go there.
+tmpdir-shell # Create a tmpfs-based temporary directory and go there.
 
 #echo "`id -un`@`hostname`" > logins.txt # Uncomment to generate demo file
 
 outchars=32 show_qr_code=false
-
 octets=`expr \( $outchars \* 5 + 8 - 1 \) / 8`
-
 nl=`printf '\n:'` && nl=${nl%:}
-
 while read account
 do
 	issuer=${account#*"@"}
-	
 	keygen-octets-by-harvesting-entropy ${octets:?} | base32 | cut -c 1-$outchars > secret.psw
-	
 	qr="otpauth://totp/${account:?}?secret=`cat secret.psw`&issuer=$issuer"
-	
 	if $show_qr_code
 	then
 		echo && qrencode -t UTF8 "$qr" # Uncomment to display QR-Codes in output
 	fi
-	
-	echo "QR-encoded string: $qr"
-	
+	echo
+	echo "$qr"
 done < logins.txt | tee output.txt | less --quit-if-one-screen
 
 echo 'Enter 'exit' to delete this directory and its contents!'
@@ -739,8 +732,10 @@ prefix='otpauth://totp/'
 clear
 while :
 do
-	echo 'Please paste either an TOTP configurtion URI or the path to an"
-	echo "image file containing a QR-encoded TOTP URI.'
+	echo "This is `id -un`@`hostname` (`hostname -f`)"
+	echo
+	echo "Please paste either an TOTP configurtion URI or the path to an"
+	echo "image file containing a QR-encoded TOTP URI."
 	printf %s "Your input [press Return at the end]? "
 	if reply= && IFS= read reply <& 5
 	then
@@ -783,7 +778,7 @@ do
 	fi
 	if test ! -f ~/.google_authenticator
 	then
-		google-authenticator --no-confirm --time-based --disallow-reuse --force --qr-mode=UTF8_INVERSE --rate-limit=3 --rate-time=30 --window-size=17 --emergency-codes=0 || break
+		google-authenticator --no-confirm --time-based --disallow-reuse --force --qr-mode=none --rate-limit=3 --rate-time=30 --window-size=17 --emergency-codes=0 > /dev/null 2>& 1 || break
 	fi
 	chmod +w ~/.google_authenticator
 	sed -i "1s/.*/$secret/" ~/.google_authenticator
