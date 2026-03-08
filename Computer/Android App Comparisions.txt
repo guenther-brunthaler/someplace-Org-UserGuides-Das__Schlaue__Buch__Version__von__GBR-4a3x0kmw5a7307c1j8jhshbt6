@@ -1,4 +1,4 @@
-+++
+﻿+++
 Quando vs. AnachB|VOR 2016-04-26:
 
 Beide Apps bieten Fahrtroutenplanung, Haltestellen-Abfahrtsmonitor sowie Umgebungskarten.

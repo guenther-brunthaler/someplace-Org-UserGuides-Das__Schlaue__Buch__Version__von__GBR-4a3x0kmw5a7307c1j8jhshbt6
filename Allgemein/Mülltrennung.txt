@@ -1,4 +1,4 @@
-#1: Müll-Trennung (Österreich)
+﻿#1: Müll-Trennung (Österreich)
 #2: v2025.341
 #3:
 #4:Müll-Art;Priorität;Tonne;Kommentar

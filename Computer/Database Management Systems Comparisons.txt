@@ -1,4 +1,4 @@
-MySQL (2010):
+﻿MySQL (2010):
 http://sql-info.de/mysql/gotchas.html
 In C geschriebenes RDBMS.
 Galt einst als "sauschnell" und war irrsinnig beliebt bei mietbaren Webservern, wo typischerweise MySQL als DB und PHP als Programmiersprache verfügbar waren. Die Welt hat sich seit damals aber weitergedreht, und heute sind andere Implementierungen wie SQLite3 deutlich schneller als MySQL, während andere wie PostgreSQL deutlich mehr können. MySQL ist irgendwie zwischen den Stühlen und eigentlich braucht es kein Mensch mehr. Es zehrt daher im wesentlichen von seiner ehemaligen weiten Verbreitung, und ist immer noch häufig anzutreffen obwohl es bei weitem nicht mehr die Bedeutung hat wie einst. Ein weiteres Problem vom MySQL könnte der Umstand sein, dass es nun von ORACLE übernommen wurde und gewisse Zweifel herrschen, wie interessiert ein Datenbankhersteller wie ORACLE daran sein kann dass MySQL statt der kostenpflichtigen ORACLE-DB eingesetzt wird.

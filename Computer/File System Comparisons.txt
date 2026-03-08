@@ -1,4 +1,4 @@
-Coda:
+﻿Coda:
 * RPC2-component is not yet 64 bit clean
 * Only transfers whole files, not parts of files
 * Not all the normal UNIX filesystem semantics are maintained, especially regarding locking and updating.

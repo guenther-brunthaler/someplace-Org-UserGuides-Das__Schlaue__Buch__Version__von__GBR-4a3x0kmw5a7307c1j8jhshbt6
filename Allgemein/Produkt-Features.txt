@@ -1,4 +1,4 @@
-Mobiltelefon
+﻿Mobiltelefon
 
 * Mehrere SIM-Slots
 * MicroSD-Kartenslot

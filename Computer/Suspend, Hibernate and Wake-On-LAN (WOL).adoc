@@ -1,4 +1,4 @@
-Suspend, Hibernate and Wake-On-LAN (WOL)
+﻿Suspend, Hibernate and Wake-On-LAN (WOL)
 ========================================
 v2026.16
 

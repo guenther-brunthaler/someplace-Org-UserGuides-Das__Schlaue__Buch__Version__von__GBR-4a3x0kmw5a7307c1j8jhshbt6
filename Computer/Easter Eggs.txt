@@ -1,4 +1,4 @@
-2007-05-08
+﻿2007-05-08
 Neues OpenOffice-Tabellendokument öffnen.
 
 In eine Zelle eingeben:

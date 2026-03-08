@@ -1,4 +1,4 @@
-## Format, Description
+﻿## Format, Description
 http://invalid
 1970-01-01 2015-06-18,
 The Format of THIS file is as follows: It contains an arbitrary number of sections from various sources.

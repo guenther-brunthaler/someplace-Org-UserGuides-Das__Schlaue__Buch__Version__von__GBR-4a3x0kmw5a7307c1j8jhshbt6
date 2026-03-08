@@ -1,4 +1,4 @@
-Tipps & Tricks zum Arbeiten mit LibreOffice
+﻿Tipps & Tricks zum Arbeiten mit LibreOffice
 ===========================================
 
 Dieser Text enthält Hinweise auf und Lösungen von Problemen, auf die ich im Laufe der Zeit während meiner Arbeit mit LibreOffice stieß.

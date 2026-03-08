@@ -1,4 +1,4 @@
-"Truppen" für "troops" wenn eine Anzahl von Soldaten genannt ist
+﻿"Truppen" für "troops" wenn eine Anzahl von Soldaten genannt ist
 
 "Physiker" als "physician" (Arzt) anstatt "physisist"
 

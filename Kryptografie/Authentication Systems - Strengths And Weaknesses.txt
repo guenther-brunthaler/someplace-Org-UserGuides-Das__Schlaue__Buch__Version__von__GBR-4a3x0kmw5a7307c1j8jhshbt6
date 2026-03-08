@@ -1,4 +1,4 @@
-PACE:
+﻿PACE:
 * Acronym for "Password Authenticated Connection Establishment"
 * Is based on elliptic curve cryptography
 * Uses a Diffie-Hellman-like scheme, but based on EC.

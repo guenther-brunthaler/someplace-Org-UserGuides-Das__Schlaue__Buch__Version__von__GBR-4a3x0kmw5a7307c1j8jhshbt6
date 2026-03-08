@@ -1,4 +1,4 @@
-* NIS
+﻿* NIS
 NIS has negligible security.
 http://www.vanemery.com/DAS/110-introduction.html
 In password change requests, the old password will be sent over the network in plaintext - even if the password change request fails and the old password therefore remains valid.

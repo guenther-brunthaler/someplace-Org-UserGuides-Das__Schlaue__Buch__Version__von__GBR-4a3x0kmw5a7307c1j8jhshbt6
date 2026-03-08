@@ -1,4 +1,4 @@
-Schwarzschild-Radius
+﻿Schwarzschild-Radius
 ====================
 v2025.206
 

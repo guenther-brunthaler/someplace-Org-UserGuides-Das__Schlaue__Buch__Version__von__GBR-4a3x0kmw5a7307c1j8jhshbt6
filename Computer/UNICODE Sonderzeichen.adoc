@@ -1,4 +1,4 @@
-UNICODE Sonderzeichen
+﻿UNICODE Sonderzeichen
 =====================
 v2026.46
 
