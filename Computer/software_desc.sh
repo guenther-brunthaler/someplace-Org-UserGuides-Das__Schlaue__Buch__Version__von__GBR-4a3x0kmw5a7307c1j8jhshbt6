@@ -1,4 +1,6 @@
 #! /bin/sh
+
+# v2026.57
 set -e
 trap 'test $? = 0 || echo "$0 failed!" >& 2' 0
 println() {
@@ -45,20 +47,25 @@ do
 			|| apt-cache show "`dpkg_which "$pkg"`"
 	} | awk -F ': ' '
 		BEGIN {
-			order="Package|Version|Section|distributor id"
-			n= split(order, o, "|")
-			for (i= 1; i <= n; ++i) {
-				f[o[i]]= i; delete o[i]
+			order = "Package|Version|Section" \
+				"|distributor id|eval_date"
+			n = split(order, o, "|")
+			for (i = 1; i <= n; ++i) {
+				f[o[i]] = i; delete o[i]
 			}
-			OFS= ""
+			OFS = ""
 		}
 		
-		$1 in f {i= $1; $1= ""; v[f[i]]= $0}
+		$1 in f {i = $1; $1 = ""; v[f[i]] = $0}
 	
 		END {
-			c= v[1]; s= "-"
-			for (i= 2; i <= n; ++i) {
-				c= c s v[i]; s= "/"
+			c = "date -u +%Y-%m-%d"
+			c | getline curr_date
+			v[f["eval_date"]] = curr_date
+			close(c)
+			c = v[1]; s = "-"
+			for (i = 2; i <= n; ++i) {
+				c= c s v[i]; s = "/"
 			}
 			print c ": "
 		}
