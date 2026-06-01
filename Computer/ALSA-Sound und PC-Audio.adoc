@@ -1,6 +1,6 @@
-﻿ALSA-Sound und PC-Audio
+ALSA-Sound und PC-Audio
 =======================
-v2022.55
+v2026.141
 
 
 Farben der Soundkarten-Ausgänge
@@ -99,14 +99,21 @@ $ aplay -D plughw:CARD=b1,DEV=0 /usr/share/sounds/alsa/Rear_Center.wav
 
 Nehmen wir an dieses gibt die Audiodatei auf die gewünschte Art und Weise wieder, und man möchte diese ALSA-Konfiguration daher zum Default machen.
 
+Die Device-Spezifikation
+
+plughw:CARD=b1,DEV=0
+
+ist eine Kurform von
+
+plug:{SLAVE="hw:CARD=b1,DEV=0"}
+
 In der Datei `~/.asoundrc` werden die ALSA-Settings für individuelle Benutzer angepasst.
 
 ----
 $ cat << 'EOF' >> ~/.asoundrc 
 pcm.!default {
-        type hw
-        device 0
-        card b1
+        type plug
+        slave.pcm "hw:CARD=b1,DEV=0"
 }
 
 ctl.!default {
@@ -117,7 +124,11 @@ ctl.!default {
 EOF
 ----
 
-Etwas unklar ist warum man `type hw` anstatt `type plughw` schreiben muss, und ob das auch tatsächlich dem obigen `aplay`-Befehl entspricht. Zumindest am Raspberry Pi hat es aber wie erhofft funktioniert.
+"hw" ist immer ein Hardware-Device. Problem: Diese können meist nur eine kleine Auwahl an Sample-Formaten und Rates ausgeben.
+
+Daher wird das Plugin "plug" dazwischen geschaltet, welches Sample-Rate und Sample-Format der gewünschten Ausgabe in etwas konvertieren kann, das die Audio-Hardware akzeptiert.
+
+Solche Konvertierungen bringen nur bei der Sound-Ein-/Ausgabe etwas. Daher wird der Mixer ("ctl") statt dessen normalerweise ohne Plugins direkt an die Hardware geleitet.
 
 Ein weiteres Problem entsteht wenn PulseAudio installiert ist. Dieses installiert jede Menge Hooks im ALSA-System, mit der Folge dass nichts mehr ohne PulseAudio funktioniert.
 
@@ -135,3 +146,13 @@ Die Umleitung der folgenden Dateien war zumindest unter Raspbian ausreichend:
 /usr/share/alsa/pulse-alsa.conf
 /etc/alsa/conf.d/99-pulse.conf
 ....
+
+
+alisp
+-----
+
+Es gibt zwar eine Komponente "alisp" die in ALSA verwendet werden kann, jedoch ist es kein integraler Bestandteil von ALSA. Insbesondere ist es kein Bestandteil der Konfigurationssprache von ".asoundrc".
+
+Es handelt sich vielmehr um ein Plugin zum programmgesteuerten Zugriff auf Interna von ALSA. Es ist vor allem zu Debugging interessant, wird aber kaum je überhaupt verwendet.
+
+Am besten vergessen - es gibt bessere LISP-Dialekte wenn man etwas in LISP programmieren möchte.

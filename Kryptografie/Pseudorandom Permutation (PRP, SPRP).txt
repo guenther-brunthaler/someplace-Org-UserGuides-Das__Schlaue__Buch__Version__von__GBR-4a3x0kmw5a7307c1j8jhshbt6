@@ -1,8 +1,12 @@
-﻿Pseudorandom Permutation
+Pseudorandom Permutation
 ========================
 
-Eine Pseudorandom Permutation (PRP) ist eine Permutation, die von Beobachter nicht mit praktikablem Aufwand von einer Zufalls-Permutation unterschieden werden kann.
+Eine Pseudorandom Permutation (PRP) ist eine Permutation, die vom Angreifer nicht mit praktikablem Aufwand von einer Zufalls-Permutation unterschieden werden kann.
 
-Letztere ist eine (mit gleicher Wahrscheinlichkeit) zufällig ausgewählte Permutation aus allem möglichen existierenden Permutationen.
+Dabei wird ihm beliebiger Zugriff auf die Verschlüsselungs-Funktion (aus welcher er jedoch natürlich den Schlüssel nicht auslesen können darf) gewährt, jedoch nicht auf die Entschlüsselungs-Funktion .
+
+Eine Zufalls-Permutation ist eine (mit gleicher Wahrscheinlichkeit) zufällig ausgewählte Permutation aus allem möglichen existierenden Permutationen.
 
 Eine PRP muss immer umkehrbar sein.
+
+Eine SPRP ist eine "Strong" PRP. Sie unterscheidet sich von der PRP dadurch dass der Angreifer hier zusätzlich Zugriff auf die Entschlüsselungs-Funktion hat (aber natürlich auch hier nicht auf deren Schlüssel).
