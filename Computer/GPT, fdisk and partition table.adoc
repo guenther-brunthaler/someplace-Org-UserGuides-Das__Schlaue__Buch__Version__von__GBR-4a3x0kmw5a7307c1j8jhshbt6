@@ -1,4 +1,4 @@
-GPT (GUID Partition Table)
+﻿GPT (GUID Partition Table)
 ==========================
 v2026.67
 

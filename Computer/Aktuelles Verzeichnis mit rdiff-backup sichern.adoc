@@ -1,4 +1,4 @@
-Aktuelles Verzeichnis mit rdiff-backup sichern
+﻿Aktuelles Verzeichnis mit rdiff-backup sichern
 ==============================================
 v2026.68
 

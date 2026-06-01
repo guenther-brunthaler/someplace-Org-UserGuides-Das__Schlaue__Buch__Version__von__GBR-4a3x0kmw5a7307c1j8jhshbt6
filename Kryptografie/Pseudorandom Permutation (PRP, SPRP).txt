@@ -1,4 +1,4 @@
-Pseudorandom Permutation
+﻿Pseudorandom Permutation
 ========================
 
 Eine Pseudorandom Permutation (PRP) ist eine Permutation, die vom Angreifer nicht mit praktikablem Aufwand von einer Zufalls-Permutation unterschieden werden kann.

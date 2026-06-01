@@ -1,4 +1,4 @@
-ALSA-Sound und PC-Audio
+﻿ALSA-Sound und PC-Audio
 =======================
 v2026.141
 
