@@ -1,0 +1,22 @@
+﻿Zahlen
+======
+
+Ganze Zahl (ℤ): Zahlen ohne Nachkommastellen. Inkludiert auch negative Zahlen und Null, nicht jedoch Zahlen mit einem Imaginär-Anteil ungleich Null.
+
+Natürliche Zahlen ohne Null (ℕ): 1, 2, 3, ... Nach weniger verbreiteter Definition ist auch die 0 enthalten, genau wie in ℕ₀.
+
+Natürliche Zahlen mit Null (ℕ₀): 0, 1, 2, 3, ...
+
+Primzahl (ℙ): Natürliche Zahl größer 1, für welche nur 1 und die Zahl selbst die einzigen ganzzahligen Teiler (mit ganzahligem Divisions-Ergebnis) sind.
+
+Rationale Zahl (ℚ): Durch Division zweier Ganzzahlen darstellbar.
+
+Reelle Zahl (ℝ): Zahlen mit oder ohne Nachkommastellen, und ohne Imaginär-Anteil ungleich Null.
+
+Komplexe Zahl: jede Zahl x + y * i wobei x und y reelle Zahlen sind und i * i == -1. y ist der "Imaginäranteil".
+
+Algebraische Zahl: Eine komplexe oder reelle Zahl, welche eine Nullstelle eines Polynoms vom Grad größer Null mit rationalen Koeffizienten ist.
+
+Irrationale Zahlen (ℝ ∖ ℚ): Lassen sich nicht als Brüche darstellen. Es gibt zwei Untertypen: Komplexe und nicht-komplexe irrationale Zahlen.
+
+Transzendente Zahlen: Lassen sich nicht als Polynome (außer der Zahl 0) mit ganzzahligen Koeffizienten darstellen. Weiters kann eine transzendente Zahl nicht durch Manipulation mittels einer endlichen Anzahl der 4 Grundrechenarten in die Zahl 0 übergeführt werden. Jede transzendente Zahl ist zudem auch eine irrationale Zahl. e und Pi sind bekannte transzendente Zahlen. Es gibt bedeutend mehr transzendente als algebraische Zahlen.

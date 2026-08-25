@@ -1,12 +1,17 @@
 ﻿Suspend, Hibernate and Wake-On-LAN (WOL)
 ========================================
-v2026.16
-
+v2026.177
 
 Suspend
 -------
 
 Um ein Suspend-To-RAM auszulösen:
+
+----
+$ pm-suspend
+----
+
+Falls dieses Kommando nicht installiert ist, kann man die folgende Low-Level Methode benutzen:
 
 ----
 $ echo deep > /sys/power/mem_sleep

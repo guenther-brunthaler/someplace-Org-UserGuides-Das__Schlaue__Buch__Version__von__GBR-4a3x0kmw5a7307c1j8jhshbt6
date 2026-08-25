@@ -1,0 +1,71 @@
+﻿9er- und 11er-Probe
+===================
+v2026.189
+
+Die 9er- und 11er-Proben sind zwei verschiedene Verfahren, welche demselben Zweck dienen: Das Ergebnis einer der 4 Grundrechenarten auf Plausibilität zu prüfen.
+
+Die 9er-Probe ist etwas einfacher zu berechnen und erkennt 8 von 9 Fehlern (88,8 % der Fälle).
+
+Die 11er-Probe erkennt 10 von 11 Fehlern (90,90 %).
+
+Beide Proben zusammen durchgeführt erkennen 98 von 99 Fehlern (98,98 %).
+
+Zur Durchführung berechnet man den Divisionsrest der Originalzahlen sowie des Originalergebnisses, nachdem diese Zahlen durch die namensgebende Zahl der Probe (9 oder 11, fortan N genannt) dividiert wurden. Sie werden also Modulo N reduziert.
+
+Zur Kontrolle auf Plausibilität führt man dan dieselbe Operation wie im Original mit den Resten durch. Das Ergebnis dieser Kontroll-Rechnung wird erneut Modulo N reduziert.
+
+Wenn der Rest des Original-Ergebnisses von Rest der Kontroll-Rechnung abweicht, wurde ein Fehler gefunden.
+
+Beide Proben können keine Fehler entdecken, die vom korrekten Ergebnis um ein Vielfaches von N abweicht. Die 9er-Probe kann darüber hinaus keine Fehler durch vertauschte Ziffern im Ergebnis erkennen.
+
+
+9er-Rest
+--------
+
+Man addiert alle Ziffern der Originalzahl. Dann wiederholt man dies für das Ergebnis so lange bis nur noch eine einzige Ziffer übrig ist. Ist diese eine 9, wird sie durch eine 0 ersetzt.
+
+
+11er-Rest
+---------
+
+Wie der Neunerrest, nur beginnt man mit der letzten Ziffer und fährt bis zur ersten Ziffer fort. Dabei wird abwechselnd subtrahiert und addiert. Sollte die Summe negativ sein, addiert man so lange 11 bis sie dies nicht mehr ist.
+
+
+Division
+--------
+
+Für die Division ist ein zusätzlicher Trick nötig. Wenn
+
+a / b + r = q
+
+verwendet die Kontrollrechnung *nicht* die Division, sondern vielmehr multipliziert man zuerst symbolisch beide Seiten der Gleichung mit dem Divisor b
+
+(a / b + r) * b = q * b
+
+gleich
+
+a * (b / b) + r * b = q * b
+
+gleich
+
+b * r + a = q * b
+
+und führt die Kontrollrechnung dann Schritt für Schritt aus, wobei jedes Zwischenergebnis immer modulo N reduziert wird.
+
+
+Potenzierung
+------------
+
+Man kann auch die Quare-and-Multiply-Methode verwenden, um die Kontrollrechnung
+
+[(a mod N) ^ b] mod N = (c mod N)
+
+Im Spezialfall dass GCD(a, N) = 1 darf man dies abkürzen zu
+
+[(a mod N) ^ (b mod N)] mod N = (c mod N)
+
+Dabei muss man dem Exponenten der Kontrollrechnung in die Binärdarstellung umformen und dessen Binärziffern von hinten beginnend lesen.
+
+Das initiale Zwischenergebnis ist (a mod N).
+
+Für jede gelesene Binärziffer quadriert man das Zwischenergebnis, mod N. Wenn die Binärziffer 1 war, multipliziert man das Zwischenergebnis (vor dem Quadrieren, also das alte) noch dazu. Auch dieses Zwischenergebnis wird Modulo N reduziert.

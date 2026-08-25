@@ -1,7 +1,61 @@
-﻿Bluetooth Low Energy, Bluetooth LE (kurz BLE), Bluetooth Smart ist eine Funktechnik, mit der sich Geräte in einer Umgebung von etwa 10 Metern vernetzen lassen (siehe auch Rechnernetz). Im Vergleich zum „klassischen“ Bluetooth soll BLE deutlich geringeren Stromverbrauch und geringere Kosten mit einem ähnlichen Kommunikationsbereich haben. Technisch ist Bluetooth Smart nicht rückwärtskompatibel, neuere Bluetooth-Geräte müssen zusätzlich den LE-Protokollstapel unterstützen, um sich verbinden zu können.
+﻿Bluetooth
+=========
+v2026.153
+
+
+Allgemeines
+-----------
+
+Bluetooth Low Energy, Bluetooth LE (kurz BLE), Bluetooth Smart ist eine Funktechnik, mit der sich Geräte in einer Umgebung von etwa 10 Metern vernetzen lassen (siehe auch Rechnernetz). Im Vergleich zum „klassischen“ Bluetooth soll BLE deutlich geringeren Stromverbrauch und geringere Kosten mit einem ähnlichen Kommunikationsbereich haben. Technisch ist Bluetooth Smart nicht rückwärtskompatibel, neuere Bluetooth-Geräte müssen zusätzlich den LE-Protokollstapel unterstützen, um sich verbinden zu können.
 
 Bluetooth Smart und Bluetooth Smart Ready sind optionale Bestandteile von Bluetooth 4.0.
 
 Eine Folge daraus ist, dass Bluetooth 4.0-Geräte nicht zwangsläufig mit Bluetooth Smart-Geräten kommunizieren können müssen.
 
 Geräte im Classic Bluetooth müssen allgemein nur die Konnektivität mit der Basisgeschwindigkeit BR (Basic Rate) unterstützen, die Übertragung mit EDR (Enhanced Data Rate), HS (High Speed) oder LE (Low Energy) ist optional. Für Bluetooth Smart ist eine single-mode Implementation vorgesehen, die nur die Konnektivität per LE kennt.
+
+
+Profile
+-------
+
+Im folgenden sind die am weitesten verbreiteten "Profile" aufgelistet, welche Angeben was die an einer Bluetooth-Übertragung beteiligten Geräte für Fähigkeiten haben.
+
+Manchmal Profile können von Geräten auch gewechselt werden, um unterschiedlichen Einsatz-Zwecken zu dienen. Dies ist vor allem dann der Fall, wenn sich Features beider Profile wiedersprechen (z. B. niedrige Audio-Qualität vs. hohe Audio-Qualität).
+
+* Abkürzung: Bedeutung (verwendet für)
+* A2DP: Advanced Audio Distribution Profile (Übertragung (Streaming) von Audiodaten)
+* AVRCP: Audio Video Remote Control Profile (Fernbedienung für Audio/Video)
+* BIP: Basic Imaging Profile (Übertragung von Bilddaten)
+* BPP: Basic Printing Profile (Drucken)
+* CIP: Common ISDN Access Profile (ISDN-Verbindungen über CAPI)
+* CTP: Cordless Telephony Profile (schnurlose Telefonie)
+* DIP: Device ID Profile (zusätzliche Informationen über das Bluetooth-Gerät (z. B. Hersteller, Produkt-ID, Version des Produktes))
+* DUN: Dial-up Networking Profile (Internet-Einwahlverbindung)
+* EDR: Enhanced Data Rate Profile (Ermöglicht eine höhere Datenübertragung, bis zu dreimal höher im Vergleich zur Basis Rate)
+* ESDP: Extended Service Discovery Profile (erweiterte Diensteerkennung)
+* FAX, FAXP: FAX Profile (Faxen)
+* OBEX-FTP: File Transfer Profile (Dateiübertragung)
+* GAP: Generic Access Profile (Zugriffsregelung)
+* GATT: Generic Attribute Profile (Sensordaten, energieeffiziente Übertragung kleiner Datenmengen[1])
+* GAVDP: Generic AV Distribution Profile (Übertragung von Audio-/Videodaten)
+* GOEP: Generic Object Exchange Profile (Objektaustausch)
+* HCRP: Hardcopy Cable Replacement Profile (Druckanwendung)
+* HDP: Health Device Profile (sichere Verbindung zwischen medizinischen Geräten)
+* HFP: Hands Free Profile (schnurlose Telefonie im Auto)
+* HID: Human Interface Device Profile (Eingabe - Aus der USB-Spezifikation übernommen.[2])
+* HSP: Headset Profile (Sprachausgabe per Headset)
+* ICP, INTP: Intercom Profile (Sprechfunk)
+* LAP: LAN Access Profile (nur Version < 1.2) (PPP Netzwerkverbindung (neu siehe PAN))
+* MAP: Message Access Profile (Nachrichtenaustausch zwischen Geräten)
+* MDP: Medical Device Profile (sichere Verbindung zwischen medizinischen Geräten (veraltet, neu siehe HDP))
+* OBEX: Object Exchange (generische Datenübertragung zwischen zwei Geräten)
+* OPP: Object Push Profile (Senden von einzelnen Dateien (Bilder, Lieder, Visitenkarten, Termine))
+* PAN: Personal Area Networking Profile (Netzwerkverbindungen)
+* PBA, PBAP: Phonebook Access Profile (Zugriff auf Telefonbuch (nur lesend))
+* SAP, SIM, rSAP: SIM Access Profile (Zugriff auf SIM-Karte (inoffiziell auch rSAP wegen engl. remote))
+* SCO: Synchronous Connection-Oriented link (Zugriff sowohl auf das Mikrofon als auch auf den Ohrhörer eines Headsets)
+* SDAP: Service Discovery Application Profile (Ermittlung vorhandener Profile)
+* SPP: Serial Port Profile (serielle Datenübertragung)
+* SYNCH, SYNC: Synchronisation Profile (Datenabgleich)
+* VDP: Video Distribution Profile (Übertragung von Videodaten)
+* WAPB: Wireless Application Protocol Bearer ()

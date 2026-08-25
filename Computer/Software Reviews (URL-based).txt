@@ -1507,3 +1507,50 @@ Also, many hyperlinks to documentation on the GitHub page are just dead.
 It seems, the "preferred" way to use OpnForm is to subscribe to the commercial services provided by "opnform.com". But that web site seems to be down also.
 
 To me, all this together suggests to better forget about this project. It does not seem to be reliable in any way.
+
+https://docs.paperless-ngx.com/
+## Paperless, DMS, OCR
+2026-06-27
+Paperless ist ein OpenSource-basiertes Dokument-Management System für eingescannte Papierdokumente. Es ist klassisch Client/Server basiert. Als Client dient jeder aktuelle Web-Browser.
+
+Das aktuelle Projekt "paperless-ngx" (seit 2022) ist ein Fork des des eingestellten "paperless-ng" (2020-2021) welches wiederum ein Fork des orginalen "Paperless" (2015-2019) war. Im folgenden soll mit "Paperless" aber immer der aktuelle Fork gemeint sein.
+
+Eine Besonderheit von Paperless ist der Umstand dass nur Metadaten in einer Datenbank hinterlegt werden. Die eigentlichen gescannten Dokumente werden hingegen am Server unverändert als Dateien gespeichert, sowie zusätzliche aus den Original-Dokumenten extrahierte PDF/A-Versionen derselben Dokumente.
+
+Weiters kann automatisch OCR mittels "Tesseract" auf die eingescannten Dokumente angewendet werden um diese durchsuchbar zu machen.
+
+Paperless erledigt beide Schritte durch Einsatz von "ocrmypdf", welches sofohl Scans automatisch gerade rotieren als auch den OCR-Layer hinzufügt.
+
+Allerdings ist dies kein Ersatz für den manuellen Einsatz von "ScanTailor" welches überdies noch unnötige Ränder wegschneiden kann sowie Flecken entfernen. Eben so wenig kann es den Einsatz eines "Bilateral Filters" ersetzen wie "ImageMagick" einen bietet, um Dither-Muster aus den Scans zu entfernen welche die Komprimierbarkeit stark reduzieren und in diesem Fällen zu viel größeren PDF-Dateien führen.
+
+Die Organisation der Dokumente in Paperless erfolgt vor allem über das Zuweisen von benutzerdefinierten "Tags", nach denen dann gefiltert werden kann. Aber natürlich kann auch nach anderen Metadaten gesucht werden, ebenso eine Volltextsuche.
+
+Ein offensichtlicher Nachteil ist die Platzverschwendung durch die doppelte Speicherung der Dokumente, einmal im Originalformat und dann zusätzlich als PDF/A-Version welche noch dazu schlecht komprimiert ist da FAX Group 4 die stärkste Kompression darstellt welches dieses Dokumentenformat für S/W-Grafiken bietet.
+
+Wenn man die PDF-Dokumente bereits hocheffizient mit "ocrmypdf" als lossy JBIG2 oder JPEG-2000 plus OCR-Overlay erstellt hat, muss damit gerechnet werden dass die redundante PDF/A-Version desselben Dokuments dem 5-10-fachen Speicherplatz zusätzlich am Server belegen wird.
+
+Der Grund warum eine PDF/A-Kopie angelegt wird ist der Umstand, dass die PDFs im Webbrowser am Client mittels dem Modul pdf.js angezeigt werden, welches nur PDF/A unterstützt.
+
+Theoretisch könnte man sich diesen Speicherplatz-Overhead ersparen, indem man darauf verzichtet sich Previews der PDF-Dokumente im Webbrowser anzusehen und die gefundenen PDFs einfach nur lokal abspeichert und erst danach öffnet.
+
+Praktisch dürfte durch den Verzicht der Browser-Darstellung aber so viel Bedienungskomfort bei der Suche verloren gehen, dass es eine erhebliche Einschränkung bei der Benutzung von "Paperless" wäre.
+
+Paperless unterstützt auch den Workflow, dass ein bestehendes Dokument editiert wird, etwa um weitere Seiten hinzu zu fügen.
+
+Zu diesem Zweck kann man die Metadaten eines Dokumenten-Eintrags beibehalten, während das damit verknüpfte Dokument durch eine neue Version ersetzt wird.
+
+Der Workflow könnte hier so sein dass man sich zunächst die alte Version des PDF-Originals mittels Paperless auf das lokale Gerät herunter lädt, die PDF-Datei dort mit einem PDF-Editor wie "pdfarranger" bearbeitet und um neue Seiten ergänzt, und das resultierende neue PDF dann erneut in Paperless hochlädt wo es die alte Version ersetzt.
+
+Paperless regeneriert in diesem Fall automatisch die PDF/A-Kopie und aktualisiert auch den Volltext-Index automatisch für die Suche nach dem aktualisierten Textinhalt.
+
+Paperless kann die Metadaten wahlweise in PostgreSQL-, SQLite3- oder MySQL/MariaDB-Datenbanken speichern. Empfohlen wird PostgreSQL. Doch wenn nicht zu viele Clients gleichzeitig Änderungen am Server durchführen ist SQLite3 völlig ausreichend und belegt typischer Weise weniger Platz im Dateisystem für dieselben Inhalte aufgrund einer allgemein platzsparenderen On-Disk-Repräsentation der Datensätze.
+
+Paperless ist in Python (mit dem "Django" Web-Framework) und Typescript (ein Superset von JavaScript, wahrscheinlich für den Client-Code im Web-Browser) verfasst und verwendet ein Linux-System als Server. Meist wird es dort als Docker-Container installiert und betrieben.
+
+Obwohl JavaScript mittlerweile einige Features von TypeScript übernommen hat, bietet dieses aber immer noch zahlreiche Zusatz-Features wie insbesondere statische Typdeklarationen welche vom Compiler geprüft werden, und ist JavaScript daher bei komplexen Anwendungen im Web-Browser nach wie vor deutlich überlegen.
+
+TypeScript wird von eine Transpiler komplett in JavaScript kompiliert, so dass im kompilierten Code nur noch letzteres tatsächlich enthalten ist.
+
+Doch leider ist der Transpiler für TypeScript in JavaScript geschrieben und erfordert den wegen Lieferkettenangriffen gefürchteten "vorbei am Paketmanager der Distro"-Paketmanager "npm" zu seiner Installation und Ausführung.
+
+Häufig wird Paperless deswegen als Docker-Container installiert, weil man sich damit unter anderem diese unangenehmen Schritte ersparen kann.
