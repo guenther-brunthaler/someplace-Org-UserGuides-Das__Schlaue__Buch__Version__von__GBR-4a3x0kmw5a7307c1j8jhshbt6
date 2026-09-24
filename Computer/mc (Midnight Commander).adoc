@@ -1,6 +1,6 @@
 ﻿Midnight Commander
 ==================
-v2023.281
+v2026.264
 
 
 tmux-Probleme
@@ -31,13 +31,13 @@ Einstellungen
 .Listenmodus (links):
 ....
 (*) benutzerdefiniert: "full bsize | type name"
-[x] Benutzer-Ministatus: "perm | mtime | name | owner | group"
+[x] Benutzer-Ministatus: "nlink | perm | mtime | name | owner | group"
 ....
 
 .Listenmodus (rechts):
 ....
 (*) benutzerdefiniert: "half type name"
-[x] Benutzer-Ministatus: "bsize | mode | mtime | owner | group"
+[x] Benutzer-Ministatus: "nlink | bsize | mode | mtime | owner | group"
 ....
 
 Danach nicht vergessen, mit dem Menüpunkt `Optionen|Einstellungen speichern` diese Einstellungen auch dauerhaft zu speichern! Sonst sind sie beim Beenden des `mc` vergessen.

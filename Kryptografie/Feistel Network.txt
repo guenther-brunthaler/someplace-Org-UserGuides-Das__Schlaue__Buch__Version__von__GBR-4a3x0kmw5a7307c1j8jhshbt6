@@ -1,0 +1,35 @@
+﻿Feistel-Netzwerk
+================
+
+Dieses ist die Basis vieler Blockverschlüsselungen. Es handelt sich um eine allgemeine Konstruktion, welche sicherstellt dass die Verschlüsselung wieder eindeutig umkehrbar ist.
+
+Erfunden wurde sie von Host Feistel, einem IBM-Forscher, während seiner Arbeit an der Cipher "Luficer", einem Vorgänger vom DES.
+
+Ein Feistel-Netzwerk wendet in mehreren "Runden" dieselbe Funktion F mit einem rundenspezifischen Schlüssel auf die Eingangsdaten der Runde an.
+
+Dabei werden die Eingangsdaten in einen linken Teil L und rechten Teil R aufgespaltet, die meist ("balanced Feistel Network", BFN), jedoch nicht immer ("unbalanced Feistel Network", UFN), gleich groß sind. Es kommt auch vor, dass die Aufteilung in die beiden Teilblöcke in jeder Runde eine andere ist. 
+
+Nach jeder Runde werden die veränderten linken und rechten Teile vertauscht und zu einem neuen Zwischenergebnis zusammen gesetzt.
+
+Die Eingabe der ersten Runde ist der Plaintext, der Ergebnis der letzten Runde ist der Ciphertext.
+
+Verschlüsselung, in jeder Runde:
+
+L[i+1] := R[i]
+R[i+1] := L[i] (+) F(R[i], K[i])
+
+F() ist die Runden- oder Transformations-Funktion und K[i] ist der Rundenschlüssel. (+) ist eine umkehrbare Vernüpfung und (-) deren Umkehrfunktion. Oft wird XOR für beides verwendet.
+
+Entschlüsselung, in jeder Runde:
+
+R[i] := L[i+1]
+L[i] := R[i+1] (-) F(L[i+1], K[i])
+
+Variante: Der Rundenschlüssel wird direkt mit Teilblöcken verknüpft, die Rundenfunktion benötigt keinen Schlüssel.
+
+L[i+1] := R[i] (*) K[i]
+R[i+1] := L[i] (+) F(L[i+1])
+
+Hier ist "(*)" eine zusätzliche (kann auch dieselbe sein) umkehrbare Verknüpfungsfunktion.
+
+Alternativen zum Feistel-Netzwerk sind beispielsweise das Substitution-Permutations-Netzwerk.
