@@ -1,6 +1,6 @@
 ﻿Firefox Settings
 ================
-v2024.39
+v2026.273
 
 
 about:config-Settings
@@ -186,3 +186,104 @@ zu finden. Dort einstellen:
 |[x] Lesezeichen | [ ] Add-ons
 |[x] Passwörter  | [x] Einstellungen
 |===
+
+
+User preferences
+----------------
+
+Create the file `~/.mozilla/firefox/$PROFILE_DIR/user.js` with the following contents:
+
+----
+/* Version 2026.259
+ * Copyright (c) 2026 Guenther Brunthaler. All rights reserved.
+ *
+ * This JavaScript configuration file is free software.
+\* Distribution is permitted under the terms of the GPLv3. */
+
+/* Hauptschalter */
+user_pref("privacy.trackingprotection.enabled", false);
+user_pref("privacy.trackingprotection.pbmode.enabled", false);
+
+/* Zusätzliche Kategorien */
+user_pref("privacy.trackingprotection.cryptomining.enabled", false);
+user_pref("privacy.trackingprotection.fingerprinting.enabled", false);
+
+/* Achtung: Deaktiviert Google/Mozilla Safe Browsing. Dadurch weniger "phone
+\* home", aber auch weniger Malware-/Phishing-Schutz. */
+
+user_pref("browser.safebrowsing.malware.enabled", false);
+user_pref("browser.safebrowsing.phishing.enabled", false);
+
+user_pref("browser.safebrowsing.downloads.enabled", false);
+user_pref("browser.safebrowsing.downloads.remote.enabled", false);
+
+/* Firefox Suggest / Sponsored Suggestions */
+user_pref("browser.search.suggest.enabled", false);
+user_pref("browser.search.suggest.enabled.private", false);
+user_pref("browser.urlbar.quicksuggest.dataCollection.enabled", false);
+user_pref("browser.urlbar.quicksuggest.enabled", false);
+user_pref("browser.urlbar.suggest.quicksuggest", false);
+user_pref("browser.urlbar.suggest.quicksuggest.nonsponsoredd", false);
+user_pref("browser.urlbar.suggest.quicksuggest.sponsoredd", false);
+user_pref("browser.urlbar.suggest.quicksuggest.sponsored", false);
+
+/* Telemetry */
+user_pref("toolkit.telemetry.enabled", false);
+user_pref("toolkit.telemetry.unified", false);
+user_pref("toolkit.telemetry.archive.enabled", false);
+user_pref("toolkit.telemetry.updatePing.enabled", false);
+user_pref("toolkit.telemetry.shutdownPingSender.enabled", false);
+user_pref("toolkit.telemetry.bhrPing.enabled", false);
+user_pref("toolkit.telemetry.firstShutdownPing.enabled", false);
+
+/* Remote Studies / Experiments */
+user_pref("app.normandy.enabled", false);
+user_pref("app.normandy.api_url", "");
+user_pref("app.shield.optoutstudies.enabled", false);
+
+/* DNS over HTTPS
+ *
+ * network.trr.mode:
+ *
+ * 0 = aus
+ * 2 = TRR first
+ * 3 = nur TRR
+ * 5 = explizit deaktiviert
+ *
+\* 5 verhindert automatische Aktivierung. */
+user_pref("network.trr.mode", 5);
+
+/* Pocket deaktivieren */
+user_pref("extensions.pocket.enabled", false);
+
+/* Crash Reporter deaktivieren */
+user_pref("breakpad.reportURL", "");
+user_pref("browser.tabs.crashReporting.sendReport", false);
+
+/* Geolocation deaktivieren */
+user_pref("geo.enabled", false);
+
+/* Captive Portal Detection deaktivieren */
+user_pref("network.captive-portal-service.enabled", false);
+
+/* Connectivity Checks deaktivieren */
+user_pref("network.connectivity-service.enabled", false);
+
+/* Prefetching deaktivieren */
+user_pref("network.prefetch-next", false);
+user_pref("network.dns.disablePrefetch", true);
+user_pref("network.predictor.enabled", false);
+user_pref("network.predictor.enable-prefetch", false);
+user_pref("network.http.speculative-parallel-limit", 0);
+
+/* Speculative Connections deaktivieren */
+user_pref("network.http.speculative-parallel-limit", 0);
+
+/* Link-Ping deaktivieren */
+user_pref("browser.send_pings", false);
+
+/* Beacon API deaktivieren */
+user_pref("beacon.enabled", false);
+----
+
+Then Firefox will automatically apply those settings at startup.
