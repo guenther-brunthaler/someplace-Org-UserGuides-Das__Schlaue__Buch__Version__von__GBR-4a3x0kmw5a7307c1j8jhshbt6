@@ -1,0 +1,101 @@
+OverlayFS
+=========
+v2026.309
+
+OverlayFS wird häufig auf Live-Boot-Systemen verwendet, um veränderbare Daten in einem Upper-Layer zu speichern, der unter einem Read-Only Dateisystem auf einem Lower Layer liegt.
+
+Wenn man den Inhalt der Änderungen in einem OverlayFS über Neustarts hinweg erhalten möchte, muss man die Datei im Upper Layer sichern und wiederherstellen. Der Lower Layer muss dabei derselbe bleiben.
+
+Das "workdir" hingegen sollte nach dem Wiederherstellen und vor dem erneuten Mounten geleert werden.
+
+Weder Backup noch Restore sollten (soweit möglich) ausgeführt weden während das OverlayFS gemountet ist. Ansonsten sollte man zumindest dafür sorgen dass während dessen  keine Änderungen im Dateisystem vorgenommen werden.
+
+
+Backup
+------
+
+Sichern mit GNU tar und diesen Optionen.
+
+----
+$ tar --format=pax \
+   --create \
+   --file=overlay-upper.tar \
+   --numeric-owner \
+   --xattrs \
+   --xattrs-include='*' \
+   --acls \
+   --sparse \
+   --directory=/path/to/upper \
+   .
+----
+
+
+Restore
+-------
+
+----
+$ tar --extract \
+   --file=overlay-upper.tar \
+   --numeric-owner \
+   --same-owner \
+   --same-permissions \
+   --xattrs \
+   --xattrs-include='*' \
+   --acls \
+   --directory=/path/to/upper
+----
+
+
+Mount-Optionen
+--------------
+
+
+Zwei Konfigurationen. Beide setzen voraus, dass lowerdir, upperdir und workdir bereits angelegt sind und upperdir sowie workdir auf demselben Dateisystem liegen.
+
+1. Maximale Portabilität
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Der gesicherte Upper-Layer kann sogar unter einer anderen Hardware-Architektor wieder in Betrieb genommen werden.
+
+----
+$ mount -t overlay overlay \
+   -o lowerdir=/lower,upperdir=/upper,workdir=/work,\
+index=off,metacopy=off,redirect_dir=off,xino=off \
+   /merged
+----
+
+Eigenschaften:
+
+* index=off: Keine Lower-Layer-Dateihandles zur Wiedererkennung.
+
+* metacopy=off: Änderungen an Dateien führen zur vollständigen Datenkopie in den Upper Layer.
+
+* redirect_dir=off: Keine Redirect-Metadaten für Verzeichnisumbenennungen.
+
+* xino=off: Keine zusätzliche Inode-Nummerierung über Layer hinweg.
+
+Damit bleibt der Upper Layer möglichst unabhängig von der Identität des Lower Layers und dessen Dateisystem.
+
+
+2. Maximale Platzersparnis
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sollte nur auf derselben Maschine fortgesetzt werden. Optimiert für minimale Schreibzugriffe.
+
+----
+$ mount -t overlay overlay \
+   -o lowerdir=/lower,upperdir=/upper,workdir=/work,\
+index=on,metacopy=on,redirect_dir=on,xino=auto \
+   /merged
+----
+
+Eigenschaften:
+
+* index=on: Nutzt Indexeinträge zur Identifikation von Lower-Layer-Dateien und unterstützt Hardlink-Konsistenz.
+
+* metacopy=on: Bei reinen Metadatenänderungen wird zunächst nur ein Metadatenverweis angelegt, statt die gesamte Datei zu kopieren.
+
+* redirect_dir=on: Verzeichnisumbenennungen können durch Redirect-Metadaten statt durch vollständiges Kopieren realisiert werden.
+
+* xino=auto: Verwendet möglichst einheitliche Inode-Nummern über die Layer hinweg.
+Wichtiger Hinweis zu index=on: Der Upper Layer wird dadurch stärker an die Identität des Lower Layers gebunden. Das ist für deine zweite Konfiguration ausdrücklich erwünscht.
